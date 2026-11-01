@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Aeroscopia Quiz">
+<meta name="theme-color" content="#49B190">
+<title>Aeroscopia Quiz · Emerald Language Learning</title>
+<link rel="icon" href="../icon-192.png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --emerald:#49B190; --emerald-link:#53AC90; --emerald-dark:#457865; --emerald-soft:#72B1A0;
+  --text-strong:#323232; --text:#777777; --bg:#FFFFFF; --bg-soft:#F9F9F9;
+  --line:#DADADA; --line-strong:#BBBBBB; --bad:#C0573E;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:'Open Sans',sans-serif;color:#777777;color:var(--text);background:#fff;line-height:1.7;-webkit-text-size-adjust:100%}
+button,input{font-family:inherit;font-size:inherit}
+header.top{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:space-between;justify-content:space-between;padding:10px 4%;border-bottom:1px solid #DADADA;background:#fff;position:-webkit-sticky;position:sticky;top:0;z-index:5}
+header.top img{height:60px;width:auto;display:block}
+header.top .score{font-family:'Montserrat',sans-serif;font-weight:700;color:#457865;font-size:15px;text-align:right;line-height:1.3}
+header.top .score small{display:block;font-family:'Open Sans',sans-serif;font-weight:400;color:#777;font-size:12px}
+.progress{height:4px;background:#F0F0F0}
+.progress div{height:4px;background:#49B190;width:0;-webkit-transition:width .3s;transition:width .3s}
+main{width:92%;max-width:820px;margin:0 auto;padding:26px 0 60px}
+h1{font-family:'Montserrat',sans-serif;font-weight:300;text-transform:uppercase;color:#457865;text-align:center;font-size:40px;line-height:1.25;letter-spacing:1px;margin:24px 0 8px}
+h2.section{font-family:'Montserrat',sans-serif;font-weight:400;text-transform:uppercase;color:#457865;text-align:center;font-size:26px;letter-spacing:1px;margin:6px 0 4px}
+.kicker{text-align:center;color:#72B1A0;font-weight:600;text-transform:uppercase;letter-spacing:2px;font-size:13px;margin:0}
+.intro{text-align:center;max-width:600px;margin:0 auto 18px;line-height:1.9}
+.card{background:#F9F9F9;border-radius:4px;padding:58px 28px 28px;margin:56px 0 20px;position:relative;text-align:center}
+.badge{position:absolute;left:50%;top:-44px;margin-left:-44px;width:88px;height:88px;border-radius:50%;background:#49B190;color:#fff;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;font-family:'Montserrat',sans-serif;font-weight:700;font-size:28px;border:4px solid #fff}
+.badge svg{width:42px;height:42px}
+.card h3{font-family:'Montserrat',sans-serif;font-weight:700;color:#323232;font-size:21px;line-height:1.45;margin:0 0 6px}
+.card .sub{margin:0 0 14px;font-size:15px}
+.answer-row{max-width:520px;margin:14px auto 0}
+input.txt{width:100%;padding:13px 14px;border:1px solid #BBBBBB;border-radius:4px;font-size:18px;color:#323232;background:#fff;-webkit-appearance:none;text-align:center}
+input.txt:focus{outline:none;border-color:#49B190;box-shadow:0 0 0 3px rgba(73,177,144,.2)}
+input.txt[disabled]{background:#F3F3F3;color:#777}
+.btn{display:inline-block;background:#49B190;color:#fff;border:1px solid #49B190;border-radius:4px;padding:11px 24px;font-weight:600;font-size:16px;cursor:pointer;margin:6px 4px;-webkit-appearance:none;text-decoration:none}
+.btn:hover{background:#3f9c7e;border-color:#3f9c7e}
+.btn.outline{background:#fff;color:#457865;border-color:#49B190}
+.btn.outline:hover{background:#EEF7F3}
+.btn.ghost{background:transparent;border-color:transparent;color:#777;font-weight:400;text-decoration:underline}
+.btn[disabled]{opacity:.45;cursor:default}
+.opts{max-width:520px;margin:10px auto 0}
+.opt{display:block;width:100%;text-align:left;background:#fff;border:1px solid #DADADA;border-radius:4px;padding:12px 16px;margin:0 0 10px;font-size:17px;color:#323232;cursor:pointer;-webkit-appearance:none}
+.opt .l{display:inline-block;width:28px;height:28px;line-height:26px;border-radius:50%;border:1px solid #BBBBBB;text-align:center;margin-right:12px;font-size:14px;color:#777;font-weight:600}
+.opt.sel{border-color:#49B190;background:#EEF7F3}
+.opt.sel .l{background:#49B190;border-color:#49B190;color:#fff}
+.opt.right{border-color:#49B190;background:#E3F3EC}
+.opt.right .l{background:#49B190;border-color:#49B190;color:#fff}
+.opt.wrong{border-color:#C0573E;background:#FBEDE9}
+.opt.wrong .l{background:#C0573E;border-color:#C0573E;color:#fff}
+.opt[disabled]{cursor:default}
+.fb{margin:14px auto 0;max-width:560px;padding:12px 16px;border-radius:4px;font-size:16px;display:none}
+.fb.show{display:block}
+.fb.ok{background:#E3F3EC;color:#2f6b55}
+.fb.no{background:#FBEDE9;color:#9b4430}
+.fb.info{background:#fff;border:1px dashed #BBBBBB;color:#777}
+.fb b{color:inherit}
+.nav{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-justify-content:space-between;justify-content:space-between;-webkit-align-items:center;align-items:center;margin-top:10px}
+.nav .count{font-size:14px;color:#777}
+.rebus{background:#fff;border:1px solid #DADADA;border-radius:4px;min-height:190px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;margin:6px auto 4px;max-width:520px;padding:20px;font-family:'Montserrat',sans-serif;color:#323232}
+.photo{max-width:520px;margin:6px auto 4px}
+.photo img{width:100%;height:auto;max-height:440px;-o-object-fit:contain;object-fit:contain;border-radius:4px;background:#fff;border:1px solid #DADADA;display:block}
+.letters{text-align:center;margin:8px 0 2px}
+.tile{display:inline-block;width:46px;height:54px;line-height:52px;margin:4px;border-radius:4px;border:1px dashed #BBBBBB;font-family:'Montserrat',sans-serif;font-weight:700;font-size:26px;color:#BBBBBB;background:#fff;vertical-align:top}
+.tile.on{border:1px solid #49B190;background:#49B190;color:#fff}
+.tag{display:inline-block;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#457865;background:#E3F3EC;border-radius:3px;padding:2px 8px;margin-bottom:8px}
+.map{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;-webkit-justify-content:center;justify-content:center;margin:24px auto 0;max-width:700px}
+.map button{width:40px;height:40px;margin:3px;border-radius:4px;border:1px solid #DADADA;background:#fff;color:#777;font-size:13px;font-weight:600;cursor:pointer;padding:0;-webkit-appearance:none}
+.map button.done{background:#49B190;border-color:#49B190;color:#fff}
+.map button.miss{background:#F3D9D2;border-color:#E2B4A8;color:#9b4430}
+.map button.cur{box-shadow:0 0 0 2px #457865}
+.map button.rb{border-radius:50%}
+.maplegend{text-align:center;font-size:13px;margin-top:6px}
+.res-table{width:100%;border-collapse:collapse;margin:14px 0;text-align:left;font-size:15px;background:#fff}
+.res-table th,.res-table td{border-bottom:1px solid #EAEAEA;padding:9px 8px;vertical-align:top}
+.res-table th{font-family:'Montserrat',sans-serif;color:#457865;font-size:13px;text-transform:uppercase;letter-spacing:1px}
+.res-table td.q{color:#323232}
+.ok-ic{color:#49B190;font-weight:700}
+.no-ic{color:#C0573E;font-weight:700}
+.big-score{font-family:'Montserrat',sans-serif;font-weight:700;font-size:54px;color:#49B190;line-height:1.1;margin:4px 0}
+.parts{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;-webkit-justify-content:center;justify-content:center;margin:10px 0}
+.parts div{background:#fff;border-radius:4px;padding:10px 14px;margin:5px;min-width:130px}
+.parts b{display:block;font-family:'Montserrat',sans-serif;color:#323232;font-size:22px}
+.modal{position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(50,50,50,.45);display:none;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;z-index:20;padding:20px}
+.modal.show{display:-webkit-box;display:-webkit-flex;display:flex}
+.modal .box{background:#fff;border-radius:4px;max-width:420px;padding:26px;text-align:center}
+.modal h4{font-family:'Montserrat',sans-serif;color:#323232;margin:0 0 8px;font-size:19px}
+.splash img{display:block;margin:10px auto 0;width:120px;height:auto}
+.rules{text-align:left;max-width:520px;margin:12px auto 18px;padding-left:20px;line-height:1.8}
+.chips{margin-top:12px}
+.chips span{margin-right:8px;font-size:15px}
+.chip{display:inline-block;border:1px solid #49B190;color:#457865;background:#fff;border-radius:16px;padding:5px 16px;margin:3px;cursor:pointer;font-size:15px;-webkit-appearance:none}
+.chip.sel{background:#49B190;color:#fff}
+footer{text-align:center;font-size:12px;color:#BBBBBB;padding:0 0 30px}
+@media (max-width:600px){
+  header.top img{height:44px}
+  h1{font-size:30px}
+  .card{padding:54px 16px 22px}
+  .card h3{font-size:19px}
+  .tile{width:36px;height:46px;line-height:44px;font-size:21px;margin:3px}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <img src="data:image/png;base64,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" width="306" height="90" alt="Emerald Language Learning">
+  <div class="score" id="hdrScore"></div>
+</header>
+<div class="progress"><div id="bar"></div></div>
+<main id="app"></main>
+<footer>Aeroscopia Quiz · Emerald Language Learning</footer>
+
+<div class="modal" id="modal"><div class="box">
+  <h4 id="mTitle"></h4><p id="mText"></p>
+  <button class="btn outline" id="mNo">Cancel</button><button class="btn" id="mYes">OK</button>
+</div></div>
+
+<script>
+(function(){
+'use strict';
+
+/* ---------- Content ---------- */
+var ICON_PLANE = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>';
+var ICON_PUZZLE = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h3a2 2 0 1 1 4 0h3v5a2 2 0 1 0 0 4v5h-5a2 2 0 1 0-4 0H5v-5a2 2 0 1 1 0-4V3z"/></svg>';
+var ICON_CAMERA = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h4l2-3h6l2 3h4v11H3z"/><circle cx="12" cy="13" r="3.5"/></svg>';
+var ICON_KEY = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="12" r="4"/><path d="M12 12h9M18 12v3M21 12v2"/></svg>';
+
+var CLOUD = function(w){ return '<svg width="'+w+'" viewBox="0 0 64 40" style="display:block"><path d="M16 36h34a12 12 0 0 0 0-24 16 16 0 0 0-30-2A12 12 0 0 0 16 36z" fill="#E3F3EC" stroke="#72B1A0" stroke-width="2"/></svg>'; };
+
+/* Question answers: groups = list of token lists; a typed answer is right if it contains all the tokens of one group.
+   "#n" = the whole number n. */
+var QUESTIONS = [
+ {id:'q1', text:'What is the name of the ancestor of the Beluga?', groups:[['guppy'],['gupy']], show:'The Super Guppy'},
+ {id:'q2', text:'What was the first aircraft made by the Airbus consortium?', groups:[['a300']], show:'The A300B'},
+ {id:'q3', text:'What does the interior of the Concorde smell like?', opts:['Vomit','Grease','Old people','Mildew'], correct:[0,3]},
+ {id:'q4', text:'How many helicopters are there in the museum?', groups:[['#3'],['three']], show:'3'},
+ {id:'q5', text:'How did Roland Garros steer his plane?', sub:'You can see it on the floor, to the left of the ancestor of the Beluga.', groups:[['wing','bend'],['wing','bent'],['wing','warp'],['wing','twist'],['wing','flex']], show:'By bending the wings'},
+ {id:'q6', text:'What is the maximum authorised take-off weight of the A380?', groups:[['#560']], show:'560 tonnes'},
+ {id:'q7', text:'What are the maximum passenger capacities of the A380?', opts:['580','545','853','873'], correct:[1,2]},
+ {id:'q8', text:'Who crossed the Mediterranean for the first time in an aircraft?', groups:[['garros'],['garos']], show:'Roland Garros'},
+ {id:'q9', text:'Which company manufactured the Concorde engines?', groups:[['rolls'],['royce'],['snecma']], show:'Rolls-Royce'},
+ {id:'q10', text:'General knowledge: what is the maximum amount of time allowed for the evacuation of an aircraft in order for it to be certified marketable?', groups:[['#90'],['#1','#30'],['one','half'],['#1','#5','min']], show:'1 minute 30 seconds (90 seconds)'},
+ {id:'q11', text:'How did the Marquis de Bacqueville try to fly?', groups:[['wing','limb'],['wing','arm'],['wing','leg']], show:'He attached a wing to each limb'},
+ {id:'q12', text:'What is the NATO name for the MiG-15?', groups:[['fagot']], show:'Fagot'},
+ {id:'q13', text:'Who was the founder of the first aeronautical factory in Toulouse and the first “Aéropostale” commercial line?', groups:[['latecoere'],['latecoer'],['latecore']], show:'Pierre-Georges Latécoère'},
+ {id:'q14', text:'How many Airbus miniature models are on show in the main hall?', opts:['10','13','9'], correct:[0]},
+ {id:'q15', text:'What is the maximum payload capacity of the Beluga?', opts:['40.2 T','63.3 T','45.5 T','73.8 T'], correct:[2]},
+ {id:'q16', text:'What is the nickname of the Cessna 337?', groups:[['push','pull']], show:'The Push-Pull'},
+ {id:'q17', text:'How many fighter jets can you see in the main hall?', groups:[['#7'],['seven']], show:'7'},
+ {id:'q18', text:'What is the funny thing you can see poking out of the top of the CM.170 Magister?', opts:['Binoculars','Telescope','Periscope','Microscope'], correct:[2]},
+ {id:'q19', text:'What are the first two aircraft in the back outside area, behind the main museum hangar?', groups:[['atr','380']], show:'An ATR and an A380'},
+ {id:'q20', text:'How much does the biggest propeller in the gift shop cost?', groups:[['#319']], show:'€319', buy:true}
+];
+
+/* Rebus puzzles (original). Placed after the question with the given id. */
+var REBUSES = [
+ {id:'r1', after:'q3', groups:[['airbus'],['air','bus']], show:'AIRBUS',
+  html:'<div style="font-size:64px;line-height:1">💨 <span style="font-size:44px;color:#BBBBBB;vertical-align:middle">+</span> 🚌</div>',
+  hint:'A name you see everywhere in Toulouse. Say the two pictures out loud.',
+  meaning:'<b>Air + bus = Airbus</b>, the aircraft maker based in Toulouse.'},
+ {id:'r2', after:'q7', groups:[['jumbo']], show:'JUMBO JET',
+  html:'<div style="font-size:120px;font-weight:700;letter-spacing:6px;line-height:1;color:#457865">JET</div>',
+  hint:'Look at the size of the word. What is another word for “enormous”?',
+  meaning:'A huge JET = a <b>jumbo jet</b>, the nickname of the Boeing 747.'},
+ {id:'r3', after:'q11', groups:[['touch','down']], show:'TOUCHDOWN',
+  html:'<div style="font-size:34px;font-weight:700;line-height:1.05;text-align:center;letter-spacing:2px">T<br>O<br>U<br>C<br>H<br><span style="font-size:30px;color:#72B1A0">↓</span></div>',
+  hint:'Which way is the word going?',
+  meaning:'TOUCH going down = <b>touchdown</b>, the moment the wheels meet the runway.'},
+ {id:'r4', after:'q15', groups:[['up','in','air']], show:'UP IN THE AIR',
+  html:'<div style="font-size:66px;font-weight:300;letter-spacing:4px;line-height:1">A<span style="font-size:30px;font-weight:700;color:#49B190;vertical-align:top">UP</span>IR</div>',
+  hint:'Where is the small word? Think of an expression meaning “not decided yet”.',
+  meaning:'UP inside AIR = <b>up in the air</b>: still undecided. “Our holiday plans are still up in the air.”'},
+ {id:'r5', after:'q18', groups:[['head','cloud']], show:'HEAD IN THE CLOUDS',
+  html:'<div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center">'+CLOUD(70)+'<span style="font-size:46px;font-weight:700;margin:0 10px;letter-spacing:3px">HEAD</span>'+CLOUD(70)+'</div>',
+  hint:'Where is the word? Think of an expression for someone who is always daydreaming.',
+  meaning:'HEAD among the clouds = <b>to have your head in the clouds</b>: to be a daydreamer.'}
+];
+
+var RIDDLES = [
+ {id:'d1', text:'Blanchard, Jeffries, Montgolfier, Jacques and Noël all flew in the same way. What was it?', groups:[['balloon'],['ballon'],['hot','air']], show:'In a balloon', letter:'B'},
+ {id:'d2', text:'I burnt someone’s wings when they got too close. If you get too much of my emissions, you burn. What are they?', groups:[['light']], show:'Light', letter:'L'},
+ {id:'d3', text:'I ran on hot pressurised air, but physics are a thing. Before I could fly, I died. What’s my name?', groups:[['ariel']], show:'Ariel', letter:'I'},
+ {id:'d4', text:'Wind, muscles, steam, electricity and heat all generate something. What is it?', groups:[['energy'],['energie']], show:'Energy', letter:'E'},
+ {id:'d5', text:'We flew a first together in 1785, and we also share something else in our names. What is it?', sub:'Your answer is a letter.', groups:[['r']], exact:true, show:'The letter R', letter:'R'},
+ {id:'d6', text:'I fly on a tether, attached to the ground. Perhaps in China I can be found. What am I?', groups:[['kite']], show:'A kite', letter:'T'},
+ {id:'d7', text:'I gave birth to a famous woman locked in the Louvre. Inventing was just a pastime for me. Who am I?', groups:[['vinci'],['leonardo'],['leonard']], show:'Leonardo da Vinci', letter:'O'}
+];
+var RIDDLE_WORD = {id:'dw', text:'Unscramble your letters to find a famous aviation pioneer.', groups:[['bleriot']], show:'BLÉRIOT',
+  meaning:'Louis Blériot was the first person to fly across the English Channel, in 1909.'};
+
+var PHOTOS = [
+ {id:'p1', img:'img/d33-trait-dunion.jpg', groups:[['trait','union'],['d33'],['d 33']], show:'D.33 Trait d’Union', letter:'I'},
+ {id:'p2', img:'img/late-631.jpg', groups:[['631'],['hydravion'],['seaplane']], show:'Laté 631 (seaplane)', letter:'L'},
+ {id:'p3', img:'img/se2010-armagnac.jpg', groups:[['armagnac'],['armangac'],['2010']], show:'SNCASE SE 2010 Armagnac', letter:'N'},
+ {id:'p4', img:'img/se212-durandal.jpg', groups:[['durandal'],['212']], show:'SE 212 Durandal', letter:'D'},
+ {id:'p5', img:'img/concorde.jpg', groups:[['concorde']], show:'Concorde', letter:'R'},
+ {id:'p6', img:'img/a300b.jpg', groups:[['a300']], show:'Airbus A300B', letter:'B'},
+ {id:'p7', img:'img/sa340-gazelle.jpg', groups:[['gazelle'],['340']], show:'SA 340 Gazelle', letter:'G'},
+ {id:'p8', img:'img/mirage-iiic.jpg', groups:[['mirage']], show:'Mirage III C', letter:'E'}
+];
+var PHOTO_WORD = {id:'pw', text:'Unscramble your letters to find another famous aviator.', groups:[['lindberg']], show:'LINDBERGH',
+  meaning:'Charles Lindbergh made the first solo non-stop flight across the Atlantic, in 1927.'};
+
+/* ---------- Build the list of steps ---------- */
+var STEPS = [{type:'start'}];
+var i, j;
+STEPS.push({type:'intro', part:1});
+for(i=0;i<QUESTIONS.length;i++){
+  STEPS.push({type:'q', item:QUESTIONS[i], n:i+1});
+  for(j=0;j<REBUSES.length;j++) if(REBUSES[j].after===QUESTIONS[i].id) STEPS.push({type:'rebus', item:REBUSES[j], n:j+1});
+}
+STEPS.push({type:'intro', part:2});
+for(i=0;i<RIDDLES.length;i++) STEPS.push({type:'riddle', item:RIDDLES[i], n:i+1});
+STEPS.push({type:'word', item:RIDDLE_WORD, set:RIDDLES, part:2});
+STEPS.push({type:'intro', part:3});
+for(i=0;i<PHOTOS.length;i++) STEPS.push({type:'photo', item:PHOTOS[i], n:i+1});
+STEPS.push({type:'word', item:PHOTO_WORD, set:PHOTOS, part:3});
+STEPS.push({type:'results'});
+
+var ALL_ITEMS = [].concat(QUESTIONS, REBUSES, RIDDLES, [RIDDLE_WORD], PHOTOS, [PHOTO_WORD]);
+
+/* ---------- State ---------- */
+var KEY = 'ell-aeroscopia-v1';
+var S = {team:'', step:0, a:{}};   // a[id] = {v:answer, tries:n, ok:bool, done:bool, hint:bool}
+function load(){ try{ var t = localStorage.getItem(KEY); if(t){ var o = JSON.parse(t); if(o && o.a){ S = o; } } }catch(e){} }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+function rec(id){ if(!S.a[id]) S.a[id] = {v:'', tries:0, ok:false, done:false}; return S.a[id]; }
+
+/* ---------- Answer matching ---------- */
+var ACC = {'à':'a','á':'a','â':'a','ä':'a','ç':'c','è':'e','é':'e','ê':'e','ë':'e','î':'i','ï':'i','ô':'o','ö':'o','ù':'u','û':'u','ü':'u','œ':'oe'};
+function norm(s){
+  s = String(s||'').toLowerCase();
+  s = s.replace(/[à-ÿœ]/g, function(c){ return ACC[c] || c; });
+  return s.replace(/[^a-z0-9]+/g,' ').replace(/^\s+|\s+$/g,'');
+}
+function matches(input, item){
+  var sp = norm(input);
+  if(!sp) return false;
+  if(item.exact){ var w = sp.replace(/^the letter /,'').replace(/^letter /,''); return w === item.groups[0][0]; }
+  var ns = sp.replace(/ /g,'');
+  var nums = (' ' + sp.replace(/([0-9])([a-z])/g,'$1 $2').replace(/([a-z])([0-9])/g,'$1 $2') + ' ');
+  for(var g=0; g<item.groups.length; g++){
+    var grp = item.groups[g], ok = true;
+    for(var t=0; t<grp.length; t++){
+      var tok = grp[t];
+      if(tok.charAt(0)==='#'){ if(nums.indexOf(' '+tok.slice(1)+' ') < 0){ ok=false; break; } }
+      else if(sp.indexOf(tok) < 0 && ns.indexOf(tok.replace(/ /g,'')) < 0){ ok=false; break; }
+    }
+    if(ok) return true;
+  }
+  return false;
+}
+
+/* ---------- Scoring ---------- */
+function partScore(list){ var s=0,n=0; for(var k=0;k<list.length;k++){ n++; var r=S.a[list[k].id]; if(r && r.ok) s++; } return {s:s,n:n}; }
+function scores(){
+  var p1 = partScore(QUESTIONS), rb = partScore(REBUSES), p2 = partScore(RIDDLES.concat([RIDDLE_WORD])), p3 = partScore(PHOTOS.concat([PHOTO_WORD]));
+  return {p1:p1, rb:rb, p2:p2, p3:p3, s:p1.s+rb.s+p2.s+p3.s, n:p1.n+rb.n+p2.n+p3.n};
+}
+
+/* ---------- Helpers ---------- */
+function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+var app = document.getElementById('app');
+function $(id){ return document.getElementById(id); }
+
+function confirmBox(title, text, yes, cb){
+  $('mTitle').textContent = title; $('mText').textContent = text; $('mYes').textContent = yes;
+  $('modal').className = 'modal show';
+  $('mYes').onclick = function(){ $('modal').className='modal'; cb(); };
+  $('mNo').onclick = function(){ $('modal').className='modal'; };
+}
+
+function header(){
+  var sc = scores();
+  $('hdrScore').innerHTML = S.team ? esc(S.team) + '<small>' + sc.s + ' / ' + sc.n + ' points</small>' : '';
+  $('bar').style.width = Math.round(100 * S.step / (STEPS.length-1)) + '%';
+}
+
+function go(n){
+  if(n<0) n=0; if(n>STEPS.length-1) n=STEPS.length-1;
+  S.step = n; save(); render();
+  try{ window.scrollTo(0,0); }catch(e){}
+}
+
+function navHtml(){
+  var st = STEPS[S.step];
+  var next = S.step < STEPS.length-1 ? '<button class="btn outline" id="nNext">Next →</button>' : '';
+  return '<div class="nav"><button class="btn ghost" id="nPrev">← Back</button><span class="count">'+ stepLabel(st) +'</span>'+ next +'</div>';
+}
+function stepLabel(st){
+  if(st.type==='q') return 'Question '+st.n+' of 20';
+  if(st.type==='rebus') return 'Rebus '+st.n+' of 5';
+  if(st.type==='riddle') return 'Riddle '+st.n+' of 7';
+  if(st.type==='photo') return 'Photo '+st.n+' of 8';
+  return '';
+}
+function bindNav(){
+  var p = $('nPrev'), n = $('nNext');
+  if(p) p.onclick = function(){ go(S.step-1); };
+  if(n) n.onclick = function(){ go(S.step+1); };
+}
+
+function mapHtml(){
+  var h = '<div class="map">';
+  for(var k=1;k<STEPS.length;k++){
+    var st = STEPS[k], lab, cls = '';
+    if(st.type==='q') lab = st.n;
+    else if(st.type==='rebus'){ lab = 'R'+st.n; cls='rb'; }
+    else if(st.type==='riddle') lab = 'D'+st.n;
+    else if(st.type==='photo') lab = 'P'+st.n;
+    else if(st.type==='word') lab = '★';
+    else continue;
+    var r = S.a[st.item.id];
+    if(r && r.done) cls += r.ok ? ' done' : ' miss';
+    if(k===S.step) cls += ' cur';
+    h += '<button class="'+cls+'" data-go="'+k+'">'+lab+'</button>';
+  }
+  h += '</div><p class="maplegend">Tap a number to jump to it. Green = correct, red = missed. R = rebus, D = riddle, P = photo.</p>';
+  return h;
+}
+function bindMap(){
+  var bs = app.querySelectorAll('[data-go]');
+  for(var k=0;k<bs.length;k++) bs[k].onclick = function(){ go(parseInt(this.getAttribute('data-go'),10)); };
+}
+
+/* ---------- Screens ---------- */
+function renderStart(){
+  app.innerHTML =
+    '<div class="splash"><img src="data:image/png;base64,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" width="251" height="257" alt="Emerald Language Learning"></div>'+
+    '<h1>Aeroscopia Quiz</h1>'+
+    '<p class="intro">Explore the Aeroscopia museum in Toulouse and find the answers. Read the panels, look closely at the aircraft and work as a team!</p>'+
+    '<div class="card"><div class="badge">'+ICON_PLANE+'</div>'+
+      '<h3>How it works</h3>'+
+      '<ul class="rules">'+
+        '<li><b>Part 1:</b> 20 museum questions, with 5 rebus puzzles hidden between them.</li>'+
+        '<li><b>Part 2:</b> 7 riddles. Each answer gives you a letter for a mystery name.</li>'+
+        '<li><b>Part 3:</b> 8 photos. Find each aircraft and collect more letters.</li>'+
+        '<li>For typed answers you get <b>two tries</b>. Then the answer is shown.</li>'+
+        '<li>Your answers are saved on this device, so you can close the page and come back.</li>'+
+      '</ul>'+
+      '<div class="answer-row"><input class="txt" id="team" maxlength="40" placeholder="Your team name" value="'+esc(S.team)+'"></div>'+
+      '<p><button class="btn" id="startBtn">'+(S.team ? 'Continue' : 'Start the quiz')+'</button></p>'+
+      (S.team ? '<p><button class="btn ghost" id="resetBtn">Start again with a new team</button></p>' : '')+
+    '</div>';
+  $('startBtn').onclick = function(){
+    var t = $('team').value.replace(/^\s+|\s+$/g,'');
+    if(!t){ $('team').focus(); $('team').placeholder = 'Please enter a team name'; return; }
+    S.team = t; save();
+    go(S.step > 0 ? S.step : 1);
+  };
+  $('team').onkeydown = function(e){ if(e.keyCode===13) $('startBtn').onclick(); };
+  if($('resetBtn')) $('resetBtn').onclick = resetAll;
+}
+
+function resetAll(){
+  confirmBox('Start again?', 'All answers on this device will be deleted.', 'Delete and restart', function(){
+    S = {team:'', step:0, a:{}}; save(); render();
+  });
+}
+
+function renderIntro(part){
+  var d = {
+    1:{icon:ICON_PLANE, k:'Part 1', t:'Museum questions', p:'Walk around the museum to answer 20 questions. Look out for the 5 rebus puzzles along the way: each one hides an English word or expression.'},
+    2:{icon:ICON_KEY, k:'Part 2', t:'Riddles', p:'Solve 7 riddles. Each correct answer gives you a letter. Put the letters together to find a famous aviation pioneer.'},
+    3:{icon:ICON_CAMERA, k:'Part 3', t:'Photo hunt', p:'Find the aircraft in each photo and write its name. Each one gives you a letter. Unscramble them to find another famous aviator.'}
+  }[part];
+  app.innerHTML = '<p class="kicker">'+d.k+'</p><h2 class="section">'+d.t+'</h2>'+
+    '<div class="card"><div class="badge">'+d.icon+'</div><p class="intro" style="margin-bottom:6px">'+d.p+'</p>'+
+    '<button class="btn" id="goOn">Let’s go</button></div>'+ navHtml() + mapHtml();
+  $('goOn').onclick = function(){ go(S.step+1); };
+  bindNav(); bindMap();
+}
+
+function feedbackHtml(item, r, extraRight){
+  if(!r.done && r.tries===1) return '<div class="fb no show">Not quite. Read the question again and have another try.</div>';
+  if(!r.done) return '<div class="fb" id="fb"></div>';
+  var shown = item.show ? '<b>'+esc(item.show)+'</b>' : '';
+  if(r.ok) return '<div class="fb ok show">✔ Correct! '+(item.show ? 'Answer: '+shown+'.' : '')+(extraRight||'')+'</div>';
+  return '<div class="fb no show">The answer was '+shown+'.'+(extraRight||'')+'</div>';
+}
+
+function renderTyped(st){
+  var item = st.item, r = rec(item.id);
+  var tag, badge, body = '';
+  if(st.type==='q'){ tag='Question'; badge=st.n; }
+  else if(st.type==='rebus'){ tag='Rebus puzzle'; badge=ICON_PUZZLE; }
+  else if(st.type==='riddle'){ tag='Riddle'; badge=ICON_KEY; }
+  else { tag='Photo hunt'; badge=ICON_CAMERA; }
+
+  var title = item.text || '';
+  if(st.type==='rebus'){ title = 'What word or expression does this picture show?'; body = '<div class="rebus">'+item.html+'</div>'; }
+  if(st.type==='photo'){ title = 'Which aircraft is this?'; body = '<div class="photo"><img src="'+item.img+'" alt="Detail of an aircraft in the museum"></div>'; }
+
+  var extra = '';
+  if(st.type==='rebus' && r.done) extra = '<br>' + item.meaning;
+  if((st.type==='riddle' || st.type==='photo') && r.done && r.ok) extra = ' You win the letter <b>'+item.letter+'</b>.';
+
+  var hint = '';
+  if(st.type==='rebus' && !r.done){
+    hint = r.hint ? '<div class="fb info show">💡 '+esc(item.hint)+'</div>' : '<button class="btn ghost" id="hintBtn">Show a hint</button>';
+  }
+
+  var buy = '';
+  if(item.buy){
+    buy = '<div class="chips"><span>And would you buy it?</span>'+
+      '<button class="chip'+(S.a.buy==='yes'?' sel':'')+'" data-buy="yes">Yes!</button>'+
+      '<button class="chip'+(S.a.buy==='no'?' sel':'')+'" data-buy="no">No way</button></div>';
+  }
+
+  app.innerHTML =
+    '<div class="card"><div class="badge">'+badge+'</div>'+
+      '<span class="tag">'+tag+'</span>'+
+      '<h3>'+esc(title)+'</h3>'+ (item.sub ? '<p class="sub">'+esc(item.sub)+'</p>' : '') +
+      body +
+      '<div class="answer-row"><input class="txt" id="ans" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type your answer" value="'+esc(r.v)+'"'+(r.done?' disabled':'')+'></div>'+
+      (r.done ? '' : '<p><button class="btn" id="checkBtn">Check</button><button class="btn ghost" id="giveBtn">Show the answer</button></p>') +
+      hint + feedbackHtml(item, r, extra) + buy +
+      (st.type==='riddle' || st.type==='photo' ? lettersHtml(st.type==='riddle' ? RIDDLES : PHOTOS) : '') +
+    '</div>' + navHtml() + mapHtml();
+
+  if(!r.done){
+    $('checkBtn').onclick = function(){
+      var v = $('ans').value;
+      if(!norm(v)){ $('ans').focus(); return; }
+      r.v = v; r.tries++;
+      if(matches(v, item)){ r.ok = true; r.done = true; }
+      else if(r.tries >= 2){ r.done = true; }
+      save(); render();
+      if(!r.done){ try{ $('ans').focus(); $('ans').select(); }catch(e){} }
+    };
+    $('ans').onkeydown = function(e){ if(e.keyCode===13) $('checkBtn').onclick(); };
+    $('giveBtn').onclick = function(){
+      confirmBox('Show the answer?', 'You will not get a point for this one.', 'Show it', function(){
+        r.v = $('ans').value; r.done = true; r.ok = false; save(); render();
+      });
+    };
+    if($('hintBtn')) $('hintBtn').onclick = function(){ r.hint = true; save(); render(); };
+  }
+  var chips = app.querySelectorAll('[data-buy]');
+  for(var k=0;k<chips.length;k++) chips[k].onclick = function(){ S.a.buy = this.getAttribute('data-buy'); save(); render(); };
+  bindNav(); bindMap();
+}
+
+function renderChoice(st){
+  var item = st.item, r = rec(item.id);
+  if(!r.sel) r.sel = [];
+  var need = item.correct.length;
+  var h = '';
+  for(var k=0;k<item.opts.length;k++){
+    var cls = 'opt';
+    var isSel = r.sel.indexOf(k) >= 0, isRight = item.correct.indexOf(k) >= 0;
+    if(r.done){ if(isRight) cls += ' right'; else if(isSel) cls += ' wrong'; }
+    else if(isSel) cls += ' sel';
+    h += '<button class="'+cls+'" data-o="'+k+'"'+(r.done?' disabled':'')+'><span class="l">'+'ABCD'.charAt(k)+'</span>'+esc(item.opts[k])+'</button>';
+  }
+  var rightTxt = [];
+  for(k=0;k<item.correct.length;k++) rightTxt.push(item.opts[item.correct[k]]);
+  var fb = '';
+  if(r.done) fb = r.ok ? '<div class="fb ok show">✔ Correct!</div>' : '<div class="fb no show">The right answer'+(need>1?'s were':' was')+' <b>'+esc(rightTxt.join(' and '))+'</b>.</div>';
+
+  app.innerHTML =
+    '<div class="card"><div class="badge">'+st.n+'</div><span class="tag">Question</span>'+
+      '<h3>'+esc(item.text)+'</h3>'+
+      '<p class="sub">'+(need>1 ? 'Choose <b>'+need+'</b> answers.' : 'Choose one answer.')+'</p>'+
+      '<div class="opts">'+h+'</div>'+
+      (r.done ? '' : '<p><button class="btn" id="checkBtn"'+(r.sel.length===need?'':' disabled')+'>Check</button></p>')+
+      fb +
+    '</div>' + navHtml() + mapHtml();
+
+  if(!r.done){
+    var bs = app.querySelectorAll('[data-o]');
+    for(k=0;k<bs.length;k++) bs[k].onclick = function(){
+      var o = parseInt(this.getAttribute('data-o'),10), p = r.sel.indexOf(o);
+      if(p>=0) r.sel.splice(p,1);
+      else { if(need===1) r.sel = [o]; else if(r.sel.length < need) r.sel.push(o); else { r.sel.shift(); r.sel.push(o); } }
+      save(); render();
+    };
+    $('checkBtn').onclick = function(){
+      if(r.sel.length!==need) return;
+      var ok = true;
+      for(var z=0; z<r.sel.length; z++) if(item.correct.indexOf(r.sel[z])<0) ok = false;
+      r.ok = ok; r.done = true; r.v = r.sel.map(function(x){ return item.opts[x]; }).join(', ');
+      save(); render();
+    };
+  }
+  bindNav(); bindMap();
+}
+
+function lettersHtml(set){
+  var h = '<div class="letters">';
+  for(var k=0;k<set.length;k++){ var r = S.a[set[k].id], on = r && r.done; h += '<span class="tile'+(on?' on':'')+'">'+(on ? set[k].letter : '?')+'</span>'; }
+  return h + '</div>';
+}
+
+function renderWord(st){
+  var item = st.item, r = rec(item.id);
+  var miss = 0;
+  for(var k=0;k<st.set.length;k++){ var x = S.a[st.set[k].id]; if(!x || !x.done) miss++; }
+  var note = miss ? '<p class="sub">You still have '+miss+' letter'+(miss>1?'s':'')+' to find. You can try now or go back first.</p>' : '<p class="sub">You have all your letters!</p>';
+  var fb = '';
+  if(r.done) fb = '<div class="fb '+(r.ok?'ok':'no')+' show">'+(r.ok?'✔ Brilliant! ':'The answer was ')+'<b>'+esc(item.show)+'</b>. '+esc(item.meaning)+'</div>';
+  else if(r.tries===1) fb = '<div class="fb no show">Not quite. Try another order!</div>';
+  app.innerHTML =
+    '<p class="kicker">Part '+st.part+'</p><h2 class="section">Mystery name</h2>'+
+    '<div class="card"><div class="badge">★</div>'+
+      '<h3>'+esc(item.text)+'</h3>'+ note + lettersHtml(st.set) +
+      '<div class="answer-row"><input class="txt" id="ans" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Mystery name" value="'+esc(r.v)+'"'+(r.done?' disabled':'')+'></div>'+
+      (r.done ? '' : '<p><button class="btn" id="checkBtn">Check</button><button class="btn ghost" id="giveBtn">Show the answer</button></p>') + fb +
+    '</div>' + navHtml() + mapHtml();
+  if(!r.done){
+    $('checkBtn').onclick = function(){
+      var v = $('ans').value; if(!norm(v)) return;
+      r.v = v; r.tries++;
+      if(matches(v,item)){ r.ok = true; r.done = true; } else if(r.tries>=2) r.done = true;
+      save(); render();
+    };
+    $('ans').onkeydown = function(e){ if(e.keyCode===13) $('checkBtn').onclick(); };
+    $('giveBtn').onclick = function(){ confirmBox('Show the answer?', 'You will not get a point for this one.', 'Show it', function(){ r.v=$('ans').value; r.done=true; save(); render(); }); };
+  }
+  bindNav(); bindMap();
+}
+
+function renderResults(){
+  var sc = scores();
+  var rows = '';
+  function row(label, item, shown){
+    var r = S.a[item.id] || {};
+    var ic = r.done ? (r.ok ? '<span class="ok-ic">✔</span>' : '<span class="no-ic">✘</span>') : '–';
+    rows += '<tr><td>'+ic+'</td><td class="q">'+label+'</td><td>'+esc(r.v || '')+'</td><td>'+esc(shown)+'</td></tr>';
+  }
+  for(var k=1;k<STEPS.length;k++){
+    var st = STEPS[k], it = st.item;
+    if(st.type==='q') row('Q'+st.n+'. '+esc(it.text), it, it.show || it.correct.map(function(x){ return it.opts[x]; }).join(' + '));
+    else if(st.type==='rebus') row('Rebus '+st.n, it, it.show);
+    else if(st.type==='riddle') row('Riddle '+st.n+' ('+it.letter+')', it, it.show);
+    else if(st.type==='photo') row('Photo '+st.n+' ('+it.letter+')', it, it.show);
+    else if(st.type==='word') row('<b>Mystery name, part '+st.part+'</b>', it, it.show);
+  }
+  var todo = 0;
+  for(k=0;k<ALL_ITEMS.length;k++){ var rr = S.a[ALL_ITEMS[k].id]; if(!rr || !rr.done) todo++; }
+  app.innerHTML =
+    '<p class="kicker">Results</p><h2 class="section">'+esc(S.team || 'Your team')+'</h2>'+
+    '<div class="card"><div class="badge">★</div>'+
+      '<div class="big-score">'+sc.s+' / '+sc.n+'</div><p class="sub">points</p>'+
+      (todo ? '<p class="sub">'+todo+' question'+(todo>1?'s':'')+' not answered yet. Tap a grey number below to finish.</p>' : '')+
+      '<div class="parts">'+
+        '<div>Museum questions<b>'+sc.p1.s+' / '+sc.p1.n+'</b></div>'+
+        '<div>Rebus puzzles<b>'+sc.rb.s+' / '+sc.rb.n+'</b></div>'+
+        '<div>Riddles<b>'+sc.p2.s+' / '+sc.p2.n+'</b></div>'+
+        '<div>Photo hunt<b>'+sc.p3.s+' / '+sc.p3.n+'</b></div>'+
+      '</div>'+
+      (S.a.buy ? '<p class="sub">Would you buy the big propeller? <b>'+(S.a.buy==='yes'?'Yes!':'No way')+'</b></p>' : '')+
+      '<p><button class="btn outline" id="showTbl">See all answers</button><button class="btn ghost" id="resetBtn2">Start again</button></p>'+
+      '<div id="tbl" style="display:none;overflow-x:auto"><table class="res-table"><tr><th></th><th>Question</th><th>Your answer</th><th>Correct answer</th></tr>'+rows+'</table></div>'+
+    '</div>' + navHtml() + mapHtml();
+  $('showTbl').onclick = function(){ var t=$('tbl'); var on = t.style.display==='none'; t.style.display = on?'block':'none'; this.textContent = on?'Hide answers':'See all answers'; };
+  $('resetBtn2').onclick = resetAll;
+  bindNav(); bindMap();
+}
+
+function render(){
+  header();
+  if(!S.team && S.step>0) S.step = 0;
+  var st = STEPS[S.step];
+  if(st.type==='start') renderStart();
+  else if(st.type==='intro') renderIntro(st.part);
+  else if(st.type==='q' && st.item.opts) renderChoice(st);
+  else if(st.type==='q' || st.type==='rebus' || st.type==='riddle' || st.type==='photo') renderTyped(st);
+  else if(st.type==='word') renderWord(st);
+  else renderResults();
+}
+
+load();
+render();
+window.__quiz = {matches:matches, QUESTIONS:QUESTIONS, REBUSES:REBUSES, RIDDLES:RIDDLES, PHOTOS:PHOTOS, STEPS:STEPS};
+})();
+</script>
+</body>
+</html>
