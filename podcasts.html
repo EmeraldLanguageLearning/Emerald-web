@@ -144,6 +144,31 @@
   #follow:hover{background:var(--accent-soft)}
   #follow.on{background:var(--emerald);color:#fff}
   .empty{background:var(--bg-soft);border-radius:4px;padding:22px;text-align:center;color:var(--text)}
+  /* live radio */
+  .rgroup{font-family:var(--font-head);font-weight:700;font-size:.95rem;color:var(--emerald-dark);text-transform:uppercase;letter-spacing:.05em;margin:20px 0 2px}
+  #results>.rgroup:first-child{margin-top:6px}
+  .stations{padding:6px 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(260px,100%),1fr));gap:12px}
+  .station{display:flex;gap:12px;align-items:center;background:var(--bg-soft);border:1px solid transparent;border-radius:4px;padding:10px;min-width:0;cursor:pointer}
+  .station:hover{box-shadow:0 4px 14px rgba(69,120,101,.12)}
+  .station img{width:56px;height:56px;border-radius:4px;flex:none}
+  .smeta{flex:1;min-width:0}
+  .smeta b{display:block;font-family:var(--font-head);font-size:.95rem;line-height:1.25;color:var(--text-strong);overflow-wrap:anywhere}
+  .smeta span{display:block;font-size:.8rem;color:var(--text)}
+  .station .pbtn{width:44px;height:44px}
+  .station.playing{border-color:var(--emerald);box-shadow:inset 3px 0 0 var(--emerald)}
+  #player.live .seek,#player.live #pBack,#player.live #pFwd,#player.live #pSpeed,
+  body.radio-mode #player.idle .seek,body.radio-mode #player.idle #pBack,body.radio-mode #player.idle #pFwd,body.radio-mode #player.idle #pSpeed{display:none}
+  #player.live #pShow{color:#c0392b;font-weight:600}
+  body.radio-mode .controls,body.radio-mode #chips,body.radio-mode .tabs,body.radio-mode #back,body.radio-mode #showHeader{display:none!important}
+  body.radio-mode #radioChips{margin-bottom:14px}
+  .smeta .cc{font-style:normal;font-weight:700;color:var(--emerald-dark)}
+  .xswitch{display:flex;width:max-content;max-width:100%;margin:26px auto 0;border:1px solid var(--emerald);border-radius:999px;overflow:hidden}
+  .xswitch button{border:0;background:#fff;color:var(--emerald-dark);font:600 .95rem var(--font-body);padding:9px 22px}
+  .xswitch button+button{border-left:1px solid var(--emerald)}
+  .xswitch button:hover{background:var(--accent-soft)}
+  .xswitch button[aria-selected="true"]{background:var(--emerald);color:#fff}
+  .xswitch + .title-block{padding-top:16px}
+  @media (prefers-color-scheme:dark){.xswitch button{background:transparent}.xswitch button[aria-selected="true"]{background:#49B190;color:#fff}}
 </style>
 <style id="emerald-dark">
 /* Dark version of the Emerald look, used when the phone is in dark mode */
@@ -213,9 +238,13 @@
 </div>
 
 <main class="wrap">
+  <div class="xswitch" role="tablist" data-i18n-aria="explorers" aria-label="Explorateurs">
+    <button type="button" role="tab" aria-selected="true" data-explorer="pod" data-i18n="podSwitch">Podcasts</button>
+    <button type="button" role="tab" aria-selected="false" data-explorer="radio" data-i18n="radioSwitch">Radio en direct</button>
+  </div>
   <div class="title-block">
-    <h1 data-i18n="title">Explorateur de podcasts</h1>
-    <p class="sub" data-i18n="sub"></p>
+    <h1 id="hTitle" data-i18n="title">Explorateur de podcasts</h1>
+    <p class="sub" id="hSub" data-i18n="sub"></p>
   </div>
 
   <div class="controls">
@@ -233,6 +262,7 @@
   </div>
 
   <div class="chips" id="chips"></div>
+  <div class="chips" id="radioChips" hidden></div>
 
   <div class="tabs" role="tablist">
     <button class="tab active" role="tab" aria-selected="true" data-mode="rec" data-i18n="recTab">Recommandés</button>
@@ -345,6 +375,20 @@ var __read = (this && this.__read) || function (o, n) {
             mineEmpty: "Vous n’avez encore ajouté aucun podcast. Ouvrez un podcast et touchez « ＋ Ajouter à mes podcasts ».", mineCount: "{n} podcasts dans votre liste",
             follow: "＋ Ajouter à mes podcasts", following: "✓ Dans mes podcasts", followingT: "Touchez pour le retirer de votre liste" }
     };
+    Object.assign(STR.en, { podSwitch: "Podcasts", radioSwitch: "Live radio", explorers: "Podcasts or live radio",
+        radioTitle: "Radio Explorer", radioSub: "Listen live to English-language news, talk and documentary stations from the UK, Ireland, Australia, Canada, the US and New Zealand.",
+        idleRadio: "Choose a station to start listening", radioAll: "All", c_NZ: "New Zealand", live: "LIVE",
+        radioCount: "{n} live English-language stations: news, talk and documentaries",
+        liveConnecting: "Connecting to {s}…", radioFail: "This station can't be played right now. Try another one.",
+        k_public: "Public radio", k_talk: "News & talk", k_news: "News", k_world: "World news", k_sport: "Sport talk",
+        k_drama: "Drama, comedy & books", k_politics: "Politics", k_business: "Business news" });
+    Object.assign(STR.fr, { podSwitch: "Podcasts", radioSwitch: "Radio en direct", explorers: "Podcasts ou radio en direct",
+        radioTitle: "Explorateur de radios", radioSub: "Écoutez en direct des radios d’actualités, de débats et de documentaires en anglais : Royaume-Uni, Irlande, Australie, Canada, États-Unis et Nouvelle-Zélande.",
+        idleRadio: "Choisissez une radio pour commencer l’écoute", radioAll: "Toutes", c_NZ: "Nouvelle-Zélande", live: "EN DIRECT",
+        radioCount: "{n} radios en anglais en direct : actualités, débats et documentaires",
+        liveConnecting: "Connexion à {s}…", radioFail: "Cette radio ne peut pas être lue pour l’instant. Essayez-en une autre.",
+        k_public: "Radio publique", k_talk: "Actualités et débats", k_news: "Actualités", k_world: "Actualité internationale", k_sport: "Sport (débats)",
+        k_drama: "Fiction, humour et livres", k_politics: "Politique", k_business: "Actualité économique" });
     var LANG = "fr";
     try {
         var l = localStorage.getItem("ell-lang");
@@ -579,10 +623,14 @@ var __read = (this && this.__read) || function (o, n) {
     }
     function setMode(m) {
         state.mode = m;
+        document.body.classList.toggle("radio-mode", m === "radio");
+        $("radioChips").hidden = m !== "radio";
         document.querySelectorAll(".tab").forEach(function (x) { x.classList.toggle("active", x.dataset.mode === m); x.setAttribute("aria-selected", x.dataset.mode === m ? "true" : "false"); });
     }
     function showMode() {
-        if (state.mode === "rec")
+        if (state.mode === "radio")
+            showRadio();
+        else if (state.mode === "rec")
             showRec();
         else if (state.mode === "mine")
             showMine();
@@ -677,6 +725,11 @@ var __read = (this && this.__read) || function (o, n) {
         box.innerHTML = list.map(function (s) { return "<button class=\"card\" data-show=\"".concat(esc(s.collectionId), "\">\n      <img src=\"").concat(esc(s.artworkUrl600 || s.artworkUrl100 || ""), "\" alt=\"\" loading=\"lazy\">\n      <b>").concat(esc(s.collectionName), "</b><span>").concat(esc(s.artistName || ""), "</span></button>"); }).join("");
     }
     function rerender() {
+        if (state.mode === "radio" && !state.inShow) {
+            renderRadioChips();
+            renderRadio();
+            return;
+        }
         if (state.inShow || state.mode === "episodes")
             renderEpisodes(state.episodes);
         else if (state.mode === "rec")
@@ -698,7 +751,7 @@ var __read = (this && this.__read) || function (o, n) {
                         term = (term || "").trim();
                         if (!term)
                             return [2 /*return*/];
-                        if (state.mode === "rec" || state.mode === "mine")
+                        if (state.mode === "rec" || state.mode === "mine" || state.mode === "radio")
                             setMode("episodes");
                         state.term = term;
                         state.inShow = false;
@@ -779,17 +832,22 @@ var __read = (this && this.__read) || function (o, n) {
     function setPlayerLinks() {
         var ep = state.current;
         if (!ep) {
-            marquee($("pTitle"), T("idle"));
+            marquee($("pTitle"), T(state.mode === "radio" ? "idleRadio" : "idle"));
+            return;
+        }
+        if (ep.live) {
+            marquee($("pShow"), liveLine(ep.st));
             return;
         }
         $("pLink").textContent = "🎙 " + T("openPodcast") + " ↗";
         $("pEpLink").textContent = T("episodePage");
     }
     function play(ep) {
-        if (state.current && state.current.episodeUrl === ep.episodeUrl) {
+        if (state.current && !state.current.live && state.current.episodeUrl === ep.episodeUrl) {
             togglePlay();
             return;
         }
+        stopLive();
         state.current = ep;
         // Many feeds (e.g. BBC) give http:// audio links, which Android apps and secure websites block.
         // Ask for the https:// version first; fall back to the original link if that fails.
@@ -820,8 +878,12 @@ var __read = (this && this.__read) || function (o, n) {
     function togglePlay() {
         if (!state.current)
             return;
-        if (audio.paused)
-            audio.play().catch(function () { });
+        if (audio.paused) {
+            if (state.current.live)
+                liveSource(live.viaHls);
+            else
+                audio.play().catch(function () { });
+        }
         else
             audio.pause();
     }
@@ -835,7 +897,264 @@ var __read = (this && this.__read) || function (o, n) {
             el.classList.toggle("playing", !!isCur);
             el.querySelector(".pbtn").innerHTML = isCur && playing ? ICON_PAUSE : ICON_PLAY;
         });
+        document.querySelectorAll(".station").forEach(function (el) {
+            var isCur = !!(state.current && state.current.live && state.current.st.id === el.dataset.station);
+            el.classList.toggle("playing", isCur);
+            el.querySelector(".pbtn").innerHTML = isCur && playing ? ICON_PAUSE : ICON_PLAY;
+        });
     }
+    // ---------- live radio ----------
+    // English-language spoken-word stations. Links were checked from the website on 1 Nov 2026; each station
+    // lists its links in order of preference (plain MP3/AAC first, HLS .m3u8 after) and the player moves on
+    // to the next one if a link fails. HLS plays natively on Safari/iPad and recent Chrome; elsewhere
+    // (e.g. Firefox) hls.js is loaded on demand.
+    var RADIO_CC = ["GB", "IE", "AU", "CA", "US", "NZ"];
+    var BBC = "https://as-hls-ww-live.akamaized.net/";
+    var STW = "https://playerservices.streamtheworld.com/api/livestream-redirect/";
+    var STATIONS = [
+        { id: "bbc4", cc: "GB", name: "BBC Radio 4", brand: "BBC", mark: "R4", kind: "public",
+            src: [BBC + "pool_55057080/live/ww/bbc_radio_fourfm/bbc_radio_fourfm.isml/bbc_radio_fourfm-audio%3d128000.norewind.m3u8", BBC + "pool_55057080/live/ww/bbc_radio_fourfm/bbc_radio_fourfm.isml/bbc_radio_fourfm-audio%3d96000.norewind.m3u8"] },
+        { id: "bbc4x", cc: "GB", name: "BBC Radio 4 Extra", brand: "BBC", mark: "4X", kind: "drama",
+            src: [BBC + "pool_26173715/live/ww/bbc_radio_four_extra/bbc_radio_four_extra.isml/bbc_radio_four_extra-audio%3d128000.norewind.m3u8"] },
+        { id: "bbc5", cc: "GB", name: "BBC Radio 5 Live", brand: "BBC", mark: "5L", kind: "talk",
+            src: [BBC + "pool_89021708/live/ww/bbc_radio_five_live/bbc_radio_five_live.isml/bbc_radio_five_live-audio%3d128000.norewind.m3u8"] },
+        { id: "bbcws", cc: "GB", name: "BBC World Service", brand: "BBC", mark: "WS", kind: "world",
+            src: ["https://stream.live.vc.bbcmedia.co.uk/bbc_world_service"] },
+        { id: "lbc", cc: "GB", name: "LBC", mark: "LBC", kind: "talk",
+            src: ["https://media-ssl.musicradio.com/LBCUK", "https://media-ssl.musicradio.com/LBCUKMP3Low"] },
+        { id: "lbcnews", cc: "GB", name: "LBC News", brand: "LBC", mark: "NEWS", kind: "news",
+            src: ["https://media-ssl.musicradio.com/LBCNewsUK"] },
+        { id: "times", cc: "GB", name: "Times Radio", brand: "TIMES", mark: "TR", kind: "talk",
+            src: ["https://timesradio.wireless.radio/stream"] },
+        { id: "talksport", cc: "GB", name: "talkSPORT", brand: "TALK", mark: "SPORT", kind: "sport",
+            src: ["https://radio.talksport.com/stream"] },
+        { id: "rte1", cc: "IE", name: "RTÉ Radio 1", brand: "RTÉ", mark: "R1", kind: "public", city: "Dublin",
+            src: ["https://icecast.rte.ie/radio1", "https://liveaudio.rte.ie/hls-radio/radio1/chunklist.m3u8"] },
+        { id: "newstalk", cc: "IE", name: "Newstalk", mark: "NT", kind: "talk", city: "Dublin",
+            src: ["https://edge.audioxi.com/NT", "https://live-bauerie.sharp-stream.com/NTAAC"] },
+        { id: "abcnews", cc: "AU", name: "ABC NewsRadio", brand: "ABC", mark: "NEWS", kind: "news",
+            src: ["https://abc.streamguys1.com/live/newsradio/icecast.audio", "https://mediaserviceslive.akamaized.net/hls/live/2038311/newsradio/index.m3u8"] },
+        { id: "abcrn", cc: "AU", name: "ABC Radio National", brand: "ABC", mark: "RN", kind: "public",
+            src: ["https://abc.streamguys1.com/live/rnnsw/icecast.audio", "https://mediaserviceslive.akamaized.net/hls/live/2038318/rnnsw/masterhq.m3u8"] },
+        { id: "abcsyd", cc: "AU", name: "ABC Radio Sydney", brand: "ABC", mark: "SYD", kind: "talk", city: "Sydney",
+            src: ["https://mediaserviceslive.akamaized.net/hls/live/2038302/localsydney/masterhq.m3u8"] },
+        { id: "abcmel", cc: "AU", name: "ABC Radio Melbourne", brand: "ABC", mark: "MEL", kind: "talk", city: "Melbourne",
+            src: ["https://mediaserviceslive.akamaized.net/hls/live/2038300/localmelbourne/masterhq.m3u8"] },
+        { id: "3aw", cc: "AU", name: "3AW", mark: "3AW", kind: "talk", city: "Melbourne",
+            src: [STW + "3AW.mp3"] },
+        { id: "2gb", cc: "AU", name: "2GB", mark: "2GB", kind: "talk", city: "Sydney",
+            src: [STW + "2GB.mp3", "https://28093.live.streamtheworld.com/2GBAAC_O/HLS/playlist.m3u8"] },
+        { id: "skyau", cc: "AU", name: "Sky News Australia Radio", brand: "SKY", mark: "NEWS", kind: "news",
+            src: [STW + "NOVA_SKYNEWSAAC.aac"] },
+        { id: "cbctor", cc: "CA", name: "CBC Radio One Toronto", brand: "CBC", mark: "TOR", kind: "public", city: "Toronto",
+            src: ["https://26733.live.streamtheworld.com/CBLAFM_CBC_SC", "https://cbcradiolive.akamaized.net/hls/live/2041036/ES_R1ETR/master.m3u8"] },
+        { id: "cbcvan", cc: "CA", name: "CBC Radio One Vancouver", brand: "CBC", mark: "VAN", kind: "public", city: "Vancouver",
+            src: ["https://27033.live.streamtheworld.com/CBU2FM_CBC_SC", "https://cbcradiolive.akamaized.net/hls/live/2041050/ES_R1PVC/master.m3u8"] },
+        { id: "cbcott", cc: "CA", name: "CBC Radio One Ottawa", brand: "CBC", mark: "OTT", kind: "public", city: "Ottawa",
+            src: ["https://17813.live.streamtheworld.com/CBOFM_CBC_SC"] },
+        { id: "cfrb", cc: "CA", name: "Newstalk 1010", mark: "1010", kind: "talk", city: "Toronto",
+            src: [STW + "CFRBAMAAC.aac", "https://29324.live.streamtheworld.com/CFRBAMAAC_SC"] },
+        { id: "ctv", cc: "CA", name: "CTV News", brand: "CTV", mark: "NEWS", kind: "news",
+            src: [STW + "TV_CTV_NEWSAAC.aac", "https://29324.live.streamtheworld.com/TV_CTV_NEWSAAC_SC"] },
+        { id: "npr", cc: "US", name: "NPR (24-hour stream)", mark: "NPR", kind: "public",
+            src: ["https://npr-ice.streamguys1.com/live.mp3"] },
+        { id: "wnyc", cc: "US", name: "WNYC", mark: "WNYC", kind: "public", city: "New York",
+            src: ["https://fm939.wnyc.org/wnycfm.aac", "https://fm939.wnyc.org/wnycfm"] },
+        { id: "wamu", cc: "US", name: "WAMU", mark: "WAMU", kind: "public", city: "Washington, DC",
+            src: ["https://wamu.cdnstream1.com/wamu.mp3"] },
+        { id: "wbur", cc: "US", name: "WBUR", mark: "WBUR", kind: "public", city: "Boston",
+            src: ["https://fm909.wbur.org/wbur_www"] },
+        { id: "kqed", cc: "US", name: "KQED", mark: "KQED", kind: "public", city: "San Francisco",
+            src: ["https://streams.kqed.org/kqedradio?onsite=true"] },
+        { id: "mpr", cc: "US", name: "MPR News", brand: "MPR", mark: "NEWS", kind: "news", city: "Minnesota",
+            src: ["https://nis.stream.publicradio.org/nis.mp3"] },
+        { id: "wtop", cc: "US", name: "WTOP News", mark: "WTOP", kind: "news", city: "Washington, DC",
+            src: [STW + "WTOPFM.mp3"] },
+        { id: "cspan", cc: "US", name: "C-SPAN Radio", mark: "CSPAN", kind: "politics", city: "Washington, DC",
+            src: [STW + "CSPANRADIO.mp3", "https://26733.live.streamtheworld.com/CSPANRADIO_SC"] },
+        { id: "bloomberg", cc: "US", name: "Bloomberg Radio", brand: "BLOOMBERG", mark: "BBG", kind: "business", city: "New York",
+            src: [STW + "WBBRAMAAC.aac", "https://tunein.cdnstream1.com/3521_96.mp3"] },
+        { id: "rnz", cc: "NZ", name: "RNZ National", brand: "RNZ", mark: "NAT", kind: "public",
+            src: ["https://stream-ice.radionz.co.nz/national.mp3", "https://radionz.streamguys1.com/national/national/playlist.m3u8"] },
+        { id: "rnzpac", cc: "NZ", name: "RNZ Pacific", brand: "RNZ", mark: "PAC", kind: "world",
+            src: ["https://stream-ice.radionz.co.nz/international.mp3"] },
+        { id: "zb", cc: "NZ", name: "Newstalk ZB", mark: "ZB", kind: "talk", city: "Auckland",
+            src: [STW + "NZME_01AAC.aac", STW + "NZME_41AAC.aac"] }
+    ];
+    var ST_BY_ID = {};
+    STATIONS.forEach(function (s) { ST_BY_ID[s.id] = s; });
+    state.radioCC = (store.get("radio-cc") || "all");
+    if (state.radioCC !== "all" && RADIO_CC.indexOf(state.radioCC) < 0)
+        state.radioCC = "all";
+    // Station "logos": a plain tile with the station's initials, in Emerald colours.
+    var TILE_BG = { GB: "#457865", IE: "#3f9c7e", AU: "#49B190", CA: "#457865", US: "#3f9c7e", NZ: "#49B190" };
+    var xml = function (s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;"); };
+    function tile(s) {
+        var n = s.mark.length, fs = n <= 2 ? 44 : n === 3 ? 34 : n === 4 ? 27 : 21;
+        var y = s.brand ? 60 + fs * 0.36 : 50 + fs * 0.36;
+        var brandFs = s.brand && s.brand.length > 6 ? 11 : 15;
+        var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="' + TILE_BG[s.cc] + '"/>' +
+            (s.brand ? '<text x="50" y="33" font-family="Montserrat,Arial,sans-serif" font-size="' + brandFs + '" font-weight="700" fill="#d6f0e6" text-anchor="middle" letter-spacing="1">' + xml(s.brand) + '</text>' : '') +
+            '<text x="50" y="' + y.toFixed(1) + '" font-family="Montserrat,Arial,sans-serif" font-size="' + fs + '" font-weight="700" fill="#fff" text-anchor="middle">' + xml(s.mark) + '</text></svg>';
+        return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+    }
+    var radioList = function () { return STATIONS.filter(function (s) { return state.radioCC === "all" || s.cc === state.radioCC; }); };
+    var liveLine = function (s) { return "● " + T("live") + " · " + [T("c_" + s.cc), s.city].filter(Boolean).join(" · "); };
+    function stationCard(s) {
+        return "<div class=\"station\" data-station=\"".concat(s.id, "\">\n      <img src=\"").concat(tile(s), "\" alt=\"\">\n      <div class=\"smeta\"><b lang=\"en\">").concat(esc(s.name), "</b><span lang=\"").concat(LANG, "\"><em class=\"cc\">").concat(esc(T("c_" + s.cc)), "</em> \u00B7 ").concat(esc([T("k_" + s.kind), s.city].filter(Boolean).join(" · ")), "</span></div>\n      <button class=\"pbtn\" type=\"button\" data-station=\"").concat(s.id, "\" aria-label=\"").concat(esc(T("play") + " – " + s.name), "\">").concat(ICON_PLAY, "</button></div>");
+    }
+    function renderRadioChips() {
+        $("radioChips").innerHTML = ["all"].concat(RADIO_CC).map(function (cc) {
+            return "<button class=\"chip".concat(state.radioCC === cc ? " active" : "", "\" data-cc=\"").concat(cc, "\" lang=\"").concat(LANG, "\">").concat(esc(cc === "all" ? T("radioAll") : T("c_" + cc)), "</button>");
+        }).join("");
+    }
+    function renderRadio() {
+        var box = $("results");
+        box.className = "";
+        var ccs = state.radioCC === "all" ? RADIO_CC : [state.radioCC];
+        box.innerHTML = ccs.map(function (cc) { return "<h3 class=\"rgroup\" lang=\"".concat(LANG, "\">").concat(esc(T("c_" + cc)), "</h3><div class=\"stations\">") +
+            STATIONS.filter(function (s) { return s.cc === cc; }).map(stationCard).join("") + "</div>"; }).join("");
+        refreshButtons();
+    }
+    function applyHeading() {
+        var r = state.mode === "radio";
+        $("hTitle").textContent = T(r ? "radioTitle" : "title");
+        $("hSub").textContent = T(r ? "radioSub" : "sub");
+        document.title = T(r ? "radioTitle" : "title") + " · Emerald Language Learning";
+        document.querySelectorAll("[data-explorer]").forEach(function (b) { return b.setAttribute("aria-selected", (b.dataset.explorer === "radio") === r ? "true" : "false"); });
+        if (!state.current)
+            setPlayerLinks();
+    }
+    function setExplorer(x) {
+        store.set("pod-explorer", x);
+        if (x === "radio") {
+            if (state.mode !== "radio")
+                state.podMode = state.mode;
+            setMode("radio");
+        }
+        else
+            setMode(state.podMode || "rec");
+        applyHeading();
+        showMode();
+    }
+    function showRadio() {
+        hideShow();
+        renderRadioChips();
+        renderRadio();
+        if (!(state.status && state.status[0] === "liveConnecting"))
+            setStatus("radioCount", { n: radioList().length });
+    }
+    // playback: try each link in turn; an HLS link the browser can't play itself is retried with hls.js
+    var live = { hls: null, idx: 0, viaHls: false, timer: null, token: 0, playing: false };
+    var isM3u8 = function (u) { return /\.m3u8(\?|$)/i.test(u); };
+    var nativeHls = function () { return !!(audio.canPlayType && audio.canPlayType("application/vnd.apple.mpegurl")); };
+    var hlsLoading = null;
+    function loadHls() {
+        if (window.Hls)
+            return Promise.resolve(window.Hls);
+        if (!hlsLoading)
+            hlsLoading = new Promise(function (resolve, reject) {
+                var s = document.createElement("script");
+                s.src = "https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js";
+                s.onload = function () { return window.Hls ? resolve(window.Hls) : reject(new Error("hls")); };
+                s.onerror = function () { hlsLoading = null; reject(new Error("hls")); };
+                document.head.appendChild(s);
+            });
+        return hlsLoading;
+    }
+    function dropHls() { if (live.hls) {
+        try {
+            live.hls.destroy();
+        }
+        catch (e) { }
+        live.hls = null;
+    } }
+    function stopLive() {
+        live.token++;
+        clearTimeout(live.timer);
+        dropHls();
+        $("player").classList.remove("live");
+    }
+    function liveSource(useHls) {
+        var url = state.current.st.src[live.idx], tok = ++live.token;
+        clearTimeout(live.timer);
+        dropHls();
+        live.viaHls = !!useHls;
+        live.playing = false;
+        live.timer = setTimeout(function () { if (tok === live.token && !live.playing)
+            liveError(); }, 15000);
+        audio.playbackRate = 1;
+        if (useHls) {
+            loadHls().then(function (Hls) {
+                if (tok !== live.token)
+                    return;
+                if (!Hls.isSupported()) {
+                    liveError();
+                    return;
+                }
+                var h = live.hls = new Hls();
+                h.on(Hls.Events.ERROR, function (e, d) { if (d.fatal && tok === live.token)
+                    liveError(); });
+                h.on(Hls.Events.MANIFEST_PARSED, function () { if (tok === live.token)
+                    audio.play().catch(function () { }); });
+                h.loadSource(url);
+                h.attachMedia(audio);
+            }, function () { if (tok === live.token)
+                liveError(); });
+            return;
+        }
+        audio.src = url;
+        audio.play().catch(function () { }); // a link that fails arrives as an "error" event
+    }
+    function startLiveAt(i) { live.idx = i; var url = state.current.st.src[i]; liveSource(isM3u8(url) && !nativeHls()); }
+    function liveError() {
+        if (!state.current || !state.current.live)
+            return;
+        var st = state.current.st, url = st.src[live.idx];
+        if (isM3u8(url) && !live.viaHls && window.MediaSource) {
+            liveSource(true);
+            return;
+        }
+        if (live.idx + 1 < st.src.length) {
+            startLiveAt(live.idx + 1);
+            return;
+        }
+        stopLive();
+        $("player").classList.add("live");
+        audio.pause();
+        audio.removeAttribute("src");
+        try {
+            audio.load();
+        }
+        catch (e) { }
+        setStatus("radioFail");
+        refreshButtons();
+    }
+    function playStation(st) {
+        if (state.current && state.current.live && state.current.st.id === st.id) {
+            togglePlay();
+            return;
+        }
+        stopLive();
+        state.current = { live: true, st: st, trackName: st.name };
+        var p = $("player");
+        p.classList.add("live");
+        p.classList.remove("idle");
+        $("pArt").src = tile(st);
+        marquee($("pTitle"), st.name);
+        marquee($("pShow"), liveLine(st));
+        $("pLink").style.display = "none";
+        $("pEpLink").style.display = "none";
+        setStatus("liveConnecting", { s: st.name });
+        startLiveAt(0);
+        refreshButtons();
+    }
+    audio.addEventListener("playing", function () {
+        live.playing = true;
+        clearTimeout(live.timer);
+        if (state.status && (state.status[0] === "liveConnecting" || state.status[0] === "radioFail"))
+            state.mode === "radio" && !state.inShow ? setStatus("radioCount", { n: radioList().length }) : setStatus(null);
+    });
     // ---------- static text + language switch ----------
     function applyStatic() {
         document.documentElement.lang = LANG;
@@ -855,6 +1174,7 @@ var __read = (this && this.__read) || function (o, n) {
         setFollow();
         if (state.mode === "mine" && !state.inShow && !state.mine.length)
             showMine();
+        applyHeading();
     }
     document.querySelectorAll("[data-lang]").forEach(function (b) { return b.addEventListener("click", function () {
         if (b.dataset.lang === LANG)
@@ -881,6 +1201,20 @@ var __read = (this && this.__read) || function (o, n) {
         showMode();
     }); });
     $("back").addEventListener("click", function () { return showMode(); });
+    document.querySelectorAll("[data-explorer]").forEach(function (b) { return b.addEventListener("click", function () {
+        if ((b.dataset.explorer === "radio") !== (state.mode === "radio"))
+            setExplorer(b.dataset.explorer);
+    }); });
+    $("radioChips").addEventListener("click", function (e) {
+        var c = e.target.closest("[data-cc]");
+        if (!c)
+            return;
+        state.radioCC = c.dataset.cc;
+        store.set("radio-cc", state.radioCC);
+        if (state.status && state.status[0] === "radioFail")
+            state.status = null;
+        showRadio();
+    });
     $("follow").addEventListener("click", function () {
         if (!state.show)
             return;
@@ -890,6 +1224,11 @@ var __read = (this && this.__read) || function (o, n) {
         setFollow();
     });
     $("results").addEventListener("click", function (e) {
+        var r = e.target.closest("[data-station]");
+        if (r) {
+            playStation(ST_BY_ID[r.dataset.station]);
+            return;
+        }
         var p = e.target.closest("[data-play]");
         if (p) {
             play(currentList()[+p.dataset.play]);
@@ -908,8 +1247,8 @@ var __read = (this && this.__read) || function (o, n) {
             m.setAttribute("aria-expanded", open ? "true" : "false");
         }
     });
-    $("pPlayBtn").addEventListener("click", function () { if (state.current)
-        audio.play().catch(function () { }); });
+    $("pPlayBtn").addEventListener("click", function () { if (state.current && audio.paused)
+        togglePlay(); });
     $("pPauseBtn").addEventListener("click", function () { return audio.pause(); });
     $("pBack").addEventListener("click", function () { audio.currentTime = Math.max(0, audio.currentTime - 15); });
     $("pFwd").addEventListener("click", function () { audio.currentTime = Math.min(audio.duration || Infinity, audio.currentTime + 30); });
@@ -954,6 +1293,11 @@ var __read = (this && this.__read) || function (o, n) {
         $("pSeek").value = audio.currentTime / audio.duration * 100;
     });
     audio.addEventListener("error", function () {
+        if (state.current && state.current.live) {
+            if (!live.viaHls && audio.getAttribute("src"))
+                liveError();
+            return;
+        }
         var ep = state.current;
         if (ep && !state.triedPlain && /^http:\/\//i.test(ep.episodeUrl)) {
             state.triedPlain = true; // https version not available: try the original link
@@ -976,7 +1320,10 @@ var __read = (this && this.__read) || function (o, n) {
     setVolume(100);
     applyStatic();
     refreshButtons();
-    showRec();
+    if (store.get("pod-explorer") === "radio")
+        setExplorer("radio");
+    else
+        showRec();
 })();
 </script>
 </body>
