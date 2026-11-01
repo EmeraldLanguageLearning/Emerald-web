@@ -2,6 +2,8 @@
    Adds a few missing JavaScript methods and replaces CSS that old Safari ignores:
    spacing between items (flex "gap"), headings sized with clamp(), grid gaps. */
 (function(){
+  // The website starts in English (the Android app starts in French). A choice made with FR/EN is kept.
+  try{ if(!localStorage.getItem('ell-lang')) localStorage.setItem('ell-lang', 'en'); }catch(e){}
   var AP = Array.prototype;
   function def(o, k, v){ if(!o[k]) try{ Object.defineProperty(o, k, { value: v, configurable: true, writable: true }); }catch(e){ o[k] = v; } }
   def(AP, 'flat', function(d){ d = d === undefined ? 1 : d; return AP.reduce.call(this, function(a, v){ return a.concat(Array.isArray(v) && d > 0 ? AP.flat.call(v, d - 1) : [v]); }, []); });
