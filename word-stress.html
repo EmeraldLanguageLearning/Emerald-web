@@ -1,0 +1,993 @@
+<!doctype html><html><head><script src="legacy.js"></script><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Emerald"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#49B190"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><script src="app-bridge.js"></script><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Word Stress: (stress inside a word)</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Open+Sans:wght@400;600;700&display=swap">
+<style>
+/* Layout: one centred work column; a typing strip on top, the bubble stage below, a practise mode behind a two-tab switch. */
+:root{
+  /* Emerald Language Learning palette */
+  --emerald:#49B190; --emerald-link:#53AC90; --emerald-dark:#457865; --emerald-soft:#72B1A0;
+  --bg:#ffffff; --surface:#ffffff; --ink:#323232; --muted:#777777; --faint:#a3a3a3; --line:#DADADA; --line-strong:#BBBBBB; --field:#F9F9F9;
+  --stress:#49B190; --stress-soft:#e9f6f1; --weak:#cfd6d3; --tonic:#e0913a; --tonic-soft:#fdf2e5;
+  --good:#2f8f6a; --good-soft:#e7f5ef; --bad:#c8443a; --bad-soft:#fcecea;
+  --display:"Montserrat", "Segoe UI", system-ui, sans-serif;
+  --body:"Open Sans", "Segoe UI", system-ui, sans-serif;
+  color-scheme:light;
+}
+body{background:var(--bg);color:var(--muted);font-family:var(--body);font-size:16px;line-height:1.6}
+.site{background:#fff;border-bottom:1px solid var(--line)}
+.site-in{max-width:1080px;width:80%;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0}
+.brand-logo{height:60px;width:auto;display:block}
+@media (max-width:520px){.brand-logo{height:46px}.site-in{width:auto;padding:14px 20px}}
+.logo-slot{height:56px;min-width:180px;display:flex;align-items:center;justify-content:center;border:1.5px dashed var(--line-strong);border-radius:4px;color:var(--line-strong);font:600 .8rem var(--body);letter-spacing:.08em;text-transform:uppercase}
+.lang{display:inline-flex;border:1px solid var(--emerald);border-radius:4px;overflow:hidden;flex:none}
+.lang button{font:600 .85rem var(--body);letter-spacing:.04em;border:0;background:#fff;color:var(--emerald-dark);padding:7px 13px;cursor:pointer}
+.lang button+button{border-left:1px solid var(--emerald)}
+.lang button:hover{background:var(--stress-soft)}
+.lang button[aria-pressed="true"]{background:var(--emerald);color:#fff}
+.lang button:focus-visible{outline:2px solid var(--emerald-dark);outline-offset:2px}
+.title-block{text-align:center;padding:12px 0 4px}
+.title-block h1{justify-content:center}
+.wrap{max-width:820px;margin:0 auto;padding-block:36px 64px;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:28px}
+header.top{display:flex;flex-direction:column;align-items:center;gap:22px}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(1.9rem,5vw,3rem);line-height:1.25;color:var(--emerald-dark);text-transform:uppercase;margin:0;letter-spacing:.01em;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
+.sub{flex-basis:100%;font:400 1rem var(--body);text-transform:none;color:var(--muted);letter-spacing:0}
+.logo{display:none}
+.logo i{display:block;border-radius:50%;background:var(--weak)}
+.logo i.b{width:16px;height:16px;background:var(--stress)}
+.logo i.s{width:7px;height:7px}
+.tabs{display:inline-flex;gap:28px;border-bottom:1px solid var(--line)}
+.tabs button{font:600 1rem var(--body);border:0;border-bottom:2px solid transparent;background:transparent;color:var(--muted);padding:8px 2px;margin-bottom:-1px;cursor:pointer}
+.tabs button:hover{color:var(--emerald-link)}
+.tabs button[aria-selected="true"]{color:var(--emerald-link);border-bottom-color:var(--emerald)}
+button:focus-visible,input:focus-visible,select:focus-visible,.chip:focus-visible,.bub:focus-visible{outline:2px solid var(--stress);outline-offset:3px}
+.panel{display:flex;flex-direction:column;gap:22px}
+.typebar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.typebar input{flex:1 1 260px;min-width:0;font:400 1.6rem var(--body);padding:14px 18px;border-radius:4px;border:1px solid var(--line);background:var(--field);color:var(--ink)}
+.typebar input:focus{border-color:var(--stress);background:var(--bg);outline:none}
+.btn{font:600 .95rem var(--body);padding:10px 18px;border-radius:4px;border:1px solid var(--emerald);background:var(--bg);color:var(--emerald-dark);cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{background:var(--stress-soft)}
+.btn.primary{background:var(--emerald);border-color:var(--emerald);color:#fff}
+.btn.primary:hover{background:#3f9c7e;border-color:#3f9c7e}
+.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chips .lbl{font-size:.85rem;color:var(--faint);margin-right:4px}
+.chip{font:400 .9rem var(--body);border:0;background:var(--field);color:var(--muted);padding:4px 12px;border-radius:999px;cursor:pointer}
+.chip:hover{color:var(--stress);background:var(--stress-soft)}
+.stage{border-radius:4px;background:var(--field)!important;min-height:200px;display:flex;flex-wrap:wrap;gap:28px 44px;align-items:flex-end;justify-content:center;padding:36px 8px 20px;background:var(--bg);border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow-x:auto}
+.empty{color:var(--faint);align-self:center;text-align:center}
+.word{display:flex;flex-direction:column;align-items:center;gap:10px}
+.row{display:flex;align-items:center;gap:6px}
+.col{display:flex;flex-direction:column;align-items:center;gap:12px}
+.bubrow{height:84px;display:flex;align-items:center}
+.bub{border-radius:50%;border:0;padding:0;cursor:pointer;background:var(--weak);width:20px;height:20px;transition:transform .2s ease, background .2s ease;position:relative}
+.bub:hover{transform:scale(1.08)}
+.bub.on{width:58px;height:58px;background:var(--stress)}
+.bub.tonic{background:var(--tonic);box-shadow:0 0 0 7px var(--tonic-soft)}
+.bub.pop{animation:pop .35s ease}
+@keyframes pop{0%{transform:scale(.4)}70%{transform:scale(1.1)}100%{transform:scale(1)}}
+.syl{font-size:1.45rem;line-height:1.1;color:var(--faint)}
+.syl.on{color:var(--ink);font-weight:700;font-family:var(--display)}
+.syl.tonic{color:var(--tonic)}
+.row.say{cursor:pointer;border-radius:12px;padding:0 6px}
+.row.say:hover .syl{color:var(--muted)}
+.row.say:hover .syl.on{color:var(--stress)}
+.row.say:hover .syl.tonic{color:var(--tonic)}
+.row.speaking .bub.on{animation:pulse .6s ease}
+@keyframes pulse{0%{transform:scale(1)}40%{transform:scale(1.15)}100%{transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){.row.speaking .bub.on{animation:none}}
+.dot{color:var(--weak);font-size:1.3rem;align-self:flex-end;padding-bottom:2px}
+.wcap{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:center;min-height:22px}
+.tag{font-size:.78rem;padding:1px 8px;border-radius:6px;background:var(--stress-soft);color:var(--stress);font-weight:700}
+.tag.guess{background:var(--tonic-soft);color:#b5651a}
+.tag.pat{background:transparent;color:var(--faint);letter-spacing:.14em;font-weight:700}
+.tag.fn{background:transparent;color:var(--faint);font-weight:400}
+.info{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:20px}
+.info div{min-width:0}
+.info dt{font-size:.82rem;color:var(--faint)}
+.info dd{margin:2px 0 0;font:700 1.1rem var(--display);color:var(--ink)}
+.note{font-size:.9rem;color:var(--muted);margin:0;max-width:65ch}
+.note b{color:var(--ink)}
+.key{display:flex;flex-wrap:wrap;gap:20px;font-size:.88rem;color:var(--muted);align-items:center}
+.key span{display:inline-flex;align-items:center;gap:8px}
+.key i{display:inline-block;border-radius:50%}
+.speed{display:inline-flex;align-items:center;gap:10px;font-size:.88rem;color:var(--muted);background:var(--field);padding:8px 14px;border-radius:10px}
+.speed input{width:120px;accent-color:var(--stress);margin:0}
+.speed output{font-variant-numeric:tabular-nums;font-weight:700;color:var(--ink);min-width:3.4em;text-align:right}
+.vline{flex-basis:100%;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline}
+.vline .vnote{flex-basis:auto}
+.vnote.missing{color:#b5651a}
+.linkbtn{font:700 .8rem var(--body);border:0;background:none;padding:0;color:var(--stress);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.vhelp{flex-basis:100%;border:1px solid var(--line);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+.oslist{display:flex;flex-wrap:wrap;gap:6px}
+.oslist button{font:400 .85rem var(--body);border:0;background:var(--field);color:var(--muted);padding:4px 12px;border-radius:999px;cursor:pointer}
+.oslist button[aria-selected="true"]{background:var(--emerald);color:#fff}
+.vhelp ol{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:4px;max-width:65ch}
+.vhelp ol b{font-weight:700}
+.remind{margin:0;padding:10px 12px;border-radius:8px;background:var(--tonic-soft);color:#8a4b12;font-size:.9rem}
+.remind b{color:#6e3a0b}
+.vhelp-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.vcount{font-size:.85rem;color:var(--muted)}
+.pick{display:inline-flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted);background:var(--field);padding:4px 6px 4px 14px;border-radius:10px;position:relative}
+.pick select{appearance:none;-webkit-appearance:none;font:700 .88rem var(--body);color:var(--ink);background:var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236b7080' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 10px center;border:0;border-radius:8px;padding:6px 30px 6px 12px;box-shadow:0 1px 3px rgba(26,29,41,.12);cursor:pointer}
+
+.pick select{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}
+.dd{position:relative}
+.dd-btn{font:700 .88rem var(--body);color:var(--ink);background:var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236b7080' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 10px center;border:0;border-radius:8px;padding:6px 30px 6px 12px;box-shadow:0 1px 3px rgba(26,29,41,.12);cursor:pointer;min-width:100%;text-align:left}
+.dd-btn:hover{color:var(--stress)}
+.dd-menu{position:absolute;top:calc(100% + 6px);left:0;min-width:100%;z-index:20;margin:0;padding:4px;list-style:none;background:var(--bg);border-radius:8px;box-shadow:0 1px 3px rgba(26,29,41,.12),0 6px 18px rgba(26,29,41,.10);display:flex;flex-direction:column;gap:2px}
+.dd-menu li{font:700 .88rem var(--body);color:var(--ink);padding:6px 12px;border-radius:6px;cursor:pointer;white-space:nowrap}
+.dd-menu li:hover,.dd-menu li.active{background:var(--field)}
+.dd-menu li[aria-selected="true"]{color:var(--stress)}
+.voicebar{display:flex;flex-wrap:wrap;gap:10px 12px;align-items:center;margin-top:-12px}
+.seg{display:inline-flex;background:var(--field);border-radius:10px;padding:3px}
+.seg button{font:700 .88rem var(--body);border:0;background:transparent;color:var(--muted);padding:6px 12px;border-radius:8px;cursor:pointer}
+.seg button[aria-checked="true"]{background:var(--bg);color:var(--ink);box-shadow:0 1px 3px rgba(26,29,41,.12)}
+.vnote{flex-basis:100%;margin:0;font-size:.8rem;color:var(--faint);min-height:1.2em}
+/* practise */
+.prow{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.prow label{font-size:.85rem;color:var(--muted);display:flex;gap:8px;align-items:center}
+select{font:400 .95rem var(--body);padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.score{display:flex;gap:18px;font-variant-numeric:tabular-nums}
+.score div{display:flex;flex-direction:column;align-items:center}
+.score b{font:700 1.5rem var(--display);line-height:1;color:var(--emerald-dark)}
+.score small{font-size:.8rem;color:var(--faint)}
+.prompt{text-align:center;font-size:1.05rem;color:var(--muted);margin:0}
+.pstage .bub{width:36px;height:36px;background:var(--bg);box-shadow:inset 0 0 0 2px var(--weak)}
+.pstage .bub:hover{box-shadow:inset 0 0 0 2px var(--stress)}
+.pstage .bub.pick-good{background:var(--good);box-shadow:none;width:60px;height:60px}
+.pstage .bub.pick-bad{background:var(--bad);box-shadow:none}
+.pstage .bub.ans{background:var(--stress);box-shadow:none;width:60px;height:60px}
+.pstage .bub.rest{background:var(--weak);box-shadow:none;width:22px;height:22px}
+.feedback{text-align:center;font-weight:700;padding:10px;border-radius:10px;margin:0}
+.feedback.good{background:var(--good-soft);color:var(--good)}
+.feedback.bad{background:var(--bad-soft);color:var(--bad)}
+.pbtns{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+@media (max-width:520px){.syl{font-size:1.15rem}.stage{gap:22px 24px}.typebar input{font-size:1.25rem}}
+@media (prefers-reduced-motion:reduce){.bub{transition:none}.bub.pop{animation:none}}
+</style>
+<style id="emerald-dark">
+/* Dark version of the Emerald look, used when the phone is in dark mode */
+@media screen and (prefers-color-scheme: dark){
+  :root{color-scheme:dark;--emerald-dark:#7fcbb0;--emerald-link:#6cc8a6;--bg:#121816;--surface:#161e1b;--ink:#edf2f0;--muted:#b6c2bd;--faint:#7d8a85;
+    --line:#2f3b37;--line-strong:#4b5a55;--field:#1f2a26;--stress-soft:#1d3a31;--weak:#3e4c47;--tonic:#f0a24f;--tonic-soft:#3a2a14;
+    --good:#5fd19b;--good-soft:#173a2b;--bad:#f08a80;--bad-soft:#3a1d1a}
+  body{background:#121816}
+  .tag.guess,.vnote.missing{color:#f0a24f}
+  .remind{color:#f2c08a}
+  .remind b{color:#ffd9a8}
+  .dd-menu{box-shadow:0 1px 3px rgba(0,0,0,.5),0 6px 18px rgba(0,0,0,.45)}
+
+  .site{background:#161e1b!important;border-bottom-color:#2f3b37!important}
+  .brand-logo{background:#fff;border-radius:6px;padding:4px 8px;box-sizing:content-box}
+  .lang button{background:transparent!important;color:#7fcbb0!important}
+  .lang button[aria-pressed="true"]{background:#49B190!important;color:#fff!important}
+  .app-home{background:transparent!important;color:#7fcbb0!important}
+  .app-home:hover{background:#1d3a31!important}
+}
+</style>
+
+
+<div class="site"><div class="site-in">
+  <img class="brand-logo" alt="Emerald Language Learning" width="306" height="90" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAATIAAABaCAMAAAAMyCp0AAAAYFBMVEX///9CsJFHeGVCsJFHeGVCsJFCsJFHeGVCsJFHeGVCsJFCsJFCsJFHeGVHeGVHeGVHeGUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+cqAbAAAAIHRSTlMA/v5tdSavRY64RssQ1CkRjgAAAAAAAAAAAAAAAAAAAHyN6jMAAAmlSURBVHja7ZzrtqsoDIC1CCLg5f2fdpRrCNd2tzNravlx1mkNEr+GkATcw/Brv/Zrv/Zrv1ZoVJzth6GTFZdy9E0y8p3kpmVZjrrIKbFsTV58zDVG1PchezweS13klHjMr/By1H7IcBNsbLTvMrU/I6Ny7Gg9ljZPhbZ9FTKFpiQTl0GJzEQVXapk2/xNyESMRVJ/hSTMuPohGwZsYqpy8Wz09sgU8mLSLJ7nt5LTrKGRpirrV/symjGi4Noui0vtjP9Rlf83MprBAe3u8mvpYspujCwhNlqzksJGalJlhGrMvhxZCkOaL1lYSk+zY88w+25kSubc1GVkl9sn1OCjOAiprwHfjUxmQ1WpeXCDhel/c5mAuCMyngehHRq1jo3quZpNP+n9kIlCFikvcAQAzMM1AdytkKls4h07e4dMPJGkfzGyQnEs4kP1BC0hy0/NZ5Dpqse8+89bNU0wV4E4bvs8z1s6wrz16xnJI2S0UN8RAKbU6ZIsCrPXkDkJn40ehsK22M9rJkvZDp+srlO2JL0fOJWd/Q2PLSlMZ/TE8uh2pfqYBAZI9by80qMy35eR7UvI2NeL2QxSeFyU3+NkP2Zq77ei7H9bYJcJI0j0bMiXppolJKTNlYidfhW+LyJzT+iZzQ+sMXiaFZdFjmTEFRVMZtRj2evIWvJDpWptkm5dZKQWS2kW57xZJzIzi9ZlMY+6bFbRxf7W0P9s/jGceMRM329CNSZPYHVd1r2GrClPa+VqX2IkbvIVbZIV6mVL2qa0omY8hlF29U7KzFjwNLvlNdtFADPTD3/1P6bpsM+4wT67cVJLBVlbntdr/OzkpPTsNDZXnsaqu8SYIsNTaHFr4RKb2YrcuvWCU1ShcxLblu0zJ4XOGFlbfuxtrFDPLsdm3ciCfnaSxj/5FItHgcIRfTWlU3nyiwqe3HlkbXnaS4y3jJK9jOzAfgQ88gIeZ0+JWWZHdD+4YOT6bBVkHfK8k5hoLxYqW8ie07YhZDsKs4/CEjKlC+hgI4q9dL9sn6mMrEO+08RUxzwmr62YceSFMxN4jwXzCPeYS/dbonkOR8kja8vT54AV0tHCzOxENreQPQoWCKbSUbvflPQ5isja8qLt9aPDBDV5+SKyvROZdilLul+1hmEg4MAzTbrmErIO+borY1zUNzpxHv8SsqET2fwotxKyORkg0M8h65CXFeui8VkgUpfP5Jn9afk7kS0dyIYnkQ1tZOgUmSLSAFHjdyD7i5X1HIWyZ6do0/XxzyLTfmaas20r1SSe9GUd8hknHscKlEFPxf5LZIUVs32/t66YtB5cwcOMsh3FfRpZPmaq3y/fZ30yLgPyovbQ8dk81g5J5IeRTXkTqN5vys20VvRfkxel02RpCk7a2dWnkZkfG+eYVzlpLt5vf6Qpw97MMSvyETKpS4mEn02kzES0vrJTSP7ryEqVjLUyYlqZSOrcjUpGLC/wzPMYGEW+TgVXJgVeGvIZ09uRDag85or0c2VEYyLrlpbC872a8pGJxAczdGYZvgrSouTu+MeR2R98Nbt185ErJi25AOEU2sD21FoB3ZKHVmTwSMkkmIuKhUlHfXxGySlG8PEX/vTBz2eRDWFrZc3tl2R/pMmX8v1+wVbToiGPDq2M3KwAdoLqs7I87DZZQYdRH3OsVH8+gCzawEt3oPJ2jfU4Z11Vi7q8DNOSR9tELKyhxOEQyfylkTsU/wKy85toWy5+s6jgCuYV7bE19jGr8iwYiHnm8zSxvLZI3BVqJ6TbXSLuCiPWw7HivtxnkF174n5Ozp3eM3A2AUlr0ajIE+/JBDw/wMKMo8bLu/VV2MnMPEFRLP58sM3niYn5qbPwzWMcvfICzktw4o5EZwvOg9lOWLkuVNuXBP5QDvdo/mnZZUEUPL5I5puxMhUdpQX+kNwEGcsjG+FaSAFf4hG5E2cD63vX5GsaiScmjFzT8xYSml+C7CbErC0ZEFcAQTgR2Mo8M2JIkaiLw8zvgszaiJ91zr+hlF2EK+qKRPROgDRvoNxsXjoy9sQid2EYx5Ue4oVdiUjnANTHKXK4T/NFCJtiSmtKY+5FQ+ITdpcTqJutl2EBoDgRIvmzZna5kB703Zx/tAB4TIzmTx4QVGIToFDL74TMgmL+L6+o4jv5prZoNumk3rpj4w2NzAdg8K3o4r6IFPkNFXIzZAJt+YraMQLpDx6AOrYc7tbCGxEsswuSUrs2S9gT7+V/7QrweiPD/Rr9E7HSe78qMj7usi4/sb3zVIIImnTy1zm4Tyxqm0pGTC7x+EpGlatvQ7fyLu+TTariUgzNz8UhhLmfiUU+0a4sbPQelqOeWJQk+zR+xOSS/w8IpGJVrr4N3Z44a1dvauhBJlwg4r51al3JPSeEWWtNkfmeWJToHWhuEl6MLL4U7mGuMBuuE4Ssrls2PX+h0aELGXO5PbFdrFrCfX/+oCyLzPfEoiRxogAZwU8noivCvvxHEbKqbm9iRocuZHTkNhQh7s+8aC0UuAMzmzEIme+ZiPYjC6P7K/y8WaSKRVbT7T3M6NCH7NSQjzZLlRqGUYtHWMcMMt8zEe1HFkb3V4h+BxyoYpBVdXvHGiDV0IdMnb8eNQzOb6Xe/rPlExhTn8E0RhZ6JqLdyMDoyMqAKtaX1XRr/ymudnShhk5kxFTJTdWIUPMXEfTWH0tsPUbme6aiZDxd89VoBhm8BEZ3ItT4MqCKRVbTbej421J/i2ABMv2Dmc9GNWbUcr+98mEURuZ7pqIkUSQNMgga/Rqa6DVQIFXcilnRrVbW6JqUzSwpIDOjK+1biXHyJPoliX9ChCz0TEV7rQyO7ovIFKvig4yybqVEgL0tSQrImAmTpA+GTvMX0F8I/XyXH0HIQM9EtNeXwdEvmGfZgQQpp4pHVtbtT3+/kvcV4gjOYZn79oyLkthKpSsm7JmIdiKLRrdzfAw+zqkSQtmibrWUs25pkvTWLvEDXC7YfrARtQIHhpg510BBJ9gzEe1EFo1uPgk3SYEqIPov6VZfB0iRGqf95V6o6zBEainpI2wCI2xhIxe9csU9sWgnsuge9grX8yRSpUO35uop0tIZerGpiUz7EBIS7MsFE7/BB/O4K+tzoeu1pjF7qgj2xKJm8TubwCPCS+geZngloZkKnGOWdOsq2IrLb8qrqFiogTQ3FcZzRJB3CG8AnEUvZDARn3kwh9xgTyyaq2TYz+ASuoePy+D6wRGyom4fr1zaeAbUzRT8xOHfx4dRz/mR4oqbsnEREM3Vy+xncAndw31U0SVuxurQ7dd+7dd+7dfu2P4BRxls8DKa1nkAAAAASUVORK5CYII=">
+  <div class="lang" role="group" aria-label="Langue / Language"><button type="button" data-lang="fr" aria-pressed="true" lang="fr" title="Français">FR</button><button type="button" data-lang="en" aria-pressed="false" lang="en" title="English">EN</button></div>
+</div></div>
+<div class="wrap">
+  <header class="top">
+    <div class="title-block"><h1><span class="logo" aria-hidden="true"><i class="s"></i><i class="b"></i><i class="s"></i></span><span data-i18n="title">Word Stress</span> <span class="sub" data-i18n="sub">Stress inside a word</span></h1></div>
+    <div class="tabs" role="tablist">
+      <button role="tab" id="tab-explore" aria-selected="true" data-i18n="explore">Explore</button>
+      <button role="tab" id="tab-practise" aria-selected="false" data-i18n="practise">Practise</button>
+    </div>
+  </header>
+
+  <div class="voicebar" role="group" aria-label="Voice settings" data-i18n-aria="voiceSettings">
+    <div class="pick"><span data-i18n="accent">Accent</span><select id="accent" tabindex="-1" aria-hidden="true"><option value="en-GB" data-i18n="british">British</option><option value="en-US" data-i18n="american">American</option></select></div>
+    <div class="pick"><span data-i18n="voice">Voice</span><select id="gender" tabindex="-1" aria-hidden="true"><option value="female" data-i18n="female">Female</option><option value="male" data-i18n="male">Male</option></select></div>
+    <label class="speed" for="rate1"><span data-i18n="speed">Speed</span><input type="range" id="rate1" class="rate" min="0.5" max="1.5" step="0.05" value="0.85" aria-label="Speech speed" data-i18n-aria="speechSpeed"><output class="rateval">0.85×</output></label>
+    <div class="vline"><p class="vnote" id="vnote"></p><button type="button" class="linkbtn" id="morev" aria-expanded="false" aria-controls="vhelp">Get more voices</button></div>
+    <div class="vhelp" id="vhelp" hidden>
+      <div class="oslist" role="tablist" aria-label="Device" data-i18n-aria="device" id="oslist"></div>
+      <ol id="vsteps"></ol>
+      <p class="remind" data-i18n-html="remind"></p>
+      <div class="vhelp-actions"><button type="button" class="btn" id="vcheck" data-i18n="vcheck">Check for new voices</button><span class="vcount" id="vcount"></span></div>
+    </div>
+  </div>
+
+  <section class="panel" id="explore">
+    <div class="typebar">
+      <input id="word" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" value="photographer" aria-label="Type a word or a short phrase" data-i18n-aria="inputAria">
+      <button class="btn" id="speak" type="button" title="Hear it" data-i18n-title="hearIt" data-i18n="listen">&#9654; Listen</button>
+    </div>
+    <div class="chips" id="examples"><span class="lbl" data-i18n="try">Try</span></div>
+    <div class="stage" id="stage" aria-live="polite"></div>
+    <dl class="info" id="info"></dl>
+    <div class="key">
+      <span><i style="width:16px;height:16px;background:var(--stress)"></i><span data-i18n="keyStressed">Stressed syllable</span></span>
+      <span><i style="width:8px;height:8px;background:var(--weak)"></i><span data-i18n="keyUnstressed">Unstressed</span></span>
+      <span><i style="width:14px;height:14px;background:var(--tonic);box-shadow:0 0 0 4px var(--tonic-soft)"></i><span data-i18n="keyTonic">Tonic stress in a phrase</span></span>
+    </div>
+    <p class="note" data-i18n-html="note"></p>
+  </section>
+
+  <section class="panel" id="practise" hidden>
+    <div class="prow">
+      <label for="pattern"><span data-i18n="patternLbl">Stress pattern</span>
+        <select id="pattern">
+          <option value="any" data-i18n="mixed">Mixed</option>
+          <option value="Oo">Oo · TA-ble</option>
+          <option value="oO">oO · ho-TEL</option>
+          <option value="Ooo">Ooo · FA-mi-ly</option>
+          <option value="oOo">oOo · com-PU-ter</option>
+          <option value="ooO">ooO · un-der-STAND</option>
+          <option value="4" data-i18n="fourPlus">4+ syllables</option>
+        </select>
+      </label>
+      <div class="score"><div><b id="sc-right">0</b><small data-i18n="right">Right</small></div><div><b id="sc-total">0</b><small data-i18n="tried">Tried</small></div><div><b id="sc-streak">0</b><small data-i18n="streak">Streak</small></div></div>
+    </div>
+    <p class="prompt" data-i18n="prompt">Tap the syllable that carries the stress.</p>
+    <div class="stage pstage" id="pstage"></div>
+    <p class="feedback" id="pfeed" hidden></p>
+    <div class="pbtns">
+      <button class="btn" id="psay" type="button" data-i18n="listen">&#9654; Listen</button>
+      <button class="btn primary" id="pnext" type="button" data-i18n="next">Next word</button>
+    </div>
+  </section>
+</div>
+
+<script>var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __values = (this && this.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+};
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
+/* ---------- Language (FR / EN) ---------- */
+var STR = {
+    en: { title: "Word Stress", sub: "Stress inside a word", explore: "Explore", practise: "Practise", voiceSettings: "Voice settings", accent: "Accent", british: "British", american: "American", voice: "Voice", female: "Female", male: "Male", speed: "Speed", speechSpeed: "Speech speed", device: "Device",
+        remind: "<b>Then restart your browser and refresh this page.</b> New voices usually only show up after a restart.", vcheck: "Check for new voices", inputAria: "Type a word or a short phrase", hearIt: "Hear it", listen: "▶ Listen", try: "Try",
+        keyStressed: "Stressed syllable", keyUnstressed: "Unstressed", keyTonic: "Tonic stress in a phrase",
+        note: "Type one word to see its stress. Type a phrase and the <b>tonic</b> (main sentence stress) goes on the last content word; tap a word's label to move it for contrast. Click any word to hear it.",
+        patternLbl: "Stress pattern", mixed: "Mixed", fourPlus: "4+ syllables", right: "Right", tried: "Tried", streak: "Streak", prompt: "Tap the syllable that carries the stress.", next: "Next word",
+        empty: "Type a word above and its stress bubbles appear here.", stressedAria: ", stressed", clickHear: "Click to hear {w}", clickHearIt: "Click to hear it", bestGuess: "Best guess", weak: "weak", makeTonic: "Make this the tonic", tapTonic: "tap for tonic",
+        syllables: "Syllables", stress: "Stress", pattern: "Pattern", source: "Source", dictionary: "Dictionary", ruleGuess: "Rule-based guess", nthSyl: "{o} syllable", oneSyl: "one syllable, always stressed", words: "Words", tonicWord: "Tonic word", tonicSyl: "Tonic syllable", weakWords: "Weak words",
+        noSpeech: "Your browser can't read words aloud.", using: "Using {n}", noGender: "No {g} {l} voice on this device, so using {n}.", noLabel: "No {l} voice on this device; the browser's default English voice will be used.",
+        gFemale: "female", gMale: "male", lBritish: "British", lAmerican: "American", moreVoices: "Get more voices", missingVoice: "Get the missing voice", thisDevice: " (this device)",
+        found: "Found {n} UK/US English voice{s}. ", ready: "Your chosen voice is ready.", stillMissing: "Still missing: restart the browser, then refresh this page.",
+        sylAria: "Syllable {i}: {s}", yes: "Yes! {w}", notQuite: "Not quite. It's {w}, stress on the {o} syllable.",
+        pos: {} },
+    fr: { title: "Accent tonique", sub: "L'accent à l'intérieur du mot", explore: "Explorer", practise: "S'entraîner", voiceSettings: "Réglages de la voix", accent: "Accent", british: "Britannique", american: "Américain", voice: "Voix", female: "Féminine", male: "Masculine", speed: "Vitesse", speechSpeed: "Vitesse de lecture", device: "Appareil",
+        remind: "<b>Ensuite, redémarrez votre navigateur et actualisez cette page.</b> Les nouvelles voix n'apparaissent généralement qu'après un redémarrage.", vcheck: "Rechercher de nouvelles voix", inputAria: "Tapez un mot ou une courte phrase", hearIt: "L'écouter", listen: "▶ Écouter", try: "Essayez",
+        keyStressed: "Syllabe accentuée", keyUnstressed: "Non accentuée", keyTonic: "Accent principal dans une phrase",
+        note: "Tapez un mot pour voir où tombe l'accent. Tapez une phrase : l'accent <b>tonique</b> (accent principal de la phrase) se place sur le dernier mot porteur de sens ; touchez l'étiquette d'un mot pour le déplacer et créer un contraste. Cliquez sur un mot pour l'entendre.",
+        patternLbl: "Schéma accentuel", mixed: "Mélangé", fourPlus: "4 syllabes ou plus", right: "Justes", tried: "Essais", streak: "Série", prompt: "Touchez la syllabe accentuée.", next: "Mot suivant",
+        empty: "Tapez un mot ci-dessus : ses bulles d'accent apparaîtront ici.", stressedAria: ", accentuée", clickHear: "Cliquez pour entendre {w}", clickHearIt: "Cliquez pour l'entendre", bestGuess: "Estimation", weak: "faible", makeTonic: "En faire l'accent tonique", tapTonic: "toucher pour l'accent",
+        syllables: "Syllabes", stress: "Accent", pattern: "Schéma", source: "Source", dictionary: "Dictionnaire", ruleGuess: "Estimation par règles", nthSyl: "{o} syllabe", oneSyl: "une syllabe, toujours accentuée", words: "Mots", tonicWord: "Mot tonique", tonicSyl: "Syllabe tonique", weakWords: "Mots faibles",
+        noSpeech: "Votre navigateur ne peut pas lire les mots à voix haute.", using: "Voix utilisée : {n}", noGender: "Pas de voix {g} {l} sur cet appareil ; utilisation de {n}.", noLabel: "Pas de voix {l} sur cet appareil ; la voix anglaise par défaut du navigateur sera utilisée.",
+        gFemale: "féminine", gMale: "masculine", lBritish: "britannique", lAmerican: "américaine", moreVoices: "Obtenir plus de voix", missingVoice: "Obtenir la voix manquante", thisDevice: " (cet appareil)",
+        found: "{n} voix anglaise{s} UK/US trouvée{s}. ", ready: "La voix choisie est prête.", stillMissing: "Toujours manquante : redémarrez le navigateur, puis actualisez cette page.",
+        sylAria: "Syllabe {i} : {s}", yes: "Oui ! {w}", notQuite: "Pas tout à fait. C'est {w}, accent sur la {o} syllabe.",
+        pos: { "noun": "nom", "verb": "verbe", "adjective": "adjectif", "noun / adj": "nom / adj", "noun (sand)": "nom (sable)", "verb (leave)": "verbe (quitter)", "noun (UK)": "nom (UK)", "noun (US)": "nom (US)" } }
+};
+var ORD_L = { en: ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th"], fr: ["1re", "2e", "3e", "4e", "5e", "6e", "7e"] };
+var LANG = "fr";
+try {
+    var l = localStorage.getItem("ell-lang");
+    if (l === "en" || l === "fr")
+        LANG = l;
+}
+catch (e) { }
+function T(k, v) { var s = (STR[LANG][k] !== undefined ? STR[LANG][k] : STR.en[k]); if (v)
+    for (var x in v)
+        s = s.split("{" + x + "}").join(v[x]); return s; }
+function ORDN(i) { return ORD_L[LANG][i]; }
+function POS(l) { return STR[LANG].pos[l] || l; }
+function applyStatic() {
+    document.documentElement.lang = LANG;
+    document.querySelectorAll("[data-i18n]").forEach(function (e) { return e.textContent = T(e.dataset.i18n); });
+    document.querySelectorAll("[data-i18n-html]").forEach(function (e) { return e.innerHTML = T(e.dataset.i18nHtml); });
+    document.querySelectorAll("[data-i18n-aria]").forEach(function (e) { return e.setAttribute("aria-label", T(e.dataset.i18nAria)); });
+    document.querySelectorAll("[data-i18n-title]").forEach(function (e) { return e.title = T(e.dataset.i18nTitle); });
+    document.querySelectorAll(".lang button").forEach(function (b) { return b.setAttribute("aria-pressed", b.dataset.lang === LANG); });
+}
+applyStatic();
+/* Dictionary: syllables split by ".", stressed syllable preceded by "'". Spelling division follows pronunciation. */
+var RAW = "\n'ab.sent 'ac.cent 'ac.tion 'ac.tive 'ac.tor 'ad.dress 'af.ter 'ag.ent 'an.gry 'an.kle 'an.swer 'ap.ple 'ar.my 'art.ist 'au.tumn 'ba.by 'bal.ance 'bas.ket 'bath.room 'bat.tle 'beau.ty 'bed.room 'bet.ter 'birth.day 'black.board 'blan.ket 'bod.y 'bor.ing 'bot.tle 'bot.tom 'brack.et 'break.fast 'bri.dle 'bright.en 'broth.er 'bub.ble 'buck.et 'budg.et 'build.ing 'bus.y 'but.ter 'but.ton 'cab.bage 'ca.ble 'can.dle 'cap.tain 'car.pet 'car.rot 'cas.tle 'cen.tre 'cen.ter 'chap.ter 'char.ter 'chick.en 'chil.dren 'cho.rus 'cir.cle 'cit.y 'class.room 'cli.ent 'cli.mate 'cloth.ing 'coast.line 'cof.fee 'col.lege 'col.our 'col.or 'com.ma 'com.mon 'con.cert 'con.tent 'cook.er 'cook.ie 'cop.y 'cor.ner 'cot.ton 'coun.cil 'coun.try 'coup.le 'cour.age 'cous.in 'cov.er 'cra.zy 'cul.ture 'cup.board 'cur.tain 'cus.tom 'dai.ly 'dan.cer 'dan.ger 'dark.ness 'daugh.ter 'dead.line 'dent.ist 'des.ert 'dif.fer 'din.ner 'doc.tor 'dol.lar 'dou.ble down.'stairs 'dra.gon 'dra.ma 'draw.er 'draw.ing 'dress.er 'driv.er 'ea.ger 'ear.ly 'earth.quake 'ea.sy 'ed.it 'ef.fort 'ei.ther 'emp.ty 'en.gine 'en.ter 'ent.ry 'e.qual 'er.ror 'ev.er 'ev.ery 'ex.it 'ex.pert 'fab.ric 'fa.mous 'farm.er 'fash.ion 'fa.ther 'fea.ture 'fe.male 'fes.ti.val 'fev.er 'fic.tion fif.'teen 'fif.ty 'fig.ure 'fi.nal 'fin.ger 'fin.ish 'fit.ness 'fla.vour 'fla.vor 'flow.er 'fo.cus 'fol.low 'foot.ball 'for.eign 'for.est 'for.mal 'for.ty 'for.ward 'fre.quent 'Fri.day 'friend.ly 'fu.ture 'gal.ler.y 'gar.age 'gar.den 'gen.tle 'girl.friend 'glad.ly 'glob.al 'gold.en 'gos.sip 'grand.child 'grate.ful 'gree.dy 'hab.it 'hair.cut 'hand.bag 'han.dle 'hand.some 'hap.pen 'hap.py 'hard.ly 'har.vest 'head.ache 'heal.thy 'heav.y hel.'lo 'help.ful 'hid.den 'high.way 'hob.by 'hol.i.day 'hon.est 'hon.ey 'hor.rid 'hos.pi.tal 'house.work 'hun.dred 'hun.gry 'hur.ry 'hus.band 'i.dle 'in.come 'in.sect in.'side 'in.stant 'in.to 'is.land 'is.sue 'jack.et 'jel.ly 'jew.el 'jour.ney 'jug.gle 'jun.gle 'jun.ior 'kitch.en 'kit.ten 'knowl.edge 'lad.der 'la.dy 'lan.guage 'la.ter 'laugh.ter 'law.yer 'lead.er 'lem.on 'les.son 'let.ter 'lev.el 'li.brar.y 'light.ning 'lim.it 'lin.en 'lis.ten 'lit.tle 'liv.ing 'lone.ly 'love.ly 'luck.y 'lug.gage 'lunch.time 'mag.ic 'mar.ket 'mar.ried 'mas.ter 'match.es 'mat.ter 'mead.ow 'mean.ing 'meas.ure 'meet.ing 'mem.ber 'mem.o.ry 'men.tal 'mes.sage 'met.al 'mid.dle 'mil.lion 'mir.ror 'min.ute 'mod.ern 'mo.ment 'Mon.day 'mon.ey 'mon.key 'month.ly 'morn.ing 'moth.er 'mo.tor 'moun.tain 'mov.ie 'mus.cle 'mu.sic 'nar.row 'na.tive 'na.ture 'nee.dle 'neigh.bour 'neigh.bor 'nei.ther 'nerv.ous 'nev.er 'news.pa.per 'nine.ty 'no.bod.y 'noi.sy 'nor.mal 'north.ern 'note.book 'noth.ing 'no.tice 'nov.el 'num.ber 'ob.vi.ous 'oc.ean 'of.fer 'of.fice 'of.ten 'on.ly 'o.pen 'op.tion 'or.ange 'or.der 'or.gan 'oth.er out.'side 'o.ver 'own.er 'pack.age 'pa.ges 'pain.ful 'paint.er 'pal.ace 'pa.per 'par.cel 'par.ent 'par.ty 'pass.port 'pass.word 'pa.tient 'pat.tern 'pay.ment 'pea.nut 'pen.cil 'pen.ny 'peo.ple 'pep.per 'per.fect 'per.son 'pho.to 'pic.nic 'pic.ture 'pi.lot 'pil.low 'pin.ky 'pi.rate 'pit.y 'plan.et 'plas.tic 'play.er 'pleas.ant 'pock.et 'po.em 'po.et 'point.ed 'poi.son 'pol.ish 'po.ny 'pop.corn 'pop.u.lar 'post.card 'pos.ter 'pot.ter.y 'pow.er 'prac.tice 'prac.tise 'pres.ent 'pret.ty 'price.less 'prin.cess 'print.er 'pri.son 'pri.vate 'prob.lem 'prod.uct 'pro.file 'prof.it 'prop.er 'pub.lic 'pun.ish 'pup.py 'pur.ple 'pur.pose 'puz.zle 'qual.i.ty 'quar.ter 'ques.tion 'qui.et 'quick.ly 'rab.bit 'ra.di.o 'rain.bow 'rain.coat 'rath.er 'read.er 'read.y 're.al 're.cent 'rec.i.pe 'rel.a.tive 'res.cue 'res.tau.rant 'rib.bon 'rid.dle 'rob.ot 'rock.et 'rub.bish 'rul.er 'sad.ness 'safe.ty 'sail.or 'sal.ad 'sal.ty 'sand.wich 'Sat.ur.day 'sau.sage 'scis.sors 'sea.son 'sec.ond 'se.cret 'sen.tence 'se.ri.ous 'ser.vice 'set.tle 'sev.en 'shad.ow 'shal.low 'shel.ter 'shop.ping 'short.ly 'shoul.der 'show.er 'sig.nal 'sil.ly 'sil.ver 'sim.ple 'sin.gle 'sis.ter 'slip.pers 'slow.ly 'smart.phone 'soc.cer 'so.fa 'sol.dier 'some.one 'some.thing 'some.times 'south.ern 'speak.er 'spe.cial 'spi.der 'spin.ach 'sport.y 'spring.time 'sta.ble 'sta.di.um 'stair.case 'sta.tion 'sto.ry 'stom.ach 'stor.age 'stu.dent 'stud.y 'stu.pid 'sub.ject 'sud.den 'sug.ar 'sum.mer 'Sun.day 'sun.glass.es 'sun.ny 'sup.per 'sur.face 'sweat.er 'sym.bol 'sys.tem 'ta.ble 'tab.let 'tal.ent 'tax.i 'teach.er 'tea.pot 'tem.ple 'ten.nis 'ter.ri.ble 'text.book 'thank.ful 'the.atre 'the.a.ter 'thir.ty 'thou.sand 'thun.der 'Thurs.day 'tick.et 'ti.dy 'ti.ger 'tim.id 'ti.ny 'tired 'ti.tle 'toi.let 'to.tal 'tour.ist 'tow.el 'tow.er 'traf.fic 'train.ers 'trav.el 'treas.ure 'trou.ble 'trou.sers 'truth.ful 'Tues.day 'tur.key 'tur.tle 'twen.ty 'ug.ly 'un.cle 'up.per up.'stairs 'use.ful 'us.u.al 'val.ley 'val.ue 'vil.lage 'vis.it 'vi.sion 'voice.mail 'vol.ume 'wait.er 'wal.let 'wa.ter 'wealth.y 'weath.er 'wed.ding 'Wednes.day 'week.end 'wel.come 'west.ern 'whis.per 'win.dow 'win.ter 'wis.dom 'wom.an 'won.der 'wood.en 'work.er 'wor.ry 'writ.er 'writ.ing 'year.ly 'yel.low 'yes.ter.day 'young.ster 'ze.bra 'ze.ro\na.'bout a.'bove a.'broad a.'cross a.'dult a.'fraid a.'gain a.'go a.'gree a.'head a.'larm a.'like a.'live a.'lone a.'long a.'loud a.'mount a.'mong a.'muse a.'part ap.'ply ap.'prove a.'rise a.'round ar.'range ar.'rest ar.'rive a.'shamed a.'side a.'sleep as.'sist at.'tack at.'tend a.'void a.'wake a.'ward a.'ware a.'way bal.'loon ba.'zaar be.'cause be.'come be.'fore be.'gin be.'have be.'hind be.'lief be.'lieve be.'long be.'low be.'neath be.'side be.'sides be.'tween be.'yond bou.'quet bro.'chure ca.'det ca.'nal ca.'reer car.'toon ce.'ment cha.'grin ci.'gar col.'lect com.'bine com.'mand com.'pare com.'pete com.'plain com.'plete com.'pose con.'cern con.'clude con.'firm con.'fuse con.'nect con.'sent con.'sist con.'tain con.'trol con.'vince cor.'rect cre.'ate de.'bate de.'cay de.'ceive de.'cide de.'clare de.'fend de.'gree de.'lay de.'light de.'liv.er de.'mand de.'ny de.'pend de.'scribe de.'serve de.'sign de.'sire de.'stroy de.'tail de.'tect de.'vice de.'vote di.'rect dis.'cuss dis.'ease dis.'like dis.'miss di.'vide di.'vorce ef.'fect e.'nough en.'joy en.'large en.'tire es.'cape es.'tate e.'vent ex.'act ex.'ceed ex.'cept ex.'change ex.'cite ex.'cuse ex.'ist ex.'pand ex.'pect ex.'pense ex.'plain ex.'plode ex.'plore ex.'press ex.'tend fa.'tigue for.'bid for.'get for.'give gi.'raffe gui.'tar ho.'tel i.'dea im.'press im.'prove in.'clude in.'deed in.'form in.'sist in.'stall in.'stead in.'tend in.'vent in.'vite in.'volve ja.'pan ma.'chine main.'tain mis.'take mo.'tel nar.'rate ob.'ey oc.'cur of.'fend op.'pose pa.'rade per.'form per.'haps per.'mit per.'suade po.'lice po.'lite pol.'lute pos.'sess pre.'dict pre.'fer pre.'pare pre.'tend pre.'vent pro.'duce pro.'mote pro.'pose pro.'tect pro.'vide re.'act re.'ceive re.'duce re.'fer re.'fuse re.'gret re.'lax re.'lease re.'ly re.'main re.'mind re.'move re.'pair re.'peat re.'place re.'ply re.'port re.'quest re.'quire re.'serve re.'spect re.'spond re.'sult re.'tire re.'turn re.'veal re.'view re.'ward sa.'loon sham.'poo sin.'cere sup.'ply sup.'port sup.'pose sur.'prise sur.'round sur.'vive to.'day to.'night trans.'late un.'less un.'til up.'set ex.'treme mis.'trust dis.'turb at.'tempt ad.'mit ad.'vice ad.'vise al.'low a.'maze di.'vine\n'an.i.mal 'av.er.age 'ba.nan.a? 'beau.ti.ful 'bi.cy.cle 'cam.er.a 'cap.i.tal 'car.a.van 'cel.e.brate 'cer.tain.ly 'char.ac.ter 'choc.o.late 'cin.e.ma 'col.our.ful 'com.for.ta.ble 'com.pa.ny 'con.fi.dent 'cu.cum.ber 'dan.ger.ous 'del.i.cate 'dif.fer.ent 'dif.fi.cult 'dig.i.tal 'dis.ci.pline 'ed.u.cate 'el.e.phant 'en.e.my 'en.er.gy 'ev.er.y.thing 'ev.i.dence 'ex.er.cise 'fac.to.ry 'fam.i.ly 'fan.tas.tic? 'fur.ni.ture 'gen.er.al 'gen.er.ous 'gov.ern.ment 'grand.fa.ther 'grand.moth.er 'ham.burg.er 'hand.ker.chief 'his.to.ry 'hos.pi.tal 'im.age 'in.dus.try 'in.flu.ence 'in.stru.ment 'in.ter.est 'in.ter.est.ing 'in.ter.net 'in.ter.view 'jew.el.ler.y 'jew.el.ry 'lib.er.al 'lit.er.a.ture 'man.ag.er 'med.i.cine 'mi.cro.phone 'mi.cro.wave 'mis.er.a.ble 'mus.cu.lar 'nat.u.ral 'neg.a.tive 'nec.es.sar.y 'nor.mal.ly 'nu.mer.ous 'of.fi.cer 'op.er.ate 'op.po.site 'or.di.nar.y 'or.gan.ize 'or.gan.ise 'pa.ra.chute 'par.a.graph 'par.al.lel 'pen.guin? 'per.fect.ly 'pho.to.graph 'pi.an.ist 'pine.ap.ple 'pol.i.tics 'pos.i.tive 'pos.si.ble 'pow.er.ful 'prac.ti.cal 'pres.i.dent 'pres.en.ta.tion? 'prin.ci.pal 'prob.a.bly 'pro.gram.mer 'quan.ti.ty 're.al.ly 'rec.og.nize 'rec.og.nise 'sat.el.lite 'sci.en.tist 'sec.re.tar.y 'sen.si.ble 'sev.en.ty 'skel.e.ton 'some.bod.y 'sou.ve.nir 'spe.cial.ist 'straw.ber.ry 'su.per.mar.ket 'tel.e.phone 'tel.e.vi.sion 'tem.per.a.ture 'tour.na.ment 'vi.o.lent 'tri.an.gle 'um.brel.la? 'un.der.wear 'u.ni.form 'u.ni.verse 'val.u.a.ble 'veg.e.ta.ble 'vid.e.o 'vis.it.or 'won.der.ful 'yes.ter.day 'ac.ci.dent 'ad.ver.tise 'al.pha.bet 'ap.pe.tite 'ar.gu.ment 'au.di.ence 'bal.co.ny 'bar.be.cue 'bis.cuit 'cal.cu.late 'cal.en.dar 'cat.a.logue 'cer.e.al 'cig.a.rette? 'com.pli.ment 'con.tin.ent 'cro.co.dile 'cus.tom.er 'dec.o.rate 'des.ti.ny 'dic.tion.ar.y 'doc.u.ment 'el.e.gant 'em.pha.sis 'en.ter.prise 'ex.cel.lent 'fes.ti.val 'Feb.ru.ar.y 'gal.ax.y 'hol.i.days 'i.dol 'ig.no.rant 'in.ci.dent 'Jan.u.ar.y 'lab.o.ra.to.ry? 'mar.a.thon 'mes.sen.ger 'mil.i.tar.y 'min.i.mum 'max.i.mum 'mon.u.ment 'mys.ter.y 'nov.el.ist 'or.ches.tra 'pas.sen.ger 'pen.al.ty 'pharm.a.cy 'phys.i.cal 'pol.i.cy 'pop.u.lar 'pot.a.to? 'reg.u.lar 'sal.a.ry 'sci.ence 'sim.i.lar 'stat.ue 'stim.u.late 'sym.pa.thy 'tech.ni.cal 'ter.ri.to.ry 'trav.el.ler 'vic.to.ry 'vit.a.min 'vol.un.tar.y 'wil.der.ness 'ac.cu.rate 'ad.e.quate 'al.co.hol 'ar.chi.tect 'cab.i.net 'can.di.date 'cat.e.go.ry 'cir.cum.stance 'com.mu.nist 'con.se.quence 'cor.ri.dor 'crit.i.cize 'cur.ren.cy 'el.e.ment 'fas.ci.nate 'hes.i.tate 'hu.man 'in.no.cent 'in.ter.val 'iv.o.ry 'mod.er.ate 'nur.ser.y 'op.er.a 'or.i.gin 'par.a.dise 'par.lia.ment 'pes.ti.cide 'pri.ma.ry 'pro.ba.bly 'res.i.dent 'sac.ri.fice 'sep.a.rate 'tel.e.scope 'u.su.al.ly 'ac.tu.al.ly 'beau.ti.ful.ly 'nat.u.ral.ly 'ob.vi.ous.ly 'per.son.al.ly 'pos.si.bly 'friend.ship 'hap.pi.ness 'kind.ness 'lone.li.ness 'neigh.bour.hood 'neigh.bor.hood 'child.hood 'fol.low.ing 'hun.dreds\nba.'nan.a po.'ta.to to.'ma.to um.'brel.la com.'pu.ter re.'mem.ber to.'mor.row a.'part.ment ad.'ven.ture al.'read.y a.'nom.a.ly? a.'noth.er ap.'proach.ing? at.'ten.tion bi.'ki.ni ca.'the.dral cho.'ris.ter? col.'lec.tion com.'mit.tee com.'mu.ni.cate com.'mu.ni.ty com.'pan.ion com.'pet.i.tive con.'di.tion con.'trib.ute con.'tin.ue de.'ci.sion de.'li.cious de.'liv.er.y de.'part.ment de.'vel.op de.'vel.op.ment dis.'cov.er dis.'cov.er.y e.'co.no.my e.'con.o.my ef.'fec.tive e.'lec.tric e.'lev.en e.'mer.gen.cy e.'mo.tion em.'ploy.ment en.'vi.ron.ment e.'quip.ment es.'pe.cial.ly e.'vent.u.al.ly ex.'am.ple ex.'cit.ing ex.'pen.sive ex.'pe.ri.ence ex.'per.i.ment ex.'treme.ly fan.'tas.tic fa.'mil.iar for.'get.ful for.'got.ten gi.'gan.tic gui.'tar.ist ho.'ri.zon hys.'ter.i.cal i.'de.al i.'den.ti.ty i.'mag.ine im.'por.tant im.'pos.si.ble im.'prove.ment in.'cred.i.ble in.'stru.ment.al in.'tel.li.gent ma.'chin.er.y mo.'squi.to mu.'se.um of.'fi.cial o.'pin.ion op.'por.tu.ni.ty? par.'tic.u.lar pa.'ja.mas pho.'tog.ra.pher pho.'tog.ra.phy po.'lit.i.cal pre.'fer.ring? pro.'fes.sor pro.'gram.ming? re.'la.tion.ship re.'mark.a.ble re.'spon.si.ble re.'ceipt? se.'cu.ri.ty sig.'nif.i.cant spa.'ghet.ti suc.'cess.ful sur.'pris.ing to.'geth.er tra.'di.tion.al un.'hap.py u.'nu.su.al vo.'cab.u.lar.y a.'gree.ment a.'maz.ing a.'part.ment ap.'point.ment ar.'range.ment as.'sist.ant at.'trac.tive a.'void.ed ba.'na.na? be.'gin.ning be.'gin.ner cer.'tif.i.cate com.'pare.son? com.'par.i.son con.'fi.dence? de.'pres.sing de.'ter.mine dis.'as.ter dis.'gust.ing en.'thu.si.asm en.'ve.lope? ex.'ag.ger.ate fi.'nan.cial gi.'raf.fes ho.'ri.zon.tal? in.'spec.tor in.'vest.ment ma.'te.ri.al me.'chan.ic mo.'nop.o.ly ne.'ces.si.ty or.'gan.ic per.'cent.age per.'form.ance phi.'los.o.phy pre.'dic.tion re.'cep.tion re.'li.gion re.'li.gious re.'search.er so.'ci.e.ty tech.'nol.o.gy the.'at.ri.cal u.'ni.ted Sep.'tem.ber Oc.'to.ber No.'vem.ber De.'cem.ber Au.'gust? ho.'tel.ier? ca.'nar.y? kan.'ga.roo? a.'ca.de.my? a.'cad.e.my ac.'cept ac.'count ac.'tiv.i.ty a.'bil.i.ty ad.'di.tion ad.'van.tage a.'mer.i.ca ap.'pear.ance as.'ton.ish.ing a.'tom.ic au.'thor.i.ty bi.'ol.o.gy ca.'pac.i.ty cel.'eb.ri.ty com.'mer.cial con.'ver.sa.tion? de.'moc.ra.cy dra.'mat.ic e.'lec.tri.cian? e.'lec.tric.i.ty ge.'og.ra.phy ge.'ol.o.gy his.'tor.ic his.'tor.i.cal ma.'jor.i.ty me.'chan.i.cal mi.'nor.i.ty phy.'si.cian psy.'chol.o.gy re.'al.i.ty so.'lu.tion sta.'tis.tics\nau.to.'mat.ic ac.a.'dem.ic ad.ver.'tise.ment? af.ter.'noon ap.pli.'ca.tion? cig.a.'rette ed.u.'ca.tion en.gi.'neer en.ter.'tain guar.an.'tee in.tro.'duce kan.ga.'roo lem.on.'ade? mag.a.'zine ref.e.'ree Chi.'nese Jap.a.'nese Vi.et.nam.'ese Por.tu.'guese un.der.'stand vol.un.'teer em.ploy.'ee in.ter.'rupt rec.om.'mend o.ver.'come pi.o.'neer souve.'nir? dis.ap.'pear dis.ap.'point dis.a.'gree con.tra.'dict rep.re.'sent sci.en.'tif.ic pre.sen.'ta.tion con.ver.'sa.tion in.for.'ma.tion or.gan.i.'za.tion or.gan.i.'sa.tion ed.u.'ca.tion.al com.pe.'ti.tion com.bi.'na.tion con.cen.'tra.tion dec.o.'ra.tion dem.on.'stra.tion de.ter.mi.'na.tion ex.pla.'na.tion im.ag.i.'na.tion in.vi.'ta.tion na.tion.'al.i.ty? op.er.'a.tion pop.u.'la.tion pro.nun.ci.'a.tion qual.i.fi.'ca.tion rec.om.men.'da.tion res.er.'va.tion sit.u.'a.tion trans.por.'ta.tion u.ni.'ver.si.ty op.por.'tu.ni.ty per.son.'al.i.ty pos.si.'bil.i.ty re.spon.si.'bil.i.ty in.ter.'na.tion.al ec.o.'nom.ic ec.o.'nom.i.cal en.thu.si.'as.tic math.e.'mat.ics math.e.'mat.i.cal sym.pa.'thet.ic char.ac.ter.'is.tic dip.lo.'mat.ic pho.to.'graph.ic en.cy.clo.'pe.di.a con.gra.tu.'la.tions? in.de.'pend.ent in.ex.'pen.sive un.em.'ploy.ment o.ver.'night un.der.'neath af.ter.'wards? sev.en.'teen nine.'teen eight.'een four.'teen six.'teen thir.'teen fif.'teen? Hal.low.'een vol.'ca.no tor.'na.do mag.'nif.i.cent re.'li.a.ble 'brill.iant cel.e.'bra.tion 'di.no.saur ad.o.'les.cent ap.pa.'ra.tus? cal.cu.'la.tor? ci.vi.li.'za.tion el.e.'men.ta.ry en.ter.'tain.ment in.ter.'rup.tion meth.od.'ol.o.gy? pol.i.'ti.cian mu.si.'cian? tech.ni.'cian? vi.o.'lin ir.re.'spon.si.ble\n";
+/* Words whose stress depends on part of speech. */
+var PAIRS = {
+    record: [["noun", "'rec.ord"], ["verb", "re.'cord"]], present: [["noun / adj", "'pres.ent"], ["verb", "pre.'sent"]],
+    object: [["noun", "'ob.ject"], ["verb", "ob.'ject"]], project: [["noun", "'proj.ect"], ["verb", "pro.'ject"]],
+    produce: [["noun", "'prod.uce"], ["verb", "pro.'duce"]], progress: [["noun", "'pro.gress"], ["verb", "pro.'gress"]],
+    permit: [["noun", "'per.mit"], ["verb", "per.'mit"]], protest: [["noun", "'pro.test"], ["verb", "pro.'test"]],
+    conduct: [["noun", "'con.duct"], ["verb", "con.'duct"]], contract: [["noun", "'con.tract"], ["verb", "con.'tract"]],
+    convert: [["noun", "'con.vert"], ["verb", "con.'vert"]], export: [["noun", "'ex.port"], ["verb", "ex.'port"]],
+    import: [["noun", "'im.port"], ["verb", "im.'port"]], increase: [["noun", "'in.crease"], ["verb", "in.'crease"]],
+    decrease: [["noun", "'de.crease"], ["verb", "de.'crease"]], insult: [["noun", "'in.sult"], ["verb", "in.'sult"]],
+    rebel: [["noun", "'reb.el"], ["verb", "re.'bel"]], refund: [["noun", "'re.fund"], ["verb", "re.'fund"]],
+    subject: [["noun", "'sub.ject"], ["verb", "sub.'ject"]], suspect: [["noun", "'sus.pect"], ["verb", "sus.'pect"]],
+    transport: [["noun", "'trans.port"], ["verb", "trans.'port"]], update: [["noun", "'up.date"], ["verb", "up.'date"]],
+    contrast: [["noun", "'con.trast"], ["verb", "con.'trast"]], desert: [["noun (sand)", "'des.ert"], ["verb (leave)", "de.'sert"]],
+    perfect: [["adjective", "'per.fect"], ["verb", "per.'fect"]], content: [["noun", "'con.tent"], ["adjective", "con.'tent"]],
+    address: [["noun (UK)", "ad.'dress"], ["noun (US)", "'ad.dress"]], survey: [["noun", "'sur.vey"], ["verb", "sur.'vey"]]
+};
+var FUNC = new Set("a an the and but or nor so yet if as at by for from in into of off on onto out over to up with is am are was were be been being do does did have has had can could will would shall should may might must i me my mine you your yours he him his she her hers it its we us our ours they them their theirs this that these those there here not no than then when what who whom whose which where why how some any all each very just too".split(" "));
+function parse(e) { var segs = []; var stress = 0; e.split(".").forEach(function (s, i) { if (s.startsWith("'")) {
+    stress = i;
+    s = s.slice(1);
+} segs.push(s); }); return { segs: segs, stress: stress }; }
+var DICT = new Map();
+RAW.trim().split(/\s+/).forEach(function (e) { if (!e || e.includes("?"))
+    return; var p = parse(e); var k = p.segs.join("").toLowerCase(); if (!DICT.has(k))
+    DICT.set(k, p); });
+for (var k in PAIRS)
+    DICT.delete(k);
+/* ---------- fallback syllabifier + stress rules ---------- */
+var V = "aeiouy";
+function isV(w, i) { var c = w[i]; if (!c)
+    return false; if (c === "y")
+    return i > 0 && !V.includes(w[i - 1] || "#") || i === w.length - 1 && i > 0; return "aeiou".includes(c); }
+function syllabify(word) {
+    var w = word.toLowerCase();
+    if (w.length < 3)
+        return [word];
+    var cm = w.match(/^(.*[aeiouy][^aeiouy]+e)(fully|ful|less|ment|ness|ly)$/);
+    if (cm)
+        return syllabify(word.slice(0, cm[1].length)).concat(syllabify(word.slice(cm[1].length)));
+    var groups = [];
+    var i = 0;
+    while (i < w.length) {
+        if (isV(w, i)) {
+            var j = i;
+            while (j + 1 < w.length && isV(w, j + 1) && !(w[j] === "i" && "aou".includes(w[j + 1]) && !/[tscg]/.test(w[i - 1] || "") && w[i - 1] !== "q") && !(w[j] === "e" && w[j + 1] === "o"))
+                j++;
+            groups.push([i, j]);
+            i = j + 1;
+        }
+        else
+            i++;
+    }
+    var n = w.length;
+    if (groups.length > 1) {
+        var last = groups[groups.length - 1];
+        if (last[0] === n - 1 && w[n - 1] === "e" && !/[^aeiou]le$/.test(w) && !isV(w, n - 2))
+            groups.pop();
+        else if (/ed$/.test(w) && last[0] === n - 2 && !/[td]ed$/.test(w))
+            groups.pop();
+        else if (/es$/.test(w) && last[0] === n - 2 && !/(s|x|z|ch|sh|ce|ge)es$/.test(w))
+            groups.pop();
+    }
+    if (groups.length < 2)
+        return [word];
+    var cuts = [];
+    for (var g = 0; g < groups.length - 1; g++) {
+        var a = groups[g][1] + 1, b = groups[g + 1][0];
+        var cl = w.slice(a, b);
+        var cut = void 0;
+        if (cl.length === 0)
+            cut = a;
+        else if (cl.length === 1)
+            cut = cl === "x" ? b : a;
+        else if (cl.length === 2) {
+            if (/^(ck|ng|gh)$/.test(cl))
+                cut = b;
+            else if (/^(ch|sh|th|ph|wh|qu)$/.test(cl))
+                cut = a;
+            else if (/^[bcdfgkpt][lr]$/.test(cl))
+                cut = a;
+            else
+                cut = a + 1;
+        }
+        else {
+            var t2 = cl.slice(-2);
+            cut = (/^[bcdfgkpt][lr]$|^(ch|sh|th|ph)$/.test(t2) && !/^(ng|ck)/.test(cl.slice(-3))) ? b - 2 : b - 1;
+            if (/^(ng|ck)/.test(cl))
+                cut = Math.max(cut, a + 2);
+        }
+        cuts.push(cut);
+    }
+    var segs = [];
+    var s = 0;
+    cuts.forEach(function (c) { segs.push(word.slice(s, c)); s = c; });
+    segs.push(word.slice(s));
+    return segs.filter(function (x) { return x.length; });
+}
+function firstVowelSeg(segs, charPos) { var acc = 0; for (var i = 0; i < segs.length; i++) {
+    acc += segs[i].length;
+    if (charPos < acc)
+        return i;
+} return segs.length - 1; }
+function guessStress(word, segs) {
+    var w = word.toLowerCase(), n = segs.length;
+    if (n < 2)
+        return 0;
+    var end = function (re) { var m = w.match(re); return m ? m.index : -1; };
+    if (end(/(ee|eer|ese|ique|esque|oon|ette|aire)$/) >= 0)
+        return n - 1;
+    var pre = end(/(tion|sion|cian|cial|tial|ically|ical|ics|ic|ity|ial|ian|ious|eous|ient|ience|iency|ify|logy|graphy|metry|nomy|pathy|phony)$/);
+    if (pre >= 0) {
+        var vp = pre;
+        while (vp < w.length && !"aeiouy".includes(w[vp]))
+            vp++;
+        var k = firstVowelSeg(segs, vp);
+        return Math.max(0, k - 1);
+    }
+    if (n >= 3 && end(/(ate|ize|ise|ous|ary|ery|ory)$/) >= 0)
+        return n - 3 >= 0 ? n - 3 : 0;
+    var neu = w.match(/(ness|ment|ful|less|ly|ing|er|ed|able|ism|ist|ship|hood)$/);
+    if (neu && n > 2) {
+        var base = word.slice(0, word.length - neu[1].length);
+        var bs = syllabify(base);
+        if (bs.length >= 1 && bs.length < n) {
+            var r = guessStress(base, bs);
+            return Math.min(r, n - 1);
+        }
+    }
+    if (n === 2 && /^(be|de|re|un|dis|mis|pre|ex|con|com|a)/.test(w))
+        return 1;
+    if (n === 2)
+        return 0;
+    return n - 3;
+}
+/* inflections of dictionary words */
+function viaBase(w) {
+    var e_1, _a;
+    var tries = [];
+    if (/s$/.test(w))
+        tries.push([w.slice(0, -1), "s", false]);
+    if (/es$/.test(w))
+        tries.push([w.slice(0, -2), "es", /(s|x|z|ch|sh)es$/.test(w)]);
+    if (/ies$/.test(w))
+        tries.push([w.slice(0, -3) + "y", "ies", false]);
+    if (/ing$/.test(w)) {
+        var b = w.slice(0, -3);
+        tries.push([b, "ing", true], [b + "e", "ing", true]);
+        if (/(.)\1$/.test(b))
+            tries.push([b.slice(0, -1), "ing", true]);
+    }
+    if (/ed$/.test(w)) {
+        var b = w.slice(0, -2), syl = /[td]ed$/.test(w);
+        tries.push([b, "ed", syl], [b + "e", "ed", syl], [w.slice(0, -1), "d", syl]);
+        if (/(.)\1$/.test(b))
+            tries.push([b.slice(0, -1), "ed", syl]);
+    }
+    if (/ly$/.test(w))
+        tries.push([w.slice(0, -2), "ly", true]);
+    if (/er$/.test(w))
+        tries.push([w.slice(0, -2), "er", true], [w.slice(0, -1), "r", false]);
+    if (/ment$/.test(w))
+        tries.push([w.slice(0, -4), "ment", true]);
+    if (/ness$/.test(w))
+        tries.push([w.slice(0, -4), "ness", true]);
+    try {
+        for (var tries_1 = __values(tries), tries_1_1 = tries_1.next(); !tries_1_1.done; tries_1_1 = tries_1.next()) {
+            var _b = __read(tries_1_1.value, 3), b = _b[0], suf = _b[1], adds = _b[2];
+            var d = DICT.get(b);
+            if (!d)
+                continue;
+            var segs = d.segs.slice();
+            var last = segs[segs.length - 1];
+            if (suf === "ies")
+                last = last.slice(0, -1);
+            else if ((suf === "ing" || suf === "ed") && b.endsWith("e") && !w.startsWith(b))
+                last = last.slice(0, -1);
+            else if (suf !== "d" && suf !== "r" && b.length < w.length - suf.length)
+                last += w[b.length];
+            segs[segs.length - 1] = last;
+            var tail = suf === "ies" ? "ies" : suf;
+            if (adds)
+                segs.push(tail);
+            else
+                segs[segs.length - 1] += tail;
+            if (segs.join("").toLowerCase() !== w)
+                continue;
+            return { segs: segs, stress: d.stress, source: "dict" };
+        }
+    }
+    catch (e_1_1) { e_1 = { error: e_1_1 }; }
+    finally {
+        try {
+            if (tries_1_1 && !tries_1_1.done && (_a = tries_1.return)) _a.call(tries_1);
+        }
+        finally { if (e_1) throw e_1.error; }
+    }
+    return null;
+}
+function restoreCase(raw, segs) { var i = 0; return segs.map(function (s) { var o = raw.slice(i, i + s.length); i += s.length; return o; }); }
+function analyse(raw) {
+    var w = raw.toLowerCase();
+    if (PAIRS[w])
+        return { word: raw, pairs: PAIRS[w].map(function (_a) {
+                var _b = __read(_a, 2), lab = _b[0], e = _b[1];
+                var p = parse(e);
+                return { label: lab, segs: restoreCase(raw, p.segs), stress: p.stress };
+            }), source: "dict" };
+    var r = DICT.get(w);
+    var res;
+    if (r)
+        res = { segs: restoreCase(raw, r.segs), stress: r.stress, source: "dict" };
+    else {
+        var b = viaBase(w);
+        if (b)
+            res = { segs: restoreCase(raw, b.segs), stress: b.stress, source: "dict" };
+        else {
+            var segs = syllabify(raw);
+            res = { segs: segs, stress: guessStress(raw, segs), source: segs.length > 1 ? "guess" : "one" };
+        }
+    }
+    res.word = raw;
+    res.func = FUNC.has(w);
+    return res;
+}
+function pattern(n, s) { var p = ""; for (var i = 0; i < n; i++)
+    p += i === s ? "O" : "o"; return p; }
+/* ---------- Explore ---------- */
+var $ = function (id) { return document.getElementById(id); };
+var input = $("word"), stage = $("stage"), info = $("info");
+var tonicOverride = null, lastText = "";
+["photographer", "information", "banana", "understand", "record", "comfortable", "Japanese", "I'd like a cup of tea", "She's a doctor", "economic"].forEach(function (t) { var b = document.createElement("button"); b.className = "chip"; b.type = "button"; b.textContent = t; b.onclick = function () { input.value = t; tonicOverride = null; render(true); }; $("examples").appendChild(b); });
+function wordEl(a, _a) {
+    var tonic = _a.tonic, phrase = _a.phrase, idx = _a.idx;
+    var box = document.createElement("div");
+    box.className = "word";
+    var row = document.createElement("div");
+    row.className = "row";
+    a.segs.forEach(function (s, i) {
+        if (i > 0) {
+            var d = document.createElement("span");
+            d.className = "dot";
+            d.textContent = "·";
+            row.appendChild(d);
+        }
+        var col = document.createElement("div");
+        col.className = "col";
+        var br = document.createElement("div");
+        br.className = "bubrow";
+        var on = !a.func && i === a.stress || a.segs.length === 1 && !a.func;
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "bub pop" + (on ? " on" : "") + (on && tonic ? " tonic" : "");
+        b.style.animationDelay = (i * 60) + "ms";
+        b.setAttribute("aria-label", "".concat(s).concat(on ? T("stressedAria") : "", ". ").concat(T("clickHear", { w: a.word })));
+        b.tabIndex = i === 0 ? 0 : -1;
+        br.appendChild(b);
+        col.appendChild(br);
+        var t = document.createElement("span");
+        t.className = "syl" + (on ? " on" : "") + (on && tonic ? " tonic" : "");
+        t.textContent = s;
+        col.appendChild(t);
+        row.appendChild(col);
+    });
+    row.classList.add("say");
+    row.title = T("clickHearIt");
+    row.onclick = function () { say(a.word); row.classList.remove("speaking"); void row.offsetWidth; row.classList.add("speaking"); };
+    box.appendChild(row);
+    var cap = document.createElement("div");
+    cap.className = "wcap";
+    if (a.pairLabel)
+        cap.innerHTML = "<span class=\"tag\">".concat(POS(a.pairLabel), "</span>");
+    if (a.segs.length > 1)
+        cap.insertAdjacentHTML("beforeend", "<span class=\"tag pat\">".concat(pattern(a.segs.length, a.stress), "</span>"));
+    if (a.source === "guess")
+        cap.insertAdjacentHTML("beforeend", "<span class=\"tag guess\">".concat(T("bestGuess"), "</span>"));
+    if (a.func && phrase)
+        cap.insertAdjacentHTML("beforeend", "<span class=\"tag fn\">".concat(T("weak"), "</span>"));
+    if (phrase && !a.func) {
+        cap.style.cursor = "pointer";
+        cap.title = T("makeTonic");
+        cap.onclick = function () { tonicOverride = idx; render(false); };
+        if (!cap.children.length)
+            cap.insertAdjacentHTML("beforeend", "<span class=\"tag pat\">".concat(T("tapTonic"), "</span>"));
+    }
+    box.appendChild(cap);
+    return box;
+}
+function render(anim) {
+    var text = input.value.trim();
+    if (text !== lastText && lastText !== "")
+        tonicOverride = null;
+    lastText = text;
+    stage.innerHTML = "";
+    info.innerHTML = "";
+    var toks = text.match(/[A-Za-z]+(?:['’][A-Za-z]+)?/g) || [];
+    if (!toks.length) {
+        stage.innerHTML = "<p class=\"empty\">".concat(T("empty"), "</p>");
+        return;
+    }
+    var words = toks.map(function (t) { var base = t.replace(/['’].*$/, ""); var a = analyse(base); if (t !== base) {
+        a.word = t;
+        if (!a.pairs)
+            a.segs = a.segs.slice(0, -1).concat(a.segs[a.segs.length - 1] + t.slice(base.length));
+    } return a; });
+    var phrase = words.length > 1;
+    if (!phrase && words[0].pairs) {
+        words[0].pairs.forEach(function (p) { return stage.appendChild(wordEl(__assign(__assign({}, p), { word: words[0].word, pairLabel: p.label, source: "dict" }), { tonic: false })); });
+        var p = words[0].pairs;
+        info.innerHTML = "<div><dt>".concat(T("syllables"), "</dt><dd>").concat(p[0].segs.length, "</dd></div><div><dt>").concat(POS(p[0].label), "</dt><dd>").concat(T("nthSyl", { o: ORDN(p[0].stress) }), " \u00B7 ").concat(pattern(p[0].segs.length, p[0].stress), "</dd></div><div><dt>").concat(POS(p[1].label), "</dt><dd>").concat(T("nthSyl", { o: ORDN(p[1].stress) }), " \u00B7 ").concat(pattern(p[1].segs.length, p[1].stress), "</dd></div>");
+        return;
+    }
+    words.forEach(function (a) { if (a.pairs) {
+        var v = a.pairs[0];
+        a.segs = v.segs;
+        a.stress = v.stress;
+        a.pairLabel = null;
+    } });
+    var tonic = -1;
+    if (phrase) {
+        if (tonicOverride != null && words[tonicOverride] && !words[tonicOverride].func)
+            tonic = tonicOverride;
+        else {
+            for (var i = words.length - 1; i >= 0; i--)
+                if (!words[i].func) {
+                    tonic = i;
+                    break;
+                }
+            if (tonic < 0)
+                tonic = words.length - 1;
+        }
+    }
+    words.forEach(function (a, i) { if (phrase && i === tonic)
+        a.func = false; stage.appendChild(wordEl(a, { tonic: phrase && i === tonic, phrase: phrase, idx: i })); });
+    if (!phrase) {
+        var a = words[0];
+        var n = a.segs.length;
+        info.innerHTML = "<div><dt>".concat(T("syllables"), "</dt><dd>").concat(n, "</dd></div><div><dt>").concat(T("stress"), "</dt><dd>").concat(n > 1 ? T("nthSyl", { o: ORDN(a.stress) }) : T("oneSyl"), "</dd></div><div><dt>").concat(T("pattern"), "</dt><dd>").concat(n > 1 ? pattern(n, a.stress) : "O", "</dd></div><div><dt>").concat(T("source"), "</dt><dd>").concat(a.source === "dict" || a.source === "one" ? T("dictionary") : T("ruleGuess"), "</dd></div>");
+    }
+    else {
+        var t = words[tonic];
+        info.innerHTML = "<div><dt>".concat(T("words"), "</dt><dd>").concat(words.length, "</dd></div><div><dt>").concat(T("tonicWord"), "</dt><dd>").concat(t.word, "</dd></div><div><dt>").concat(T("tonicSyl"), "</dt><dd>").concat(t.segs[t.stress] || t.word, "</dd></div><div><dt>").concat(T("weakWords"), "</dt><dd>").concat(words.filter(function (w) { return w.func; }).length, "</dd></div>");
+    }
+}
+input.addEventListener("input", function () { return render(true); });
+var RATE = .85;
+try {
+    var r = parseFloat(localStorage.getItem("tsb-rate"));
+    if (r >= .5 && r <= 1.5)
+        RATE = r;
+}
+catch (e) { }
+function syncRate(v) { RATE = v; document.querySelectorAll(".rate").forEach(function (x) { return x.value = v; }); document.querySelectorAll(".rateval").forEach(function (o) { return o.textContent = v.toFixed(2) + "×"; }); try {
+    localStorage.setItem("tsb-rate", v);
+}
+catch (e) { } }
+document.querySelectorAll(".rate").forEach(function (x) { x.addEventListener("input", function () { return syncRate(parseFloat(x.value)); }); x.addEventListener("change", function () { return sayCurrent(); }); });
+syncRate(RATE);
+var ACCENT = "en-GB", GENDER = "female";
+try {
+    var a = localStorage.getItem("tsb-accent"), g = localStorage.getItem("tsb-gender");
+    if (a === "en-US" || a === "en-GB")
+        ACCENT = a;
+    if (g === "male" || g === "female")
+        GENDER = g;
+}
+catch (e) { }
+var FEM = /female|woman|samantha|victoria|karen|serena|kate|moira|tessa|fiona|susan|zira|hazel|libby|sonia|jenny|aria|allison|ava|emma|martha|stephanie|joanna|salli|kimberly|ivy|amy|nicole|olivia|michelle|ana\b|catherine|shelley|sandy|flo|grandma/i;
+var MAL = /\bmale|\bman\b|daniel|alex\b|fred|tom\b|oliver|arthur|george|david|mark|ryan|guy|aaron|rishi|evan|nathan|matthew|justin|joey|brian|eric|christopher|roger|ralph|reed|rocko|eddy|grandpa|thomas|james|william/i;
+function voiceGender(v) { var n = v.name; if (/female/i.test(n))
+    return "female"; if (/\bmale/i.test(n))
+    return "male"; if (MAL.test(n))
+    return "male"; if (FEM.test(n))
+    return "female"; if (/google us english|google uk english/i.test(n))
+    return "female"; return null; }
+function chooseVoice() {
+    if (!("speechSynthesis" in window))
+        return { voice: null, note: T("noSpeech"), ok: false };
+    var all = speechSynthesis.getVoices();
+    var lang = ACCENT.toLowerCase();
+    var acc = all.filter(function (v) { return v.lang && v.lang.replace("_", "-").toLowerCase().startsWith(lang); });
+    var label = (ACCENT === "en-GB" ? T("lBritish") : T("lAmerican"));
+    var gl = GENDER === "female" ? T("gFemale") : T("gMale");
+    var match = acc.filter(function (v) { return voiceGender(v) === GENDER; });
+    var pick = match.find(function (v) { return v.localService; }) || match[0];
+    if (pick)
+        return { voice: pick, note: T("using", { n: pick.name }), ok: true };
+    if (acc.length)
+        return { voice: acc[0], note: T("noGender", { g: gl, l: label, n: acc[0].name }), ok: false };
+    if (!all.length)
+        return { voice: null, note: "", ok: false };
+    return { voice: null, note: T("noLabel", { l: label }), ok: false };
+}
+function refreshVoice() { var c = chooseVoice(); var n = document.getElementById("vnote"); n.textContent = c.note; n.classList.toggle("missing", !!c.note && !c.ok); var m = document.getElementById("morev"); if (m)
+    m.textContent = n.classList.contains("missing") ? T("missingVoice") : T("moreVoices"); return c.voice; }
+var OS_STEPS = {
+    windows: { name: "Windows", steps: ["Open <b>Settings</b> → <b>Time &amp; language</b> → <b>Speech</b>.", "Under <b>Manage voices</b>, choose <b>Add voices</b>.", "Tick <b>English (United Kingdom)</b> and/or <b>English (United States)</b>, then <b>Add</b>.", "Wait for the download to finish."], fr: ["Ouvrez <b>Paramètres</b> → <b>Heure et langue</b> → <b>Voix</b>.", "Sous <b>Gérer les voix</b>, choisissez <b>Ajouter des voix</b>.", "Cochez <b>Anglais (Royaume-Uni)</b> et/ou <b>Anglais (États-Unis)</b>, puis <b>Ajouter</b>.", "Attendez la fin du téléchargement."] },
+    mac: { name: "Mac", steps: ["Open <b>System Settings</b> → <b>Accessibility</b> → <b>Spoken Content</b>.", "Click the <b>System voice</b> menu and choose <b>Manage Voices…</b>.", "Open <b>English</b> and tick voices marked United Kingdom or United States (for example Daniel, Serena, Alex, Samantha).", "Click <b>OK</b> and wait for the download."], fr: ["Ouvrez <b>Réglages Système</b> → <b>Accessibilité</b> → <b>Contenu énoncé</b>.", "Cliquez sur le menu <b>Voix du système</b> et choisissez <b>Gérer les voix…</b>.", "Ouvrez <b>Anglais</b> et cochez des voix Royaume-Uni ou États-Unis (par exemple Daniel, Serena, Alex, Samantha).", "Cliquez sur <b>OK</b> et attendez le téléchargement."] },
+    ios: { name: "iPhone / iPad", steps: ["Open <b>Settings</b> → <b>Accessibility</b> → <b>Spoken Content</b> → <b>Voices</b>.", "Tap <b>English</b>.", "Tap a UK or US voice and tap the download button next to it.", "Close Safari fully (swipe it away) before reopening."], fr: ["Ouvrez <b>Réglages</b> → <b>Accessibilité</b> → <b>Contenu énoncé</b> → <b>Voix</b>.", "Touchez <b>Anglais</b>.", "Touchez une voix UK ou US, puis le bouton de téléchargement à côté.", "Fermez complètement Safari (balayez-le vers le haut) avant de le rouvrir."] },
+    android: { name: "Android", steps: ["Open <b>Settings</b> → <b>System</b> → <b>Languages &amp; input</b> → <b>Text-to-speech output</b>.", "Tap the gear next to <b>Speech Services by Google</b>, then <b>Install voice data</b>.", "Choose <b>English (United Kingdom)</b> or <b>English (United States)</b> and download it.", "Tap the language again to pick a male or female voice."], fr: ["Ouvrez <b>Paramètres</b> → <b>Système</b> → <b>Langues et saisie</b> → <b>Synthèse vocale</b>.", "Touchez la roue dentée à côté de <b>Services vocaux Google</b>, puis <b>Installer les données vocales</b>.", "Choisissez <b>Anglais (Royaume-Uni)</b> ou <b>Anglais (États-Unis)</b> et téléchargez-le.", "Touchez à nouveau la langue pour choisir une voix masculine ou féminine."] },
+    chromeos: { name: "Chromebook", steps: ["Open <b>Settings</b> → <b>Accessibility</b> → <b>Text-to-speech</b>.", "Choose <b>Text-to-speech voice settings</b>.", "Under <b>Preferred voice</b>, add English (UK) or English (US) voices.", "Install any voices the list offers to download."], fr: ["Ouvrez <b>Paramètres</b> → <b>Accessibilité</b> → <b>Synthèse vocale</b>.", "Choisissez <b>Paramètres de la voix de synthèse vocale</b>.", "Sous <b>Voix préférée</b>, ajoutez des voix anglaises (UK) ou (US).", "Installez les voix proposées au téléchargement."] },
+    linux: { name: "Linux", steps: ["Install a speech engine such as <b>espeak-ng</b> or <b>speech-dispatcher</b> with your package manager.", "For more natural voices, use Chrome or Edge, which include online UK and US voices.", "Restart the browser so it finds the new engine."], fr: ["Installez un moteur vocal comme <b>espeak-ng</b> ou <b>speech-dispatcher</b> avec votre gestionnaire de paquets.", "Pour des voix plus naturelles, utilisez Chrome ou Edge, qui incluent des voix UK et US en ligne.", "Redémarrez le navigateur pour qu'il détecte le nouveau moteur."] }
+};
+function detectOS() { var ua = navigator.userAgent || ""; if (/iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1))
+    return "ios"; if (/Android/.test(ua))
+    return "android"; if (/CrOS/.test(ua))
+    return "chromeos"; if (/Windows/.test(ua))
+    return "windows"; if (/Macintosh|Mac OS X/.test(ua))
+    return "mac"; return "linux"; }
+var OS_CUR = null;
+function showOS(k) { document.querySelectorAll("#oslist button").forEach(function (b) { return b.setAttribute("aria-selected", b.dataset.os === k); }); OS_CUR = k; document.getElementById("vsteps").innerHTML = ((LANG === "fr" && OS_STEPS[k].fr) || OS_STEPS[k].steps).map(function (x) { return "<li>".concat(x, "</li>"); }).join(""); }
+(function () {
+    var list = document.getElementById("oslist");
+    var mine = detectOS();
+    Object.entries(OS_STEPS).forEach(function (_a) {
+        var _b = __read(_a, 2), k = _b[0], v = _b[1];
+        var b = document.createElement("button");
+        b.type = "button";
+        b.role = "tab";
+        b.dataset.os = k;
+        b.dataset.mine = k === mine ? "1" : "";
+        b.textContent = v.name + (k === mine ? T("thisDevice") : "");
+        b.onclick = function () { return showOS(k); };
+        list.appendChild(b);
+    });
+    showOS(mine);
+    var mv = document.getElementById("morev"), h = document.getElementById("vhelp");
+    mv.onclick = function () { h.hidden = !h.hidden; mv.setAttribute("aria-expanded", !h.hidden); };
+    document.getElementById("vcheck").onclick = function () { var all = ("speechSynthesis" in window) ? speechSynthesis.getVoices() : []; var en = all.filter(function (v) { return /^en[-_](gb|us)/i.test(v.lang || ""); }); var c = chooseVoice(); refreshVoice(); document.getElementById("vcount").textContent = T("found", { n: en.length, s: en.length === 1 ? "" : "s" }) + (c.ok ? T("ready") : T("stillMissing")); };
+})();
+var accSel = document.getElementById("accent"), genSel = document.getElementById("gender");
+accSel.value = ACCENT;
+genSel.value = GENDER;
+function makeDD(sel) {
+    var wrap = document.createElement("div");
+    wrap.className = "dd";
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "dd-btn";
+    btn.setAttribute("aria-haspopup", "listbox");
+    btn.setAttribute("aria-expanded", "false");
+    btn.setAttribute("aria-label", sel.closest(".pick").querySelector("span").textContent);
+    var menu = document.createElement("ul");
+    menu.className = "dd-menu";
+    menu.setAttribute("role", "listbox");
+    menu.hidden = true;
+    var opts = __spreadArray([], __read(sel.options), false);
+    var act = 0;
+    var sync = function () { btn.textContent = sel.options[sel.selectedIndex].text; __spreadArray([], __read(menu.children), false).forEach(function (li, i) { return li.setAttribute("aria-selected", i === sel.selectedIndex); }); };
+    var hi = function (i) { act = (i + opts.length) % opts.length; __spreadArray([], __read(menu.children), false).forEach(function (li, j) { return li.classList.toggle("active", j === act); }); };
+    var close = function () { menu.hidden = true; btn.setAttribute("aria-expanded", "false"); };
+    var open = function () { document.querySelectorAll(".dd-menu").forEach(function (m) { if (m !== menu) {
+        m.hidden = true;
+        m.previousSibling.setAttribute("aria-expanded", "false");
+    } }); menu.hidden = false; btn.setAttribute("aria-expanded", "true"); hi(sel.selectedIndex); };
+    var choose = function (i) { if (sel.selectedIndex !== i) {
+        sel.selectedIndex = i;
+        sel.dispatchEvent(new Event("change"));
+    } sync(); close(); btn.focus(); };
+    opts.forEach(function (o, i) { var li = document.createElement("li"); li.setAttribute("role", "option"); li.textContent = o.text; li.onmousedown = function (e) { return e.preventDefault(); }; li.onclick = function () { return choose(i); }; li.onmouseenter = function () { return hi(i); }; menu.appendChild(li); });
+    btn.onclick = function () { return menu.hidden ? open() : close(); };
+    btn.onkeydown = function (e) { if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        e.preventDefault();
+        if (menu.hidden)
+            open();
+        else
+            hi(act + (e.key === "ArrowDown" ? 1 : -1));
+    }
+    else if ((e.key === "Enter" || e.key === " ") && !menu.hidden) {
+        e.preventDefault();
+        choose(act);
+    }
+    else if (e.key === "Escape")
+        close(); };
+    btn.onblur = function () { return setTimeout(close, 120); };
+    wrap.append(btn, menu);
+    sel.after(wrap);
+    sync();
+}
+makeDD(accSel);
+makeDD(genSel);
+document.addEventListener("click", function (e) { if (!e.target.closest(".dd"))
+    document.querySelectorAll(".dd-menu").forEach(function (m) { m.hidden = true; m.previousSibling.setAttribute("aria-expanded", "false"); }); });
+accSel.onchange = function () { ACCENT = accSel.value; try {
+    localStorage.setItem("tsb-accent", ACCENT);
+}
+catch (e) { } refreshVoice(); sayCurrent(); };
+genSel.onchange = function () { GENDER = genSel.value; try {
+    localStorage.setItem("tsb-gender", GENDER);
+}
+catch (e) { } refreshVoice(); sayCurrent(); };
+if ("speechSynthesis" in window) {
+    refreshVoice();
+    try {
+        speechSynthesis.addEventListener("voiceschanged", refreshVoice);
+    }
+    catch (e) {
+        speechSynthesis.onvoiceschanged = refreshVoice;
+    }
+}
+function sayCurrent() { say(document.getElementById("practise").hidden ? input.value : (typeof cur !== "undefined" && cur ? cur[0] : "")); }
+function say(text) { try {
+    if (!text || !("speechSynthesis" in window))
+        return;
+    speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(text);
+    var v = refreshVoice();
+    if (v)
+        u.voice = v;
+    u.lang = v ? v.lang : ACCENT;
+    u.rate = RATE;
+    speechSynthesis.speak(u);
+}
+catch (e) { } }
+$("speak").onclick = function () { return say(input.value); };
+render(true);
+/* ---------- Practise ---------- */
+var POOL = __spreadArray([], __read(DICT.entries()), false).filter(function (_a) {
+    var _b = __read(_a, 2), k = _b[0], v = _b[1];
+    return v.segs.length >= 2 && v.segs.length <= 5 && /^[a-z]+$/.test(k);
+});
+var cur = null, answered = false, sc = { r: 0, t: 0, s: 0 };
+function pick() {
+    var f = $("pattern").value;
+    var list = POOL.filter(function (_a) {
+        var _b = __read(_a, 2), k = _b[0], v = _b[1];
+        var p = pattern(v.segs.length, v.stress);
+        return f === "any" || (f === "4" ? v.segs.length >= 4 : p === f);
+    });
+    var n;
+    do {
+        n = list[Math.floor(Math.random() * list.length)];
+    } while (list.length > 1 && cur && n[0] === cur[0]);
+    cur = n;
+    answered = false;
+    drawP();
+}
+function drawP(chosen) {
+    var ps = $("pstage");
+    ps.innerHTML = "";
+    var _a = __read(cur, 2), k = _a[0], v = _a[1];
+    var box = document.createElement("div");
+    box.className = "word";
+    var row = document.createElement("div");
+    row.className = "row";
+    v.segs.forEach(function (s, i) {
+        if (i > 0) {
+            var d = document.createElement("span");
+            d.className = "dot";
+            d.textContent = "·";
+            row.appendChild(d);
+        }
+        var col = document.createElement("div");
+        col.className = "col";
+        var br = document.createElement("div");
+        br.className = "bubrow";
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "bub";
+        b.setAttribute("aria-label", T("sylAria", { i: i + 1, s: s }));
+        if (answered) {
+            if (i === v.stress)
+                b.classList.add(chosen === i ? "pick-good" : "ans");
+            else if (i === chosen)
+                b.classList.add("pick-bad");
+            else
+                b.classList.add("rest");
+        }
+        else
+            b.onclick = function () { return answer(i); };
+        br.appendChild(b);
+        col.appendChild(br);
+        var t = document.createElement("span");
+        t.className = "syl" + (answered && i === v.stress ? " on" : "");
+        t.textContent = s;
+        col.appendChild(t);
+        row.appendChild(col);
+    });
+    box.appendChild(row);
+    if (answered) {
+        var c = document.createElement("div");
+        c.className = "wcap";
+        c.innerHTML = "<span class=\"tag pat\">".concat(pattern(v.segs.length, v.stress), "</span>");
+        box.appendChild(c);
+    }
+    ps.appendChild(box);
+    if (!answered)
+        $("pfeed").hidden = true;
+}
+var LASTOK = null, LASTPICK = null;
+function showFeed() {
+    var f = $("pfeed");
+    f.hidden = false;
+    f.className = "feedback " + (LASTOK ? "good" : "bad");
+    var w = cur[1].segs.map(function (s, j) { return j === cur[1].stress ? s.toUpperCase() : s; }).join("·");
+    f.textContent = LASTOK ? T("yes", { w: w }) : T("notQuite", { w: w, o: ORDN(cur[1].stress) });
+}
+function answer(i) {
+    answered = true;
+    var ok = i === cur[1].stress;
+    sc.t++;
+    if (ok) {
+        sc.r++;
+        sc.s++;
+    }
+    else
+        sc.s = 0;
+    $("sc-right").textContent = sc.r;
+    $("sc-total").textContent = sc.t;
+    $("sc-streak").textContent = sc.s;
+    LASTOK = ok;
+    LASTPICK = i;
+    showFeed();
+    drawP(i);
+    say(cur[0]);
+}
+$("pnext").onclick = pick;
+$("pattern").onchange = pick;
+$("psay").onclick = function () { return cur && say(cur[0]); };
+/* tabs */
+function tab(which) { var ex = which === "explore"; $("explore").hidden = !ex; $("practise").hidden = ex; $("tab-explore").setAttribute("aria-selected", ex); $("tab-practise").setAttribute("aria-selected", !ex); if (!ex && !cur)
+    pick(); }
+$("tab-explore").onclick = function () { return tab("explore"); };
+$("tab-practise").onclick = function () { return tab("practise"); };
+/* language switch */
+function setLang(l) {
+    if (l === LANG)
+        return;
+    LANG = l;
+    try {
+        localStorage.setItem("ell-lang", l);
+    }
+    catch (e) { }
+    applyStatic();
+    document.querySelectorAll(".dd").forEach(function (d) { return d.remove(); });
+    makeDD(accSel);
+    makeDD(genSel);
+    document.querySelectorAll("#oslist button").forEach(function (b) { var v = OS_STEPS[b.dataset.os]; b.textContent = v.name + (b.dataset.mine ? T("thisDevice") : ""); });
+    if (OS_CUR)
+        showOS(OS_CUR);
+    var vc = document.getElementById("vcount");
+    if (vc.textContent) {
+        var all = ("speechSynthesis" in window) ? speechSynthesis.getVoices() : [];
+        var en = all.filter(function (v) { return /^en[-_](gb|us)/i.test(v.lang || ""); });
+        vc.textContent = T("found", { n: en.length, s: en.length === 1 ? "" : "s" }) + (chooseVoice().ok ? T("ready") : T("stillMissing"));
+    }
+    refreshVoice();
+    render(false);
+    if (cur) {
+        drawP(answered ? LASTPICK : undefined);
+        if (answered)
+            showFeed();
+    }
+}
+document.querySelectorAll(".lang button").forEach(function (b) { return b.onclick = function () { return setLang(b.dataset.lang); }; });
+</script>
+
+</body></html>

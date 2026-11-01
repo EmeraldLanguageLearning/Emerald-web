@@ -1,0 +1,1701 @@
+<!doctype html>
+<html lang="en">
+<head><script src="legacy.js"></script><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Emerald"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#49B190"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Listening Lab (Emerald)</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<script src="app-bridge.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Open+Sans:wght@400;600;700&display=swap">
+<style>
+/* Emerald Language Learning palette */
+:root{
+  --emerald:#49B190; --emerald-link:#53AC90; --emerald-dark:#457865; --emerald-soft:#72B1A0; --emerald-hover:#3f9c7e;
+  --bg:#F9F9F9; --sheet:#ffffff; --ink:#323232; --muted:#777777; --faint:#a3a3a3; --line:#DADADA; --line-strong:#BBBBBB;
+  --accent:#49B190; --accent-soft:#e9f6f1; --mark:#fde8a6; --mark-ink:#3b3000;
+  --ok:#2f8f6a; --ok-soft:#e7f5ef; --bad:#c8443a; --bad-soft:#fcecea;
+  --screen:#1f3a31; --screen-hi:#457865; --screen-ink:#ffffff;
+  --display:"Montserrat","Segoe UI",system-ui,sans-serif;
+  --body:"Open Sans","Segoe UI",system-ui,sans-serif;
+  --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--sheet);color:var(--muted);font-family:var(--body);font-size:16px;line-height:1.7;padding-bottom:env(safe-area-inset-bottom,0px)}
+[hidden]{display:none!important}
+img{max-width:100%}
+.wrap{max-width:1080px;width:80%;margin:0 auto}
+@media (max-width:720px){.wrap{width:auto;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}}
+h1,h2,h3{font-family:var(--display);line-height:1.25;text-wrap:balance;margin:0}
+h1{font-size:clamp(1.6rem,4vw,2.6rem);font-weight:400;text-transform:uppercase;color:var(--emerald-dark);letter-spacing:.01em}
+h2{font-size:clamp(1.3rem,3vw,1.8rem);font-weight:400;text-transform:uppercase;color:var(--emerald-dark)}
+h3{font-size:1.02rem;font-weight:700;color:var(--ink)}
+p{margin:0}
+b,strong{color:var(--ink)}
+.label{font-family:var(--body);font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--emerald-soft)}
+.muted{color:var(--muted)}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* site header */
+.site{background:#fff;border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+.site-in{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:16px}
+.brand-logo{height:60px;width:auto;display:block}
+@media (max-width:520px){.brand-logo{height:44px}.site-in{padding-block:12px}}
+.lang{display:inline-flex;border:1px solid var(--emerald);border-radius:4px;overflow:hidden;flex:none}
+.lang button{font:600 .85rem var(--body);letter-spacing:.04em;border:0;background:#fff;color:var(--emerald-dark);padding:7px 13px;cursor:pointer}
+.lang button+button{border-left:1px solid var(--emerald)}
+.lang button:hover{background:var(--accent-soft)}
+.lang button[aria-pressed="true"]{background:var(--emerald);color:#fff}
+.lang button:focus-visible{outline:2px solid var(--emerald-dark);outline-offset:2px}
+
+/* title + step rail (sticky) */
+.bar{background:#fff;border-bottom:1px solid var(--line);position:-webkit-sticky;position:sticky;top:0;z-index:5}
+.bar .wrap{padding-top:22px;display:flex;flex-direction:column;gap:14px}
+.toprow{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}
+.clipmeta{font-family:var(--mono);font-size:.8rem;color:var(--faint)}
+.rail{display:flex;gap:26px;overflow-x:auto;scrollbar-width:none;justify-content:safe center}
+.rail::-webkit-scrollbar{display:none}
+.rail button{all:unset;cursor:pointer;display:flex;align-items:center;gap:8px;padding:8px 2px 10px;font-family:var(--body);font-weight:600;font-size:.95rem;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap}
+.rail button:hover{color:var(--emerald-link)}
+.rail button .n{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;border:1.5px solid currentColor;font-size:.75rem}
+.rail button.done .n{background:var(--emerald);border-color:var(--emerald);color:#fff}
+.rail button[aria-current="step"]{color:var(--emerald-link);border-bottom-color:var(--emerald)}
+.rail button.locked{opacity:.55}
+.rail button:focus-visible{outline:2px solid var(--emerald);outline-offset:-2px}
+
+main .wrap{padding-block:36px 72px;display:flex;flex-direction:column;gap:20px}
+.sheet{background:var(--sheet);border:1px solid var(--line);border-radius:4px;padding:32px;display:flex;flex-direction:column;gap:22px}
+@media (max-width:520px){.sheet{padding:20px}}
+.intro{display:flex;flex-direction:column;gap:8px}
+.intro p{max-width:66ch}
+
+/* listen bar */
+.listen{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 16px;border-radius:4px;background:var(--bg);border-left:3px solid var(--emerald)}
+.listen .info{flex:1 1 220px;min-width:0;font-size:.92rem}
+.count{font-family:var(--mono);font-size:.85rem;color:var(--emerald-dark)}
+
+.btn{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:4px;font-family:var(--body);font-weight:600;font-size:.93rem;background:var(--emerald);color:#fff;text-decoration:none;transition:background-color .15s}
+.btn:hover{background:var(--emerald-hover)}
+.btn.ghost{background:#fff;color:var(--emerald-dark);box-shadow:inset 0 0 0 1px var(--emerald)}
+.btn.ghost:hover{background:var(--accent-soft)}
+.btn.quiet{background:transparent;color:var(--muted);padding:6px 8px}
+.btn.quiet:hover{color:var(--emerald-link);background:transparent}
+.btn[aria-disabled="true"]{opacity:.45;cursor:not-allowed}
+.btn:focus-visible,.chip:focus-visible{outline:2px solid var(--emerald-dark);outline-offset:2px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;align-items:center}
+
+/* chips */
+.group{display:flex;flex-direction:column;gap:8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{all:unset;cursor:pointer;padding:5px 13px;border-radius:999px;border:1px solid var(--line);background:#fff;font-family:var(--body);font-size:.88rem;color:var(--muted)}
+.chip:hover{border-color:var(--emerald);color:var(--emerald-dark)}
+.chip[aria-pressed="true"]{background:var(--emerald);border-color:var(--emerald);color:#fff}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+@media (max-width:620px){.grid2{grid-template-columns:1fr}}
+
+textarea,input[type=text],input[type=number],input[type=password]{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:10px 12px;width:100%}
+textarea{min-height:110px;resize:vertical}
+textarea:focus,input:focus{outline:none;border-color:var(--emerald);background:#fff}
+label.field,.field{display:flex;flex-direction:column;gap:6px}
+
+/* keywords */
+.kw{display:flex;flex-direction:column;gap:10px}
+.kwrow{display:grid;grid-template-columns:minmax(0,180px) minmax(0,1fr) auto;gap:10px;align-items:start;padding:12px;border:1px solid var(--line);border-radius:4px;background:#fff;transition:background-color .2s,border-color .2s}
+.kwrow .chips .chip{font-size:.8rem;padding:3px 10px}
+@media (max-width:620px){.kwrow{grid-template-columns:minmax(0,1fr) auto}.kwrow .chips{grid-column:1/-1;grid-row:2}}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 20px;font-size:.9rem}
+.legend dt{font-family:var(--display);font-weight:700;color:var(--ink)}
+.legend dd{margin:0;color:var(--muted)}
+details summary{cursor:pointer;font-family:var(--body);font-weight:600;color:var(--emerald-link)}
+
+/* transcript */
+.script{font-size:1.08rem;line-height:2.3;max-width:68ch;color:var(--ink)}
+.blank{font:inherit;font-family:var(--mono);font-size:.92rem;border:none;border-bottom:2px solid var(--emerald);background:var(--accent-soft);color:var(--ink);padding:0 6px;border-radius:4px 4px 0 0;text-align:center}
+.blank:focus{outline:none;background:var(--mark);color:var(--mark-ink)}
+.blank.ok{border-color:var(--ok);background:var(--ok-soft)}
+.blank.bad{border-color:var(--bad);background:var(--bad-soft)}
+.fix{font-family:var(--mono);font-size:.82rem;color:var(--ok);margin-left:4px}
+.bank{display:flex;flex-wrap:wrap;gap:6px}
+.bank span{font-family:var(--mono);font-size:.88rem;padding:2px 10px;border:1px dashed var(--line-strong);border-radius:4px;color:var(--ink)}
+.bank span.used{text-decoration:line-through;opacity:.45}
+.bank span.ok{border-style:solid;border-color:var(--ok);background:var(--ok-soft);color:var(--ok)}
+.progress{display:flex;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:.85rem}
+.progress .met{color:var(--ok)}
+
+/* final */
+.lock{display:flex;flex-direction:column;gap:8px;padding:18px;border:1px dashed var(--line-strong);border-radius:4px;background:var(--bg)}
+.score{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.score b{font-family:var(--display);font-weight:700;font-size:2.4rem;color:var(--emerald-dark)}
+.quote{padding:14px 16px;border-left:3px solid var(--emerald);background:var(--bg);border-radius:0 4px 4px 0;white-space:pre-wrap;color:var(--ink)}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.summary div{display:flex;flex-direction:column;gap:4px;font-size:.92rem;min-width:0}
+
+.note{font-size:.88rem;color:var(--muted)}
+.linkbtn{all:unset;cursor:pointer;color:var(--emerald-link);text-decoration:underline}
+.linkbtn:focus-visible{outline:2px solid var(--emerald);outline-offset:2px}
+main a:not(.btn){color:var(--emerald-link)}
+@media (pointer:coarse){
+  .blank,.tool-select{font-size:16px}
+  .tool{padding:8px 12px}
+  .chip{padding:7px 14px}
+  .kwrow .chips .chip{padding:6px 12px}
+}
+.fbrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.kwcell{display:flex;flex-direction:column;gap:4px;min-width:0}
+.kwok{display:none;font-size:.8rem;font-weight:600;color:var(--ok)}
+.kwrow.ok{border-color:var(--ok);background:var(--ok-soft)}
+.kwrow.ok .kwok{display:block}
+.kwrow.ok input[type=text]{border-color:var(--ok)}
+.tlayout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,220px);gap:24px;align-items:start}
+.tmain{min-width:0}
+.tside{display:flex;flex-direction:column;gap:18px;padding:16px;background:var(--bg);border-radius:4px;position:-webkit-sticky;position:sticky;top:150px}
+@media (max-width:720px){.tlayout{grid-template-columns:1fr}.tside{position:static;order:-1}}
+@media (prefers-reduced-motion:reduce){.kwrow{transition:none}}
+.alt{font-size:.85rem;color:var(--emerald-link)}
+.helper{border:1px dashed var(--line-strong);border-radius:4px;padding:12px 14px}
+.howto{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:4px;font-size:.92rem;max-width:68ch}
+.player{display:flex;flex-direction:column;gap:10px}
+.screen{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;aspect-ratio:16/9;max-width:100%;border-radius:4px;text-decoration:none;color:var(--screen-ink);background:radial-gradient(120% 90% at 50% 40%,var(--screen-hi),var(--screen));padding:16px;text-align:center}
+.screen:focus-visible{outline:3px solid var(--emerald);outline-offset:3px}
+.pplay{display:grid;place-items:center;width:84px;height:84px;border-radius:50%;background:var(--emerald);color:#fff;transition:transform .15s}
+.screen:hover .pplay{transform:scale(1.06)}
+.ptitle{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:1.1rem;text-wrap:balance;text-shadow:0 1px 3px rgba(0,0,0,.3)}
+.ptime{font-size:.82rem;opacity:.85}
+.screen.embed{padding:0;overflow:hidden;background:var(--screen)}
+.screen.embed iframe{width:100%;height:100%;border:0;display:block}
+.player.small{max-width:640px}
+.listen.audio .info{flex:1 1 100%}
+.aplayer{display:flex;flex-direction:column;gap:8px;flex:1 1 280px;min-width:0}
+.aplayer audio{width:100%;display:block}
+.speeds{display:flex;gap:6px;flex-wrap:wrap}
+.dframe{width:100%;aspect-ratio:5/1;min-height:240px;height:auto;border:0;border-radius:4px;background:#000;display:block}
+.listen.audio.fallback .aplayer{flex:1 1 100%}
+.listen.audio.fallback .count{margin-left:auto}
+.pfoot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline}
+.pfoot .note{flex:1 1 260px;min-width:0}
+@media (prefers-reduced-motion:reduce){.pplay{transition:none}}
+
+/* playlist cards */
+.plist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.pitem{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:18px;align-items:center;padding:18px;background:var(--bg);border:1px solid transparent;border-radius:4px}
+.pitem.current{border-color:var(--emerald);box-shadow:inset 3px 0 0 var(--emerald)}
+.pnum{display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:var(--emerald);color:#fff;font-family:var(--display);font-weight:700;font-size:1rem;align-self:start}
+.pbody{display:flex;flex-direction:column;gap:6px;min-width:0}
+.pmeta{font-size:.8rem}
+.pbar{height:6px;border-radius:3px;background:var(--line);overflow:hidden;max-width:240px}
+.pbar span{display:block;height:100%;background:var(--emerald)}
+.pdone{color:var(--ok)}
+.pact{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.ptools{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:2px}
+.ptools .btn{font-size:.82rem;padding:4px 8px}
+.pdel{color:var(--bad)!important}
+@media (max-width:620px){.pitem{grid-template-columns:auto minmax(0,1fr)}.pact{grid-column:1/-1;align-items:stretch}.pact>.btn{justify-content:center}.ptools{justify-content:flex-start}}
+
+/* editor */
+.editor{display:flex;flex-direction:column}
+.toolbar{display:flex;flex-wrap:wrap;gap:4px;padding:6px;border:1px solid var(--line);border-bottom:none;border-radius:4px 4px 0 0;background:var(--bg)}
+.editor textarea{border-radius:0 0 4px 4px}
+.tool{all:unset;cursor:pointer;padding:5px 10px;border-radius:4px;font-family:var(--body);font-size:.85rem;font-weight:600;color:var(--ink);white-space:nowrap}
+.tool:hover{background:var(--accent-soft)}
+.tool:focus-visible{outline:2px solid var(--emerald);outline-offset:1px}
+.tool.key{background:var(--emerald);color:#fff}
+.tool.key:hover{background:var(--emerald-hover)}
+.tool-select{font-family:var(--body);font-size:.85rem;font-weight:600;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:4px;padding:4px 8px;cursor:pointer}
+.tool-select:focus-visible{outline:2px solid var(--emerald);outline-offset:1px}
+.tsep{width:1px;align-self:stretch;background:var(--line);margin:2px 4px}
+.preview{font-size:.98rem;line-height:2.1;padding:12px 14px;border:1px dashed var(--line-strong);border-radius:4px;overflow-wrap:anywhere;color:var(--ink)}
+.preview mark{background:var(--accent-soft);color:var(--ink);border-bottom:2px solid var(--emerald);padding:0 5px;border-radius:3px 3px 0 0;font-family:var(--mono);font-size:.88rem}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--emerald-dark);color:#fff;padding:10px 18px;border-radius:4px;font-family:var(--body);font-size:.9rem;z-index:20}
+code{font-family:var(--mono);font-size:.88em;background:var(--accent-soft);color:var(--emerald-dark);padding:1px 5px;border-radius:4px}
+@media (prefers-reduced-motion:no-preference){.sheet{animation:in .25s ease-out}@keyframes in{from{transform:translateY(6px)}to{transform:none}}}
+</style>
+<style id="emerald-dark">
+/* Dark version of the Emerald look, used when the phone is in dark mode */
+@media screen and (prefers-color-scheme: dark){
+  :root{color-scheme:dark;--emerald-dark:#7fcbb0;--emerald-link:#6cc8a6;--emerald-soft:#7fcbb0;
+    --bg:#1a2320;--sheet:#121816;--ink:#edf2f0;--muted:#b6c2bd;--faint:#7d8a85;--line:#2f3b37;--line-strong:#4b5a55;
+    --accent-soft:#1d3a31;--mark:#6b5a14;--mark-ink:#fff3c4;--ok:#5fd19b;--ok-soft:#173a2b;--bad:#f08a80;--bad-soft:#3a1d1a}
+  .bar{background:#161e1b;border-bottom-color:#2f3b37}
+  .btn.ghost{background:transparent;color:#7fcbb0}
+  .btn.ghost:hover{background:#1d3a31}
+  .chip{background:transparent}
+  .chip[aria-pressed="true"]{background:#49B190;color:#fff}
+  textarea:focus,input:focus{background:#1f2a26}
+  .kwrow{background:#161e1b}
+  .tool-select{background:#1f2a26;color:var(--ink)}
+  .toast{background:#2c6b56;color:#fff}
+
+  .site{background:#161e1b!important;border-bottom-color:#2f3b37!important}
+  .brand-logo{background:#fff;border-radius:6px;padding:4px 8px;box-sizing:content-box}
+  .lang button{background:transparent!important;color:#7fcbb0!important}
+  .lang button[aria-pressed="true"]{background:#49B190!important;color:#fff!important}
+  .app-home{background:transparent!important;color:#7fcbb0!important}
+  .app-home:hover{background:#1d3a31!important}
+}
+</style>
+
+</head>
+<body>
+<header class="site">
+  <div class="wrap site-in">
+    <img class="brand-logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAATIAAABaCAMAAAAMyCp0AAAAYFBMVEX///9CsJFHeGVCsJFHeGVCsJFCsJFHeGVCsJFHeGVCsJFCsJFCsJFHeGVHeGVHeGVHeGUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+cqAbAAAAIHRSTlMA/v5tdSavRY64RssQ1CkRjgAAAAAAAAAAAAAAAAAAAHyN6jMAAAmlSURBVHja7ZzrtqsoDIC1CCLg5f2fdpRrCNd2tzNravlx1mkNEr+GkATcw/Brv/Zrv/Zrv1ZoVJzth6GTFZdy9E0y8p3kpmVZjrrIKbFsTV58zDVG1PchezweS13klHjMr/By1H7IcBNsbLTvMrU/I6Ny7Gg9ljZPhbZ9FTKFpiQTl0GJzEQVXapk2/xNyESMRVJ/hSTMuPohGwZsYqpy8Wz09sgU8mLSLJ7nt5LTrKGRpirrV/symjGi4Noui0vtjP9Rlf83MprBAe3u8mvpYspujCwhNlqzksJGalJlhGrMvhxZCkOaL1lYSk+zY88w+25kSubc1GVkl9sn1OCjOAiprwHfjUxmQ1WpeXCDhel/c5mAuCMyngehHRq1jo3quZpNP+n9kIlCFikvcAQAzMM1AdytkKls4h07e4dMPJGkfzGyQnEs4kP1BC0hy0/NZ5Dpqse8+89bNU0wV4E4bvs8z1s6wrz16xnJI2S0UN8RAKbU6ZIsCrPXkDkJn40ehsK22M9rJkvZDp+srlO2JL0fOJWd/Q2PLSlMZ/TE8uh2pfqYBAZI9by80qMy35eR7UvI2NeL2QxSeFyU3+NkP2Zq77ei7H9bYJcJI0j0bMiXppolJKTNlYidfhW+LyJzT+iZzQ+sMXiaFZdFjmTEFRVMZtRj2evIWvJDpWptkm5dZKQWS2kW57xZJzIzi9ZlMY+6bFbRxf7W0P9s/jGceMRM329CNSZPYHVd1r2GrClPa+VqX2IkbvIVbZIV6mVL2qa0omY8hlF29U7KzFjwNLvlNdtFADPTD3/1P6bpsM+4wT67cVJLBVlbntdr/OzkpPTsNDZXnsaqu8SYIsNTaHFr4RKb2YrcuvWCU1ShcxLblu0zJ4XOGFlbfuxtrFDPLsdm3ciCfnaSxj/5FItHgcIRfTWlU3nyiwqe3HlkbXnaS4y3jJK9jOzAfgQ88gIeZ0+JWWZHdD+4YOT6bBVkHfK8k5hoLxYqW8ie07YhZDsKs4/CEjKlC+hgI4q9dL9sn6mMrEO+08RUxzwmr62YceSFMxN4jwXzCPeYS/dbonkOR8kja8vT54AV0tHCzOxENreQPQoWCKbSUbvflPQ5isja8qLt9aPDBDV5+SKyvROZdilLul+1hmEg4MAzTbrmErIO+borY1zUNzpxHv8SsqET2fwotxKyORkg0M8h65CXFeui8VkgUpfP5Jn9afk7kS0dyIYnkQ1tZOgUmSLSAFHjdyD7i5X1HIWyZ6do0/XxzyLTfmaas20r1SSe9GUd8hknHscKlEFPxf5LZIUVs32/t66YtB5cwcOMsh3FfRpZPmaq3y/fZ30yLgPyovbQ8dk81g5J5IeRTXkTqN5vys20VvRfkxel02RpCk7a2dWnkZkfG+eYVzlpLt5vf6Qpw97MMSvyETKpS4mEn02kzES0vrJTSP7ryEqVjLUyYlqZSOrcjUpGLC/wzPMYGEW+TgVXJgVeGvIZ09uRDag85or0c2VEYyLrlpbC872a8pGJxAczdGYZvgrSouTu+MeR2R98Nbt185ErJi25AOEU2sD21FoB3ZKHVmTwSMkkmIuKhUlHfXxGySlG8PEX/vTBz2eRDWFrZc3tl2R/pMmX8v1+wVbToiGPDq2M3KwAdoLqs7I87DZZQYdRH3OsVH8+gCzawEt3oPJ2jfU4Z11Vi7q8DNOSR9tELKyhxOEQyfylkTsU/wKy85toWy5+s6jgCuYV7bE19jGr8iwYiHnm8zSxvLZI3BVqJ6TbXSLuCiPWw7HivtxnkF174n5Ozp3eM3A2AUlr0ajIE+/JBDw/wMKMo8bLu/VV2MnMPEFRLP58sM3niYn5qbPwzWMcvfICzktw4o5EZwvOg9lOWLkuVNuXBP5QDvdo/mnZZUEUPL5I5puxMhUdpQX+kNwEGcsjG+FaSAFf4hG5E2cD63vX5GsaiScmjFzT8xYSml+C7CbErC0ZEFcAQTgR2Mo8M2JIkaiLw8zvgszaiJ91zr+hlF2EK+qKRPROgDRvoNxsXjoy9sQid2EYx5Ue4oVdiUjnANTHKXK4T/NFCJtiSmtKY+5FQ+ITdpcTqJutl2EBoDgRIvmzZna5kB703Zx/tAB4TIzmTx4QVGIToFDL74TMgmL+L6+o4jv5prZoNumk3rpj4w2NzAdg8K3o4r6IFPkNFXIzZAJt+YraMQLpDx6AOrYc7tbCGxEsswuSUrs2S9gT7+V/7QrweiPD/Rr9E7HSe78qMj7usi4/sb3zVIIImnTy1zm4Tyxqm0pGTC7x+EpGlatvQ7fyLu+TTariUgzNz8UhhLmfiUU+0a4sbPQelqOeWJQk+zR+xOSS/w8IpGJVrr4N3Z44a1dvauhBJlwg4r51al3JPSeEWWtNkfmeWJToHWhuEl6MLL4U7mGuMBuuE4Ssrls2PX+h0aELGXO5PbFdrFrCfX/+oCyLzPfEoiRxogAZwU8noivCvvxHEbKqbm9iRocuZHTkNhQh7s+8aC0UuAMzmzEIme+ZiPYjC6P7K/y8WaSKRVbT7T3M6NCH7NSQjzZLlRqGUYtHWMcMMt8zEe1HFkb3V4h+BxyoYpBVdXvHGiDV0IdMnb8eNQzOb6Xe/rPlExhTn8E0RhZ6JqLdyMDoyMqAKtaX1XRr/ymudnShhk5kxFTJTdWIUPMXEfTWH0tsPUbme6aiZDxd89VoBhm8BEZ3ItT4MqCKRVbTbej421J/i2ABMv2Dmc9GNWbUcr+98mEURuZ7pqIkUSQNMgga/Rqa6DVQIFXcilnRrVbW6JqUzSwpIDOjK+1biXHyJPoliX9ChCz0TEV7rQyO7ovIFKvig4yybqVEgL0tSQrImAmTpA+GTvMX0F8I/XyXH0HIQM9EtNeXwdEvmGfZgQQpp4pHVtbtT3+/kvcV4gjOYZn79oyLkthKpSsm7JmIdiKLRrdzfAw+zqkSQtmibrWUs25pkvTWLvEDXC7YfrARtQIHhpg510BBJ9gzEe1EFo1uPgk3SYEqIPov6VZfB0iRGqf95V6o6zBEainpI2wCI2xhIxe9csU9sWgnsuge9grX8yRSpUO35uop0tIZerGpiUz7EBIS7MsFE7/BB/O4K+tzoeu1pjF7qgj2xKJm8TubwCPCS+geZngloZkKnGOWdOsq2IrLb8qrqFiogTQ3FcZzRJB3CG8AnEUvZDARn3kwh9xgTyyaq2TYz+ASuoePy+D6wRGyom4fr1zaeAbUzRT8xOHfx4dRz/mR4oqbsnEREM3Vy+xncAndw31U0SVuxurQ7dd+7dd+7dfu2P4BRxls8DKa1nkAAAAASUVORK5CYII=" alt="Emerald Language Learning" width="306" height="90">
+  </div>
+</header>
+<div class="bar">
+  <div class="wrap">
+    <div class="toprow">
+      <h1 id="clipTitle"></h1>
+      <span class="clipmeta" id="clipMeta"></span>
+    </div>
+    <nav class="rail" id="rail" data-i18n-aria="stepsNav" aria-label="Steps"></nav>
+  </div>
+</div>
+<main><div class="wrap" id="view"></div></main>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+var __values = (this && this.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+};
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
+(function () {
+    var _this = this;
+    // ---------- language
+    var STR = {
+        en: {
+            appTitle: "Listening Lab", langGroup: "Language", stepsNav: "Steps",
+            exercises: function (v) { return "".concat(v.n, " exercise").concat(v.n === 1 ? "" : "s"); },
+            clip: "clip {a} → {b}", noClip: "no clip set",
+            st_playlist: "Playlist", st_setup: "Teacher setup", st_context: "Context", st_keywords: "Key words", st_transcript: "Transcript", st_final: "Final listening",
+            listens: function (v) { return "".concat(v.n, " listen").concat(v.n === 1 ? "" : "s"); }, views: function (v) { return "".concat(v.n, " view").concat(v.n === 1 ? "" : "s"); },
+            back: "← Back", next: "Next step →",
+            playSeq: "▶ Play the sequence", addVideo: "Add a video in setup",
+            playsRange: "Plays {a} → {b} in a new tab and stops by itself.",
+            wontPlay: "Won't play? Open it on YouTube",
+            audioOnly: "Audio only. It opens in a new tab.", playAudio: "▶ Play the audio",
+            speedGroup: "Playback speed", slower: "Slower", normalSpeed: "Normal speed",
+            embedNote: "{text} The sequence runs from {a} to {b} and stops by itself.",
+            videoSeq: "Video sequence", watchSeqAria: "Watch the sequence in a new tab", watchSeq: "Watch the sequence", long: "{d} long",
+            finalWatchNote: "Watch the sequence while you read your transcript. It opens in a new tab and stops at {e} by itself.",
+            finalWatchEmbed: "Watch the sequence while you read your transcript.",
+            followTranscript: "Follow the transcript as you listen.",
+            audioNoteEmpty: "Upload an MP3 of the sequence to Google Drive, set sharing to “Anyone with the link”, and paste its link here. Learners then hear audio only in steps 1 to 3 and see the video in the final listening. Without audio, the video is used in every step.",
+            audioNoteOk: "Audio found. Learners hear it in steps 1 to 3; the video is shown in the final listening.",
+            audioNoteBad: "This doesn't look like a Google Drive file link. Use Share → Copy link on the file in Drive.",
+            audioPlayer: "Audio player", audioDrive: "The audio is playing through Google Drive's player.",
+            t_selectWord: "Select a word or phrase first", t_alreadyKey: "That is already a key word", t_cursorInside: "Put the cursor inside a key word",
+            t_noKeyInSel: "There is no key word in the selection", t_selectText: "Select some text first", t_noKeys: "There are no key words to clear",
+            t_keysCleared: "Key words cleared. Use Undo to bring them back.", t_tidy: "Spacing is already tidy",
+            t_copied: "Copied to clipboard", t_copyManual: "Select the text and copy it manually",
+            t_unlocked: "Unlocked", t_locked: "Teacher settings locked", t_dup: "Exercise duplicated", t_needOne: "The playlist needs at least one exercise",
+            t_deleted: "Exercise deleted", t_new: "New exercise added", t_plLoaded: function (v) { return "Playlist loaded: ".concat(v.n, " exercise").concat(v.n === 1 ? "" : "s"); },
+            t_exAdded: "Exercise added to the playlist", t_codeBad: "That code couldn't be read. Copy the whole code and try again.",
+            t_answersCleared: "Answers cleared for this exercise",
+            clickAgainDelete: "Click again to delete", del: "Delete", clickAgainClear: "Click again to clear all answers", resetAnswers: "Reset answers for this exercise",
+            found: function (v) { return "".concat(v.n, " of ").concat(v.t, " key word").concat(v.t === 1 ? "" : "s", " found"); },
+            yourKeys: "Your key words", greenNote: "Green words are in the transcript.",
+            noWords: "You didn't note any words in step 2. {btn}.", addSome: "Add some", wordBank: "Word bank",
+            pl_label: "Playlist", pl_h: "Choose an exercise",
+            pl_intro: "Each exercise is one video sequence with the same four listening steps. Your progress is saved separately for each one, so you can switch at any time.",
+            untitled: "Untitled exercise", noVideo: "no video yet", kwCount: function (v) { return "".concat(v.n, " key word").concat(v.n === 1 ? "" : "s"); },
+            stepsDone: "{n} of 4 steps done", notStarted: "Not started", finished: "Finished · {r}/{t} correct",
+            review: "Review", cont: "Continue", start: "Start", edit: "Edit", duplicate: "Duplicate", moveUp: "Move up", moveDown: "Move down",
+            teacherTools: "Teacher tools", newEx: "+ New exercise", copyCode: "Copy playlist code", loadCode: "Load playlist code",
+            pasteCodeNote: "Paste a playlist code to replace this playlist. A code for a single exercise is added to the end instead.",
+            pastePh: "Paste the code here", loadThis: "Load this code",
+            savedNote: "Everything is saved in this browser only. To give learners the same playlist on their own devices, send them the playlist code.",
+            teachersUnlock: "Teachers: unlock {btn} to add, edit or reorder exercises.", teacherSetupLink: "teacher setup",
+            forTeacher: "For the teacher", lockedH: "Teacher settings are locked", lockedP: "Enter the teacher PIN to change the video, transcript or other settings.",
+            pin: "PIN", unlock: "Unlock", backToEx: "Back to the exercise →", pinBad: "That PIN is not correct. Try again.", pinBadShort: "That PIN is not correct.",
+            setH: "Set up the sequence", lockBtn: "🔒 Lock settings",
+            setupIntro: "Paste the YouTube link, choose the part of the video to use, and write the transcript. Put each key word in square brackets, for example <code>it [never] moves</code>. Each bracketed word becomes a blank in step 3.",
+            titleLbl: "Title shown to learners", ytLbl: "YouTube link", urlFound: "Video found: {id}",
+            urlBad: "This doesn't look like a YouTube link. Check that it contains the video ID.",
+            urlSample: "The sample below has no video yet. Paste a link to make the clip buttons work.", urlPaste: "Paste a YouTube link.",
+            audioLbl: "Audio file (Google Drive link)", startLbl: "Start (m:ss)", endLbl: "End (m:ss)",
+            helper: "Transcription helper",
+            how1: "Open the video on YouTube, click <b>…more</b> under the video, then <b>Show transcript</b>.",
+            how2: "Select all the text in the transcript panel, copy it and paste it below. The timestamps can stay.",
+            how3: "Click <b>Cut to my clip</b> to keep only the lines between your start and end times. <b>Cut and tidy with Claude</b> also adds punctuation, speaker labels and suggested key words.",
+            openYT: "Open this video on YouTube ↗", cutBtn: "Cut to my clip", aiBtn: "Cut and tidy with Claude", claudePin: "Claude PIN", unlockRun: "Unlock and run",
+            hMsg: "The result replaces the transcript below. Use Undo in the toolbar to go back.",
+            transLbl: "Transcript with [key words]", toolsAria: "Transcript tools",
+            tl_key: "[ ] Make key word", tt_key: "Select a word, then click (Ctrl/⌘ + K)",
+            tl_unkey: "Remove key word", tt_unkey: "Remove the brackets around the selected or current key word",
+            tt_bold: "Bold (Ctrl/⌘ + B)", al_bold: "Bold", tt_italic: "Italic (Ctrl/⌘ + I)", al_italic: "Italic",
+            speakerAria: "Speaker label for the current line", speakerTitle: "Start the current line with a speaker label", speakerPh: "Speaker…", speakerX: "Speaker {x}",
+            tl_tidy: "Tidy spacing", tt_tidy: "Remove extra spaces and empty lines", tl_clear: "Clear key words", tt_clear: "Remove every key word bracket",
+            tl_undo: "↶ Undo", al_undo: "Undo", tt_undo: "Undo (Ctrl/⌘ + Z)", tl_redo: "↷ Redo", al_redo: "Redo",
+            kwFound: function (v) { return "".concat(v.n, " key word").concat(v.n === 1 ? "" : "s", " found: ").concat(v.list); }, noneYet: "none yet",
+            formatNote: "In the editor, bold shows as <code>**word**</code> and italics as <code>*word*</code>. Learners see the formatting.",
+            previewLbl: "Preview: key words become blanks", emptyTrans: "The transcript is empty.",
+            bankLbl: "Word bank in step 3", shown: "Shown", hiddenW: "Hidden", bankNote: "An alphabetical list of the key words, to make step 3 easier.",
+            fbLbl: "Correct-word feedback in step 2 (default)", on: "On", off: "Off",
+            fbNote: "When on, a noted word turns green if it is one of the key words. This is the starting setting: learners can switch it on or off themselves in step 2.",
+            modelLbl: "Model interpretation (revealed after the final check)",
+            autosave: "Changes save automatically. To share the playlist, use the playlist code on the Playlist page.",
+            previewLearner: "Preview as a learner →",
+            ai_pasteFirst: "Paste the YouTube transcript first, or write a draft in the transcript field.",
+            ai_unavail: "Claude isn't available in this view. Use “Cut to my clip” instead.",
+            ai_working: "Claude is tidying the transcript. This can take up to a minute…",
+            ai_done: function (v) { return "Done. Claude marked ".concat(v.n, " key words. Check the transcript against the video, and use Undo if you want your previous version back."); },
+            ai_cant: "Claude can't be used here. Use “Cut to my clip” and edit the transcript yourself.",
+            ai_busy: "Claude is busy or your usage limit is reached. Try again in a few minutes.",
+            ai_expired: "Your Claude session has expired. Sign in again, then retry.",
+            ai_refused: "Claude couldn't work with this text. Try a shorter or different excerpt.",
+            ai_error: "Something went wrong while contacting Claude. Try again.",
+            cut_pasteFirst: "Paste the YouTube transcript first.",
+            cut_none: "No lines found between {a} and {b}. Check the start and end times.",
+            cut_kept: function (v) { return "Kept ".concat(v.n, " caption line").concat(v.n === 1 ? "" : "s", " from ").concat(v.a, " to ").concat(v.b, ". Now add punctuation, speakers and key words."); },
+            cut_noTs: "No timestamps were found, so all the text was inserted.",
+            listenOf: "Listening {n} of 4",
+            ctxH: "Contextualisation", ctxP: "Listen for the general atmosphere. Don't try to understand every word. Where are the speakers, who is there, and what can you hear around them?",
+            ctxBar: "Listen once without stopping, then note what you heard.",
+            notesLbl: "What else do you hear? Mood, accents, how people sound",
+            notesPh: "e.g. busy morning, people chatting behind them, the woman sounds tired but friendly",
+            kwH: "Listening for key words", kwP: "Listen to how the words are said. Which words stand out? Write each one down and mark what made it stand out.",
+            kwBar: "You can listen several times. Pause after each sentence if it helps.",
+            whatListen: "What to listen for",
+            lg_tonic: "Tonic stress", lg_tonicD: "The main stressed syllable in a phrase, usually on the most important new word.",
+            lg_emph: "Emphatic stress", lg_emphD: "Extra stress the speaker adds to show emotion, contrast or insistence.",
+            lg_into: "Intonation", lg_intoD: "The voice going up ↗ (questions, surprise, unfinished ideas) or down ↘ (statements, certainty).",
+            lg_vol: "Volume and speed", lg_volD: "Louder, softer, slower or faster than the words around it.",
+            showCorrect: "Show correct words: {s}", switchOnNote: "Switch this on to see which of your words are in the transcript.",
+            kwInTrans: "✓ In the transcript", wordPh: "Word or phrase", kwAria: "Key word {n}", removeRow: "Remove row {n}", addWord: "+ Add a word",
+            trH: "Place the key words", trP: "Listen again and fill each blank with the word you hear. If you like, explain what the stressed words tell you about the speakers.",
+            trBar: "Use your notes from step 2. You can listen as many times as you need.",
+            blankAria: "Blank {n}", interpLbl: "Your interpretation (optional)",
+            interpNote: "Why did the speakers stress these words? What do they show about feelings, attitude or meaning?",
+            interpPh: "e.g. She stresses “never” because she is surprised that…",
+            blanksFilled: "{f}/{t} blanks filled", wordsWritten: function (v) { return "".concat(v.n, " word").concat(v.n === 1 ? "" : "s", " written (optional)"); },
+            goFinal: "Go to final listening →", finalLocked: "Final listening (locked)",
+            finalH: "Final listening", finishFirst: "Finish step 3 first",
+            finishP: "Fill every blank ({f}/{t} so far). Then come back here to listen one last time and check your answers.",
+            backTrans: "← Back to the transcript",
+            finalP: "Listen one last time while you read your transcript. Then check your answers and compare your interpretation with the model.",
+            correctLbl: "key words correct", yourInterp: "Your interpretation", modelInterp: "Model interpretation",
+            ctxNoted: "Context you noted", kwHeard: "Key words you heard", listensLbl: "Listens",
+            copyWork: "Copy my work for the teacher", another: "Choose another exercise", tryAgain: "Try again",
+            lockNote: "Your answers lock when you check them.", check: "Check my answers",
+            blankOk: "Blank {n}, correct", blankBad: "Blank {n}, incorrect",
+            r_title: "LISTENING LAB", r_clip: "Clip", r_noLink: "(no link)", r_ctx: "1. CONTEXT", r_notes: "Notes", r_kw: "2. KEY WORDS", r_noFeat: "no features marked",
+            r_trans: "3. TRANSCRIPT ({r}/{t} correct)", r_blank: "Blank {n}", r_interp: "INTERPRETATION", r_none: "(none written)",
+            newExTitle: "New exercise",
+            c_place: "Where are the speakers?", c_people: "How many people?", c_type: "Type of audio", c_sounds: "Background sounds",
+            o_street: "In the street", o_room: "In a room", o_shop: "In a shop or café", o_outdoors: "Outdoors / nature", o_vehicle: "In a vehicle", o_work: "At work", o_stage: "On stage", o_cant: "Can't tell",
+            o_one: "One speaker", o_two: "Two people", o_group: "A small group", o_crowd: "A crowd",
+            o_conv: "Conversation", o_interview: "Interview", o_speech: "Speech / talk", o_announce: "Announcement", o_news: "News report", o_film: "Film or TV scene", o_vlog: "Vlog", o_advert: "Advert",
+            o_traffic: "Traffic", o_music: "Music", o_voices: "Other voices", o_steps: "Footsteps", o_weather: "Weather", o_machines: "Machines", o_laughter: "Laughter", o_silence: "Near silence",
+            g_tonic: "Tonic stress", g_emph: "Emphatic stress", g_rise: "Rising ↗", g_fall: "Falling ↘", g_fallrise: "Fall-rise ↘↗", g_louder: "Louder", g_softer: "Softer", g_slower: "Slower", g_faster: "Faster"
+        }
+    };
+    var LANG = "en";
+    function T(key, vars) {
+        vars = vars || {};
+        var s = STR[LANG][key];
+        if (s === undefined)
+            s = STR.en[key];
+        if (s === undefined)
+            return key;
+        if (typeof s === "function")
+            return s(vars);
+        return s.replace(/\{(\w+)\}/g, function (m, k) { return k in vars ? vars[k] : m; });
+    }
+    function applyStatic() {
+        document.documentElement.lang = LANG;
+        document.querySelectorAll("[data-i18n]").forEach(function (el) { return el.textContent = T(el.dataset.i18n); });
+        document.querySelectorAll("[data-i18n-html]").forEach(function (el) { return el.innerHTML = T(el.dataset.i18nHtml); });
+        document.querySelectorAll("[data-i18n-aria]").forEach(function (el) { return el.setAttribute("aria-label", T(el.dataset.i18nAria)); });
+        document.querySelectorAll("[data-i18n-title]").forEach(function (el) { return el.title = T(el.dataset.i18nTitle); });
+        document.title = T("appTitle") + " · Emerald Language Learning";
+    }
+    // ---------- data (learning content stays in English)
+    var SAMPLE = {
+        title: "Saturday at the bakery",
+        url: "",
+        start: "0:00",
+        end: "0:45",
+        transcript: "A: Excuse me, is this the [queue] for the bakery?\nB: It is, but it [never] moves this slowly on a weekday.\nA: Really? I [thought] it would be [quiet] this early.\nB: You'd [think] so! Honestly, the croissants are [worth] the wait.",
+        wordBank: true,
+        minWords: 30,
+        model: "B stresses \"never\" to show surprise and mild frustration: the slow queue is unusual. A's rising intonation on \"Really?\" shows disbelief, and the stress on \"thought\" contrasts what A expected with what is happening. \"Worth\" is said more loudly because B wants to persuade A to stay."
+    };
+    var BLANK_WORK = function () { return ({ listens: { context: 0, keywords: 0, transcript: 0, final: 0 },
+        ctx: { place: [], people: [], type: [], sounds: [], notes: "" },
+        keys: [{ word: "", tags: [], note: "" }, { word: "", tags: [], note: "" }],
+        blanks: {}, interp: "", checked: false }); };
+    var store = {
+        get: function (k) { try {
+            return JSON.parse(localStorage.getItem(k));
+        }
+        catch (e) {
+            return null;
+        } },
+        set: function (k, v) { try {
+            localStorage.setItem(k, JSON.stringify(v));
+        }
+        catch (e) { } }
+    };
+    var DEFAULTS = { title: "New exercise", url: "", start: "0:00", end: "0:30", transcript: "", audio: "", wordBank: true, keyFeedback: true, minWords: 30, model: "" };
+    var SAMPLE2 = {
+        title: "Platform announcement", url: "", start: "0:00", end: "0:30",
+        transcript: "A: The ten fifteen service to Leeds is [delayed] by approximately [twenty] minutes.\nA: We [apologise] for any inconvenience this may cause.\nA: Passengers for York should [change] at Doncaster.\nA: Please do [not] leave your luggage unattended.",
+        wordBank: false, minWords: 25,
+        model: "The announcer stresses \"delayed\" and \"twenty\" because they are the new information passengers need. \"Not\" carries emphatic stress: it is a warning, so it is louder and slower than the rest."
+    };
+    var uid = function () { return Math.random().toString(36).slice(2, 9); };
+    var newItem = function (s) { return ({ id: uid(), setup: Object.assign({}, DEFAULTS, s), work: BLANK_WORK() }); };
+    var lib = store.get("ll-lib");
+    if (!lib || !Array.isArray(lib.items) || !lib.items.length) {
+        lib = { current: null, items: [Object.assign(newItem(SAMPLE), { id: "bakery" }), Object.assign(newItem(SAMPLE2), { id: "platform" })] };
+    }
+    lib.items.forEach(function (it) { it.setup = Object.assign({}, DEFAULTS, it.setup); it.work = Object.assign(BLANK_WORK(), it.work); });
+    var setup, work;
+    function select(id) { var it = lib.items.find(function (i) { return i.id === id; }) || lib.items[0]; lib.current = it.id; setup = it.setup; work = it.work; }
+    select(lib.current);
+    var curItem = function () { return lib.items.find(function (i) { return i.id === lib.current; }); };
+    function withItem(it, fn) { var s = setup, w = work; setup = it.setup; work = it.work; try {
+        return fn();
+    }
+    finally {
+        setup = s;
+        work = w;
+    } }
+    var save = function () { return store.set("ll-lib", lib); };
+    // ---------- remote exercises (Android app) ----------
+    // The app reads the playlist code from this Google Doc each time it opens.
+    // The exercises live in a Google Sheet (one exercise per row), read each time Listening Lab opens.
+    var REMOTE_SHEET_ID = "16z4gUtwyRlwHIPSjgKIvfeBmIkw3T3RQamY_AEdFPXw";
+    var REMOTE_EDIT = "https://docs.google.com/spreadsheets/d/" + REMOTE_SHEET_ID + "/edit";
+    // Column headings in the sheet (matched by their first words, so they can be reworded a little).
+    var SHEET_COLS = [["id", "ID"], ["title", "Title"], ["url", "YouTube link"], ["start", "Start (m:ss)"], ["end", "End (m:ss)"], ["audio", "Audio (Google Drive link)"], ["transcript", "Transcript (key words in [brackets])"], ["wordBank", "Word bank (yes/no)"], ["keyFeedback", "Key word feedback (yes/no)"], ["model", "Model interpretation"]];
+    var yes = function (v) { return /^(yes|y|oui|o|true|1|x|✓)$/i.test(String(v || "").trim()); };
+    function rowsToPlaylist(table) {
+        var find = function (label) { var want = label.toLowerCase().split(" (")[0]; return table.cols.findIndex(function (c) { return c.toLowerCase().trim().indexOf(want) === 0; }); };
+        var idx = {};
+        SHEET_COLS.forEach(function (_a) {
+            var _b = __read(_a, 2), k = _b[0], label = _b[1];
+            return idx[k] = find(label);
+        });
+        if (idx.transcript < 0)
+            return null;
+        var get = function (r, k) { return idx[k] >= 0 ? String(r[idx[k]] || "").replace(/\r/g, "") : ""; };
+        return table.rows.map(function (r) {
+            var s = { title: get(r, "title").trim(), url: get(r, "url").trim(), start: get(r, "start").trim() || "0:00", end: get(r, "end").trim() || "0:30",
+                audio: get(r, "audio").trim(), transcript: get(r, "transcript").trim(), model: get(r, "model").trim(),
+                wordBank: idx.wordBank < 0 ? true : yes(get(r, "wordBank")), keyFeedback: idx.keyFeedback < 0 ? true : yes(get(r, "keyFeedback")) };
+            var id = get(r, "id").trim();
+            if (id)
+                s.id = id;
+            return s;
+        }).filter(function (s) { return s.transcript || s.title; });
+    }
+    // Teachers: copy the current playlist as a table that pastes straight into the sheet.
+    function copySheetRows() {
+        var esc2 = function (t) { return String(t || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>"); };
+        var head = SHEET_COLS.map(function (c) { return c[1]; });
+        var rows = lib.items.map(function (it) { var s = it.setup; return [it.id, s.title, s.url, s.start, s.end, s.audio, s.transcript, s.wordBank ? "yes" : "no", s.keyFeedback !== false ? "yes" : "no", s.model]; });
+        var html = "<table><tr>" + head.map(function (h) { return "<td>" + esc2(h) + "</td>"; }).join("") + "</tr>" + rows.map(function (r) { return "<tr>" + r.map(function (c) { return "<td>" + esc2(c) + "</td>"; }).join("") + "</tr>"; }).join("") + "</table>";
+        var box = document.createElement("div");
+        box.innerHTML = html;
+        box.setAttribute("contenteditable", "true");
+        box.style.cssText = "position:fixed;left:-9999px;top:0;opacity:0";
+        document.body.appendChild(box);
+        var range = document.createRange();
+        range.selectNodeContents(box);
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        var ok = false;
+        try {
+            ok = document.execCommand("copy");
+        }
+        catch (e) { }
+        sel.removeAllRanges();
+        box.parentNode.removeChild(box);
+        toast(ok ? "Copied. In the sheet, click cell A1 and paste." : T("t_copyManual"));
+    }
+    var inApp = function () { return !!(window.EmeraldApp && window.EmeraldApp.inApp); };
+    function decodeCode(text) {
+        var e_1, _a;
+        var t = String(text || "").replace(/^﻿/, "").trim();
+        try {
+            var j = JSON.parse(t);
+            if (j && typeof j === "object")
+                return j;
+        }
+        catch (e) { }
+        var runs = (t.match(/[A-Za-z0-9+/=]{40,}/g) || []).sort(function (a, b) { return b.length - a.length; });
+        try {
+            for (var runs_1 = __values(runs), runs_1_1 = runs_1.next(); !runs_1_1.done; runs_1_1 = runs_1.next()) {
+                var r = runs_1_1.value;
+                try {
+                    return JSON.parse(decodeURIComponent(escape(atob(r))));
+                }
+                catch (e) { }
+            }
+        }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (runs_1_1 && !runs_1_1.done && (_a = runs_1.return)) _a.call(runs_1);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
+        return null;
+    }
+    var keyOf = function (s) { return (String(s.title || "") + "|" + String(s.url || "")).toLowerCase().trim(); };
+    function stableId(s) { var k = keyOf(s) + "|" + (s.start || ""); var h = 0; for (var i = 0; i < k.length; i++)
+        h = (h * 31 + k.charCodeAt(i)) | 0; return "r" + (h >>> 0).toString(36); }
+    // Replace the playlist, keeping each learner's progress for exercises that are still in it.
+    function mergePlaylist(list) {
+        if (!Array.isArray(list) || !list.length || !list.every(function (x) { return x && typeof x.transcript === "string"; }))
+            return false;
+        var old = lib.items;
+        lib.items = list.map(function (s0) {
+            var s = Object.assign({}, s0);
+            var id = s.id || stableId(s);
+            delete s.id;
+            var setupNew = Object.assign({}, DEFAULTS, s);
+            var prev = old.find(function (o) { return o.id === id; }) || old.find(function (o) { return keyOf(o.setup) === keyOf(setupNew); });
+            var w = BLANK_WORK();
+            if (prev) {
+                w = prev.setup.transcript === setupNew.transcript ? prev.work : Object.assign(BLANK_WORK(), { listens: prev.work.listens, ctx: prev.work.ctx, keys: prev.work.keys, feedback: prev.work.feedback });
+            }
+            return { id: id, setup: setupNew, work: w };
+        });
+        select(lib.items.some(function (i) { return i.id === lib.current; }) ? lib.current : lib.items[0].id);
+        save();
+        return true;
+    }
+    var syncing = false;
+    var canSync = function () { return !!(window.EmeraldApp && window.EmeraldApp.sheet); };
+    function syncRemote(manual) {
+        if (!canSync() || syncing)
+            return;
+        syncing = true;
+        window.EmeraldApp.sheet(REMOTE_SHEET_ID).then(function (table) {
+            var list = rowsToPlaylist(table);
+            if (!list || !list.length) {
+                if (manual)
+                    toast("The exercises sheet couldn't be read. Check its column headings.");
+                return;
+            }
+            var sig = JSON.stringify(list);
+            var last = null;
+            try {
+                last = localStorage.getItem("ll-remote-sig");
+            }
+            catch (e) { }
+            if (sig === last) {
+                if (manual)
+                    toast("Exercises are up to date");
+                return;
+            }
+            if (mergePlaylist(list)) {
+                try {
+                    localStorage.setItem("ll-remote-sig", sig);
+                }
+                catch (e) { }
+                render();
+                toast("Exercises updated");
+            }
+        }).catch(function () { if (manual)
+            toast("Couldn't reach the exercises list. Check the internet connection."); })
+            .then(function () { syncing = false; }, function () { syncing = false; });
+    }
+    var PIN_HASH = "737513f7afb8668a9c9a489db2c4812419ad909bbc7d1989611852d8535909e7";
+    var unlocked = false;
+    try {
+        unlocked = sessionStorage.getItem("ll-unlocked") === "1";
+    }
+    catch (e) { }
+    function sha(s) {
+        return __awaiter(this, void 0, void 0, function () { var b; return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, crypto.subtle.digest("SHA-256", new TextEncoder().encode(s))];
+                case 1:
+                    b = _a.sent();
+                    return [2 /*return*/, __spreadArray([], __read(new Uint8Array(b)), false).map(function (x) { return x.toString(16).padStart(2, "0"); }).join("")];
+            }
+        }); });
+    }
+    var STEPS = [
+        { id: "setup", n: "⚙" },
+        { id: "context", n: "1" },
+        { id: "keywords", n: "2" },
+        { id: "transcript", n: "3" },
+        { id: "final", n: "✓" }
+    ];
+    var stepName = function (id) { return T("st_" + id); };
+    // Context options and stress tags are stored as stable keys, labelled in the current language.
+    var CTX = {
+        place: { label: "c_place", opts: ["street", "room", "shop", "outdoors", "vehicle", "work", "stage", "cant"] },
+        people: { label: "c_people", opts: ["one", "two", "group", "crowd"] },
+        type: { label: "c_type", opts: ["conv", "interview", "speech", "announce", "news", "film", "vlog", "advert"] },
+        sounds: { label: "c_sounds", opts: ["traffic", "music", "voices", "steps", "weather", "machines", "laughter", "silence"] }
+    };
+    var TAGS = ["tonic", "emph", "rise", "fall", "fallrise", "louder", "softer", "slower", "faster"];
+    var optName = function (k) { return T("o_" + k); }, tagName = function (k) { return T("g_" + k); };
+    // ---------- helpers
+    var $ = function (s, el) {
+        if (el === void 0) { el = document; }
+        return el.querySelector(s);
+    };
+    var esc = function (s) { return String(s !== null && s !== void 0 ? s : "").replace(/[&<>"]/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]); }); };
+    var toSec = function (t) { var p = String(t || "").trim().split(":").map(Number); if (p.some(isNaN))
+        return 0; return p.reduce(function (a, b) { return a * 60 + b; }, 0); };
+    var fmt = function (s) { return "".concat(Math.floor(s / 60), ":").concat(String(s % 60).padStart(2, "0")); };
+    function videoId(u) {
+        if (!u)
+            return null;
+        var m = u.match(/(?:youtu\.be\/|v=|shorts\/|embed\/|live\/)([A-Za-z0-9_-]{11})/);
+        return m ? m[1] : null;
+    }
+    function clipUrl() { var id = videoId(setup.url); if (!id)
+        return null; var s = toSec(setup.start), e = toSec(setup.end); return "https://www.youtube.com/embed/".concat(id, "?start=").concat(s).concat(e > s ? "&end=".concat(e) : "", "&autoplay=1&rel=0"); }
+    var EMBED_VIDEO = false; // true in the Google Sites build, where YouTube can play inside the page
+    var listensTxt = function (n) { return T("listens", { n: n }); };
+    function embedPlayer(step, text, big) {
+        var id = videoId(setup.url), s = toSec(setup.start), e = toSec(setup.end), n = work.listens[step];
+        return "<div class=\"player ".concat(big ? "" : "small", "\">\n    <div class=\"screen embed\"><iframe data-listen=\"").concat(step, "\" src=\"https://www.youtube-nocookie.com/embed/").concat(id, "?start=").concat(s).concat(e > s ? "&end=".concat(e) : "", "&rel=0&playsinline=1&modestbranding=1\" title=\"").concat(esc(setup.title || T("videoSeq")), "\" allow=\"autoplay; encrypted-media; picture-in-picture; fullscreen\" allowfullscreen></iframe></div>\n    <div class=\"pfoot\"><span class=\"note\">").concat(T("embedNote", { text: text, a: fmt(s), b: fmt(e) }), " <a href=\"").concat(esc(watchUrl()), "\" target=\"_blank\" rel=\"noopener\">").concat(T("wontPlay"), "</a></span><span class=\"count\" data-count=\"").concat(step, "\">").concat(listensTxt(n), "</span></div>\n  </div>");
+    }
+    function driveId(u) { if (!u)
+        return null; var m = u.match(/\/file\/d\/([A-Za-z0-9_-]{10,})/) || u.match(/[?&]id=([A-Za-z0-9_-]{10,})/); return m ? m[1] : null; }
+    var audioNote = function () { return !setup.audio ? T("audioNoteEmpty") : driveId(setup.audio) ? T("audioNoteOk") : T("audioNoteBad"); };
+    var audioSrc = function () { var id = driveId(setup.audio); return id ? "https://drive.google.com/uc?export=download&id=".concat(id) : null; };
+    var audioPreview = function () { var id = driveId(setup.audio); return id ? "https://drive.google.com/file/d/".concat(id, "/preview") : null; };
+    function audioPlayer(step, text) {
+        var n = work.listens[step], cnt = "<span class=\"count\" data-count=\"".concat(step, "\">").concat(listensTxt(n), "</span>");
+        if (!EMBED_VIDEO)
+            return "<div class=\"listen\">\n    <div class=\"info\">".concat(text, "<br><span class=\"mono muted\">").concat(T("audioOnly"), "</span></div>\n    <a class=\"btn\" href=\"").concat(esc(audioPreview()), "\" target=\"_blank\" rel=\"noopener\" data-listen=\"").concat(step, "\">").concat(T("playAudio"), "</a>").concat(cnt, "\n  </div>");
+        return "<div class=\"listen audio\">\n    <div class=\"info\">".concat(text, "</div>\n    <div class=\"aplayer\">\n      <audio controls preload=\"metadata\" src=\"").concat(esc(audioSrc()), "\" data-astep=\"").concat(step, "\" data-preview=\"").concat(esc(audioPreview()), "\"></audio>\n      <div class=\"speeds\" role=\"group\" aria-label=\"").concat(T("speedGroup"), "\">\n        <button class=\"chip\" data-rate=\"0.75\" aria-pressed=\"false\">").concat(T("slower"), "</button>\n        <button class=\"chip\" data-rate=\"1\" aria-pressed=\"true\">").concat(T("normalSpeed"), "</button>\n      </div>\n    </div>").concat(cnt, "\n  </div>");
+    }
+    function bumpListen(step) {
+        work.listens[step]++;
+        save();
+        var c = document.querySelector("[data-count=\"".concat(step, "\"]"));
+        if (c) {
+            c.textContent = listensTxt(work.listens[step]);
+        }
+        renderRail();
+    }
+    function watchUrl() { var id = videoId(setup.url); return id ? "https://www.youtube.com/watch?v=".concat(id, "&t=").concat(toSec(setup.start), "s") : null; }
+    var AI_PIN_HASH = "483029d526219f816e8e8f6a9de07b422633dba180ffc26faac22862a017519f";
+    var aiUnlocked = false;
+    try {
+        aiUnlocked = sessionStorage.getItem("ll-ai") === "1";
+    }
+    catch (e) { }
+    var ownerPromise = null;
+    var isOwner = function () { return ownerPromise || (ownerPromise = ((window.claude && window.claude.use) ? window.claude.use("user").catch(function () { return null; }) : Promise.resolve(null)).then(function (u) { try {
+        return !!(u && u.isOwner());
+    }
+    catch (e) {
+        return false;
+    } })); };
+    var samplePromise = null;
+    var getSample = function () { return samplePromise || (samplePromise = (window.claude && window.claude.use) ? window.claude.use("sample").catch(function () { return null; }) : Promise.resolve(null)); };
+    var DURATION_LINE = /^\d+\s+(hours?|minutes?|seconds?|heures?|secondes?)(,\s*\d+\s+(minutes?|seconds?|secondes?))*$/i;
+    function cutTranscript(raw) {
+        var e_2, _a;
+        var lines = raw.replace(/\r/g, "").split("\n").map(function (l) { return l.trim(); }).filter(function (l) { return l && !DURATION_LINE.test(l); });
+        var TS = /^((?:\d{1,2}:)?\d{1,2}:\d{2})$/, TSI = /^((?:\d{1,2}:)?\d{1,2}:\d{2})\s+(.+)$/;
+        var segs = [];
+        var cur = null, found = false;
+        try {
+            for (var lines_1 = __values(lines), lines_1_1 = lines_1.next(); !lines_1_1.done; lines_1_1 = lines_1.next()) {
+                var l = lines_1_1.value;
+                var m = void 0;
+                if ((m = l.match(TS))) {
+                    found = true;
+                    cur = { t: toSec(m[1]), text: [] };
+                    segs.push(cur);
+                }
+                else if ((m = l.match(TSI))) {
+                    found = true;
+                    cur = { t: toSec(m[1]), text: [m[2]] };
+                    segs.push(cur);
+                }
+                else if (cur)
+                    cur.text.push(l);
+                else {
+                    cur = { t: 0, text: [l] };
+                    segs.push(cur);
+                }
+            }
+        }
+        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+        finally {
+            try {
+                if (lines_1_1 && !lines_1_1.done && (_a = lines_1.return)) _a.call(lines_1);
+            }
+            finally { if (e_2) throw e_2.error; }
+        }
+        var s = toSec(setup.start), e = toSec(setup.end);
+        var keep = found ? segs.filter(function (g, i) { var next = segs[i + 1] ? segs[i + 1].t : Infinity; return next > s && (e <= s || g.t < e); }) : segs;
+        var text = keep.map(function (g) { return g.text.join(" "); }).join(" ").replace(/\[([^\]]*)\]/g, "($1)").replace(/\s+/g, " ").trim();
+        return { text: text, found: found, count: keep.length };
+    }
+    function putTranscript(text) {
+        var ta = $("#s-trans");
+        if (!ta)
+            return;
+        replaceRange(ta, 0, ta.value.length, text);
+    }
+    function runAI(btn) {
+        return __awaiter(this, void 0, void 0, function () {
+            var msg, raw, cut, sample, prompt, text, clean, e_3, c;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        msg = $("#h-msg"), raw = $("#h-raw").value;
+                        cut = raw.trim() ? cutTranscript(raw) : { text: setup.transcript.replace(/[\[\]]/g, ""), found: false, count: 0 };
+                        if (!cut.text) {
+                            msg.textContent = T("ai_pasteFirst");
+                            return [2 /*return*/];
+                        }
+                        return [4 /*yield*/, getSample()];
+                    case 1:
+                        sample = _a.sent();
+                        if (!sample) {
+                            btn.hidden = true;
+                            msg.textContent = T("ai_unavail");
+                            return [2 /*return*/];
+                        }
+                        btn.setAttribute("aria-disabled", "true");
+                        msg.textContent = T("ai_working");
+                        prompt = "You are preparing a transcript for an English listening exercise for learners.\nBelow is an excerpt of automatic YouTube captions. They may have no punctuation and some recognition errors.\nRewrite it as a clean transcript:\n- Add punctuation and capital letters.\n- Start a new line each time the speaker changes, beginning with \"A: \", \"B: \" and so on, using at most five speakers (A to E). If there is only one speaker, use \"A: \" and start a new line after each sentence or two.\n- Keep the speakers' own words. Do not summarise, add, remove or reorder anything. Fix only obvious caption errors.\n- Choose 4 to 8 key words that a listener would hear with tonic or emphatic stress, and wrap each one in square brackets, like [never]. Use square brackets for nothing else; write sound labels in round brackets, like (laughs).\nReply with only the finished transcript, no introduction and no notes.\n\nCaptions:\n\"\"\"\n".concat(cut.text.slice(0, 12000), "\n\"\"\"");
+                        _a.label = 2;
+                    case 2:
+                        _a.trys.push([2, 4, 5, 6]);
+                        return [4 /*yield*/, sample(prompt)];
+                    case 3:
+                        text = (_a.sent()).text;
+                        clean = text.replace(/^```[a-z]*\n?|```$/gim, "").trim();
+                        putTranscript(clean);
+                        msg.textContent = T("ai_done", { n: answers().length });
+                        return [3 /*break*/, 6];
+                    case 4:
+                        e_3 = _a.sent();
+                        c = e_3 && e_3.code;
+                        if (["not_granted", "sampling_disabled", "not_declared", "capability_disabled", "capability_removed"].includes(c)) {
+                            btn.hidden = true;
+                            msg.textContent = T("ai_cant");
+                        }
+                        else if (c === "rate_limited")
+                            msg.textContent = T("ai_busy");
+                        else if (c === "session_expired")
+                            msg.textContent = T("ai_expired");
+                        else if (c === "refused")
+                            msg.textContent = T("ai_refused");
+                        else if (c !== "cancelled")
+                            msg.textContent = T("ai_error");
+                        return [3 /*break*/, 6];
+                    case 5:
+                        btn.removeAttribute("aria-disabled");
+                        return [7 /*endfinally*/];
+                    case 6: return [2 /*return*/];
+                }
+            });
+        });
+    }
+    function player() {
+        var url = clipUrl(), n = work.listens.final, s = toSec(setup.start), e = toSec(setup.end);
+        if (!url)
+            return listenBar("final", T("followTranscript"));
+        if (EMBED_VIDEO)
+            return embedPlayer("final", T("finalWatchEmbed"), true);
+        return "<div class=\"player\">\n    <a class=\"screen\" href=\"".concat(esc(url), "\" target=\"_blank\" rel=\"noopener\" data-listen=\"final\" aria-label=\"").concat(T("watchSeqAria"), "\">\n      <span class=\"pplay\" aria-hidden=\"true\"><svg viewBox=\"0 0 24 24\" width=\"34\" height=\"34\"><path d=\"M8 5v14l11-7z\" fill=\"currentColor\"/></svg></span>\n      <span class=\"ptitle\">").concat(esc(setup.title || T("watchSeq")), "</span>\n      <span class=\"ptime mono\">").concat(fmt(s), " \u2192 ").concat(fmt(e), " \u00B7 ").concat(T("long", { d: fmt(Math.max(0, e - s)) }), "</span>\n    </a>\n    <div class=\"pfoot\"><span class=\"note\">").concat(T("finalWatchNote", { e: fmt(e) }), " <a href=\"").concat(esc(watchUrl()), "\" target=\"_blank\" rel=\"noopener\" data-listen=\"final\">").concat(T("wontPlay"), "</a></span><span class=\"count\">").concat(T("views", { n: n }), "</span></div>\n  </div>");
+    }
+    function parse() {
+        var out = [];
+        var i = 0;
+        var re = /\[([^\]]+)\]/g;
+        var last = 0, m;
+        while ((m = re.exec(setup.transcript))) {
+            if (m.index > last)
+                out.push({ text: setup.transcript.slice(last, m.index) });
+            out.push({ answer: m[1].replace(/\*/g, "").trim(), i: i++ });
+            last = re.lastIndex;
+        }
+        if (last < setup.transcript.length)
+            out.push({ text: setup.transcript.slice(last) });
+        return out;
+    }
+    var answers = function () { return parse().filter(function (p) { return "answer" in p; }); };
+    // Render the transcript with **bold** and *italic* markers; styles reset at each line break.
+    function rich(blankFn) {
+        var e_4, _a, e_5, _b;
+        var b = false, it = false, out = "";
+        var wrap = function (h) { return (b ? "<strong>" : "") + (it ? "<em>" : "") + h + (it ? "</em>" : "") + (b ? "</strong>" : ""); };
+        try {
+            for (var _c = __values(parse()), _d = _c.next(); !_d.done; _d = _c.next()) {
+                var p = _d.value;
+                if ("answer" in p) {
+                    out += wrap(blankFn(p));
+                    continue;
+                }
+                try {
+                    for (var _e = (e_5 = void 0, __values(p.text.split(/(\*\*|\*|\n)/))), _f = _e.next(); !_f.done; _f = _e.next()) {
+                        var tok = _f.value;
+                        if (tok === "**")
+                            b = !b;
+                        else if (tok === "*")
+                            it = !it;
+                        else if (tok === "\n") {
+                            out += "<br>";
+                            b = false;
+                            it = false;
+                        }
+                        else if (tok)
+                            out += wrap(esc(tok));
+                    }
+                }
+                catch (e_5_1) { e_5 = { error: e_5_1 }; }
+                finally {
+                    try {
+                        if (_f && !_f.done && (_b = _e.return)) _b.call(_e);
+                    }
+                    finally { if (e_5) throw e_5.error; }
+                }
+            }
+        }
+        catch (e_4_1) { e_4 = { error: e_4_1 }; }
+        finally {
+            try {
+                if (_d && !_d.done && (_a = _c.return)) _a.call(_c);
+            }
+            finally { if (e_4) throw e_4.error; }
+        }
+        return out;
+    }
+    var previewHtml = function () { return setup.transcript.trim() ? rich(function (p) { return "<mark>".concat(esc(p.answer), "</mark>"); }) : "<span class=\"muted\">".concat(T("emptyTrans"), "</span>"); };
+    function replaceRange(ta, s, e, text) {
+        ta.focus();
+        ta.setSelectionRange(s, e);
+        var ok = false;
+        try {
+            ok = text === "" ? document.execCommand("delete") : document.execCommand("insertText", false, text);
+        }
+        catch (err) { }
+        if (!ok) {
+            ta.setRangeText(text, s, e, "end");
+            ta.dispatchEvent(new Event("input", { bubbles: true }));
+        }
+    }
+    function tool(name) {
+        var ta = $("#s-trans");
+        if (!ta)
+            return;
+        var s = ta.selectionStart, e = ta.selectionEnd;
+        var v = ta.value;
+        var isW = function (c) { return /[A-Za-z0-9\u00C0-\u024F\u0370-\u03FF\u0400-\u04FF'’-]/.test(c || ""); };
+        if (name === "undo" || name === "redo") {
+            ta.focus();
+            try {
+                document.execCommand(name);
+            }
+            catch (err) { }
+            return;
+        }
+        if (name === "key") {
+            if (s === e) {
+                while (s > 0 && isW(v[s - 1]))
+                    s--;
+                while (e < v.length && isW(v[e]))
+                    e++;
+            }
+            while (s < e && /\s/.test(v[s]))
+                s++;
+            while (e > s && /\s/.test(v[e - 1]))
+                e--;
+            if (s === e) {
+                toast(T("t_selectWord"));
+                return;
+            }
+            if (v[s - 1] === "[" && v[e] === "]") {
+                toast(T("t_alreadyKey"));
+                return;
+            }
+            var inner = v.slice(s, e).replace(/[\[\]]/g, "");
+            replaceRange(ta, s, e, "[".concat(inner, "]"));
+            ta.setSelectionRange(s, s + inner.length + 2);
+            return;
+        }
+        if (name === "unkey") {
+            if (s === e) {
+                var L = v.lastIndexOf("[", s - 1), R = v.indexOf("]", s), Lc = v.lastIndexOf("]", s - 1);
+                if (L < 0 || R < 0 || Lc > L) {
+                    toast(T("t_cursorInside"));
+                    return;
+                }
+                s = L;
+                e = R + 1;
+            }
+            else {
+                if (v[s - 1] === "[")
+                    s--;
+                if (v[e] === "]")
+                    e++;
+            }
+            var t = v.slice(s, e);
+            if (!/[\[\]]/.test(t)) {
+                toast(T("t_noKeyInSel"));
+                return;
+            }
+            replaceRange(ta, s, e, t.replace(/[\[\]]/g, ""));
+            return;
+        }
+        if (name === "bold" || name === "italic") {
+            var mk = name === "bold" ? "**" : "*";
+            if (s === e) {
+                while (s > 0 && isW(v[s - 1]))
+                    s--;
+                while (e < v.length && isW(v[e]))
+                    e++;
+            }
+            while (s < e && /\s/.test(v[s]))
+                s++;
+            while (e > s && /\s/.test(v[e - 1]))
+                e--;
+            if (s === e) {
+                toast(T("t_selectText"));
+                return;
+            }
+            var before = 0, after = 0;
+            while (v[s - 1 - before] === "*")
+                before++;
+            while (v[e + after] === "*")
+                after++;
+            var run = Math.min(before, after);
+            var has = mk === "**" ? run >= 2 : (run === 1 || run === 3);
+            var inner = v.slice(s, e);
+            if (has) {
+                replaceRange(ta, s - mk.length, e + mk.length, inner);
+                ta.setSelectionRange(s - mk.length, e - mk.length);
+            }
+            else {
+                replaceRange(ta, s, e, mk + inner + mk);
+                ta.setSelectionRange(s + mk.length, e + mk.length);
+            }
+            return;
+        }
+        if (name.startsWith("sp-")) {
+            var label = name.slice(3) + ": ", ls = v.lastIndexOf("\n", s - 1) + 1, le = v.indexOf("\n", ls);
+            var m = v.slice(ls, le < 0 ? v.length : le).match(/^[A-Z][\w ]{0,15}:\s*/);
+            replaceRange(ta, ls, ls + (m ? m[0].length : 0), label);
+            return;
+        }
+        if (name === "clear") {
+            if (!/[\[\]]/.test(v)) {
+                toast(T("t_noKeys"));
+                return;
+            }
+            replaceRange(ta, 0, v.length, v.replace(/[\[\]]/g, ""));
+            toast(T("t_keysCleared"));
+            return;
+        }
+        if (name === "tidy") {
+            var t = v.split("\n").map(function (l) { return l.replace(/[ \t]+/g, " ").trim(); }).join("\n").replace(/\n{3,}/g, "\n\n").replace(/\[\s+/g, "[").replace(/\s+\]/g, "]").trim();
+            if (t !== v)
+                replaceRange(ta, 0, v.length, t);
+            else
+                toast(T("t_tidy"));
+            return;
+        }
+    }
+    var norm = function (s) { return String(s || "").toLowerCase().replace(/[’']/g, "'").replace(/[^A-Za-z0-9\u00C0-\u024F\u0370-\u03FF\u0400-\u04FF\u0590-\u06FF\u3040-\u30FF\u4E00-\u9FFF\uAC00-\uD7AF' -]/g, "").trim(); };
+    var words = function (s) { return (s.trim().match(/\S+/g) || []).length; };
+    var feedbackOn = function () { return (typeof work.feedback === "boolean") ? work.feedback : setup.keyFeedback !== false; };
+    var isKey = function (w) { return feedbackOn() && !!String(w || "").trim() && answers().some(function (a) { return norm(a.answer) === norm(w); }); };
+    var foundCount = function () { return answers().filter(function (a) { return work.keys.some(function (k) { return norm(k.word) === norm(a.answer); }); }).length; };
+    var foundText = function () { return T("found", { n: foundCount(), t: answers().length }); };
+    function sidePanel(bank, used) {
+        var mine = work.keys.map(function (k) { return k.word.trim(); }).filter(Boolean);
+        return "<aside class=\"tside\">\n    <div class=\"group\"><span class=\"label\">".concat(T("yourKeys"), "</span>\n      ").concat(mine.length ? "<div class=\"bank\">".concat(mine.map(function (w) { return "<span class=\"".concat(isKey(w) ? "ok" : "", " ").concat(used.includes(norm(w)) ? "used" : "", "\">").concat(esc(w), "</span>"); }).join(""), "</div>").concat(feedbackOn() ? "<span class=\"note\">".concat(T("greenNote"), "</span>") : "") : "<p class=\"note\">".concat(T("noWords", { btn: "<button type=\"button\" class=\"linkbtn\" data-go=\"keywords\">".concat(T("addSome"), "</button>") }), "</p>"), "\n    </div>\n    ").concat(setup.wordBank && bank.length ? "<div class=\"group\"><span class=\"label\">".concat(T("wordBank"), "</span><div class=\"bank\">").concat(bank.map(function (b) { return "<span class=\"".concat(used.includes(norm(b)) ? "used" : "", "\">").concat(esc(b), "</span>"); }).join(""), "</div></div>") : "", "\n  </aside>");
+    }
+    var filledCount = function () { return answers().filter(function (a) { return (work.blanks[a.i] || "").trim(); }).length; };
+    var ready = function () { return answers().length > 0 && filledCount() === answers().length; };
+    function stepDone(id) {
+        if (id === "setup")
+            return !!videoId(setup.url) && answers().length > 0;
+        if (id === "context")
+            return work.listens.context > 0 && (Object.keys(CTX).some(function (k) { return work.ctx[k].length; }) || work.ctx.notes.trim());
+        if (id === "keywords")
+            return work.listens.keywords > 0 && work.keys.some(function (k) { return k.word.trim(); });
+        if (id === "transcript")
+            return ready();
+        if (id === "final")
+            return work.checked;
+    }
+    function toast(msg) { var t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast.h); toast.h = setTimeout(function () { return t.hidden = true; }, 2200); }
+    function copy(text) {
+        return __awaiter(this, void 0, void 0, function () {
+            var e_6, ta;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, navigator.clipboard.writeText(text)];
+                    case 1:
+                        _a.sent();
+                        toast(T("t_copied"));
+                        return [3 /*break*/, 3];
+                    case 2:
+                        e_6 = _a.sent();
+                        ta = document.createElement("textarea");
+                        ta.value = text;
+                        document.body.appendChild(ta);
+                        ta.select();
+                        try {
+                            document.execCommand("copy");
+                            toast(T("t_copied"));
+                        }
+                        catch (_) {
+                            toast(T("t_copyManual"));
+                        }
+                        ta.remove();
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    }
+    // ---------- chrome
+    // Navigation is kept in a variable, not only in the address: inside an embed (Google Sites) links to "#step" can be blocked.
+    var route = "";
+    try {
+        route = location.hash.slice(1);
+    }
+    catch (e) { }
+    function current() { var h = route; return (h === "playlist" || STEPS.some(function (s) { return s.id === h; })) ? h : "playlist"; }
+    function go(v) {
+        route = v;
+        render();
+        try {
+            window.scrollTo(0, 0);
+        }
+        catch (e) { }
+        try {
+            if (location.hash !== "#" + v)
+                history.replaceState(null, "", "#" + v);
+        }
+        catch (e) { }
+    }
+    var LEARN = ["context", "keywords", "transcript", "final"];
+    function renderRail() {
+        var cur = current();
+        var btn = function (s) { return "<button data-go=\"".concat(s.id, "\" class=\"").concat(stepDone(s.id) ? "done" : "", " ").concat(s.id === "final" && !ready() ? "locked" : "", "\" ").concat(s.id === cur ? 'aria-current="step"' : "", "><span class=\"n\">").concat(s.id === "setup" && !unlocked ? "🔒" : s.n, "</span>").concat(stepName(s.id), "</button>"); };
+        requestAnimationFrame(function () { var a = $('#rail [aria-current="step"]'); if (a)
+            a.scrollIntoView({ inline: "center", block: "nearest", behavior: "auto" }); });
+        $("#rail").innerHTML = "<button data-go=\"playlist\" ".concat(cur === "playlist" ? 'aria-current="step"' : "", "><span class=\"n\">\u2261</span>").concat(stepName("playlist"), "</button>") + STEPS.slice(1).map(btn).join("") + btn(STEPS[0]);
+        if (cur === "playlist") {
+            $("#clipTitle").textContent = T("appTitle");
+            $("#clipMeta").textContent = T("exercises", { n: lib.items.length });
+        }
+        else {
+            $("#clipTitle").textContent = setup.title || T("appTitle");
+            $("#clipMeta").textContent = videoId(setup.url) ? T("clip", { a: fmt(toSec(setup.start)), b: fmt(toSec(setup.end)) }) : T("noClip");
+        }
+    }
+    function listenBar(step, text) {
+        var url = clipUrl(), n = work.listens[step];
+        if (audioSrc())
+            return audioPlayer(step, text);
+        if (EMBED_VIDEO && url)
+            return embedPlayer(step, text, false);
+        return "<div class=\"listen\">\n    <div class=\"info\">".concat(text, "<br><span class=\"mono muted\">").concat(T("playsRange", { a: fmt(toSec(setup.start)), b: fmt(toSec(setup.end)) }), "</span>").concat(url ? " <a class=\"alt\" href=\"".concat(esc(watchUrl()), "\" target=\"_blank\" rel=\"noopener\" data-listen=\"").concat(step, "\">").concat(T("wontPlay"), "</a>") : "", "</div>\n    ").concat(url ? "<a class=\"btn\" href=\"".concat(esc(url), "\" target=\"_blank\" rel=\"noopener\" data-listen=\"").concat(step, "\">").concat(T("playSeq"), "</a>") : "<button type=\"button\" class=\"btn\" aria-disabled=\"true\" data-go=\"setup\">".concat(T("addVideo"), "</button>"), "\n    <span class=\"count\" aria-live=\"polite\">").concat(listensTxt(n), "</span>\n  </div>");
+    }
+    function nav(prev, next, nextLabel) {
+        return "<div class=\"actions\">".concat(prev ? "<button type=\"button\" class=\"btn quiet\" data-go=\"".concat(prev, "\">").concat(T("back"), "</button>") : "<span></span>").concat(next ? "<button type=\"button\" class=\"btn ghost\" data-go=\"".concat(next, "\">").concat(nextLabel || T("next"), "</button>") : "", "</div>");
+    }
+    // ---------- views
+    var views = {
+        playlist: function () {
+            var card = function (it, i) { return withItem(it, function () {
+                var done = LEARN.filter(stepDone).length, ans = answers();
+                var right = ans.filter(function (a) { return norm(work.blanks[a.i]) === norm(a.answer); }).length;
+                var started = done > 0 || Object.values(work.listens).some(function (n) { return n > 0; });
+                var status = work.checked ? T("finished", { r: right, t: ans.length }) : started ? T("stepsDone", { n: done }) : T("notStarted");
+                var label = work.checked ? T("review") : started ? T("cont") : T("start");
+                var last = i === lib.items.length - 1;
+                return "<li class=\"pitem ".concat(it.id === lib.current ? "current" : "", "\">\n      <span class=\"pnum\" aria-hidden=\"true\">").concat(String(i + 1).padStart(2, "0"), "</span>\n      <div class=\"pbody\">\n        <h3>").concat(esc(setup.title || T("untitled")), "</h3>\n        <span class=\"mono muted pmeta\">").concat(videoId(setup.url) ? "".concat(fmt(toSec(setup.start)), " \u2192 ").concat(fmt(toSec(setup.end))) : T("noVideo"), " \u00B7 ").concat(T("kwCount", { n: ans.length }), "</span>\n        <div class=\"pbar\" role=\"img\" aria-label=\"").concat(T("stepsDone", { n: done }), "\"><span style=\"width:").concat(done * 25, "%\"></span></div>\n        <span class=\"note ").concat(work.checked ? "pdone" : "", "\">").concat(status, "</span>\n      </div>\n      <div class=\"pact\">\n        <button class=\"btn ").concat(work.checked ? "ghost" : "", "\" data-open=\"").concat(it.id, "\">").concat(label, "</button>\n        ").concat(unlocked ? "<div class=\"ptools\">\n          <button class=\"btn quiet\" data-edit=\"".concat(it.id, "\">").concat(T("edit"), "</button>\n          <button class=\"btn quiet\" data-dup=\"").concat(it.id, "\">").concat(T("duplicate"), "</button>\n          <button class=\"btn quiet\" data-move=\"").concat(it.id, "\" data-dir=\"-1\" aria-label=\"").concat(T("moveUp"), "\" ").concat(i === 0 ? 'aria-disabled="true"' : "", ">\u2191</button>\n          <button class=\"btn quiet\" data-move=\"").concat(it.id, "\" data-dir=\"1\" aria-label=\"").concat(T("moveDown"), "\" ").concat(last ? 'aria-disabled="true"' : "", ">\u2193</button>\n          <button class=\"btn quiet pdel\" data-rm=\"").concat(it.id, "\">").concat(T("del"), "</button>\n        </div>") : "", "\n      </div>\n    </li>");
+            }); };
+            return "<section class=\"sheet\">\n    <div class=\"intro\"><span class=\"label\">".concat(T("pl_label"), "</span><h2>").concat(T("pl_h"), "</h2>\n    <p class=\"muted\">").concat(T("pl_intro"), "</p></div>\n    <ol class=\"plist\">").concat(lib.items.map(card).join(""), "</ol>\n    ").concat(canSync() ? "<div><button type=\"button\" class=\"btn quiet\" id=\"p-sync\">\u21BB Check for new exercises</button></div>" : "", "\n    ").concat(unlocked ? "<div class=\"group\">\n      <span class=\"label\">".concat(T("teacherTools"), "</span>\n      <div style=\"display:flex;gap:10px;flex-wrap:wrap\">\n        <button class=\"btn\" id=\"p-new\">").concat(T("newEx"), "</button>\n        <button class=\"btn ghost\" id=\"s-rows\">Copy for the spreadsheet</button>\n        <button class=\"btn ghost\" id=\"s-export\">").concat(T("copyCode"), "</button>\n        <button class=\"btn ghost\" id=\"s-importToggle\">").concat(T("loadCode"), "</button>\n      </div>\n      <div id=\"s-import\" hidden class=\"group\">\n        <span class=\"note\">").concat(T("pasteCodeNote"), "</span>\n        <textarea id=\"s-code\" placeholder=\"").concat(T("pastePh"), "\"></textarea>\n        <div><button class=\"btn\" id=\"s-load\">").concat(T("loadThis"), "</button></div>\n      </div>\n      <p class=\"note\">Learners get the exercises from the <a href=\"").concat(REMOTE_EDIT, "\" target=\"_blank\" rel=\"noopener\">exercises spreadsheet</a>, one exercise per row. Edit it directly, or build the exercises here, tap <b>Copy for the spreadsheet</b>, then in the sheet select all, delete, click cell A1 and paste. Learners\u2019 apps update the next time they open Listening Lab.</p>\n    </div>") : "<p class=\"note\">".concat(T("teachersUnlock", { btn: "<button type=\"button\" class=\"linkbtn\" data-go=\"setup\">".concat(T("teacherSetupLink"), "</button>") }), "</p>"), "\n  </section>");
+        },
+        setup: function () {
+            if (!unlocked)
+                return "<section class=\"sheet\">\n    <div class=\"intro\"><span class=\"label\">".concat(T("forTeacher"), "</span><h2>").concat(T("lockedH"), "</h2>\n    <p class=\"muted\">").concat(T("lockedP"), "</p></div>\n    <form id=\"pin-form\" class=\"group\" style=\"max-width:260px\">\n      <label class=\"field\"><span class=\"label\">").concat(T("pin"), "</span><input type=\"password\" id=\"pin\" inputmode=\"numeric\" autocomplete=\"off\" maxlength=\"12\" class=\"mono\"></label>\n      <span class=\"note\" id=\"pin-msg\" aria-live=\"polite\"></span>\n      <div><button class=\"btn\" type=\"submit\">").concat(T("unlock"), "</button></div>\n    </form>\n    ").concat(nav("playlist", "context", T("backToEx")), "\n  </section>");
+            var id = videoId(setup.url), n = answers().length;
+            return "<section class=\"sheet\">\n    <div class=\"actions\"><div class=\"intro\"><span class=\"label\">".concat(T("forTeacher"), "</span><h2>").concat(T("setH"), "</h2></div><button class=\"btn quiet\" id=\"s-lock\">").concat(T("lockBtn"), "</button></div>\n    <div class=\"intro\">\n    <p class=\"muted\">").concat(T("setupIntro"), "</p></div>\n    <label class=\"field\"><span class=\"label\">").concat(T("titleLbl"), "</span><input type=\"text\" id=\"s-title\" value=\"").concat(esc(setup.title), "\"></label>\n    <label class=\"field\"><span class=\"label\">").concat(T("ytLbl"), "</span><input type=\"text\" id=\"s-url\" placeholder=\"https://www.youtube.com/watch?v=\u2026 / https://youtu.be/\u2026\" value=\"").concat(esc(setup.url), "\">\n      <span class=\"note\" id=\"s-urlnote\">").concat(setup.url ? (id ? T("urlFound", { id: id }) : T("urlBad")) : T("urlSample"), "</span></label>\n    <label class=\"field\"><span class=\"label\">").concat(T("audioLbl"), "</span><input type=\"text\" id=\"s-audio\" placeholder=\"https://drive.google.com/file/d/\u2026/view\" value=\"").concat(esc(setup.audio), "\">\n      <span class=\"note\" id=\"s-audionote\">").concat(audioNote(), "</span></label>\n    <div class=\"grid2\">\n      <label class=\"field\"><span class=\"label\">").concat(T("startLbl"), "</span><input type=\"text\" id=\"s-start\" class=\"mono\" value=\"").concat(esc(setup.start), "\"></label>\n      <label class=\"field\"><span class=\"label\">").concat(T("endLbl"), "</span><input type=\"text\" id=\"s-end\" class=\"mono\" value=\"").concat(esc(setup.end), "\"></label>\n    </div>\n    <details class=\"helper\">\n      <summary>").concat(T("helper"), "</summary>\n      <div class=\"group\" style=\"margin-top:12px\">\n        <ol class=\"howto\">\n          <li>").concat(T("how1"), "</li>\n          <li>").concat(T("how2"), "</li>\n          <li>").concat(T("how3"), "</li>\n        </ol>\n        ").concat(id ? "<div><a class=\"btn quiet\" href=\"".concat(esc(watchUrl()), "\" target=\"_blank\" rel=\"noopener\">").concat(T("openYT"), "</a></div>") : "", "\n        <textarea id=\"h-raw\" placeholder=\"0:12&#10;excuse me is this the queue for the bakery&#10;0:15&#10;it is but it never moves this slowly\"></textarea>\n        <div style=\"display:flex;gap:10px;flex-wrap:wrap\"><button class=\"btn ghost\" id=\"h-cut\">").concat(T("cutBtn"), "</button><button class=\"btn\" id=\"h-ai\" hidden>").concat(T("aiBtn"), "</button></div>\n        <div id=\"h-pinrow\" hidden style=\"display:flex;gap:8px;flex-wrap:wrap;align-items:center\">\n          <label class=\"label\" for=\"h-pin\">").concat(T("claudePin"), "</label>\n          <input type=\"password\" id=\"h-pin\" inputmode=\"numeric\" autocomplete=\"off\" maxlength=\"12\" class=\"mono\" style=\"width:9ch\">\n          <button class=\"btn ghost\" id=\"h-pinok\">").concat(T("unlockRun"), "</button>\n        </div>\n        <span class=\"note\" id=\"h-msg\" aria-live=\"polite\">").concat(T("hMsg"), "</span>\n      </div>\n    </details>\n    <div class=\"field\"><label class=\"label\" for=\"s-trans\">").concat(T("transLbl"), "</label>\n      <div class=\"editor\">\n        <div class=\"toolbar\" role=\"toolbar\" aria-label=\"").concat(T("toolsAria"), "\">\n          <button type=\"button\" class=\"tool key\" data-tool=\"key\" title=\"").concat(T("tt_key"), "\">").concat(T("tl_key"), "</button>\n          <button type=\"button\" class=\"tool\" data-tool=\"unkey\" title=\"").concat(T("tt_unkey"), "\">").concat(T("tl_unkey"), "</button>\n          <span class=\"tsep\" aria-hidden=\"true\"></span>\n          <button type=\"button\" class=\"tool\" data-tool=\"bold\" title=\"").concat(T("tt_bold"), "\" aria-label=\"").concat(T("al_bold"), "\"><b>B</b></button>\n          <button type=\"button\" class=\"tool\" data-tool=\"italic\" title=\"").concat(T("tt_italic"), "\" aria-label=\"").concat(T("al_italic"), "\"><i>I</i></button>\n          <span class=\"tsep\" aria-hidden=\"true\"></span>\n          <select class=\"tool-select\" id=\"s-speaker\" aria-label=\"").concat(T("speakerAria"), "\" title=\"").concat(T("speakerTitle"), "\">\n            <option value=\"\">").concat(T("speakerPh"), "</option>\n            ").concat(["A", "B", "C", "D", "E"].map(function (x) { return "<option value=\"".concat(x, "\">").concat(T("speakerX", { x: x }), "</option>"); }).join(""), "\n          </select>\n          <span class=\"tsep\" aria-hidden=\"true\"></span>\n          <button type=\"button\" class=\"tool\" data-tool=\"tidy\" title=\"").concat(T("tt_tidy"), "\">").concat(T("tl_tidy"), "</button>\n          <button type=\"button\" class=\"tool\" data-tool=\"clear\" title=\"").concat(T("tt_clear"), "\">").concat(T("tl_clear"), "</button>\n          <span class=\"tsep\" aria-hidden=\"true\"></span>\n          <button type=\"button\" class=\"tool\" data-tool=\"undo\" title=\"").concat(T("tt_undo"), "\" aria-label=\"").concat(T("al_undo"), "\">").concat(T("tl_undo"), "</button>\n          <button type=\"button\" class=\"tool\" data-tool=\"redo\" title=\"").concat(T("al_redo"), "\" aria-label=\"").concat(T("al_redo"), "\">").concat(T("tl_redo"), "</button>\n        </div>\n        <textarea id=\"s-trans\" style=\"min-height:180px\" spellcheck=\"true\" lang=\"en\">").concat(esc(setup.transcript), "</textarea>\n      </div>\n      <span class=\"note\" id=\"s-count\">").concat(T("kwFound", { n: n, list: answers().map(function (a) { return esc(a.answer); }).join(", ") || T("noneYet") }), "</span>\n      <span class=\"note\">").concat(T("formatNote"), "</span>\n      <span class=\"label\" style=\"margin-top:6px\">").concat(T("previewLbl"), "</span>\n      <div class=\"preview\" id=\"s-preview\" lang=\"en\">").concat(previewHtml(), "</div>\n    </div>\n    <div class=\"grid2\">\n      <div class=\"group\"><span class=\"label\">").concat(T("bankLbl"), "</span><div class=\"chips\">\n        <button class=\"chip\" id=\"s-bank\" aria-pressed=\"").concat(setup.wordBank, "\">").concat(setup.wordBank ? T("shown") : T("hiddenW"), "</button></div>\n        <span class=\"note\">").concat(T("bankNote"), "</span></div>\n      <div class=\"group\"><span class=\"label\">").concat(T("fbLbl"), "</span><div class=\"chips\">\n        <button class=\"chip\" id=\"s-feedback\" aria-pressed=\"").concat(setup.keyFeedback !== false, "\">").concat(setup.keyFeedback !== false ? T("on") : T("off"), "</button></div>\n        <span class=\"note\">").concat(T("fbNote"), "</span></div>\n    </div>\n    <label class=\"field\"><span class=\"label\">").concat(T("modelLbl"), "</span><textarea id=\"s-model\">").concat(esc(setup.model), "</textarea></label>\n    <div class=\"actions\"><span class=\"note\">").concat(T("autosave"), "</span><button class=\"btn quiet\" id=\"s-reset\">").concat(T("resetAnswers"), "</button></div>\n    ").concat(nav("playlist", "context", T("previewLearner")), "\n  </section>");
+        },
+        context: function () {
+            return "<section class=\"sheet\">\n    <div class=\"intro\"><span class=\"label\">".concat(T("listenOf", { n: 1 }), "</span><h2>").concat(T("ctxH"), "</h2>\n    <p>").concat(T("ctxP"), "</p></div>\n    ").concat(listenBar("context", T("ctxBar")), "\n    <div class=\"grid2\">").concat(Object.entries(CTX).map(function (_a) {
+                var _b = __read(_a, 2), k = _b[0], g = _b[1];
+                return "<div class=\"group\"><span class=\"label\">".concat(T(g.label), "</span><div class=\"chips\">").concat(g.opts.map(function (o) { return "<button class=\"chip\" data-ctx=\"".concat(k, "\" data-v=\"").concat(o, "\" aria-pressed=\"").concat(work.ctx[k].includes(o), "\">").concat(optName(o), "</button>"); }).join(""), "</div></div>");
+            }).join(""), "</div>\n    <label class=\"field\"><span class=\"label\">").concat(T("notesLbl"), "</span>\n      <textarea id=\"c-notes\" placeholder=\"").concat(T("notesPh"), "\">").concat(esc(work.ctx.notes), "</textarea></label>\n    ").concat(nav("playlist", "keywords"), "\n  </section>");
+        },
+        keywords: function () {
+            return "<section class=\"sheet\">\n    <div class=\"intro\"><span class=\"label\">".concat(T("listenOf", { n: 2 }), "</span><h2>").concat(T("kwH"), "</h2>\n    <p>").concat(T("kwP"), "</p></div>\n    ").concat(listenBar("keywords", T("kwBar")), "\n    <details><summary>").concat(T("whatListen"), "</summary>\n      <dl class=\"legend\" style=\"margin-top:12px\">\n        <div><dt>").concat(T("lg_tonic"), "</dt><dd>").concat(T("lg_tonicD"), "</dd></div>\n        <div><dt>").concat(T("lg_emph"), "</dt><dd>").concat(T("lg_emphD"), "</dd></div>\n        <div><dt>").concat(T("lg_into"), "</dt><dd>").concat(T("lg_intoD"), "</dd></div>\n        <div><dt>").concat(T("lg_vol"), "</dt><dd>").concat(T("lg_volD"), "</dd></div>\n      </dl></details>\n    <div class=\"fbrow\">\n      <button class=\"chip\" id=\"k-feedback\" aria-pressed=\"").concat(feedbackOn(), "\">").concat(T("showCorrect", { s: feedbackOn() ? T("on") : T("off") }), "</button>\n      ").concat(feedbackOn() ? "<span class=\"note\" id=\"kw-found\" aria-live=\"polite\">".concat(foundText(), "</span>") : "<span class=\"note\">".concat(T("switchOnNote"), "</span>"), "\n    </div>\n    <div class=\"kw\" id=\"kw\">").concat(work.keys.map(function (k, i) { return "<div class=\"kwrow ".concat(isKey(k.word) ? "ok" : "", "\">\n        <div class=\"kwcell\"><input type=\"text\" lang=\"en\" data-kw=\"").concat(i, "\" aria-label=\"").concat(T("kwAria", { n: i + 1 }), "\" placeholder=\"").concat(T("wordPh"), "\" value=\"").concat(esc(k.word), "\"><span class=\"kwok\">").concat(T("kwInTrans"), "</span></div>\n        <div class=\"chips\">").concat(TAGS.map(function (t) { return "<button class=\"chip\" data-tag=\"".concat(i, "\" data-v=\"").concat(t, "\" aria-pressed=\"").concat(k.tags.includes(t), "\">").concat(tagName(t), "</button>"); }).join(""), "</div>\n        <button class=\"btn quiet\" data-del=\"").concat(i, "\" aria-label=\"").concat(T("removeRow", { n: i + 1 }), "\">\u2715</button>\n      </div>"); }).join(""), "</div>\n    <div><button class=\"btn ghost\" id=\"kw-add\">").concat(T("addWord"), "</button></div>\n    ").concat(nav("context", "transcript"), "\n  </section>");
+        },
+        transcript: function () {
+            var ans = answers(), filled = filledCount(), w = words(work.interp);
+            var used = Object.values(work.blanks).map(norm);
+            var bank = ans.map(function (a) { return a.answer; }).sort(function (a, b) { return a.localeCompare(b); });
+            return "<section class=\"sheet\">\n    <div class=\"intro\"><span class=\"label\">".concat(T("listenOf", { n: 3 }), "</span><h2>").concat(T("trH"), "</h2>\n    <p>").concat(T("trP"), "</p></div>\n    ").concat(listenBar("transcript", T("trBar")), "\n    <div class=\"tlayout\"><div class=\"tmain\"><div class=\"script\" lang=\"en\">").concat(rich(function (p) { return "<input class=\"blank\" data-b=\"".concat(p.i, "\" aria-label=\"").concat(T("blankAria", { n: p.i + 1 }), "\" autocomplete=\"off\" spellcheck=\"false\" style=\"width:").concat(Math.max(5, p.answer.length + 2), "ch\" value=\"").concat(esc(work.blanks[p.i] || ""), "\" ").concat(work.checked ? "readonly" : "", ">"); }), "</div></div>").concat(sidePanel(bank, used), "</div>\n    <label class=\"field\"><span class=\"label\">").concat(T("interpLbl"), "</span>\n      <span class=\"note\">").concat(T("interpNote"), "</span>\n      <textarea id=\"t-interp\" placeholder=\"").concat(T("interpPh"), "\" ").concat(work.checked ? "readonly" : "", ">").concat(esc(work.interp), "</textarea></label>\n    <div class=\"progress\" aria-live=\"polite\">\n      <span class=\"").concat(filled === ans.length && ans.length ? "met" : "", "\" id=\"p-blanks\">").concat(T("blanksFilled", { f: filled, t: ans.length }), "</span>\n      <span id=\"p-words\">").concat(T("wordsWritten", { n: w }), "</span>\n    </div>\n    ").concat(nav("keywords", "final", ready() ? T("goFinal") : T("finalLocked")), "\n  </section>");
+        },
+        final: function () {
+            if (!ready())
+                return "<section class=\"sheet\">\n    <div class=\"intro\"><span class=\"label\">".concat(T("listenOf", { n: 4 }), "</span><h2>").concat(T("finalH"), "</h2></div>\n    <div class=\"lock\"><h3>").concat(T("finishFirst"), "</h3>\n      <p class=\"muted\">").concat(T("finishP", { f: filledCount(), t: answers().length }), "</p>\n      <div><button type=\"button\" class=\"btn ghost\" data-go=\"transcript\">").concat(T("backTrans"), "</button></div></div>\n  </section>");
+            var ans = answers(), right = ans.filter(function (a) { return norm(work.blanks[a.i]) === norm(a.answer); }).length;
+            return "<section class=\"sheet\">\n    <div class=\"intro\"><span class=\"label\">".concat(T("listenOf", { n: 4 }), "</span><h2>").concat(T("finalH"), "</h2>\n    <p>").concat(T("finalP"), "</p></div>\n    ").concat(player(), "\n    ").concat(work.checked ? "\n      <div class=\"score\"><b class=\"mono\">".concat(right, "/").concat(ans.length, "</b><span class=\"muted\">").concat(T("correctLbl"), "</span></div>\n      <div class=\"script\" lang=\"en\">").concat(rich(function (p) { return (norm(work.blanks[p.i]) === norm(p.answer)
+                ? "<input class=\"blank ok\" readonly aria-label=\"".concat(T("blankOk", { n: p.i + 1 }), "\" style=\"width:").concat(Math.max(5, p.answer.length + 2), "ch\" value=\"").concat(esc(work.blanks[p.i]), "\">")
+                : "<input class=\"blank bad\" readonly aria-label=\"".concat(T("blankBad", { n: p.i + 1 }), "\" style=\"width:").concat(Math.max(5, (work.blanks[p.i] || "").length + 2), "ch\" value=\"").concat(esc(work.blanks[p.i]), "\"><span class=\"fix\">").concat(esc(p.answer), "</span>")); }), "</div>\n      ").concat(work.interp.trim() ? "<div class=\"group\"><span class=\"label\">".concat(T("yourInterp"), "</span><div class=\"quote\">").concat(esc(work.interp), "</div></div>") : "", "\n      ").concat(setup.model.trim() ? "<div class=\"group\"><span class=\"label\">".concat(T("modelInterp"), "</span><div class=\"quote\" lang=\"en\">").concat(esc(setup.model), "</div></div>") : "", "\n      <div class=\"summary\">\n        <div><span class=\"label\">").concat(T("ctxNoted"), "</span><span>").concat(esc(Object.keys(CTX).flatMap(function (k) { return work.ctx[k].map(optName); }).join(", ") || "—"), "</span></div>\n        <div><span class=\"label\">").concat(T("kwHeard"), "</span><span>").concat(esc(work.keys.filter(function (k) { return k.word.trim(); }).map(function (k) { return k.word; }).join(", ") || "—"), "</span></div>\n        <div><span class=\"label\">").concat(T("listensLbl"), "</span><span class=\"mono\">").concat(STEPS.slice(1).map(function (s) { return "".concat(stepName(s.id), ": ").concat(work.listens[s.id]); }).join(" · "), "</span></div>\n      </div>\n      <div class=\"actions\"><div style=\"display:flex;gap:10px;flex-wrap:wrap\"><button class=\"btn\" id=\"f-copy\">").concat(T("copyWork"), "</button><button type=\"button\" class=\"btn ghost\" data-go=\"playlist\">").concat(T("another"), "</button></div><button class=\"btn quiet\" id=\"f-retry\">").concat(T("tryAgain"), "</button></div>")
+                : "<div class=\"actions\"><span class=\"note\">".concat(T("lockNote"), "</span><button class=\"btn\" id=\"f-check\">").concat(T("check"), "</button></div>"), "\n  </section>");
+        }
+    };
+    function render() {
+        renderRail();
+        $("#view").innerHTML = views[current()]();
+        if (current() === "setup" && unlocked)
+            Promise.all([getSample(), isOwner()]).then(function (_a) {
+                var _b = __read(_a, 2), s = _b[0], own = _b[1];
+                var b = $("#h-ai");
+                if (b && s && own)
+                    b.hidden = false;
+            });
+    }
+    function report() {
+        var ans = answers(), right = ans.filter(function (a) { return norm(work.blanks[a.i]) === norm(a.answer); }).length;
+        return __spreadArray(__spreadArray(__spreadArray(__spreadArray(__spreadArray(__spreadArray([
+            "".concat(T("r_title"), " \u2014 ").concat(setup.title),
+            "".concat(T("r_clip"), ": ").concat(watchUrl() || T("r_noLink"), " (").concat(fmt(toSec(setup.start)), "\u2013").concat(fmt(toSec(setup.end)), ")"),
+            "",
+            T("r_ctx")
+        ], __read(Object.entries(CTX).map(function (_a) {
+            var _b = __read(_a, 2), k = _b[0], g = _b[1];
+            return "- ".concat(T(g.label), " ").concat(work.ctx[k].map(optName).join(", ") || "—");
+        })), false), [
+            "- ".concat(T("r_notes"), ": ").concat(work.ctx.notes || "—"),
+            "",
+            T("r_kw")
+        ], false), __read((work.keys.filter(function (k) { return k.word.trim(); }).map(function (k) { return "- ".concat(k.word, ": ").concat(k.tags.map(tagName).join(", ") || T("r_noFeat")); }))), false), [
+            "",
+            T("r_trans", { r: right, t: ans.length })
+        ], false), __read(ans.map(function (a) { return "- ".concat(T("r_blank", { n: a.i + 1 }), ": ").concat(work.blanks[a.i] || "—").concat(norm(work.blanks[a.i]) === norm(a.answer) ? " ✓" : " \u2717 (".concat(a.answer, ")")); })), false), [
+            "",
+            T("r_interp"), work.interp.trim() || T("r_none"), "",
+            "".concat(T("listensLbl"), ": ").concat(STEPS.slice(1).map(function (s) { return "".concat(stepName(s.id), " ").concat(work.listens[s.id]); }).join(", "))
+        ], false).join("\n");
+    }
+    // ---------- events
+    document.addEventListener("click", function (e) {
+        var _a;
+        var t = e.target.closest("button,a");
+        if (!t)
+            return;
+        if (t.tagName === "A") {
+            var h = t.getAttribute("href") || "";
+            if (h.startsWith("#")) {
+                e.preventDefault();
+                if (t.getAttribute("aria-disabled") !== "true" || h === "#setup")
+                    go(h.slice(1));
+                return;
+            }
+        }
+        if (t.dataset.go) {
+            go(t.dataset.go);
+            return;
+        }
+        if (t.dataset.tool) {
+            tool(t.dataset.tool);
+            return;
+        }
+        if (t.dataset.rate) {
+            var box = t.closest(".aplayer"), a = box && box.querySelector("audio");
+            if (a)
+                a.playbackRate = +t.dataset.rate;
+            box.querySelectorAll("[data-rate]").forEach(function (b) { return b.setAttribute("aria-pressed", b === t); });
+            return;
+        }
+        if (t.dataset.open) {
+            select(t.dataset.open);
+            save();
+            go(LEARN.find(function (id) { return !stepDone(id); }) || "final");
+            return;
+        }
+        if (t.dataset.edit) {
+            select(t.dataset.edit);
+            save();
+            go("setup");
+            return;
+        }
+        if (t.dataset.dup) {
+            var i = lib.items.findIndex(function (x) { return x.id === t.dataset.dup; });
+            var c = newItem(JSON.parse(JSON.stringify(lib.items[i].setup)));
+            c.setup.title += " (copy)";
+            lib.items.splice(i + 1, 0, c);
+            save();
+            render();
+            toast(T("t_dup"));
+            return;
+        }
+        if (t.dataset.move) {
+            if (t.getAttribute("aria-disabled") === "true")
+                return;
+            var i = lib.items.findIndex(function (x) { return x.id === t.dataset.move; }), j = i + (+t.dataset.dir);
+            _a = __read([lib.items[j], lib.items[i]], 2), lib.items[i] = _a[0], lib.items[j] = _a[1];
+            save();
+            render();
+            return;
+        }
+        if (t.dataset.rm) {
+            if (lib.items.length === 1) {
+                toast(T("t_needOne"));
+                return;
+            }
+            if (!t.dataset.armed) {
+                t.dataset.armed = "1";
+                t.textContent = T("clickAgainDelete");
+                setTimeout(function () { if (t.isConnected) {
+                    delete t.dataset.armed;
+                    t.textContent = T("del");
+                } }, 3000);
+                return;
+            }
+            lib.items = lib.items.filter(function (x) { return x.id !== t.dataset.rm; });
+            select(lib.current);
+            save();
+            render();
+            toast(T("t_deleted"));
+            return;
+        }
+        if (t.dataset.listen) {
+            work.listens[t.dataset.listen]++;
+            save();
+            setTimeout(render, 50);
+            return;
+        }
+        if (t.getAttribute("aria-disabled") === "true" && t.tagName === "A" && t.getAttribute("href") !== "#setup") {
+            e.preventDefault();
+            return;
+        }
+        if (t.dataset.ctx) {
+            var arr = work.ctx[t.dataset.ctx], v = t.dataset.v, i = arr.indexOf(v);
+            i < 0 ? arr.push(v) : arr.splice(i, 1);
+            t.setAttribute("aria-pressed", i < 0);
+            save();
+            renderRail();
+            return;
+        }
+        if (t.dataset.tag) {
+            var arr = work.keys[+t.dataset.tag].tags, v = t.dataset.v, i = arr.indexOf(v);
+            i < 0 ? arr.push(v) : arr.splice(i, 1);
+            t.setAttribute("aria-pressed", i < 0);
+            save();
+            return;
+        }
+        if (t.dataset.del) {
+            work.keys.splice(+t.dataset.del, 1);
+            if (!work.keys.length)
+                work.keys.push({ word: "", tags: [], note: "" });
+            save();
+            render();
+            return;
+        }
+        switch (t.id) {
+            case "s-lock":
+                unlocked = false;
+                try {
+                    sessionStorage.removeItem("ll-unlocked");
+                }
+                catch (e) { }
+                render();
+                toast(T("t_locked"));
+                break;
+            case "kw-add":
+                work.keys.push({ word: "", tags: [], note: "" });
+                save();
+                render();
+                $("[data-kw=\"".concat(work.keys.length - 1, "\"]")).focus();
+                break;
+            case "s-bank":
+                setup.wordBank = !setup.wordBank;
+                save();
+                render();
+                break;
+            case "s-feedback":
+                setup.keyFeedback = !(setup.keyFeedback !== false);
+                save();
+                render();
+                break;
+            case "k-feedback":
+                work.feedback = !feedbackOn();
+                save();
+                render();
+                break;
+            case "h-cut": {
+                var raw = $("#h-raw").value, msg = $("#h-msg");
+                if (!raw.trim()) {
+                    msg.textContent = T("cut_pasteFirst");
+                    break;
+                }
+                var r = cutTranscript(raw);
+                if (!r.text) {
+                    msg.textContent = T("cut_none", { a: fmt(toSec(setup.start)), b: fmt(toSec(setup.end)) });
+                    break;
+                }
+                putTranscript(r.text);
+                msg.textContent = r.found ? T("cut_kept", { n: r.count, a: fmt(toSec(setup.start)), b: fmt(toSec(setup.end)) }) : T("cut_noTs");
+                break;
+            }
+            case "h-ai":
+                if (t.getAttribute("aria-disabled") === "true")
+                    break;
+                if (aiUnlocked) {
+                    runAI(t);
+                    break;
+                }
+                $("#h-pinrow").hidden = false;
+                $("#h-pin").focus();
+                break;
+            case "h-pinok":
+                (function () { return __awaiter(_this, void 0, void 0, function () {
+                    var v, ok, err_1;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                v = $("#h-pin").value.trim();
+                                ok = false;
+                                _a.label = 1;
+                            case 1:
+                                _a.trys.push([1, 3, , 4]);
+                                return [4 /*yield*/, sha(v)];
+                            case 2:
+                                ok = (_a.sent()) === AI_PIN_HASH;
+                                return [3 /*break*/, 4];
+                            case 3:
+                                err_1 = _a.sent();
+                                return [3 /*break*/, 4];
+                            case 4:
+                                if (ok) {
+                                    aiUnlocked = true;
+                                    try {
+                                        sessionStorage.setItem("ll-ai", "1");
+                                    }
+                                    catch (err) { }
+                                    $("#h-pinrow").hidden = true;
+                                    $("#h-pin").value = "";
+                                    runAI($("#h-ai"));
+                                }
+                                else {
+                                    $("#h-msg").textContent = T("pinBadShort");
+                                    $("#h-pin").value = "";
+                                    $("#h-pin").focus();
+                                }
+                                return [2 /*return*/];
+                        }
+                    });
+                }); })();
+                break;
+            case "p-new": {
+                var it = newItem({ title: T("newExTitle") });
+                lib.items.push(it);
+                select(it.id);
+                save();
+                go("setup");
+                toast(T("t_new"));
+                break;
+            }
+            case "s-export":
+                copy(btoa(unescape(encodeURIComponent(JSON.stringify({ v: 2, playlist: lib.items.map(function (i) { return Object.assign({}, i.setup, { id: i.id }); }) })))));
+                break;
+            case "p-sync":
+                syncRemote(true);
+                break;
+            case "s-rows":
+                copySheetRows();
+                break;
+            case "s-importToggle":
+                $("#s-import").hidden = !$("#s-import").hidden;
+                break;
+            case "s-load":
+                try {
+                    var s = JSON.parse(decodeURIComponent(escape(atob($("#s-code").value.trim()))));
+                    if (Array.isArray(s.playlist) && mergePlaylist(s.playlist)) {
+                        render();
+                        toast(T("t_plLoaded", { n: lib.items.length }));
+                    }
+                    else if (typeof s.transcript === "string") {
+                        var it = newItem(s);
+                        lib.items.push(it);
+                        save();
+                        render();
+                        toast(T("t_exAdded"));
+                    }
+                    else
+                        throw 0;
+                }
+                catch (err) {
+                    toast(T("t_codeBad"));
+                }
+                break;
+            case "s-reset":
+                if (t.dataset.armed) {
+                    var it = curItem();
+                    it.work = BLANK_WORK();
+                    work = it.work;
+                    save();
+                    render();
+                    toast(T("t_answersCleared"));
+                }
+                else {
+                    t.dataset.armed = "1";
+                    t.textContent = T("clickAgainClear");
+                    setTimeout(function () { if (t.isConnected) {
+                        delete t.dataset.armed;
+                        t.textContent = T("resetAnswers");
+                    } }, 3000);
+                }
+                break;
+            case "f-check":
+                work.checked = true;
+                save();
+                render();
+                break;
+            case "f-retry":
+                work.checked = false;
+                work.blanks = {};
+                save();
+                go("transcript");
+                break;
+            case "f-copy":
+                copy(report());
+                break;
+        }
+    });
+    document.addEventListener("input", function (e) {
+        var t = e.target;
+        if (t.dataset.kw !== undefined) {
+            work.keys[+t.dataset.kw].word = t.value;
+            save();
+            t.closest(".kwrow").classList.toggle("ok", isKey(t.value));
+            var f = $("#kw-found");
+            if (f)
+                f.textContent = foundText();
+            renderRail();
+            return;
+        }
+        if (t.dataset.b !== undefined) {
+            work.blanks[t.dataset.b] = t.value;
+            save();
+            updateProgress();
+            return;
+        }
+        var map = { "c-notes": function () { return work.ctx.notes = t.value; }, "t-interp": function () { work.interp = t.value; updateProgress(); },
+            "s-title": function () { return setup.title = t.value; }, "s-start": function () { return setup.start = t.value; }, "s-end": function () { return setup.end = t.value; },
+            "s-model": function () { return setup.model = t.value; }, "s-min": function () { return setup.minWords = Math.max(0, parseInt(t.value) || 0); },
+            "s-audio": function () { setup.audio = t.value.trim(); $("#s-audionote").textContent = audioNote(); },
+            "s-url": function () { setup.url = t.value.trim(); var id = videoId(setup.url); $("#s-urlnote").textContent = !setup.url ? T("urlPaste") : id ? T("urlFound", { id: id }) : T("urlBad"); },
+            "s-trans": function () { setup.transcript = t.value; work.blanks = {}; work.checked = false; var a = answers(); $("#s-count").textContent = T("kwFound", { n: a.length, list: a.map(function (x) { return x.answer; }).join(", ") || T("noneYet") }); $("#s-preview").innerHTML = previewHtml(); } };
+        if (map[t.id]) {
+            map[t.id]();
+            save();
+            renderRail();
+        }
+    });
+    function updateProgress() {
+        var ans = answers(), f = filledCount(), w = words(work.interp);
+        var pb = $("#p-blanks"), pw = $("#p-words");
+        if (pb) {
+            pb.textContent = T("blanksFilled", { f: f, t: ans.length });
+            pb.className = f === ans.length && ans.length ? "met" : "";
+        }
+        if (pw) {
+            pw.textContent = T("wordsWritten", { n: w });
+        }
+        var used = Object.values(work.blanks).map(norm);
+        document.querySelectorAll(".bank span").forEach(function (s) { return s.classList.toggle("used", used.includes(norm(s.textContent))); });
+        var next = document.querySelector('.actions [data-go="final"]');
+        if (next)
+            next.textContent = ready() ? T("goFinal") : T("finalLocked");
+        renderRail();
+    }
+    document.addEventListener("change", function (e) {
+        if (e.target.id === "s-speaker" && e.target.value) {
+            tool("sp-" + e.target.value);
+            e.target.value = "";
+        }
+    });
+    document.addEventListener("keydown", function (e) {
+        if (e.target.id === "s-trans" && (e.ctrlKey || e.metaKey)) {
+            var k = e.key.toLowerCase();
+            if (k === "k") {
+                e.preventDefault();
+                tool("key");
+            }
+            else if (k === "b") {
+                e.preventDefault();
+                tool("bold");
+            }
+            else if (k === "i") {
+                e.preventDefault();
+                tool("italic");
+            }
+        }
+        if (e.target.id === "h-pin" && e.key === "Enter") {
+            e.preventDefault();
+            $("#h-pinok").click();
+        }
+    });
+    document.addEventListener("mousedown", function (e) { if (e.target.closest(".tool"))
+        e.preventDefault(); });
+    document.addEventListener("submit", function (e) { return __awaiter(_this, void 0, void 0, function () {
+        var v, ok, err_2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (e.target.id !== "pin-form")
+                        return [2 /*return*/];
+                    e.preventDefault();
+                    v = $("#pin").value.trim();
+                    ok = false;
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, sha(v)];
+                case 2:
+                    ok = (_a.sent()) === PIN_HASH;
+                    return [3 /*break*/, 4];
+                case 3:
+                    err_2 = _a.sent();
+                    ok = false;
+                    return [3 /*break*/, 4];
+                case 4:
+                    if (ok) {
+                        unlocked = true;
+                        try {
+                            sessionStorage.setItem("ll-unlocked", "1");
+                        }
+                        catch (err) { }
+                        render();
+                        toast(T("t_unlocked"));
+                    }
+                    else {
+                        $("#pin-msg").textContent = T("pinBad");
+                        $("#pin").value = "";
+                        $("#pin").focus();
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    document.addEventListener("play", function (e) {
+        var a = e.target;
+        if (!a || a.tagName !== "AUDIO" || !a.dataset.astep)
+            return;
+        if (a.dataset.fresh !== "0") {
+            a.dataset.fresh = "0";
+            bumpListen(a.dataset.astep);
+        }
+    }, true);
+    document.addEventListener("ended", function (e) { if (e.target && e.target.tagName === "AUDIO")
+        e.target.dataset.fresh = "1"; }, true);
+    document.addEventListener("error", function (e) {
+        var a = e.target;
+        if (!a || a.tagName !== "AUDIO" || !a.dataset.preview)
+            return;
+        var box = a.closest(".aplayer");
+        var step = a.dataset.astep;
+        box.closest(".listen").classList.add("fallback");
+        box.innerHTML = "<iframe class=\"dframe\" src=\"".concat(a.dataset.preview, "\" allow=\"autoplay\" title=\"").concat(T("audioPlayer"), "\" data-listen=\"").concat(step, "\"></iframe><span class=\"note\">").concat(T("audioDrive"), "</span>");
+    }, true);
+    // Count a listen when someone clicks into an embedded player (no re-render, so the video keeps playing)
+    window.addEventListener("blur", function () {
+        var a = document.activeElement;
+        if (a && a.tagName === "IFRAME" && a.dataset.listen && !a.dataset.counted) {
+            a.dataset.counted = "1";
+            bumpListen(a.dataset.listen);
+        }
+    });
+    window.addEventListener("hashchange", function () { try {
+        route = location.hash.slice(1);
+    }
+    catch (e) { } render(); window.scrollTo(0, 0); });
+    applyStatic();
+    render();
+    syncRemote(false);
+})();
+</script>
+</body>
+</html>

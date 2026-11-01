@@ -1,0 +1,1134 @@
+<!doctype html>
+<html lang="fr">
+<head><script src="legacy.js"></script><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Emerald"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#49B190"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><script src="app-bridge.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rythme, intonation et prononciation · Emerald Language Learning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Open+Sans:wght@400;600;700&family=Noto+Sans:wght@400;600&display=swap">
+<style>
+:root{
+  /* Emerald Language Learning palette */
+  --emerald:#49B190; --emerald-link:#53AC90; --emerald-dark:#457865; --emerald-soft:#72B1A0; --emerald-hover:#3f9c7e;
+  --ink:#323232; --muted:#777777; --faint:#a3a3a3; --line:#DADADA; --line-strong:#BBBBBB; --bg:#ffffff; --panel:#F9F9F9;
+  --accent:#49B190; --accent-soft:#e9f6f1;
+  /* annotation marks */
+  --ul:#c8443a; --hl:#fde68a; --arrow:#2f8f6a; --bubble:#49B190; --pause:#323232; --speak:#457865;
+  --display:"Montserrat","Segoe UI",system-ui,sans-serif;
+  --body:"Open Sans","Segoe UI",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--muted);font-family:var(--body);line-height:1.6}
+[hidden]{display:none!important}
+.wrap{max-width:1080px;width:80%;margin:0 auto}
+@media (max-width:720px){.wrap{width:auto;padding-left:18px;padding-right:18px}}
+
+/* site header */
+.site{background:#fff;border-bottom:1px solid var(--line)}
+.site-in{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:16px}
+.brand-logo{height:60px;width:auto;display:block}
+@media (max-width:520px){.brand-logo{height:44px}.site-in{padding-block:12px}}
+.lang{display:inline-flex;border:1px solid var(--emerald);border-radius:4px;overflow:hidden;flex:none}
+.lang button{font:600 .85rem var(--body);letter-spacing:.04em;border:0;border-radius:0;background:#fff;color:var(--emerald-dark);padding:7px 13px;cursor:pointer}
+.lang button+button{border-left:1px solid var(--emerald)}
+.lang button:hover{background:var(--accent-soft)}
+.lang button[aria-pressed="true"]{background:var(--emerald);color:#fff}
+
+main.wrap{padding-block:36px 72px}
+.title-block{text-align:center;margin-bottom:28px}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(1.6rem,4vw,2.6rem);line-height:1.25;text-transform:uppercase;color:var(--emerald-dark);margin:0 0 10px;letter-spacing:.01em}
+.sub{color:var(--muted);font-size:1rem;margin:0 auto;max-width:62ch}
+.sub b{color:var(--ink)}
+
+textarea{width:100%;min-height:100px;font:inherit;font-size:1rem;padding:12px 14px;border:1px solid var(--line);border-radius:4px;resize:vertical;color:var(--ink);background:var(--panel)}
+textarea:focus{outline:none;border-color:var(--emerald);background:#fff}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+button,select{font:600 .88rem var(--body);border:1px solid var(--emerald);background:#fff;color:var(--emerald-dark);border-radius:4px;padding:8px 12px;cursor:pointer}
+select{font-weight:400;color:var(--ink);border-color:var(--line)}
+button:hover{background:var(--accent-soft)}
+button.primary{background:var(--emerald);border-color:var(--emerald);color:#fff}
+button.primary:hover{background:var(--emerald-hover);border-color:var(--emerald-hover)}
+button:disabled{opacity:.45;cursor:default}
+button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px solid var(--emerald-dark);outline-offset:2px}
+.acc{font-size:.85rem;color:var(--muted);display:inline-flex;align-items:center;gap:6px}
+
+.tools{position:-webkit-sticky;position:sticky;top:0;z-index:10;background:var(--bg);padding:10px 0;border-bottom:1px solid var(--line);margin-top:8px}
+.tool{display:inline-flex;align-items:center;gap:6px;border-color:var(--line);color:var(--muted);font-weight:600}
+.tool:hover{border-color:var(--emerald);color:var(--emerald-dark);background:#fff}
+.tool[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--emerald);color:var(--emerald-dark);box-shadow:inset 0 -2px 0 var(--emerald)}
+.ico{display:inline-flex;width:22px;height:20px;align-items:center;justify-content:center;font-weight:700;color:var(--ink)}
+.ico.ul span{text-decoration:underline;text-decoration-color:var(--ul);text-decoration-thickness:3px;text-underline-offset:3px}
+.ico.hl span{background:var(--hl);padding:0 3px;border-radius:3px}
+.ico.up,.ico.down{color:var(--arrow);font-size:1.15rem;font-family:system-ui,'Segoe UI Symbol','Noto Sans',sans-serif}
+.ico.bub{gap:2px}
+.ico.bub i{display:inline-block;border-radius:50%;border:2px solid var(--bubble)}
+.ico.bub i.s{width:7px;height:7px}
+.ico.bub i.b{width:12px;height:12px;background:var(--bubble)}
+.ico.bar{display:inline-flex;height:20px;border:0}
+.ico.bar i{display:inline-block;height:16px;border-left:3px solid var(--pause)}
+.ico.dot i{display:inline-block;height:16px;border-left:3px dotted var(--pause)}
+.hint{font-size:.88rem;color:var(--emerald-dark);min-height:1.2em;margin-top:6px}
+
+.board{position:relative;font-size:1.45rem;line-height:1.1;padding:18px 14px 22px;border:1px solid var(--line);border-radius:4px;min-height:120px;margin-top:16px;user-select:none;-webkit-user-select:none;background:#fff;color:var(--ink)}
+.board.empty::before{content:attr(data-empty);color:var(--faint);font-size:1rem;font-family:var(--body)}
+.para{display:flex;flex-wrap:wrap;align-items:flex-end;row-gap:14px;margin-bottom:16px}
+.para:last-child{margin-bottom:0}
+.w{position:relative;display:inline-flex;flex-direction:column;align-items:center;padding-top:26px;cursor:pointer;border-radius:4px}
+.w:hover .txt{background:rgba(73,177,144,.10)}
+.w .above{position:absolute;top:3px;left:0;right:0;display:flex;justify-content:center;align-items:center;gap:4px;height:18px;pointer-events:none}
+.b{display:inline-block;border-radius:50%;border:2px solid var(--bubble);width:9px;height:9px;flex:none}
+.b.big{width:16px;height:16px;background:var(--bubble)}
+.w .txt{padding:2px 2px 6px;border-radius:4px;white-space:nowrap}
+.core{border-radius:4px;padding:0 1px}
+.w.hl .core{background:var(--hl);box-shadow:0 0 0 2px var(--hl)}
+.w.ul .core{text-decoration:underline;text-decoration-color:var(--ul);text-decoration-thickness:3px;text-underline-offset:6px}
+.arr{position:absolute;top:2px;right:-11px;font-size:1.05rem;font-family:system-ui,'Segoe UI Symbol','Noto Sans',sans-serif;font-weight:700;color:var(--arrow);pointer-events:none}
+.w.speak .txt{outline:2px solid var(--speak);outline-offset:1px}
+.g{display:inline-flex;align-self:stretch;align-items:flex-end;justify-content:center;width:16px;padding-bottom:4px;cursor:pointer;border-radius:4px}
+.g:hover{background:rgba(73,177,144,.10)}
+.bar{display:block;height:1.35em;border-left:3px solid var(--pause)}
+.bar.short{border-left-style:dotted}
+.bar.counting{border-left-color:var(--emerald)}
+.board.hidden-marks .above,.board.hidden-marks .arr,.board.hidden-marks .bar{visibility:hidden}
+.board.hidden-marks .w.hl .core{background:none;box-shadow:none}
+.board.hidden-marks .w.ul .core{text-decoration:none}
+
+.panel{background:var(--panel);border-radius:4px;padding:14px 16px;margin-top:14px}
+.ipa h3{margin:0;font-family:var(--display);font-weight:700;font-size:.95rem;color:var(--ink);display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.ipa .ipahead{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between;margin-bottom:10px}
+.ipa .ipahead label{font-size:.85rem;color:var(--muted);display:inline-flex;align-items:center;gap:6px}
+.ipatext{font-family:"Noto Sans","Doulos SIL","Charis SIL","Lucida Sans Unicode","Segoe UI",sans-serif;font-size:1.3rem;line-height:1.9;background:#fff;border:1px solid var(--line);border-radius:4px;padding:10px 12px;white-space:pre-wrap;word-break:break-word;user-select:text;-webkit-user-select:text;color:var(--ink)}
+.ipatext .unk{color:#b45309;border-bottom:1px dashed #b45309}
+.ipatext .msg{font-family:var(--body);font-size:.95rem;color:var(--muted)}
+.note{font-size:.82rem;color:var(--muted);margin-top:8px}
+.badge{font-size:.72rem;font-weight:600;color:#b45309;background:#fef3c7;border-radius:4px;padding:2px 6px;font-family:var(--body)}
+.listen{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.listen label{font-size:.85rem;color:var(--muted);display:inline-flex;align-items:center;gap:6px}
+input[type=range]{accent-color:var(--emerald)}
+input[type=checkbox]{accent-color:var(--emerald)}
+.countdown{font-size:.9rem;color:var(--emerald-dark);font-weight:700;min-width:6em}
+
+.legend-wrap h2{font-family:var(--display);font-weight:400;text-transform:uppercase;color:var(--emerald-dark);font-size:1.2rem;margin:36px 0 12px;text-align:center}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px 20px;font-size:.9rem;color:var(--muted);background:var(--panel);border-radius:4px;padding:16px 18px}
+.legend div{display:flex;align-items:center;gap:8px}
+@media (max-width:560px){
+  .board{font-size:1.25rem}
+  .tool .tname{display:none}
+}
+@media print{
+  .site,.tools,.inputarea,.listen,.legend-wrap .row,.ipa .ipahead label,.ipa .ipahead button,.ipa .note{display:none!important}
+  .board{border:none}
+}
+</style>
+<style id="emerald-dark">
+/* Dark version of the Emerald look, used when the phone is in dark mode */
+@media screen and (prefers-color-scheme: dark){
+  :root{color-scheme:dark;--emerald-dark:#7fcbb0;--emerald-link:#6cc8a6;--ink:#edf2f0;--muted:#b6c2bd;--faint:#7d8a85;--line:#2f3b37;--line-strong:#4b5a55;
+    --bg:#121816;--panel:#1a2320;--accent-soft:#1d3a31;--pause:#e6ece9;--speak:#7fcbb0;--arrow:#5fd19b;--ul:#f07a6e;--hl:#7a6516}
+  textarea{background:#1a2320}
+  textarea:focus{background:#1f2a26}
+  button,select{background:transparent}
+  select{background:#1f2a26}
+  button.primary{background:#49B190;color:#fff}
+  button.primary:hover{background:#3f9c7e}
+  .tool:hover{background:transparent}
+  .tool[aria-pressed="true"]{background:#1d3a31}
+  .board,.ipatext{background:#161e1b}
+  .ipatext .unk{color:#f2a85b;border-bottom-color:#f2a85b}
+  .badge{background:#3a2f12;color:#f2c46b}
+
+  .site{background:#161e1b!important;border-bottom-color:#2f3b37!important}
+  .brand-logo{background:#fff;border-radius:6px;padding:4px 8px;box-sizing:content-box}
+  .lang button{background:transparent!important;color:#7fcbb0!important}
+  .lang button[aria-pressed="true"]{background:#49B190!important;color:#fff!important}
+  .app-home{background:transparent!important;color:#7fcbb0!important}
+  .app-home:hover{background:#1d3a31!important}
+}
+</style>
+
+</head>
+<body>
+<header class="site">
+  <div class="wrap site-in">
+    <img class="brand-logo" src="data:image/png;base64,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" alt="Emerald Language Learning" width="306" height="90">
+    <div class="lang" role="group" data-i18n-aria="langGroup" aria-label="Langue">
+      <button type="button" data-lang="fr" aria-pressed="true" lang="fr" title="Français">FR</button>
+      <button type="button" data-lang="en" aria-pressed="false" lang="en" title="English">EN</button>
+    </div>
+  </div>
+</header>
+<main class="wrap">
+  <div class="title-block">
+    <h1 data-i18n="title">Rythme, intonation et prononciation</h1>
+    <p class="sub" data-i18n-html="sub"></p>
+  </div>
+
+  <div class="inputarea">
+    <textarea id="src" lang="en" data-i18n-ph="placeholder">I'd love to come to the party, but I have to work on Saturday. Are you free on Sunday? We could go for lunch.</textarea>
+    <div class="row">
+      <button class="primary" id="btnLoad" data-i18n="annotate">Annoter</button>
+      <button class="primary" id="btnIPA" data-i18n="ipaBtn">Transcription phonétique</button>
+      <label class="acc"><span data-i18n="accent">Accent</span>
+        <select id="accent">
+          <option value="gb" data-i18n="acc_gb">British</option>
+          <option value="us" data-i18n="acc_us">American</option>
+          <option value="au" data-i18n="acc_au">Australian</option>
+          <option value="sc" data-i18n="acc_sc">Scottish</option>
+          <option value="ie" data-i18n="acc_ie">Irish</option>
+          <option value="ca" data-i18n="acc_ca">Canadian</option>
+          <option value="in" data-i18n="acc_in">Indian</option>
+        </select>
+      </label>
+      <button id="btnAuto" data-i18n="autoPauses" data-i18n-title="autoPausesT">Auto pauses</button>
+      <button id="btnUndo" disabled data-i18n="undo">↶ Undo</button>
+      <button id="btnClear" data-i18n="clear">Clear marks</button>
+      <button id="btnHide" aria-pressed="false">Hide marks</button>
+      <button id="btnPrint" data-i18n="print">Print</button>
+    </div>
+  </div>
+
+  <div class="tools" role="toolbar" data-i18n-aria="toolsAria" aria-label="Annotation tools">
+    <div class="row" style="margin:0">
+      <button class="tool" data-tool="ul" data-i18n-title="tt_ul"><span class="ico ul"><span>ab</span></span><span class="tname" data-i18n="tn_ul">Information words</span></button>
+      <button class="tool" data-tool="hl" data-i18n-title="tt_hl"><span class="ico hl"><span>ab</span></span><span class="tname" data-i18n="tn_hl">Tonic or Emphatic Stress</span></button>
+      <button class="tool" data-tool="tonic" data-i18n-title="tt_tonic"><span class="ico bub"><i class="s"></i><i class="b"></i><i class="s"></i></span><span class="tname" data-i18n="tn_tonic">Word stress</span></button>
+      <button class="tool" data-tool="up" data-i18n-title="tt_up"><span class="ico up">↗</span><span class="tname" data-i18n="tn_up">Rising</span></button>
+      <button class="tool" data-tool="down" data-i18n-title="tt_down"><span class="ico down">↘</span><span class="tname" data-i18n="tn_down">Falling</span></button>
+      <button class="tool" data-tool="long" data-i18n-title="tt_long"><span class="ico bar"><i></i></span><span class="tname" data-i18n="tn_long">Pause 3s</span></button>
+      <button class="tool" data-tool="short" data-i18n-title="tt_short"><span class="ico dot"><i></i></span><span class="tname" data-i18n="tn_short">Pause 1s</span></button>
+      <button class="tool" data-tool="erase" data-i18n-title="tt_erase"><span class="ico">⌫</span><span class="tname" data-i18n="tn_erase">Eraser</span></button>
+    </div>
+    <div class="hint" id="hint" aria-live="polite"></div>
+  </div>
+
+  <div class="board empty" id="board" lang="en" aria-live="polite"></div>
+
+  <div class="panel ipa" id="ipaBox" hidden>
+    <div class="ipahead">
+      <h3><span data-i18n="ipaHead">Phonetic transcription</span> <span id="ipaAcc"></span></h3>
+      <div class="row" style="margin:0">
+        <label><input type="checkbox" id="weak" checked> <span data-i18n="weakForms">Weak forms</span></label>
+        <button id="ipaCopy" data-i18n="copy">Copy</button>
+        <button id="ipaClose" data-i18n="close">Close</button>
+      </div>
+    </div>
+    <div class="ipatext" id="ipaText"></div>
+    <div class="note" data-i18n="ipaNote"></div>
+  </div>
+
+  <div class="panel listen">
+    <button id="btnPlay" class="primary" data-i18n="listen">▶ Listen</button>
+    <button id="btnStop" disabled data-i18n="stop">■ Stop</button>
+    <label><span data-i18n="speed">Speed</span> <input type="range" id="rate" min="0.5" max="1.2" step="0.05" value="0.85"></label>
+    <span class="countdown" id="countdown"></span>
+    <span class="note" id="voiceNote" style="margin:0"></span>
+  </div>
+
+  <div class="legend-wrap">
+    <h2 data-i18n="legendH">Legend</h2>
+    <div class="legend">
+      <div><span class="ico ul"><span>ab</span></span> <span data-i18n="lg_ul"></span></div>
+      <div><span class="ico hl"><span>ab</span></span> <span data-i18n="lg_hl"></span></div>
+      <div><span class="ico bub"><i class="s"></i><i class="b"></i><i class="s"></i></span> <span data-i18n="lg_tonic"></span></div>
+      <div><span class="ico up">↗</span><span class="ico down">↘</span> <span data-i18n="lg_arr"></span></div>
+      <div><span class="ico bar"><i></i></span> <span data-i18n="lg_long"></span></div>
+      <div><span class="ico dot"><i></i></span> <span data-i18n="lg_short"></span></div>
+    </div>
+  </div>
+</main>
+
+<script>(function () {
+    /* ---------- language ---------- */
+    var STR = {
+        en: {
+            langGroup: 'Language', title: 'Rhythm, Intonation & Pronunciation',
+            sub: 'Paste a text, press <b>Annotate</b>, choose a tool, then tap the words. With no tool selected, tap a word to hear it.',
+            placeholder: 'Type or paste your text here…', empty: 'Type or paste a text above, then press “Annotate”.',
+            annotate: 'Annotate', annotateConfirm: 'Click again to start over (marks will be removed)', ipaBtn: 'Phonetic transcription', accent: 'Accent',
+            acc_gb: 'British', acc_us: 'American', acc_au: 'Australian', acc_sc: 'Scottish', acc_ie: 'Irish', acc_ca: 'Canadian', acc_in: 'Indian',
+            autoPauses: 'Auto pauses', autoPausesT: 'Add pause bars after full stops and commas', undo: '↶ Undo', clear: 'Clear marks',
+            hide: 'Hide marks', show: 'Show marks', print: 'Print', toolsAria: 'Annotation tools',
+            tn_ul: 'Information words', tt_ul: 'Information words', tn_hl: 'Tonic or Emphatic Stress', tt_hl: 'Tonic or Emphatic Stress',
+            tn_tonic: 'Word stress', tt_tonic: 'Word stress', tn_up: 'Rising', tt_up: 'Rising intonation', tn_down: 'Falling', tt_down: 'Falling intonation',
+            tn_long: 'Pause 3s', tt_long: '3-second pause', tn_short: 'Pause 1s', tt_short: '1-second pause', tn_erase: 'Eraser', tt_erase: 'Remove all marks from a word',
+            h_none: 'Choose a tool.', h_first: 'Choose a tool first.',
+            h_ul: 'Tap a noun, adjective, verb or adverb to underline it as an information word.',
+            h_hl: 'Tap a word to highlight tonic or emphatic stress.',
+            h_up: 'Tap a word to add a rising arrow (tap again to remove).',
+            h_down: 'Tap a word to add a falling arrow (tap again to remove).',
+            h_tonic: 'Tap a word to show its stress and hear it. Tap again to hear it again; use the Eraser to remove bubbles.',
+            h_long: 'Tap a word (or the gap after it) to add a 3-second pause.',
+            h_short: 'Tap a word (or the gap after it) to add a 1-second pause.',
+            h_erase: 'Tap a word to remove all its marks.',
+            ipaHead: 'Phonetic transcription', weakForms: 'Weak forms', copy: 'Copy', copied: 'Copied', close: 'Close', approx: 'approximate',
+            ipaNote: '‖ = 3-second pause · | = 1-second pause · ˈ = main stress · ˌ = secondary stress. Weak forms are used for unstressed grammar words (not for highlighted words or words at the end of a sentence). Words in orange were not found in the dictionary.',
+            loadingDict: 'Loading the pronunciation dictionary…',
+            dictFail: 'The pronunciation dictionary could not be loaded. Check the internet connection and try again.',
+            notInDict: 'Not in the dictionary',
+            listen: '▶ Listen', stop: '■ Stop', speed: 'Speed', pauseCount: 'Pause… {n}',
+            noVoice: 'No {acc} voice on this device{using}', using: ' — using {v}.', noSpeech: 'Speech is not available in this browser.',
+            printFail: 'Printing is not available here. Open the tool on your website, or use your browser’s Print command.',
+            legendH: 'Legend',
+            lg_ul: 'Information words: Nouns, Adjectives, Verbs, Adverbs',
+            lg_hl: 'Tonic or Emphatic Stress: intentional stress changing meaning',
+            lg_tonic: 'Word stress (big bubble = stressed syllable)',
+            lg_arr: 'Rising / falling intonation',
+            lg_long: '3-second pause (after a full stop)',
+            lg_short: '1-second pause (after a comma)'
+        },
+        fr: {
+            langGroup: 'Langue', title: 'Rythme, intonation et prononciation',
+            sub: 'Collez un texte, appuyez sur <b>Annoter</b>, choisissez un outil, puis touchez les mots. Sans outil sélectionné, touchez un mot pour l’écouter.',
+            placeholder: 'Saisissez ou collez votre texte ici…', empty: 'Saisissez ou collez un texte ci-dessus, puis appuyez sur « Annoter ».',
+            annotate: 'Annoter', annotateConfirm: 'Cliquez à nouveau pour recommencer (les marques seront effacées)', ipaBtn: 'Transcription phonétique', accent: 'Accent',
+            acc_gb: 'Britannique', acc_us: 'Américain', acc_au: 'Australien', acc_sc: 'Écossais', acc_ie: 'Irlandais', acc_ca: 'Canadien', acc_in: 'Indien',
+            autoPauses: 'Pauses automatiques', autoPausesT: 'Ajoute des barres de pause après les points et les virgules', undo: '↶ Annuler', clear: 'Effacer les marques',
+            hide: 'Masquer les marques', show: 'Afficher les marques', print: 'Imprimer', toolsAria: 'Outils d’annotation',
+            tn_ul: 'Mots porteurs de sens', tt_ul: 'Mots porteurs de sens', tn_hl: 'Accent tonique ou d’insistance', tt_hl: 'Accent tonique ou d’insistance',
+            tn_tonic: 'Accent de mot', tt_tonic: 'Accent de mot', tn_up: 'Montante', tt_up: 'Intonation montante', tn_down: 'Descendante', tt_down: 'Intonation descendante',
+            tn_long: 'Pause 3 s', tt_long: 'Pause de 3 secondes', tn_short: 'Pause 1 s', tt_short: 'Pause d’1 seconde', tn_erase: 'Gomme', tt_erase: 'Retire toutes les marques d’un mot',
+            h_none: 'Choisissez un outil.', h_first: 'Choisissez d’abord un outil.',
+            h_ul: 'Touchez un nom, un adjectif, un verbe ou un adverbe pour le souligner comme mot porteur de sens.',
+            h_hl: 'Touchez un mot pour marquer l’accent tonique ou d’insistance.',
+            h_up: 'Touchez un mot pour ajouter une flèche montante (touchez à nouveau pour la retirer).',
+            h_down: 'Touchez un mot pour ajouter une flèche descendante (touchez à nouveau pour la retirer).',
+            h_tonic: 'Touchez un mot pour afficher son accent et l’écouter. Touchez à nouveau pour le réécouter ; utilisez la Gomme pour retirer les bulles.',
+            h_long: 'Touchez un mot (ou l’espace après lui) pour ajouter une pause de 3 secondes.',
+            h_short: 'Touchez un mot (ou l’espace après lui) pour ajouter une pause d’1 seconde.',
+            h_erase: 'Touchez un mot pour retirer toutes ses marques.',
+            ipaHead: 'Transcription phonétique', weakForms: 'Formes faibles', copy: 'Copier', copied: 'Copié', close: 'Fermer', approx: 'approximatif',
+            ipaNote: '‖ = pause de 3 secondes · | = pause d’1 seconde · ˈ = accent principal · ˌ = accent secondaire. Les formes faibles s’appliquent aux mots grammaticaux non accentués (pas aux mots surlignés ni aux mots en fin de phrase). Les mots en orange ne figurent pas dans le dictionnaire.',
+            loadingDict: 'Chargement du dictionnaire de prononciation…',
+            dictFail: 'Le dictionnaire de prononciation n’a pas pu être chargé. Vérifiez la connexion internet et réessayez.',
+            notInDict: 'Absent du dictionnaire',
+            listen: '▶ Écouter', stop: '■ Arrêter', speed: 'Vitesse', pauseCount: 'Pause… {n}',
+            noVoice: 'Aucune voix {acc} sur cet appareil{using}', using: ' — utilisation de {v}.', noSpeech: 'La synthèse vocale n’est pas disponible dans ce navigateur.',
+            printFail: 'L’impression n’est pas disponible ici. Ouvrez l’outil sur votre site, ou utilisez la commande Imprimer de votre navigateur.',
+            legendH: 'Légende',
+            lg_ul: 'Mots porteurs de sens : noms, adjectifs, verbes, adverbes',
+            lg_hl: 'Accent tonique ou d’insistance : accent volontaire qui change le sens',
+            lg_tonic: 'Accent de mot (grande bulle = syllabe accentuée)',
+            lg_arr: 'Intonation montante / descendante',
+            lg_long: 'Pause de 3 secondes (après un point)',
+            lg_short: 'Pause d’1 seconde (après une virgule)'
+        }
+    };
+    var LANG = 'fr';
+    try {
+        var sl = localStorage.getItem('ell-lang');
+        if (sl === 'en' || sl === 'fr')
+            LANG = sl;
+    }
+    catch (e) { }
+    function T(key, vars) {
+        var s = STR[LANG][key];
+        if (s === undefined)
+            s = STR.en[key];
+        if (s === undefined)
+            return key;
+        return s.replace(/\{(\w+)\}/g, function (m, k) { return vars && k in vars ? vars[k] : m; });
+    }
+    function applyStatic() {
+        document.documentElement.lang = LANG;
+        document.title = T('title') + ' · Emerald Language Learning';
+        Array.prototype.forEach.call(document.querySelectorAll('[data-i18n]'), function (e) { e.textContent = T(e.dataset.i18n); });
+        Array.prototype.forEach.call(document.querySelectorAll('[data-i18n-html]'), function (e) { e.innerHTML = T(e.dataset.i18nHtml); });
+        Array.prototype.forEach.call(document.querySelectorAll('[data-i18n-aria]'), function (e) { e.setAttribute('aria-label', T(e.dataset.i18nAria)); });
+        Array.prototype.forEach.call(document.querySelectorAll('[data-i18n-title]'), function (e) { e.title = T(e.dataset.i18nTitle); });
+        Array.prototype.forEach.call(document.querySelectorAll('[data-i18n-ph]'), function (e) { e.placeholder = T(e.dataset.i18nPh); });
+        Array.prototype.forEach.call(document.querySelectorAll('[data-lang]'), function (b) { b.setAttribute('aria-pressed', b.dataset.lang === LANG ? 'true' : 'false'); });
+    }
+    var KEY = 'rip-tool-v1';
+    var PAUSE = { long: 3000, short: 1000 };
+    var $ = function (id) { return document.getElementById(id); };
+    var board = $('board'), src = $('src'), hint = $('hint');
+    var tokens = []; // {t:'w', pre, core, post, ul, hl, arr, syl, pause} | {t:'br'}
+    var tool = null, undo = [], hintKey = 'h_none', hidden = false;
+    function setHint(k) { hintKey = k; hint.textContent = T(k); }
+    function refreshUI() {
+        applyStatic();
+        board.setAttribute('data-empty', T('empty'));
+        hint.textContent = T(hintKey);
+        $('btnHide').textContent = hidden ? T('show') : T('hide');
+        resetAnnotateBtn();
+        updateIPA();
+        updateVoiceNote();
+    }
+    /* ---------- storage ---------- */
+    function save() { try {
+        localStorage.setItem(KEY, JSON.stringify({ text: src.value, tokens: tokens }));
+    }
+    catch (e) { } }
+    function load() {
+        try {
+            var d = JSON.parse(localStorage.getItem(KEY) || 'null');
+            if (d && d.tokens) {
+                src.value = d.text || '';
+                tokens = d.tokens;
+                return true;
+            }
+        }
+        catch (e) { }
+        return false;
+    }
+    /* ---------- parsing ---------- */
+    function parse(text) {
+        var out = [];
+        var paras = text.replace(/\r/g, '').split(/\n\s*\n|\n/);
+        paras.forEach(function (p) {
+            var words = p.split(/\s+/).filter(Boolean);
+            if (!words.length)
+                return;
+            if (out.length)
+                out.push({ t: 'br' });
+            words.forEach(function (w) {
+                var m = w.match(/^([^A-Za-zÀ-ÿ0-9']*)(.*?)([^A-Za-zÀ-ÿ0-9']*)$/);
+                var pre = m ? m[1] : '', core = m ? m[2] : w, post = m ? m[3] : '';
+                if (!core) {
+                    core = w;
+                    pre = '';
+                    post = '';
+                }
+                out.push({ t: 'w', pre: pre, core: core, post: post, ul: false, hl: false, arr: null, syl: null, pause: null });
+            });
+        });
+        return out;
+    }
+    function hasMarks() {
+        return tokens.some(function (t) { return t.t === 'w' && (t.ul || t.hl || t.arr || t.syl || t.pause); });
+    }
+    /* ---------- rendering ---------- */
+    function el(tag, cls, txt) { var e = document.createElement(tag); if (cls)
+        e.className = cls; if (txt != null)
+        e.textContent = txt; return e; }
+    function render() {
+        board.innerHTML = '';
+        board.classList.toggle('empty', !tokens.length);
+        var para = el('div', 'para');
+        board.appendChild(para);
+        tokens.forEach(function (t, i) {
+            if (t.t === 'br') {
+                para = el('div', 'para');
+                board.appendChild(para);
+                return;
+            }
+            var w = el('span', 'w' + (t.ul ? ' ul' : '') + (t.hl ? ' hl' : ''));
+            w.dataset.i = i;
+            var above = el('span', 'above');
+            if (t.syl) {
+                var n = t.syl.n || (t.syl.parts ? t.syl.parts.length : 1);
+                for (var k = 0; k < n; k++) {
+                    var b = el('span', 'b' + (k === t.syl.stress ? ' big' : ''));
+                    b.dataset.k = k;
+                    above.appendChild(b);
+                }
+            }
+            w.appendChild(above);
+            var txt = el('span', 'txt');
+            if (t.pre)
+                txt.appendChild(document.createTextNode(t.pre));
+            txt.appendChild(el('span', 'core', t.core));
+            if (t.post)
+                txt.appendChild(document.createTextNode(t.post));
+            w.appendChild(txt);
+            if (t.arr)
+                w.appendChild(el('span', 'arr', t.arr === 'up' ? '↗' : '↘'));
+            para.appendChild(w);
+            var g = el('span', 'g');
+            g.dataset.i = i;
+            if (t.pause)
+                g.appendChild(el('span', 'bar' + (t.pause === 'short' ? ' short' : '')));
+            para.appendChild(g);
+        });
+        updateIPA();
+    }
+    /* ---------- undo ---------- */
+    function snapshot() {
+        undo.push(JSON.stringify(tokens));
+        if (undo.length > 60)
+            undo.shift();
+        $('btnUndo').disabled = false;
+    }
+    $('btnUndo').onclick = function () {
+        if (!undo.length)
+            return;
+        tokens = JSON.parse(undo.pop());
+        $('btnUndo').disabled = !undo.length;
+        render();
+        save();
+    };
+    /* ---------- tools ---------- */
+    Array.prototype.forEach.call(document.querySelectorAll('.tool'), function (b) {
+        b.onclick = function () {
+            var t = b.dataset.tool;
+            tool = (tool === t) ? null : t;
+            Array.prototype.forEach.call(document.querySelectorAll('.tool'), function (x) {
+                x.setAttribute('aria-pressed', x.dataset.tool === tool ? 'true' : 'false');
+            });
+            setHint(tool ? 'h_' + tool : 'h_none');
+            board.classList.toggle('tonic-mode', tool === 'tonic');
+            if (tool === 'tonic')
+                loadDict();
+        };
+    });
+    board.addEventListener('click', function (e) {
+        var target = e.target.closest('.w, .g');
+        if (!target)
+            return;
+        var i = +target.dataset.i, t = tokens[i];
+        if (!t || t.t !== 'w')
+            return;
+        if (!tool) {
+            if (target.classList.contains('w'))
+                speakWord(t.core);
+            else
+                setHint('h_first');
+            return;
+        }
+        if (tool === 'tonic') {
+            if (!t.syl) {
+                snapshot();
+                t.syl = autoStress(t.core);
+                render();
+                save();
+            }
+            speakWord(t.core);
+            return;
+        }
+        snapshot();
+        switch (tool) {
+            case 'ul':
+                t.ul = !t.ul;
+                break;
+            case 'hl':
+                t.hl = !t.hl;
+                break;
+            case 'up':
+                t.arr = t.arr === 'up' ? null : 'up';
+                break;
+            case 'down':
+                t.arr = t.arr === 'down' ? null : 'down';
+                break;
+            case 'long':
+                t.pause = t.pause === 'long' ? null : 'long';
+                break;
+            case 'short':
+                t.pause = t.pause === 'short' ? null : 'short';
+                break;
+            case 'erase':
+                t.ul = t.hl = false;
+                t.arr = t.syl = t.pause = null;
+                break;
+        }
+        render();
+        save();
+    });
+    /* ---------- automatic tonic stress ---------- */
+    // Built-in list (works offline): word/syllables+stressed syllable (0 = first)
+    var BUILTIN = {};
+    ('about/21 above/21 across/21 after/20 again/21 against/21 ago/21 alone/21 along/21 already/31 also/20 ' +
+        'although/21 always/20 among/21 another/31 answer/20 anyone/30 anything/30 apartment/31 around/21 arrive/21 ' +
+        'away/21 banana/31 beautiful/30 because/21 become/21 before/21 begin/21 behind/21 believe/21 below/21 ' +
+        'better/20 between/21 birthday/20 brother/20 business/20 busy/20 camera/30 careful/20 children/20 ' +
+        'chocolate/30 cinema/30 city/20 coffee/20 collect/21 colour/20 color/20 comfortable/40 company/30 ' +
+        'complete/21 computer/31 concert/20 continue/31 correct/21 country/20 decide/21 delicious/31 describe/21 ' +
+        'dictionary/40 different/30 difficult/30 dinner/20 discuss/21 doctor/20 during/20 early/20 easy/20 ' +
+        'eleven/31 email/20 english/20 enjoy/21 enough/21 evening/20 every/20 everyone/30 everything/30 exam/21 ' +
+        'example/31 excellent/30 exercise/30 expensive/31 explain/21 family/30 famous/20 father/20 favourite/30 ' +
+        'favorite/30 finish/20 follow/20 forget/21 forward/20 friday/20 garden/20 guitar/21 happy/20 holiday/30 ' +
+        'hotel/21 hundred/20 idea/31 important/31 interesting/30 into/20 invite/21 island/20 july/21 kitchen/20 ' +
+        'language/20 later/20 lesson/20 little/20 machine/21 many/20 market/20 maybe/20 minute/20 moment/20 ' +
+        'monday/20 money/20 morning/20 mother/20 museum/31 music/20 myself/21 never/20 nobody/30 number/20 ' +
+        "o'clock/21 office/20 often/20 only/20 open/20 other/20 over/20 paper/20 parents/20 party/20 people/20 " +
+        'perhaps/21 person/20 photograph/30 photographer/41 police/21 popular/30 possible/30 prefer/21 present/20 ' +
+        'pretty/20 problem/20 promise/20 really/20 receive/21 remember/31 restaurant/30 return/21 saturday/30 ' +
+        'second/20 seven/20 sister/20 something/20 sometimes/20 sorry/20 station/20 student/20 study/20 ' +
+        'suggest/21 summer/20 sunday/20 supermarket/40 surprise/21 table/20 teacher/20 telephone/30 ' +
+        'television/40 thirteen/21 thirty/20 thursday/20 today/21 together/31 tomato/31 tomorrow/31 tonight/21 ' +
+        'travel/20 tuesday/20 understand/32 until/21 usually/40 vacation/31 vegetable/30 very/20 water/20 ' +
+        'wednesday/20 weekend/20 welcome/20 window/20 winter/20 without/21 woman/20 women/20 wonderful/30 ' +
+        'yellow/20 yesterday/30 fourteen/21 fifteen/21 sixteen/21 seventeen/32 eighteen/21 nineteen/21 ' +
+        'twenty/20 forty/20 fifty/20 sixty/20 seventy/30 eighty/20 ninety/20 january/40 february/40 april/20 ' +
+        'august/20 september/31 october/31 november/31 december/31 hello/21 goodbye/21 okay/21 unless/21 ' +
+        'upon/21 prepare/21 provide/21 relax/21 repeat/21 reply/21 report/21 result/21 review/21 agree/21 ' +
+        'allow/21 appear/21 apply/21 attack/21 attend/21 avoid/21 decision/31 education/42 information/42 ' +
+        'pronunciation/53 intonation/42 conversation/42 rhythm/20 sentence/20 syllable/30 practise/20 ' +
+        'practice/20 question/20 adjective/30 adverb/20 quiet/20 certainly/30 probably/30 actually/40 ' +
+        'especially/41 finally/30 recently/30 suddenly/30 unfortunately/51 fortunately/40 absolutely/42 ' +
+        'definitely/40 immediately/51 hospital/30 umbrella/31 engineer/32 japanese/32 volunteer/32 ' +
+        'afternoon/32 kangaroo/32 guarantee/32 magazine/32 photography/41 economy/41 economic/42 history/30 ' +
+        'library/30 factory/30 chemistry/30 mathematics/42 geography/41 biology/41 university/52 ' +
+        'opportunity/52 electricity/52 personality/52 technology/41 politics/30 political/41 politician/42 ' +
+        'italian/31 italy/30 canada/30 canadian/41 japan/21 china/20 chinese/21 america/41 american/41 ' +
+        'england/20 london/20 paris/20 germany/30 europe/20 european/42 spanish/20 britain/20 british/20 ' +
+        'lunchtime/20 weather/20 holidays/30 hotel/21 event/21 events/21 begin/21 hotel/21 cartoon/21 ' +
+        'balloon/21 shampoo/21 career/21 degree/21 employee/32 refugee/32 interview/30 introduce/32 ' +
+        'recommend/32 entertain/32 disappear/32 understood/32 overseas/32 nevertheless/42 visitor/30 ' +
+        'manager/30 customer/30 character/30 cucumber/30 potato/31 tobacco/31 piano/31 cathedral/31 ' +
+        'committee/31 develop/31 discover/31 consider/31 imagine/31 deliver/31 encourage/31 abroad/21 ' +
+        'asleep/21 awake/21 aware/21 afraid/21 alive/21 polite/21 complain/21 control/21 design/21 ' +
+        'desire/21 escape/21 exist/21 forgive/21 hotel/21 include/21 increase/21 instead/21 machine/21 ' +
+        'mistake/21 obey/21 occur/21 perform/21 pollute/21 pretend/21 protect/21 refuse/21 remain/21 ' +
+        'remind/21 replace/21 request/21 respond/21 reveal/21 select/21 support/21 survive/21 translate/21')
+        .split(/\s+/).forEach(function (e) {
+        var m = e.match(/^(.+)\/(\d)(\d)$/);
+        if (m)
+            BUILTIN[m[1]] = [+m[2], +m[3]];
+    });
+    /* The CMU pronouncing dictionary. Inside a Claude artifact only script/module loads from the CDN
+       are allowed, so it is imported as a module first; a plain download is the fallback (e.g. Google Sites). */
+    var DICT = null, dictPromise = null;
+    var DICT_MODULES = [
+        'https://cdn.jsdelivr.net/npm/cmu-pronouncing-dictionary@3/+esm',
+        'https://cdn.jsdelivr.net/npm/cmu-pronouncing-dictionary/+esm',
+        'https://unpkg.com/cmu-pronouncing-dictionary@3/index.js?module'
+    ];
+    var DICT_URLS = [
+        'https://cdn.jsdelivr.net/npm/cmu-pronouncing-dictionary/index.js',
+        'https://unpkg.com/cmu-pronouncing-dictionary/index.js'
+    ];
+    function useDict(d) {
+        DICT = d;
+        var changed = false; // refresh bubbles placed before the dictionary arrived
+        tokens.forEach(function (t) {
+            if (t.t === 'w' && t.syl && t.syl.auto) {
+                var s2 = autoStress(t.core);
+                if (s2.n !== t.syl.n || s2.stress !== t.syl.stress) {
+                    t.syl = s2;
+                    changed = true;
+                }
+            }
+        });
+        if (changed) {
+            render();
+            save();
+        }
+    }
+    function fromObject(obj) {
+        var d = {}, count = 0;
+        for (var k in obj) {
+            if (!Object.prototype.hasOwnProperty.call(obj, k) || typeof obj[k] !== 'string')
+                continue;
+            var key = k.toLowerCase();
+            if (key.indexOf('(') !== -1 || d[key])
+                continue; // keep the first (main) pronunciation
+            d[key] = obj[k];
+            count++;
+        }
+        return count >= 1000 ? d : null;
+    }
+    function fromText(txt) {
+        var d = {}, re = /["']([^"'\n]+)["']\s*:\s*["']([A-Z]{1,2}[0-2]?(?: [A-Z]{1,2}[0-2]?)*)["']/g, m, count = 0;
+        while ((m = re.exec(txt))) {
+            var key = m[1].toLowerCase();
+            if (key.indexOf('(') !== -1 || d[key])
+                continue;
+            d[key] = m[2];
+            count++;
+        }
+        return count >= 1000 ? d : null;
+    }
+    function loadDict() {
+        if (dictPromise)
+            return dictPromise;
+        dictPromise = new Promise(function (resolve) {
+            function tryFetch(k) {
+                if (k >= DICT_URLS.length || !window.fetch) {
+                    resolve(false);
+                    return;
+                }
+                fetch(DICT_URLS[k]).then(function (r) { if (!r.ok)
+                    throw 0; return r.text(); }).then(function (txt) {
+                    var d = fromText(txt);
+                    if (!d)
+                        throw 0;
+                    useDict(d);
+                    resolve(true);
+                }).catch(function () { tryFetch(k + 1); });
+            }
+            function tryModule(k) {
+                if (k >= DICT_MODULES.length) {
+                    tryFetch(0);
+                    return;
+                }
+                // import() is hidden inside Function() so that browsers without module support (old iPads) can still read this page.
+                var p;
+                try {
+                    p = (new Function('u', 'return import(u)'))(DICT_MODULES[k]);
+                }
+                catch (e) {
+                    tryModule(k + 1);
+                    return;
+                }
+                p.then(function (mod) {
+                    var obj = mod && (mod.dictionary || (mod.default && (mod.default.dictionary || mod.default)));
+                    var d = obj && fromObject(obj);
+                    if (!d)
+                        throw 0;
+                    useDict(d);
+                    resolve(true);
+                }).catch(function () { tryModule(k + 1); });
+            }
+            tryModule(0);
+        });
+        return dictPromise;
+    }
+    function stressFromPron(pron) {
+        var st = pron.match(/[012]/g) || ['1'];
+        var p = st.indexOf('1');
+        if (p < 0)
+            p = 0;
+        return [st.length, p];
+    }
+    function countSyl(w) {
+        var s = w.toLowerCase().replace(/[^a-z]/g, '');
+        if (!s)
+            return 1;
+        if (s.length <= 3)
+            return 1;
+        s = s.replace(/(?:[^laeiouy]es|[^laeiouy]e|[^dt]ed)$/, function (m) { return m.charAt(0); })
+            .replace(/^y/, '');
+        var g = s.match(/[aeiouy]{1,2}/g);
+        return Math.max(1, g ? g.length : 1);
+    }
+    function lookup(w) {
+        if (DICT && DICT[w])
+            return stressFromPron(DICT[w]);
+        if (BUILTIN[w])
+            return BUILTIN[w];
+        return null;
+    }
+    function autoStress(word) {
+        var w = word.toLowerCase().replace(/[’‘]/g, "'").replace(/^'+|'+$/g, '');
+        var r = lookup(w);
+        if (!r) {
+            var m, base;
+            if ((m = w.match(/^(.+?)(ing)$/)) && ((base = lookup(m[1])) || (base = lookup(m[1] + 'e'))))
+                r = [base[0] + 1, base[1]];
+            else if ((m = w.match(/^(.+?)(ly)$/)) && (base = lookup(m[1])))
+                r = [base[0] + 1, base[1]];
+            else if ((m = w.match(/^(.+?)es$/)) && /(s|x|z|ch|sh)$/.test(m[1]) && (base = lookup(m[1])))
+                r = [base[0] + 1, base[1]];
+            else if ((m = w.match(/^(.+?)s$/)) && (base = lookup(m[1])))
+                r = [base[0] + (/(ce|ge|se|ze)$/.test(m[1]) ? 1 : 0), base[1]];
+            else if ((m = w.match(/^(.+?)(ed|d)$/)) && (base = lookup(m[1])))
+                r = [base[0] + (/[td]$/.test(m[1]) ? 1 : 0), base[1]];
+        }
+        if (r)
+            return { n: r[0], stress: Math.min(r[1], r[0] - 1), auto: true };
+        var n = countSyl(w), s;
+        if (n === 1)
+            s = 0;
+        else if (/(ity|ical|ify|ities)$/.test(w) && n >= 3)
+            s = n - 3;
+        else if (/(tion|sion|cian|cial|tial|ic|ian|ious|eous|ient|ience|ency|ual)s?$/.test(w))
+            s = n - 2;
+        else if (/(ee|eer|ese|ette|oon|ique|esque|ain)s?$/.test(w))
+            s = n - 1;
+        else if (/(ate|ise|ize|ogy|graphy|ometer)s?$/.test(w) && n >= 3)
+            s = n - 3;
+        else if (n === 2)
+            s = /^(a|be|de|re|ex|for|un|in|con|com|pre|pro)/.test(w) && !/(er|y|ow|le|el|en)$/.test(w) ? 1 : 0;
+        else
+            s = n - 3;
+        return { n: n, stress: Math.max(0, Math.min(s, n - 1)), auto: true };
+    }
+    /* ---------- phonetic transcription (IPA) ---------- */
+    var VBASE = { AA: 'ɑ', AE: 'æ', AH: 'ʌ', AO: 'ɔ', AW: 'aʊ', AY: 'aɪ', EH: 'ɛ', EY: 'eɪ', IH: 'ɪ', IY: 'i', OW: 'oʊ', OY: 'ɔɪ', UH: 'ʊ', UW: 'u' };
+    var CBASE = { B: 'b', CH: 'tʃ', D: 'd', DH: 'ð', F: 'f', G: 'ɡ', HH: 'h', JH: 'dʒ', K: 'k', L: 'l', M: 'm', N: 'n', NG: 'ŋ', P: 'p', R: 'r', S: 's', SH: 'ʃ', T: 't', TH: 'θ', V: 'v', W: 'w', Y: 'j', Z: 'z', ZH: 'ʒ' };
+    function ext(base, over) { var o = {}, k; for (k in base)
+        o[k] = base[k]; for (k in over)
+        o[k] = over[k]; return o; }
+    var GB_V = ext(VBASE, { AA: 'ɒ', AO: 'ɔː', EH: 'e', IY: 'iː', OW: 'əʊ', UW: 'uː' });
+    var GB_PRE_R = { AA: 'ɑː', AE: 'ɑː', AO: 'ɔː', OW: 'ɔː', IH: 'ɪə', IY: 'ɪə', EH: 'eə', EY: 'eə', UH: 'ʊə', UW: 'ʊə', AY: 'aɪə', AW: 'aʊə', AH: 'ʌ' };
+    var ACCENTS = {
+        gb: { speech: ['en-GB'], rhotic: false, v: GB_V, preR: GB_PRE_R, er1: 'ɜː', er0: 'ə', weak: { IY: 'i', UW: 'u', OW: 'əʊ' }, c: {} },
+        us: { speech: ['en-US'], rhotic: true, v: VBASE, er1: 'ɝ', er0: 'ɚ', weak: {}, c: {} },
+        ca: { approx: true, speech: ['en-CA', 'en-US'], rhotic: true, v: ext(VBASE, { AO: 'ɑ' }), er1: 'ɝ', er0: 'ɚ', weak: {}, c: {} },
+        au: { approx: true, speech: ['en-AU', 'en-GB'], rhotic: false,
+            v: ext(GB_V, { AA: 'ɔ', EY: 'æɪ', AY: 'ɑe', OW: 'əʉ', UW: 'ʉː', AW: 'æɔ' }), preR: ext(GB_PRE_R, { AA: 'ɐː', AE: 'ɐː', IH: 'ɪə', EH: 'eː', EY: 'eː' }),
+            er1: 'ɜː', er0: 'ə', weak: { IY: 'i', UW: 'ʉ', OW: 'əʉ' }, c: {} },
+        sc: { approx: true, speech: ['en-scotland', 'en-GB-SCOTLAND', 'en-GB'], voiceName: /fiona|scot/i, rhotic: true,
+            v: { AA: 'a', AE: 'a', AH: 'ʌ', AO: 'ɔ', AW: 'ʌʉ', AY: 'ae', EH: 'ɛ', EY: 'e', IH: 'ɪ', IY: 'i', OW: 'o', OY: 'oe', UH: 'ʉ', UW: 'ʉ' },
+            er1: 'ʌr', er0: 'ər', weak: { UW: 'ʉ' }, c: {} },
+        ie: { approx: true, speech: ['en-IE', 'en-GB'], rhotic: true,
+            v: ext(VBASE, { AE: 'a', AO: 'ɒ', AW: 'ɐʊ', AY: 'ɑɪ', EY: 'eː', IY: 'iː', OW: 'oː', UW: 'uː' }),
+            er1: 'ɝ', er0: 'ɚ', weak: { IY: 'i', UW: 'u' }, c: { TH: 't̪', DH: 'd̪' } },
+        in: { approx: true, speech: ['en-IN', 'en-GB'], rhotic: true,
+            v: ext(VBASE, { AA: 'ɑː', AE: 'ɛ', AO: 'ɔː', EY: 'eː', IY: 'iː', OW: 'oː', UW: 'uː' }),
+            er1: 'ər', er0: 'ər', weak: { IY: 'i', UW: 'u' }, c: { T: 'ʈ', D: 'ɖ', TH: 't̪ʰ', DH: 'd̪', V: 'ʋ', W: 'ʋ' } }
+    };
+    var accName = function (k) { return T('acc_' + k); };
+    var WEAK = { a: 'AH0', an: 'AH0 N', the: 'DH AH0', to: 'T AH0', of: 'AH0 V', 'for': 'F ER0', and: 'AH0 N D', but: 'B AH0 T',
+        at: 'AH0 T', from: 'F R AH0 M', can: 'K AH0 N', was: 'W AH0 Z', were: 'W ER0', some: 'S AH0 M', them: 'DH AH0 M',
+        us: 'AH0 S', have: 'HH AH0 V', has: 'HH AH0 Z', had: 'HH AH0 D', 'do': 'D AH0', does: 'D AH0 Z', than: 'DH AH0 N',
+        you: 'Y AH0', your: 'Y ER0', are: 'ER0', am: 'AH0 M', be: 'B IY0', been: 'B IH0 N', as: 'AH0 Z', could: 'K AH0 D',
+        would: 'W AH0 D', should: 'SH AH0 D', must: 'M AH0 S T', shall: 'SH AH0 L', will: 'W AH0 L', there: 'DH ER0', her: 'HH ER0', him: 'HH IH0 M' };
+    var ONSETS = { 'P L': 1, 'P R': 1, 'B L': 1, 'B R': 1, 'T R': 1, 'D R': 1, 'K L': 1, 'K R': 1, 'G L': 1, 'G R': 1, 'F L': 1, 'F R': 1, 'TH R': 1, 'SH R': 1,
+        'S P': 1, 'S T': 1, 'S K': 1, 'S M': 1, 'S N': 1, 'S L': 1, 'S W': 1, 'T W': 1, 'K W': 1, 'D W': 1, 'P Y': 1, 'B Y': 1, 'K Y': 1, 'F Y': 1, 'M Y': 1, 'HH Y': 1, 'V Y': 1,
+        'S P R': 1, 'S T R': 1, 'S K R': 1, 'S P L': 1, 'S K W': 1, 'S K Y': 1, 'S P Y': 1 };
+    function isV(p) { return p != null && /[012]$/.test(p); }
+    function pronToIPA(pron, acc) {
+        var A = ACCENTS[acc], ph = pron.split(' '), syms = [], vowels = 0;
+        for (var i = 0; i < ph.length; i++) {
+            var m = ph[i].match(/^([A-Z]+)([012])?$/);
+            if (!m)
+                continue;
+            var base = m[1], st = m[2], sym;
+            if (st != null) {
+                vowels++;
+                if (base === 'ER')
+                    sym = st === '0' ? A.er0 : A.er1;
+                else if (base === 'AH' && st === '0')
+                    sym = 'ə';
+                else if (!A.rhotic && ph[i + 1] === 'R' && !isV(ph[i + 2])) {
+                    sym = A.preR[base] || A.v[base];
+                    i++;
+                }
+                else if (st === '0' && A.weak[base])
+                    sym = A.weak[base];
+                else
+                    sym = A.v[base] || VBASE[base];
+            }
+            else {
+                if (base === 'R' && !A.rhotic && !isV(ph[i + 1]))
+                    continue;
+                sym = A.c[base] || CBASE[base] || '';
+            }
+            syms.push({ s: sym, b: base, st: st });
+        }
+        if (vowels > 1) {
+            for (var j = syms.length - 1; j >= 0; j--) {
+                if (syms[j].st !== '1' && syms[j].st !== '2')
+                    continue;
+                var start = j, k;
+                for (k = j - 1; k >= 0 && syms[k].st == null; k--) {
+                    var run = syms.slice(k, j).map(function (x) { return x.b; });
+                    if (run.length === 1 ? run[0] !== 'NG' : ONSETS[run.join(' ')])
+                        start = k;
+                    else
+                        break;
+                }
+                syms.splice(start, 0, { s: syms[j].st === '1' ? 'ˈ' : 'ˌ', b: '', st: null, mark: true });
+            }
+        }
+        return syms.map(function (x) { return x.s; }).join('');
+    }
+    var ipaOpen = false, dictFailed = false;
+    function wordIPA(t, nextIsEnd, acc, useWeak) {
+        var w = t.core.toLowerCase().replace(/[’‘]/g, "'").replace(/^'+|'+$/g, '');
+        if (useWeak && WEAK[w] && !t.hl && !t.ul && !nextIsEnd)
+            return { ipa: pronToIPA(WEAK[w], acc) };
+        var pron = DICT && DICT[w];
+        if (!pron && DICT) {
+            var m = w.match(/^(.+?)('s|s)$/);
+            if (m && DICT[m[1]])
+                pron = DICT[m[1]] + (/[PTKF]|TH$/.test(DICT[m[1]].slice(-2)) ? ' S' : ' Z');
+        }
+        if (!pron)
+            return { ipa: t.core, unk: true };
+        return { ipa: pronToIPA(pron, acc) };
+    }
+    function updateIPA() {
+        if (!ipaOpen)
+            return;
+        var box = $('ipaText'), acc = $('accent').value, A = ACCENTS[acc];
+        $('ipaAcc').innerHTML = '';
+        $('ipaAcc').appendChild(document.createTextNode('· ' + accName(acc) + ' '));
+        if (A.approx)
+            $('ipaAcc').appendChild(el('span', 'badge', T('approx')));
+        if (!DICT) {
+            box.innerHTML = '';
+            box.appendChild(el('span', 'msg', dictFailed ? T('dictFail') : T('loadingDict')));
+            return;
+        }
+        var list = tokens.length ? tokens : parse(src.value);
+        var useWeak = $('weak').checked;
+        box.innerHTML = '';
+        box.setAttribute('lang', 'en');
+        var line = el('span');
+        line.appendChild(document.createTextNode('/'));
+        box.appendChild(line);
+        list.forEach(function (t, i) {
+            if (t.t === 'br') {
+                line.appendChild(document.createTextNode('/\n'));
+                line = el('span');
+                line.appendChild(document.createTextNode('/'));
+                box.appendChild(line);
+                return;
+            }
+            var end = /[.!?]/.test(t.post) || !list[i + 1] || list[i + 1].t === 'br';
+            var r = wordIPA(t, end, acc, useWeak);
+            if (r.unk) {
+                var u = el('span', 'unk', r.ipa);
+                u.title = T('notInDict');
+                line.appendChild(u);
+            }
+            else
+                line.appendChild(document.createTextNode(r.ipa));
+            var pause = t.pause || (/[.!?]/.test(t.post) ? 'long' : /[,;:]/.test(t.post) ? 'short' : null);
+            var next = list[i + 1];
+            if (pause)
+                line.appendChild(document.createTextNode(pause === 'long' ? ' ‖' : ' |'));
+            if (next && next.t !== 'br')
+                line.appendChild(document.createTextNode(' '));
+        });
+        line.appendChild(document.createTextNode('/'));
+    }
+    $('btnIPA').onclick = function () {
+        ipaOpen = true;
+        $('ipaBox').hidden = false;
+        updateIPA();
+        $('ipaBox').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        loadDict().then(function (ok) { dictFailed = !ok; updateIPA(); });
+    };
+    $('ipaClose').onclick = function () { ipaOpen = false; $('ipaBox').hidden = true; };
+    $('ipaCopy').onclick = function () {
+        var txt = $('ipaText').textContent, btn = this;
+        var done = function () { btn.textContent = T('copied'); setTimeout(function () { btn.textContent = T('copy'); }, 1500); };
+        if (navigator.clipboard && navigator.clipboard.writeText)
+            navigator.clipboard.writeText(txt).then(done, function () { fallbackCopy(txt); done(); });
+        else {
+            fallbackCopy(txt);
+            done();
+        }
+    };
+    function fallbackCopy(txt) {
+        var ta = document.createElement('textarea');
+        ta.value = txt;
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+            document.execCommand('copy');
+        }
+        catch (e) { }
+        document.body.removeChild(ta);
+    }
+    $('weak').onchange = updateIPA;
+    $('accent').onchange = function () {
+        try {
+            localStorage.setItem(KEY + '-accent', this.value);
+        }
+        catch (e) { }
+        updateIPA();
+        updateVoiceNote();
+    };
+    try {
+        var savedAcc = localStorage.getItem(KEY + '-accent');
+        if (savedAcc && ACCENTS[savedAcc])
+            $('accent').value = savedAcc;
+    }
+    catch (e) { }
+    /* ---------- main buttons ---------- */
+    var armTimer = null;
+    function resetAnnotateBtn() { var b = $('btnLoad'); delete b.dataset.armed; clearTimeout(armTimer); b.textContent = T('annotate'); }
+    $('btnLoad').onclick = function () {
+        var b = this;
+        // Two-step confirmation inside the page (browser confirm dialogs are blocked in some embeds).
+        if (hasMarks() && !b.dataset.armed) {
+            b.dataset.armed = '1';
+            b.textContent = T('annotateConfirm');
+            armTimer = setTimeout(resetAnnotateBtn, 4000);
+            return;
+        }
+        resetAnnotateBtn();
+        snapshot();
+        tokens = parse(src.value);
+        render();
+        save();
+    };
+    $('btnAuto').onclick = function () {
+        if (!tokens.length)
+            return;
+        snapshot();
+        tokens.forEach(function (t) {
+            if (t.t !== 'w')
+                return;
+            if (/[.!?]/.test(t.post))
+                t.pause = 'long';
+            else if (/,/.test(t.post))
+                t.pause = 'short';
+        });
+        render();
+        save();
+    };
+    $('btnClear').onclick = function () {
+        if (!hasMarks())
+            return;
+        snapshot();
+        tokens.forEach(function (t) { if (t.t === 'w') {
+            t.ul = t.hl = false;
+            t.arr = t.syl = t.pause = null;
+        } });
+        render();
+        save();
+    };
+    $('btnHide').onclick = function () {
+        hidden = board.classList.toggle('hidden-marks');
+        this.setAttribute('aria-pressed', hidden ? 'true' : 'false');
+        this.textContent = hidden ? T('show') : T('hide');
+    };
+    $('btnPrint').onclick = function () {
+        var before = Date.now();
+        try {
+            window.print();
+        }
+        catch (e) {
+            setHint('printFail');
+            return;
+        }
+        // print() returns at once when the frame blocks it; a real dialog keeps it open longer
+        if (Date.now() - before < 50 && window.top !== window)
+            setHint('printFail');
+    };
+    /* ---------- listen with pauses ---------- */
+    var playing = false, timer = null, tick = null, pauseLeft = 0;
+    function norm(l) { return (l || '').replace(/_/g, '-').toLowerCase(); }
+    function pickVoice(acc) {
+        var A = ACCENTS[acc], vs = (window.speechSynthesis && speechSynthesis.getVoices()) || [];
+        if (A.voiceName) {
+            var byName = vs.filter(function (v) { return A.voiceName.test(v.name) && norm(v.lang).indexOf('en') === 0; })[0];
+            if (byName)
+                return { voice: byName, exact: true };
+        }
+        for (var k = 0; k < A.speech.length; k++) {
+            var want = norm(A.speech[k]);
+            var v = vs.filter(function (x) { return norm(x.lang) === want || norm(x.lang).indexOf(want + '-') === 0; })[0];
+            if (v)
+                return { voice: v, exact: k === 0 && !A.voiceName };
+        }
+        return { voice: null, exact: false };
+    }
+    function speakWord(word) {
+        if (!window.speechSynthesis || playing)
+            return;
+        speechSynthesis.cancel();
+        var acc = $('accent').value, pv = pickVoice(acc);
+        var u = new SpeechSynthesisUtterance(word);
+        u.lang = pv.voice ? pv.voice.lang : ACCENTS[acc].speech[0];
+        if (pv.voice)
+            u.voice = pv.voice;
+        u.rate = parseFloat($('rate').value);
+        speechSynthesis.speak(u);
+    }
+    function updateVoiceNote() {
+        if (!window.speechSynthesis)
+            return;
+        var acc = $('accent').value, r = pickVoice(acc), vs = speechSynthesis.getVoices();
+        if (!vs.length) {
+            $('voiceNote').textContent = '';
+            return;
+        }
+        $('voiceNote').textContent = r.exact ? '' :
+            T('noVoice', { acc: accName(acc).toLowerCase(), using: r.voice ? T('using', { v: r.voice.name }) : '.' });
+    }
+    function clearSpeak() {
+        Array.prototype.forEach.call(board.querySelectorAll('.speak'), function (x) { x.classList.remove('speak'); });
+        Array.prototype.forEach.call(board.querySelectorAll('.counting'), function (x) { x.classList.remove('counting'); });
+    }
+    function stop() {
+        playing = false;
+        clearTimeout(timer);
+        clearInterval(tick);
+        if (window.speechSynthesis)
+            speechSynthesis.cancel();
+        clearSpeak();
+        $('countdown').textContent = '';
+        $('btnPlay').disabled = false;
+        $('btnStop').disabled = true;
+    }
+    function segments() {
+        var segs = [], cur = [];
+        tokens.forEach(function (t, i) {
+            if (t.t !== 'w')
+                return;
+            cur.push(i);
+            if (t.pause) {
+                segs.push({ idx: cur, pause: PAUSE[t.pause], at: i });
+                cur = [];
+            }
+        });
+        if (cur.length)
+            segs.push({ idx: cur, pause: 0, at: null });
+        return segs;
+    }
+    $('btnPlay').onclick = function () {
+        if (!window.speechSynthesis) {
+            setHint('noSpeech');
+            return;
+        }
+        if (!tokens.length)
+            return;
+        var segs = segments(), n = 0;
+        playing = true;
+        $('btnPlay').disabled = true;
+        $('btnStop').disabled = false;
+        function next() {
+            if (!playing)
+                return;
+            clearSpeak();
+            if (n >= segs.length) {
+                stop();
+                return;
+            }
+            var s = segs[n++];
+            s.idx.forEach(function (i) { var w = board.querySelector('.w[data-i="' + i + '"]'); if (w)
+                w.classList.add('speak'); });
+            var text = s.idx.map(function (i) { var t = tokens[i]; return t.pre + t.core + t.post; }).join(' ');
+            var u = new SpeechSynthesisUtterance(text);
+            var pv = pickVoice($('accent').value);
+            u.lang = pv.voice ? pv.voice.lang : ACCENTS[$('accent').value].speech[0];
+            if (pv.voice)
+                u.voice = pv.voice;
+            u.rate = parseFloat($('rate').value);
+            u.onend = function () {
+                if (!playing)
+                    return;
+                clearSpeak();
+                if (s.pause) {
+                    var bar = board.querySelector('.g[data-i="' + s.at + '"] .bar');
+                    if (bar)
+                        bar.classList.add('counting');
+                    pauseLeft = s.pause / 1000;
+                    $('countdown').textContent = T('pauseCount', { n: pauseLeft });
+                    tick = setInterval(function () { pauseLeft--; if (pauseLeft > 0)
+                        $('countdown').textContent = T('pauseCount', { n: pauseLeft }); }, 1000);
+                    timer = setTimeout(function () { clearInterval(tick); $('countdown').textContent = ''; next(); }, s.pause);
+                }
+                else
+                    next();
+            };
+            u.onerror = function () { if (playing)
+                next(); };
+            speechSynthesis.speak(u);
+        }
+        next();
+    };
+    $('btnStop').onclick = stop;
+    if (window.speechSynthesis) {
+        speechSynthesis.onvoiceschanged = updateVoiceNote;
+        setTimeout(updateVoiceNote, 300);
+    }
+    /* ---------- language switch ---------- */
+    Array.prototype.forEach.call(document.querySelectorAll('[data-lang]'), function (b) {
+        b.onclick = function () {
+            if (b.dataset.lang === LANG)
+                return;
+            LANG = b.dataset.lang;
+            try {
+                localStorage.setItem('ell-lang', LANG);
+            }
+            catch (e) { }
+            refreshUI();
+        };
+    });
+    /* ---------- init ---------- */
+    if (!load())
+        tokens = parse(src.value);
+    render();
+    refreshUI();
+})();
+</script>
+</body>
+</html>
