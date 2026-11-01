@@ -617,6 +617,7 @@ var __read = (this && this.__read) || function (o, n) {
     catch (e) {
         return "";
     } }
+    var secureUrl = function (u) { return String(u || "").replace(/^http:\/\//i, "https://"); };
     function art(r) { return r.artworkUrl160 || r.artworkUrl100 || r.artworkUrl600 || r.artworkUrl60 || ""; }
     function setStatus(key, vars) { state.status = key ? [key, vars] : null; $("status").textContent = key ? T(key, vars) : ""; }
     // ---------- rendering ----------
@@ -789,7 +790,10 @@ var __read = (this && this.__read) || function (o, n) {
             return;
         }
         state.current = ep;
-        audio.src = ep.episodeUrl;
+        // Many feeds (e.g. BBC) give http:// audio links, which Android apps and secure websites block.
+        // Ask for the https:// version first; fall back to the original link if that fails.
+        state.triedPlain = false;
+        audio.src = secureUrl(ep.episodeUrl);
         audio.playbackRate = SPEEDS[state.speedIdx];
         $("pArt").src = art(ep);
         marquee($("pTitle"), ep.trackName || "");
@@ -804,7 +808,12 @@ var __read = (this && this.__read) || function (o, n) {
         $("pCur").textContent = "0:00";
         $("pDur").textContent = ep.trackTimeMillis ? fmtTime(ep.trackTimeMillis / 1000) : "0:00";
         $("player").classList.remove("idle");
-        audio.play().catch(function () { return setStatus("playFail"); });
+        // If the https link fails, the error handler retries the original link, so only report a failure
+        // once there is nothing left to try.
+        audio.play().catch(function () { return setTimeout(function () {
+            if (audio.error && (state.triedPlain || !/^http:\/\//i.test(ep.episodeUrl)))
+                setStatus("playFail");
+        }, 400); });
         refreshButtons();
     }
     function togglePlay() {
@@ -943,8 +952,19 @@ var __read = (this && this.__read) || function (o, n) {
         $("pCur").textContent = fmtTime(audio.currentTime);
         $("pSeek").value = audio.currentTime / audio.duration * 100;
     });
-    audio.addEventListener("error", function () { if (state.current)
-        setStatus("playFail"); refreshButtons(); });
+    audio.addEventListener("error", function () {
+        var ep = state.current;
+        if (ep && !state.triedPlain && /^http:\/\//i.test(ep.episodeUrl)) {
+            state.triedPlain = true; // https version not available: try the original link
+            audio.src = ep.episodeUrl;
+            audio.playbackRate = SPEEDS[state.speedIdx];
+            audio.play().catch(function () { });
+            return;
+        }
+        if (ep)
+            setStatus("playFail");
+        refreshButtons();
+    });
     // space bar = play/pause (when not typing)
     document.addEventListener("keydown", function (e) {
         if (e.code === "Space" && !/INPUT|SELECT|TEXTAREA|BUTTON/.test(document.activeElement.tagName) && state.current) {
