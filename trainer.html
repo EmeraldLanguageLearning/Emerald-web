@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#49B190">
+<title>Trainer area · Emerald Language Learning</title>
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:'Open Sans',sans-serif;color:#777;background:#fff;line-height:1.7;-webkit-text-size-adjust:100%}
+header{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:space-between;justify-content:space-between;padding:10px 4%;border-bottom:1px solid #DADADA}
+header img{height:60px;width:auto;display:block}
+main{width:92%;max-width:980px;margin:0 auto;padding:20px 0 60px}
+h1{font-family:'Montserrat',sans-serif;font-weight:300;text-transform:uppercase;color:#457865;text-align:center;font-size:38px;letter-spacing:1px;line-height:1.25;margin:28px 0 6px}
+.intro{text-align:center;max-width:620px;margin:0 auto 10px;line-height:1.9}
+.btn{display:inline-block;background:#49B190;color:#fff;border:1px solid #49B190;border-radius:4px;padding:11px 24px;font-weight:600;font-size:16px;cursor:pointer;text-decoration:none;-webkit-appearance:none;font-family:inherit;margin:4px}
+.btn:hover{background:#3f9c7e;border-color:#3f9c7e}
+.btn.outline{background:#fff;color:#457865}
+.btn.outline:hover{background:#EEF7F3}
+.lockbtn{background:#fff;color:#457865;border:1px solid #BBBBBB;border-radius:4px;padding:7px 14px;font-size:14px;cursor:pointer;font-family:inherit;-webkit-appearance:none}
+/* PIN pad */
+.pin{max-width:330px;margin:10px auto 0;text-align:center}
+.dots{margin:16px 0 18px}
+.dots span{display:inline-block;width:18px;height:18px;border-radius:50%;border:2px solid #49B190;margin:0 9px}
+.dots span.on{background:#49B190}
+.dots.shake{-webkit-animation:shake .4s;animation:shake .4s}
+@-webkit-keyframes shake{0%,100%{-webkit-transform:translateX(0)}25%,75%{-webkit-transform:translateX(-10px)}50%{-webkit-transform:translateX(10px)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%,75%{transform:translateX(-10px)}50%{transform:translateX(10px)}}
+.keys{overflow:hidden}
+.keys button{float:left;width:29.33%;margin:2%;height:72px;border-radius:4px;border:1px solid #DADADA;background:#F9F9F9;font-family:'Montserrat',sans-serif;font-size:26px;color:#323232;cursor:pointer;-webkit-appearance:none;padding:0}
+.keys button:active{background:#E3F3EC;border-color:#49B190}
+.keys button.fn{font-family:'Open Sans',sans-serif;font-size:15px;color:#777;background:#fff}
+.err{color:#C0573E;min-height:26px;font-size:15px}
+/* Quiz cards */
+.grid{overflow:hidden;margin:40px -1.5% 0}
+.card{float:left;width:47%;margin:56px 1.5% 10px;background:#F9F9F9;border-radius:4px;padding:58px 24px 26px;text-align:center;position:relative}
+.badge{position:absolute;left:50%;top:-44px;margin-left:-44px;width:88px;height:88px;border-radius:50%;background:#49B190;border:4px solid #fff;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center}
+.badge svg{width:42px;height:42px}
+.card h3{font-family:'Montserrat',sans-serif;font-weight:700;color:#323232;font-size:21px;margin:0 0 2px;line-height:1.4}
+.card .where{color:#72B1A0;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;font-size:12px;margin:0 0 10px}
+.card p{line-height:1.9;margin:0 0 14px}
+.note{text-align:center;font-size:13px;color:#999;margin-top:30px}
+.hidden{display:none}
+@media (max-width:700px){ .card{width:97%} header img{height:44px} h1{font-size:28px} }
+</style>
+</head>
+<body>
+<header>
+  <img src="data:image/png;base64,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" width="306" height="90" alt="Emerald Language Learning">
+  <button class="lockbtn hidden" id="lockBtn">Lock</button>
+</header>
+<main>
+  <!-- Locked view -->
+  <section id="locked">
+    <h1>Trainer area</h1>
+    <p class="intro">Enter the trainer PIN to open the quizzes.</p>
+    <div class="pin">
+      <div class="dots" id="dots"><span></span><span></span><span></span><span></span></div>
+      <div class="err" id="err"></div>
+      <div class="keys" id="keys"></div>
+    </div>
+  </section>
+
+  <!-- Unlocked view -->
+  <section id="open" class="hidden">
+    <h1>Quizzes</h1>
+    <p class="intro">Open a quiz on this iPad and hand it to the team. Each quiz saves its progress on the device; use “Start again” inside the quiz for a new team.</p>
+    <div class="grid" id="grid"></div>
+    <p class="note">The trainer area locks again when Safari is closed, or when you tap Lock.</p>
+  </section>
+</main>
+<script>
+(function(){
+'use strict';
+/* Add new quizzes here. */
+var QUIZZES = [
+  {title:'Aeroscopia Quiz', where:'Museum · Blagnac, Toulouse', url:'aeroscopia/', icon:'plane',
+   text:'20 museum questions with 5 rebus puzzles, 7 riddles and a photo hunt around the aircraft.'},
+  {title:'Gaillac History Tour', where:'Walking tour · Gaillac', url:'https://emeraldlanguagelearning.github.io/Emerald-Gaillac-Quiz-Tour/', icon:'map',
+   text:'A walking quiz through the historic centre of Gaillac, stop by stop.'}
+];
+var ICONS = {
+  plane:'<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>',
+  map:'<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14"/></svg>'
+};
+
+/* The PIN is not stored in plain text. Note: this only keeps students out of the menu; it is not real security. */
+var PIN_HASH = 2085847969;
+function h(s){ var x = 5381; for(var k=0;k<s.length;k++){ x = ((x*33) ^ s.charCodeAt(k)) >>> 0; } return x; }
+
+var KEY = 'ell-trainer-ok';
+function isOpen(){ try{ return sessionStorage.getItem(KEY)==='1'; }catch(e){ return window.__ok===true; } }
+function setOpen(v){ try{ if(v) sessionStorage.setItem(KEY,'1'); else sessionStorage.removeItem(KEY); }catch(e){} window.__ok = v; }
+
+function $(id){ return document.getElementById(id); }
+var entry = '';
+
+function drawDots(){ var d = $('dots').children; for(var k=0;k<d.length;k++) d[k].className = k<entry.length ? 'on' : ''; }
+
+function press(v){
+  $('err').textContent = '';
+  if(v==='del'){ entry = entry.slice(0,-1); drawDots(); return; }
+  if(v==='clr'){ entry = ''; drawDots(); return; }
+  if(entry.length>=4) return;
+  entry += v; drawDots();
+  if(entry.length===4){
+    setTimeout(function(){
+      if(h(entry)===PIN_HASH){ setOpen(true); entry=''; show(); }
+      else {
+        $('err').textContent = 'Wrong PIN. Try again.';
+        var d = $('dots'); d.className = 'dots shake'; setTimeout(function(){ d.className='dots'; }, 450);
+        entry = ''; drawDots();
+      }
+    }, 150);
+  }
+}
+
+function buildKeys(){
+  var order = ['1','2','3','4','5','6','7','8','9','clr','0','del'], html = '';
+  for(var k=0;k<order.length;k++){
+    var v = order[k], lab = v==='clr' ? 'Clear' : v==='del' ? '⌫' : v;
+    html += '<button class="'+(v.length>1?'fn':'')+'" data-k="'+v+'" aria-label="'+(v==='del'?'Delete':lab)+'">'+lab+'</button>';
+  }
+  $('keys').innerHTML = html;
+  var bs = $('keys').getElementsByTagName('button');
+  for(k=0;k<bs.length;k++) bs[k].onclick = function(){ press(this.getAttribute('data-k')); };
+  document.onkeydown = function(e){
+    if(isOpen()) return;
+    var c = e.key || String.fromCharCode(e.keyCode);
+    if(/^[0-9]$/.test(c)) press(c); else if(e.keyCode===8) press('del');
+  };
+}
+
+function buildGrid(){
+  var html = '';
+  for(var k=0;k<QUIZZES.length;k++){
+    var q = QUIZZES[k];
+    html += '<div class="card"><div class="badge">'+(ICONS[q.icon]||ICONS.plane)+'</div>'+
+      '<h3>'+q.title+'</h3><p class="where">'+q.where+'</p><p>'+q.text+'</p>'+
+      '<a class="btn" href="'+q.url+'">Open quiz</a></div>';
+  }
+  $('grid').innerHTML = html;
+}
+
+function show(){
+  var o = isOpen();
+  $('locked').className = o ? 'hidden' : '';
+  $('open').className = o ? '' : 'hidden';
+  $('lockBtn').className = o ? 'lockbtn' : 'lockbtn hidden';
+}
+$('lockBtn').onclick = function(){ setOpen(false); show(); };
+
+buildKeys(); buildGrid(); show();
+})();
+</script>
+</body>
+</html>
