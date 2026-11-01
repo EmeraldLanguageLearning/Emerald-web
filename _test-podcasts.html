@@ -156,9 +156,19 @@
   .smeta span{display:block;font-size:.8rem;color:var(--text)}
   .station .pbtn{width:44px;height:44px}
   .station.playing{border-color:var(--emerald);box-shadow:inset 3px 0 0 var(--emerald)}
-  #player.live .seek,#player.live #pBack,#player.live #pFwd,#player.live #pSpeed{display:none}
+  #player.live .seek,#player.live #pBack,#player.live #pFwd,#player.live #pSpeed,
+  body.radio-mode #player.idle .seek,body.radio-mode #player.idle #pBack,body.radio-mode #player.idle #pFwd,body.radio-mode #player.idle #pSpeed{display:none}
   #player.live #pShow{color:#c0392b;font-weight:600}
-  body.radio-mode .controls,body.radio-mode #chips{display:none}
+  body.radio-mode .controls,body.radio-mode #chips,body.radio-mode .tabs,body.radio-mode #back,body.radio-mode #showHeader{display:none!important}
+  body.radio-mode #radioChips{margin-bottom:14px}
+  .smeta .cc{font-style:normal;font-weight:700;color:var(--emerald-dark)}
+  .xswitch{display:flex;width:max-content;max-width:100%;margin:26px auto 0;border:1px solid var(--emerald);border-radius:999px;overflow:hidden}
+  .xswitch button{border:0;background:#fff;color:var(--emerald-dark);font:600 .95rem var(--font-body);padding:9px 22px}
+  .xswitch button+button{border-left:1px solid var(--emerald)}
+  .xswitch button:hover{background:var(--accent-soft)}
+  .xswitch button[aria-selected="true"]{background:var(--emerald);color:#fff}
+  .xswitch + .title-block{padding-top:16px}
+  @media (prefers-color-scheme:dark){.xswitch button{background:transparent}.xswitch button[aria-selected="true"]{background:#49B190;color:#fff}}
 </style>
 <style id="emerald-dark">
 /* Dark version of the Emerald look, used when the phone is in dark mode */
@@ -228,9 +238,13 @@
 </div>
 
 <main class="wrap">
+  <div class="xswitch" role="tablist" data-i18n-aria="explorers" aria-label="Explorateurs">
+    <button type="button" role="tab" aria-selected="true" data-explorer="pod" data-i18n="podSwitch">Podcasts</button>
+    <button type="button" role="tab" aria-selected="false" data-explorer="radio" data-i18n="radioSwitch">Radio en direct</button>
+  </div>
   <div class="title-block">
-    <h1 data-i18n="title">Explorateur de podcasts</h1>
-    <p class="sub" data-i18n="sub"></p>
+    <h1 id="hTitle" data-i18n="title">Explorateur de podcasts</h1>
+    <p class="sub" id="hSub" data-i18n="sub"></p>
   </div>
 
   <div class="controls">
@@ -255,7 +269,6 @@
     <button class="tab" role="tab" aria-selected="false" data-mode="mine" data-i18n="mineTab">Mes podcasts</button>
     <button class="tab" role="tab" aria-selected="false" data-mode="episodes" data-i18n="episodes">Épisodes</button>
     <button class="tab" role="tab" aria-selected="false" data-mode="shows" data-i18n="podcasts">Podcasts</button>
-    <button class="tab" role="tab" aria-selected="false" data-mode="radio" data-i18n="radioTab">Radio</button>
   </div>
 
   <div id="status" aria-live="polite"></div>
@@ -362,18 +375,20 @@ var __read = (this && this.__read) || function (o, n) {
             mineEmpty: "Vous n’avez encore ajouté aucun podcast. Ouvrez un podcast et touchez « ＋ Ajouter à mes podcasts ».", mineCount: "{n} podcasts dans votre liste",
             follow: "＋ Ajouter à mes podcasts", following: "✓ Dans mes podcasts", followingT: "Touchez pour le retirer de votre liste" }
     };
-    Object.assign(STR.en, { radioTab: "Live radio", radioAll: "All", c_NZ: "New Zealand", live: "LIVE",
+    Object.assign(STR.en, { podSwitch: "Podcasts", radioSwitch: "Live radio", explorers: "Podcasts or live radio",
+        radioTitle: "Radio Explorer", radioSub: "Listen live to English-language news, talk and documentary stations from the UK, Ireland, Australia, Canada, the US and New Zealand.",
+        idleRadio: "Choose a station to start listening", radioAll: "All", c_NZ: "New Zealand", live: "LIVE",
         radioCount: "{n} live English-language stations: news, talk and documentaries",
         liveConnecting: "Connecting to {s}…", radioFail: "This station can't be played right now. Try another one.",
         k_public: "Public radio", k_talk: "News & talk", k_news: "News", k_world: "World news", k_sport: "Sport talk",
-        k_drama: "Drama, comedy & books", k_politics: "Politics", k_business: "Business news",
-        sub: "Find English-language podcasts on any topic, or listen to live English radio, right here." });
-    Object.assign(STR.fr, { radioTab: "Radio en direct", radioAll: "Toutes", c_NZ: "Nouvelle-Zélande", live: "EN DIRECT",
+        k_drama: "Drama, comedy & books", k_politics: "Politics", k_business: "Business news" });
+    Object.assign(STR.fr, { podSwitch: "Podcasts", radioSwitch: "Radio en direct", explorers: "Podcasts ou radio en direct",
+        radioTitle: "Explorateur de radios", radioSub: "Écoutez en direct des radios d’actualités, de débats et de documentaires en anglais : Royaume-Uni, Irlande, Australie, Canada, États-Unis et Nouvelle-Zélande.",
+        idleRadio: "Choisissez une radio pour commencer l’écoute", radioAll: "Toutes", c_NZ: "Nouvelle-Zélande", live: "EN DIRECT",
         radioCount: "{n} radios en anglais en direct : actualités, débats et documentaires",
         liveConnecting: "Connexion à {s}…", radioFail: "Cette radio ne peut pas être lue pour l’instant. Essayez-en une autre.",
         k_public: "Radio publique", k_talk: "Actualités et débats", k_news: "Actualités", k_world: "Actualité internationale", k_sport: "Sport (débats)",
-        k_drama: "Fiction, humour et livres", k_politics: "Politique", k_business: "Actualité économique",
-        sub: "Trouvez des podcasts en anglais sur tous les sujets, ou écoutez la radio anglophone en direct, ici même." });
+        k_drama: "Fiction, humour et livres", k_politics: "Politique", k_business: "Actualité économique" });
     var LANG = "fr";
     try {
         var l = localStorage.getItem("ell-lang");
@@ -817,7 +832,7 @@ var __read = (this && this.__read) || function (o, n) {
     function setPlayerLinks() {
         var ep = state.current;
         if (!ep) {
-            marquee($("pTitle"), T("idle"));
+            marquee($("pTitle"), T(state.mode === "radio" ? "idleRadio" : "idle"));
             return;
         }
         if (ep.live) {
@@ -986,7 +1001,7 @@ var __read = (this && this.__read) || function (o, n) {
     var radioList = function () { return STATIONS.filter(function (s) { return state.radioCC === "all" || s.cc === state.radioCC; }); };
     var liveLine = function (s) { return "● " + T("live") + " · " + [T("c_" + s.cc), s.city].filter(Boolean).join(" · "); };
     function stationCard(s) {
-        return "<div class=\"station\" data-station=\"".concat(s.id, "\">\n      <img src=\"").concat(tile(s), "\" alt=\"\">\n      <div class=\"smeta\"><b lang=\"en\">").concat(esc(s.name), "</b><span lang=\"").concat(LANG, "\">").concat(esc([T("k_" + s.kind), s.city].filter(Boolean).join(" · ")), "</span></div>\n      <button class=\"pbtn\" type=\"button\" data-station=\"").concat(s.id, "\" aria-label=\"").concat(esc(T("play") + " – " + s.name), "\">").concat(ICON_PLAY, "</button></div>");
+        return "<div class=\"station\" data-station=\"".concat(s.id, "\">\n      <img src=\"").concat(tile(s), "\" alt=\"\">\n      <div class=\"smeta\"><b lang=\"en\">").concat(esc(s.name), "</b><span lang=\"").concat(LANG, "\"><em class=\"cc\">").concat(esc(T("c_" + s.cc)), "</em> \u00B7 ").concat(esc([T("k_" + s.kind), s.city].filter(Boolean).join(" · ")), "</span></div>\n      <button class=\"pbtn\" type=\"button\" data-station=\"").concat(s.id, "\" aria-label=\"").concat(esc(T("play") + " – " + s.name), "\">").concat(ICON_PLAY, "</button></div>");
     }
     function renderRadioChips() {
         $("radioChips").innerHTML = ["all"].concat(RADIO_CC).map(function (cc) {
@@ -1000,6 +1015,27 @@ var __read = (this && this.__read) || function (o, n) {
         box.innerHTML = ccs.map(function (cc) { return "<h3 class=\"rgroup\" lang=\"".concat(LANG, "\">").concat(esc(T("c_" + cc)), "</h3><div class=\"stations\">") +
             STATIONS.filter(function (s) { return s.cc === cc; }).map(stationCard).join("") + "</div>"; }).join("");
         refreshButtons();
+    }
+    function applyHeading() {
+        var r = state.mode === "radio";
+        $("hTitle").textContent = T(r ? "radioTitle" : "title");
+        $("hSub").textContent = T(r ? "radioSub" : "sub");
+        document.title = T(r ? "radioTitle" : "title") + " · Emerald Language Learning";
+        document.querySelectorAll("[data-explorer]").forEach(function (b) { return b.setAttribute("aria-selected", (b.dataset.explorer === "radio") === r ? "true" : "false"); });
+        if (!state.current)
+            setPlayerLinks();
+    }
+    function setExplorer(x) {
+        store.set("pod-explorer", x);
+        if (x === "radio") {
+            if (state.mode !== "radio")
+                state.podMode = state.mode;
+            setMode("radio");
+        }
+        else
+            setMode(state.podMode || "rec");
+        applyHeading();
+        showMode();
     }
     function showRadio() {
         hideShow();
@@ -1138,6 +1174,7 @@ var __read = (this && this.__read) || function (o, n) {
         setFollow();
         if (state.mode === "mine" && !state.inShow && !state.mine.length)
             showMine();
+        applyHeading();
     }
     document.querySelectorAll("[data-lang]").forEach(function (b) { return b.addEventListener("click", function () {
         if (b.dataset.lang === LANG)
@@ -1164,6 +1201,10 @@ var __read = (this && this.__read) || function (o, n) {
         showMode();
     }); });
     $("back").addEventListener("click", function () { return showMode(); });
+    document.querySelectorAll("[data-explorer]").forEach(function (b) { return b.addEventListener("click", function () {
+        if ((b.dataset.explorer === "radio") !== (state.mode === "radio"))
+            setExplorer(b.dataset.explorer);
+    }); });
     $("radioChips").addEventListener("click", function (e) {
         var c = e.target.closest("[data-cc]");
         if (!c)
@@ -1279,7 +1320,10 @@ var __read = (this && this.__read) || function (o, n) {
     setVolume(100);
     applyStatic();
     refreshButtons();
-    showRec();
+    if (store.get("pod-explorer") === "radio")
+        setExplorer("radio");
+    else
+        showRec();
 })();
 </script>
 </body>
