@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><script src="legacy.js"></script><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Emerald"><meta name="theme-color" content="#49B190"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Great Vowel Shift · Emerald Language Learning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --emerald:#49B190; --emerald-link:#53AC90; --emerald-dark:#457865; --emerald-soft:#72B1A0;
+  --text-strong:#323232; --text:#777777; --bg:#FFFFFF; --bg-soft:#F9F9F9;
+  --line:#DADADA; --line-strong:#BBBBBB; --hover:#3f9c7e;
+  --font-head:'Montserrat',sans-serif; --font-body:'Open Sans',sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-body);line-height:1.9}
+button{font-family:inherit}
+:focus-visible{outline:2px solid var(--emerald);outline-offset:2px}
+
+/* header */
+header.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 5%;border-bottom:1px solid var(--line);background:#fff;position:-webkit-sticky;position:sticky;top:0;z-index:10}
+header.top img{height:60px;width:auto;display:block}
+.lang{display:flex;border:1px solid var(--emerald);border-radius:4px;overflow:hidden}
+.lang button{border:0;background:#fff;color:var(--emerald-dark);font-weight:600;font-size:.85rem;padding:6px 12px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--emerald);color:#fff}
+.lang button+button{border-left:1px solid var(--emerald)}
+@media (max-width:600px){header.top img{height:44px}}
+
+main{width:90%;max-width:1080px;margin:0 auto;padding-bottom:60px}
+h1.section{font-family:var(--font-head);font-weight:300;text-transform:uppercase;color:var(--emerald-dark);text-align:center;font-size:clamp(2rem,5vw,3.4rem);line-height:1.25;margin:56px 0 8px;letter-spacing:.02em}
+p.lede{text-align:center;max-width:720px;margin:0 auto 36px}
+h2.sub{font-family:var(--font-head);font-weight:400;text-transform:uppercase;color:var(--emerald-dark);text-align:center;font-size:clamp(1.3rem,3vw,1.9rem);margin:56px 0 20px;letter-spacing:.03em}
+
+/* figure card (anima-style frame) */
+.card{position:relative;background:var(--bg-soft);border:1px solid var(--line);border-radius:4px;padding:48px 20px 52px}
+.card .fig{position:absolute;top:12px;left:16px;font-family:var(--font-head);font-weight:700;font-size:.8rem;color:var(--emerald-dark);letter-spacing:.08em;text-transform:uppercase}
+.card .ttl{position:absolute;top:12px;right:16px;font-family:var(--font-head);font-weight:400;font-size:.8rem;color:var(--text-strong);letter-spacing:.06em;text-transform:uppercase;text-align:right;max-width:60%}
+.card .hint{position:absolute;bottom:12px;left:16px;font-size:.75rem;max-width:48%;line-height:1.4}
+.card .readout{position:absolute;bottom:12px;right:16px;font-size:.8rem;color:var(--text-strong);font-weight:600;text-align:right;max-width:50%;line-height:1.4;font-variant-numeric:tabular-nums}
+@media (max-width:600px){.card{padding-top:12px}.card .fig,.card .ttl{position:static;display:block;max-width:none;text-align:left;margin-bottom:6px}.card .hint{display:none}.card .readout{max-width:90%}}
+
+.controls{display:flex;flex-wrap:wrap;gap:14px 26px;justify-content:center;align-items:center;margin:4px 0 10px}
+.seg{display:inline-flex;border:1px solid var(--emerald);border-radius:4px;overflow:hidden}
+.seg button{border:0;background:#fff;color:var(--emerald-dark);font-size:.8rem;font-weight:600;padding:5px 11px;cursor:pointer;line-height:1.5}
+.seg button+button{border-left:1px solid var(--emerald)}
+.seg button[aria-pressed="true"]{background:var(--emerald);color:#fff}
+.ctl-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;margin-right:8px;color:var(--text)}
+.btn{background:var(--emerald);color:#fff;border:0;border-radius:4px;padding:6px 14px;font-weight:600;font-size:.85rem;cursor:pointer}
+.btn:hover{background:var(--hover)}
+.btn.outline{background:#fff;color:var(--emerald-dark);border:1px solid var(--emerald)}
+.btn.outline:hover{background:#eef7f3}
+
+.timeline{display:flex;align-items:center;gap:14px;max-width:720px;margin:6px auto 0}
+.timeline .yr{font-family:var(--font-head);font-weight:700;color:var(--emerald-dark);font-size:1.6rem;min-width:110px;text-align:center;font-variant-numeric:tabular-nums}
+input[type=range]{flex:1;accent-color:var(--emerald);height:28px}
+.ticks{display:flex;justify-content:space-between;max-width:720px;margin:-4px auto 0;padding-left:124px;padding-right:2px;font-size:.7rem}
+@media (max-width:600px){.timeline .yr{min-width:80px;font-size:1.25rem}.ticks{padding-left:94px}}
+
+svg#chart{display:block;width:100%;max-width:760px;height:auto;margin:6px auto 0;overflow:visible}
+.ax{fill:none;stroke:var(--line-strong);stroke-width:1.2}
+.grid{stroke:var(--line);stroke-width:1;stroke-dasharray:0}
+.axlab{font-family:var(--font-body);font-size:calc(12px * var(--k,1));fill:var(--text)}
+.ref{font-family:var(--font-body);font-size:calc(13px * var(--k,1));fill:#b7b7b7}
+.path{fill:none;stroke-width:1.4;stroke-linecap:round;opacity:.35}
+.glide{fill:none;stroke-width:2.6;stroke-linecap:round}
+.dot{stroke:#fff;stroke-width:2;cursor:pointer}
+.wlab{font-family:var(--font-head);font-weight:700;font-size:calc(13px * var(--k,1));pointer-events:none}
+.ipa{font-family:var(--font-body);font-size:calc(12px * var(--k,1));fill:var(--text-strong);pointer-events:none}
+.order{font-family:var(--font-head);font-weight:700;font-size:calc(11px * var(--k,1));fill:#fff;pointer-events:none}
+g.v.dim{opacity:.18}
+g.v.off{opacity:.12}
+
+.info{min-height:3.4em;max-width:760px;margin:6px auto 0;text-align:center;font-size:.9rem;line-height:1.6;color:var(--text-strong)}
+.modelnote{max-width:760px;margin:4px auto 0;text-align:center;font-size:.8rem;line-height:1.6}
+
+/* word cards */
+.words{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;margin-top:22px}
+.w{background:#fff;border:1px solid var(--line);border-radius:4px;padding:12px 10px 10px;text-align:center;cursor:pointer;line-height:1.5;transition:border-color .2s}
+.w:hover,.w.sel{border-color:var(--emerald)}
+.w .wd{font-family:var(--font-head);font-weight:700;font-size:1.15rem;color:var(--text-strong)}
+.w .now{font-size:1.05rem;color:var(--emerald-dark);font-weight:600;margin-top:2px}
+.w .was{font-size:.72rem;margin-top:4px}
+.w .sw{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.w.off{opacity:.45}
+
+/* established vs debated */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media (max-width:720px){.two{grid-template-columns:1fr}}
+.feat{position:relative;background:var(--bg-soft);border-radius:4px;padding:64px 22px 22px;margin-top:46px;text-align:center}
+.feat .circ{position:absolute;top:-44px;left:50%;transform:translateX(-50%);width:88px;height:88px;border-radius:50%;background:var(--emerald);display:flex;align-items:center;justify-content:center}
+.feat h3{font-family:var(--font-head);font-weight:700;color:var(--text-strong);margin:0 0 10px;font-size:1.05rem}
+.feat ul{text-align:left;margin:0;padding-left:18px}
+.feat li{margin:6px 0;line-height:1.7}
+
+.src{font-size:.85rem;line-height:1.7}
+.src ol{padding-left:20px}
+.src li{margin:6px 0}
+.src a{color:var(--emerald-link)}
+.note{border-left:3px solid var(--emerald);padding:6px 14px;background:var(--bg-soft);font-size:.85rem;line-height:1.7;margin-top:18px}
+footer{border-top:1px solid var(--line);text-align:center;font-size:.75rem;padding:18px;line-height:1.6}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<header class="top">
+  <img alt="Emerald Language Learning" width="306" height="90" src="data:image/png;base64,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">
+  <div class="lang" role="group" aria-label="Language / Langue">
+    <button type="button" data-lang="fr" aria-pressed="true">FR</button>
+    <button type="button" data-lang="en" aria-pressed="false">EN</button>
+  </div>
+</header>
+
+<main>
+  <h1 class="section" data-i18n="h1"></h1>
+  <p class="lede" data-i18n-html="lede"></p>
+
+  <section class="card" aria-labelledby="figttl">
+    <div class="fig" data-i18n="fig"></div>
+    <div class="ttl" id="figttl" data-i18n="figTitle"></div>
+
+    <div class="controls">
+      <div><span class="ctl-label" data-i18n="region"></span>
+        <span class="seg" id="regionSeg">
+          <button type="button" data-v="south" aria-pressed="true" data-i18n="south"></button>
+          <button type="button" data-v="north" aria-pressed="false" data-i18n="north"></button>
+        </span></div>
+      <div><span class="ctl-label" data-i18n="model"></span>
+        <span class="seg" id="modelSeg">
+          <button type="button" data-v="drag" aria-pressed="true" data-i18n="drag"></button>
+          <button type="button" data-v="push" aria-pressed="false" data-i18n="push"></button>
+          <button type="button" data-v="none" aria-pressed="false" data-i18n="none"></button>
+        </span></div>
+    </div>
+
+    <div class="timeline">
+      <div class="yr" id="yr" aria-live="off">1400</div>
+      <input type="range" id="slider" min="1400" max="1900" step="1" value="1400" data-i18n-aria="sliderAria">
+      <button type="button" class="btn outline" id="play" data-i18n-aria="playAria">▶</button>
+    </div>
+    <div class="ticks" aria-hidden="true"><span>1400</span><span>1500</span><span>1600</span><span>1700</span><span>1800</span><span data-i18n="modern"></span></div>
+
+    <svg id="chart" viewBox="0 0 640 430" role="img" data-i18n-aria="chartAria"></svg>
+    <div class="info" id="info" aria-live="polite"></div>
+    <div class="modelnote" id="modelnote"></div>
+
+    <div class="words" id="words"></div>
+
+    <div class="hint" data-i18n="hint"></div>
+    <div class="readout" id="readout" aria-live="off"></div>
+  </section>
+
+  <h2 class="sub" data-i18n="howSure"></h2>
+  <div class="two">
+    <div class="feat">
+      <div class="circ" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+      <h3 data-i18n="estTitle"></h3>
+      <ul id="estList"></ul>
+    </div>
+    <div class="feat">
+      <div class="circ" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14"/><path d="M12 17.5h.01"/></svg></div>
+      <h3 data-i18n="debTitle"></h3>
+      <ul id="debList"></ul>
+    </div>
+  </div>
+
+  <h2 class="sub" data-i18n="srcTitle"></h2>
+  <div class="src">
+    <ol>
+      <li>Lass, R. (1999). “Phonology and morphology”, §3.3 <i>The Great Vowel Shift</i>, pp. 72–85, in R. Lass (ed.), <i>The Cambridge History of the English Language, Vol. III: 1476–1776</i>. Cambridge University Press. <span data-i18n="src1"></span> <a href="https://assets.cambridge.org/97805212/64761/frontmatter/9780521264761_frontmatter.pdf">Cambridge (contents)</a> · <a href="https://en.wikipedia.org/wiki/Great_Vowel_Shift">Wikipedia, “Great Vowel Shift”</a></li>
+      <li><span data-i18n="src2a"></span> <a href="https://courses.nus.edu.sg/course/elltankw/history/phon/c.htm">National University of Singapore, ELL history of English course notes</a></li>
+      <li>Prichard, H. (2014). “Northern dialect evidence for the chronology of the Great Vowel Shift.” <i>Journal of Linguistic Geography</i> 2(2), 87–102. <span data-i18n="src3"></span> <a href="https://www.cambridge.org/core/product/860ABAF54799623B8CA3241E541DB66D">doi:10.1017/jlg.2014.9</a></li>
+      <li>Luick, K. (1896) and Jespersen, O. (1909), <span data-i18n="src4"></span></li>
+      <li>Stenbrenden, G. F. (2016). <i>Long-Vowel Shifts in English, c. 1050–1700: Evidence from Spelling</i>. Cambridge University Press. <span data-i18n="src5"></span> <a href="https://assets.cambridge.org/97811070/55759/excerpt/9781107055759_excerpt.pdf">Cambridge (excerpt)</a></li>
+      <li>Percy, C. “The Great Vowel Shift”, course notes, University of Toronto. <span data-i18n="src6"></span> <a href="https://cpercy.artsci.utoronto.ca/courses/GreatVowelShift.htm">utoronto.ca</a></li>
+      <li>Harvard’s Geoffrey Chaucer Website, “The Great Vowel Shift”. <span data-i18n="src7"></span> <a href="https://chaucer.fas.harvard.edu/pages/great-vowel-shift">harvard.edu</a></li>
+    </ol>
+    <h3 style="font-family:var(--font-head);color:var(--text-strong);font-size:1rem;margin:22px 0 4px" data-i18n="simpTitle"></h3>
+    <ul id="simpList"></ul>
+    <div class="note" data-i18n-html="recon"></div>
+  </div>
+</main>
+<footer>Emerald Language Learning · <span data-i18n="footer"></span></footer>
+
+<script>var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+var __values = (this && this.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+};
+(function () {
+    "use strict";
+    /* ---------- i18n ---------- */
+    var STR = {
+        en: {
+            h1: "The Great Vowel Shift",
+            lede: "Between about <b>1400 and 1700</b>, every long vowel of southern English moved. Spelling had mostly settled before the change was over, which is why <b>bite</b>, <b>meet</b> and <b>house</b> are no longer spelled the way they sound.",
+            fig: "Fig 1", figTitle: "English long vowels, 1400 to modern",
+            region: "Region", south: "South (London)", north: "North",
+            model: "Who moved first?", drag: "Drag chain", push: "Push chain", none: "Not one event?",
+            sliderAria: "Year", playAria: "Play or pause (Space)", modern: "modern",
+            chartAria: "Vowel chart: tongue front to back from left to right, high to low from top to bottom. Each word's vowel moves as the year changes.",
+            hint: "Drag the year, or press Space to play. Hover or tab to a word for an explanation.",
+            front: "front", back: "back", close: "high (close)", open: "low (open)", tongue: "tongue position",
+            readout: "c. {y} · {n} of {t} vowels have left their 1400 position",
+            readoutSel: "c. {y} · “{w}” = [{ipa}]",
+            was: "1400: [{a}]", inTrans: "moving: [{a}] → [{b}]",
+            drag_note: "<b>Drag chain</b> (Jespersen, 1909): the highest vowels in <i>bite</i> and <i>out</i> became diphthongs first, and the vowels below were pulled up into the space they left. Numbers show the order.",
+            push_note: "<b>Push chain</b> (Luick, 1896): the vowels in <i>meet</i> and <i>boot</i> rose first and pushed <i>bite</i> and <i>out</i> out of their places. Northern dialects, where <i>house</i> never changed, are the key evidence.",
+            none_note: "<b>Not one event?</b> Some scholars (e.g. Stenbrenden, 2016) argue these were separate changes spread over c. 1050–1700 and that calling them one “shift” is a later tidy-up.",
+            north_note: "<b>North:</b> the <i>boot</i> vowel had already moved forward before 1400, so nothing pushed the <i>house</i> vowel: it stayed [uː] (Scots <i>hoose</i>). <i>Boat</i> words had a different vowel in the North (cf. Scots <i>stane</i>) and are not shown.",
+            w_bite: "In 1400 <b>bite</b> sounded close to modern “beet”. Its vowel was the highest front vowel and broke into a diphthong, slowly opening to [aɪ].",
+            w_meet: "<b>Meet</b> had [eː], close to the vowel in modern French <i>été</i>. It rose to [iː] by about 1500, one of the earliest changes.",
+            w_meat: "<b>Meat</b> had a lower [ɛː], so meet and meat sounded different. It rose to [eː] and then [iː], merging with meet. A few words stopped halfway: <b>great, break, steak</b> rhyme with mate, not meat.",
+            w_mate: "<b>Mate</b> had [aː], like the vowel in modern “father”. It rose step by step and later became the diphthong [eɪ].",
+            w_out: "<b>Out</b> and <b>house</b> had [uː]: house sounded like “hoose”. The vowel broke into a diphthong and opened to [aʊ].",
+            w_out_n: "In the North <b>house</b> kept [uː] (“hoose”), because the vowel of boot had already moved forward and nothing pushed it.",
+            w_boot: "<b>Boot</b> had [oː], close to modern “boat”. It rose to [uː] by about 1500. Some words later shortened: <b>good, foot</b> [ʊ], <b>blood, flood</b> [ʌ].",
+            w_boot_n: "In the North the <b>boot</b> vowel had already moved forward, to a rounded front vowel [øː], before the main shift. Its later history varies by dialect.",
+            w_boat: "<b>Boat</b> had an open [ɔː], like modern British “bought”. It rose to [oː] by about 1600 and later became a diphthong ([oʊ], British [əʊ]).",
+            w_boat_n: "Not shown for the North: these words had a different Middle English vowel there (compare Scots <i>stane</i> for stone).",
+            howSure: "How sure are we?",
+            estTitle: "Well established",
+            est: ["The seven long vowels of southern Middle English all changed between about 1400 and 1700.", "The direction: long vowels rose, and the two highest became diphthongs.", "Meet and meat were once different and merged later; great, break and steak are leftovers.", "Spelling had mostly settled before the change finished, so it shows the older vowels."],
+            debTitle: "Still debated",
+            deb: ["Which change came first: push chain (Luick) or drag chain (Jespersen).", "Whether it was one connected shift or several separate changes (Stenbrenden, 2016).", "Exact dates: each stage is approximate, and old and new pronunciations existed side by side.", "The exact sounds in between (scholars write [ɛi] or [əi] for 1600 bite)."],
+            srcTitle: "Sources",
+            src1: "Values for 1400, 1500, 1600 and 1900 follow Lass (2000: 72), as tabulated in Wikipedia.",
+            src2a: "Values for 1700, and the timing of the meat and mate stages, follow this table:",
+            src3: "Source for the push-chain vs drag-chain debate and for northern dialects keeping [uː] in house words.",
+            src4: "the two original models (push chain and drag chain), as summarised by Prichard (2014) and Stenbrenden (2016).",
+            src5: "Argues the changes were spread over c. 1050–1700 and questions treating them as one event.",
+            src6: "Source for meat/meet, great and the spelling consequences.",
+            src7: "Chaucer-era pronunciation of the long vowels.",
+            simpTitle: "What this figure simplifies",
+            simp: ["Only the seven classic long vowels are shown; consonant changes and short vowels are left out.", "Each stage is placed at a round date; real change was gradual and varied by speaker, class and place.", "Vowel positions are schematic, not measured: no recordings exist before the 1870s.", "“Modern” means the southern British standard around 1900; American and other accents differ.", "The North is reduced to its two best-known differences."],
+            recon: "<b>Reconstruction, not recording.</b> These pronunciations are worked out from spelling, rhymes, puns and the descriptions of early grammarians. They are the best current estimates, not certainties.",
+            footer: "Educational illustration of the history of English."
+        },
+        fr: {
+            h1: "Le Grand Changement vocalique",
+            lede: "Entre <b>1400 et 1700</b> environ, toutes les voyelles longues de l’anglais du sud ont bougé. L’orthographe s’était en grande partie fixée avant la fin du changement : voilà pourquoi <b>bite</b>, <b>meet</b> et <b>house</b> ne s’écrivent plus comme ils se prononcent.",
+            fig: "Fig 1", figTitle: "Les voyelles longues de l’anglais, de 1400 à aujourd’hui",
+            region: "Région", south: "Sud (Londres)", north: "Nord",
+            model: "Qui a bougé en premier ?", drag: "Chaîne de traction", push: "Chaîne de poussée", none: "Un seul événement ?",
+            sliderAria: "Année", playAria: "Lecture ou pause (Espace)", modern: "moderne",
+            chartAria: "Schéma des voyelles : langue de l’avant vers l’arrière de gauche à droite, de haut en bas de la plus fermée à la plus ouverte. La voyelle de chaque mot bouge quand l’année change.",
+            hint: "Faites glisser l’année ou appuyez sur Espace. Survolez un mot ou utilisez Tab pour une explication.",
+            front: "avant", back: "arrière", close: "haute (fermée)", open: "basse (ouverte)", tongue: "position de la langue",
+            readout: "v. {y} · {n} voyelles sur {t} ont quitté leur position de 1400",
+            readoutSel: "v. {y} · « {w} » = [{ipa}]",
+            was: "1400 : [{a}]", inTrans: "en cours : [{a}] → [{b}]",
+            drag_note: "<b>Chaîne de traction</b> (Jespersen, 1909) : les voyelles les plus hautes, celles de <i>bite</i> et <i>out</i>, sont d’abord devenues des diphtongues, et les voyelles du dessous ont été tirées vers la place libérée. Les numéros indiquent l’ordre.",
+            push_note: "<b>Chaîne de poussée</b> (Luick, 1896) : les voyelles de <i>meet</i> et <i>boot</i> sont montées les premières et ont poussé celles de <i>bite</i> et <i>out</i> hors de leur place. Les dialectes du nord, où <i>house</i> n’a jamais changé, en sont la preuve principale.",
+            none_note: "<b>Un seul événement ?</b> Certains chercheurs (par ex. Stenbrenden, 2016) y voient des changements distincts, étalés de 1050 à 1700 environ, et pensent que parler d’un seul « changement » est une simplification après coup.",
+            north_note: "<b>Nord :</b> la voyelle de <i>boot</i> s’était déjà avancée avant 1400, donc rien n’a poussé celle de <i>house</i> : elle est restée [uː] (écossais <i>hoose</i>). Les mots comme <i>boat</i> avaient une autre voyelle dans le nord (cf. écossais <i>stane</i>) et ne sont pas affichés.",
+            w_bite: "En 1400, <b>bite</b> se prononçait presque comme « beet » aujourd’hui. Sa voyelle, la plus haute à l’avant, s’est scindée en diphtongue et s’est peu à peu ouverte jusqu’à [aɪ].",
+            w_meet: "<b>Meet</b> avait [eː], proche du é de « été ». Elle est montée à [iː] vers 1500 : l’un des tout premiers changements.",
+            w_meat: "<b>Meat</b> avait un [ɛː] plus ouvert : meet et meat ne se prononçaient donc pas pareil. La voyelle est montée à [eː] puis à [iː] et s’est confondue avec celle de meet. Quelques mots se sont arrêtés à mi-chemin : <b>great, break, steak</b> riment avec mate, pas avec meat.",
+            w_mate: "<b>Mate</b> avait [aː], comme dans « father » aujourd’hui. La voyelle est montée par étapes, puis est devenue la diphtongue [eɪ].",
+            w_out: "<b>Out</b> et <b>house</b> avaient [uː] : house se disait à peu près « hous’ ». La voyelle s’est scindée en diphtongue et s’est ouverte jusqu’à [aʊ].",
+            w_out_n: "Dans le nord, <b>house</b> a gardé [uː] (« hoose »), car la voyelle de boot s’était déjà avancée et rien ne l’a poussée.",
+            w_boot: "<b>Boot</b> avait [oː], proche de « boat » aujourd’hui. La voyelle est montée à [uː] vers 1500. Certains mots se sont ensuite raccourcis : <b>good, foot</b> [ʊ], <b>blood, flood</b> [ʌ].",
+            w_boot_n: "Dans le nord, la voyelle de <b>boot</b> s’était déjà avancée vers une voyelle antérieure arrondie [øː] (comme dans « peu »), avant le grand changement. Son évolution ensuite varie selon les dialectes.",
+            w_boat: "<b>Boat</b> avait un [ɔː] ouvert, comme dans « bought » en anglais britannique. Elle est montée à [oː] vers 1600, puis est devenue une diphtongue ([oʊ], britannique [əʊ]).",
+            w_boat_n: "Non affiché pour le nord : ces mots y avaient une autre voyelle en moyen anglais (comparez l’écossais <i>stane</i> pour stone).",
+            howSure: "Quel est notre degré de certitude ?",
+            estTitle: "Bien établi",
+            est: ["Les sept voyelles longues du moyen anglais du sud ont toutes changé entre 1400 et 1700 environ.", "Le sens du mouvement : les voyelles longues sont montées, et les deux plus hautes sont devenues des diphtongues.", "Meet et meat étaient autrefois différents et se sont confondus plus tard ; great, break et steak en sont des traces.", "L’orthographe s’était en grande partie fixée avant la fin du changement : elle montre donc les anciennes voyelles."],
+            debTitle: "Encore débattu",
+            deb: ["Quel changement est venu en premier : chaîne de poussée (Luick) ou de traction (Jespersen).", "S’il s’agit d’un seul changement lié ou de plusieurs changements distincts (Stenbrenden, 2016).", "Les dates exactes : chaque étape est approximative, et anciennes et nouvelles prononciations ont coexisté.", "Les sons intermédiaires exacts (on écrit [ɛi] ou [əi] pour bite en 1600)."],
+            srcTitle: "Sources",
+            src1: "Les valeurs de 1400, 1500, 1600 et 1900 suivent Lass (2000 : 72), d’après le tableau de Wikipédia.",
+            src2a: "Les valeurs de 1700, et le calendrier des étapes de meat et mate, suivent ce tableau :",
+            src3: "Source pour le débat chaîne de poussée / chaîne de traction et pour les dialectes du nord qui gardent [uː] dans house.",
+            src4: "les deux modèles d’origine (chaîne de poussée et de traction), résumés par Prichard (2014) et Stenbrenden (2016).",
+            src5: "Montre que les changements s’étalent de 1050 à 1700 environ et conteste l’idée d’un seul événement.",
+            src6: "Source pour meat/meet, great et les conséquences sur l’orthographe.",
+            src7: "Prononciation des voyelles longues à l’époque de Chaucer.",
+            simpTitle: "Ce que cette figure simplifie",
+            simp: ["Seules les sept voyelles longues classiques sont montrées ; les consonnes et les voyelles brèves sont laissées de côté.", "Chaque étape est placée à une date ronde ; le vrai changement était progressif et variait selon les personnes, les milieux et les lieux.", "Les positions des voyelles sont schématiques, pas mesurées : il n’existe aucun enregistrement avant les années 1870.", "« Moderne » désigne l’anglais britannique standard du sud vers 1900 ; les accents américains et autres sont différents.", "Le nord est réduit à ses deux différences les plus connues."],
+            recon: "<b>Reconstitution, pas enregistrement.</b> Ces prononciations sont déduites de l’orthographe, des rimes, des jeux de mots et des descriptions des premiers grammairiens. Ce sont les meilleures estimations actuelles, pas des certitudes.",
+            footer: "Illustration pédagogique de l’histoire de l’anglais."
+        }
+    };
+    var lang = "fr";
+    try {
+        var s = localStorage.getItem("ell-lang");
+        if (s === "en" || s === "fr")
+            lang = s;
+    }
+    catch (e) { }
+    function T(k, vars) { var _a, _b; var s = ((_b = (_a = STR[lang][k]) !== null && _a !== void 0 ? _a : STR.en[k]) !== null && _b !== void 0 ? _b : k); if (vars)
+        s = s.replace(/\{(\w+)\}/g, function (m, n) { return vars[n] !== undefined ? vars[n] : m; }); return s; }
+    function applyStatic() {
+        document.documentElement.lang = lang;
+        document.querySelectorAll("[data-i18n]").forEach(function (el) { return el.textContent = T(el.dataset.i18n); });
+        document.querySelectorAll("[data-i18n-html]").forEach(function (el) { return el.innerHTML = T(el.dataset.i18nHtml); });
+        document.querySelectorAll("[data-i18n-aria]").forEach(function (el) { return el.setAttribute("aria-label", T(el.dataset.i18nAria)); });
+        var list = function (id, key) { document.getElementById(id).innerHTML = STR[lang][key].map(function (x) { return "<li>" + x + "</li>"; }).join(""); };
+        list("estList", "est");
+        list("debList", "deb");
+        list("simpList", "simp");
+        document.querySelectorAll(".lang button").forEach(function (b) { return b.setAttribute("aria-pressed", String(b.dataset.lang === lang)); });
+    }
+    /* ---------- the model (one small pure module) ---------- */
+    // Vowel positions: x 0 = front .. 1 = back; y 0 = close .. 1 = open (schematic).
+    var P = {
+        "iː": [0, 0], "ɪ": [.14, .16], "eː": [0, .33], "e": [0, .33], "ɛː": [0, .66], "ɛ": [0, .66], "æː": [0, .86],
+        "aF": [.18, 1], "aB": [.38, 1], "aː": [.24, 1], "əF": [.44, .52], "əB": [.56, .52],
+        "uː": [1, 0], "ʊ": [.86, .16], "oː": [1, .33], "o": [1, .33], "ɔː": [1, .66], "ɔ": [1, .66], "øː": [.1, .36]
+    };
+    var STAGES = [1400, 1500, 1600, 1700, 1900];
+    // each stage: [nucleus, glide|null]. Values: Lass (2000:72) for 1400/1500/1600/1900; NUS table for 1700.
+    var WORDS = [
+        { id: "bite", c: "#457865", ipa: function (n, g) { return "b" + n + g + "t"; }, south: [["iː"], ["e", "iː"], ["ɛ", "iː"], ["əF", "iː"], ["aF", "ɪ"]] },
+        { id: "meet", c: "#49B190", ipa: function (n) { return "m" + n + "t"; }, south: [["eː"], ["iː"], ["iː"], ["iː"], ["iː"]] },
+        { id: "meat", c: "#72B1A0", ipa: function (n) { return "m" + n + "t"; }, south: [["ɛː"], ["ɛː"], ["eː"], ["iː"], ["iː"]] },
+        { id: "mate", c: "#2f6b57", ipa: function (n, g) { return "m" + n + g + "t"; }, south: [["aː"], ["æː"], ["ɛː"], ["eː"], ["e", "ɪ"]] },
+        { id: "out", c: "#8a6d3b", ipa: function (n, g) { return n + g + "t"; }, south: [["uː"], ["o", "uː"], ["ɔ", "uː"], ["əB", "uː"], ["aB", "ʊ"]],
+            north: [["uː"], ["uː"], ["uː"], ["uː"], ["uː"]] },
+        { id: "boot", c: "#b08a4a", ipa: function (n) { return "b" + n + "t"; }, south: [["oː"], ["uː"], ["uː"], ["uː"], ["uː"]],
+            north: [["øː"], ["øː"], ["øː"], ["øː"], ["øː"]] },
+        { id: "boat", c: "#c9a874", ipa: function (n, g) { return "b" + n + g + "t"; }, south: [["ɔː"], ["ɔː"], ["oː"], ["oː"], ["o", "ʊ"]], north: null }
+    ];
+    var ORDER = { drag: { bite: 1, out: 1, meet: 2, boot: 2, meat: 3, mate: 3, boat: 3 }, push: { meet: 1, boot: 1, bite: 2, out: 2, meat: 3, mate: 3, boat: 3 }, none: {} };
+    var sym = function (s) { return s.replace(/[FB]$/, ""); }; // display symbol
+    var glideSym = function (g) { return g === "iː" ? "i" : g === "uː" ? "u" : g; }; // second element of a diphthong
+    var ease = function (t) { return t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t); };
+    function seq(w, region) { return region === "north" && w.north !== undefined ? w.north : w.south; }
+    // state of one word at year y: nucleus position, glide position, glide amount, labels
+    function stateAt(w, y, region) {
+        var s = seq(w, region);
+        if (!s)
+            return null;
+        var i = 0;
+        while (i < STAGES.length - 2 && y >= STAGES[i + 1])
+            i++;
+        var a = s[i], b = s[i + 1];
+        var t = ease((y - STAGES[i]) / (STAGES[i + 1] - STAGES[i]));
+        var n0 = P[a[0]], n1 = P[b[0]];
+        var g0 = P[a[1] || a[0]], g1 = P[b[1] || b[0]];
+        var gl0 = a[1] ? 1 : 0, gl1 = b[1] ? 1 : 0;
+        var nuc = [n0[0] + (n1[0] - n0[0]) * t, n0[1] + (n1[1] - n0[1]) * t];
+        var gli = [g0[0] + (g1[0] - g0[0]) * t, g0[1] + (g1[1] - g0[1]) * t];
+        var cur = t < .5 ? a : b;
+        var lab = function (st) { return sym(st[0]) + (st[1] ? glideSym(st[1]) : ""); };
+        var moving = (lab(a) !== lab(b)) && t > .08 && t < .92;
+        return { nuc: nuc, gli: gli, glide: gl0 + (gl1 - gl0) * t, now: lab(cur), from: lab(a), to: lab(b),
+            ipa: w.ipa(sym(cur[0]), cur[1] ? glideSym(cur[1]) : ""), moving: moving, moved: lab(cur) !== lab(s[0]) };
+    }
+    /* ---------- drawing ---------- */
+    var svg = document.getElementById("chart");
+    var NS = "http://www.w3.org/2000/svg";
+    var X0 = 110, X1 = 560, Y0 = 50, Y1 = 380, LEFT_OPEN = 250;
+    function xy(p) { var left = X0 + (LEFT_OPEN - X0) * p[1]; return [left + (X1 - left) * p[0], Y0 + (Y1 - Y0) * p[1]]; }
+    function el(tag, attrs, parent) { var e = document.createElementNS(NS, tag); for (var k in attrs)
+        e.setAttribute(k, attrs[k]); (parent || svg).appendChild(e); return e; }
+    var region = "south", model = "drag", selected = null;
+    var refs = {};
+    function build() {
+        var e_1, _a, e_2, _b;
+        svg.innerHTML = "";
+        var _c = __read([xy([0, 0]), xy([1, 0]), xy([1, 1]), xy([0, 1])], 4), a = _c[0], b = _c[1], c = _c[2], d = _c[3];
+        el("path", { d: "M".concat(a, "L").concat(b, "L").concat(c, "L").concat(d, "Z"), class: "ax" });
+        try {
+            for (var _d = __values([1 / 3, 2 / 3]), _e = _d.next(); !_e.done; _e = _d.next()) {
+                var yy = _e.value;
+                var p = xy([0, yy]), q = xy([1, yy]);
+                el("line", { x1: p[0], y1: p[1], x2: q[0], y2: q[1], class: "grid" });
+            }
+        }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (_e && !_e.done && (_a = _d.return)) _a.call(_d);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
+        var m0 = xy([.5, 0]), m1 = xy([.5, 1]);
+        el("line", { x1: m0[0], y1: m0[1], x2: m1[0], y2: m1[1], class: "grid" });
+        refs.axlabs = [
+            el("text", { x: d[0], y: d[1] + 24, class: "axlab", "text-anchor": "start" }),
+            el("text", { x: c[0], y: c[1] + 24, class: "axlab", "text-anchor": "end" }),
+            el("text", { class: "axlab", "text-anchor": "end" }),
+            el("text", { class: "axlab", "text-anchor": "start" })
+        ];
+        try {
+            // faint reference symbols at the cardinal positions
+            for (var _f = __values(["iː", "eː", "ɛː", "aː", "ɔː", "oː", "uː"]), _g = _f.next(); !_g.done; _g = _f.next()) {
+                var k = _g.value;
+                var p = xy(P[k]);
+                el("text", { x: p[0] + (P[k][0] > .5 ? 16 : -16), y: p[1] + 5, class: "ref", "text-anchor": P[k][0] > .5 ? "start" : "end" }).textContent = k;
+            }
+        }
+        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+        finally {
+            try {
+                if (_g && !_g.done && (_b = _f.return)) _b.call(_f);
+            }
+            finally { if (e_2) throw e_2.error; }
+        }
+        // each word: full faint path of its nucleus, glide stroke, dot, labels
+        refs.w = {};
+        WORDS.forEach(function (w, idx) {
+            var g = el("g", { class: "v", tabindex: "0", role: "button" });
+            g.dataset.id = w.id;
+            var path = el("path", { class: "path", stroke: w.c }, g);
+            var glide = el("path", { class: "glide", stroke: w.c }, g);
+            var gend = el("circle", { r: 3.5, fill: w.c }, g);
+            var dot = el("circle", { r: 11, class: "dot", fill: w.c }, g);
+            var ord = el("text", { class: "order", "text-anchor": "middle" }, g);
+            var lab = el("text", { class: "wlab", fill: w.c }, g);
+            var ipa = el("text", { class: "ipa" }, g);
+            lab.textContent = w.id;
+            g.addEventListener("pointerenter", function () { return select(w.id, false); });
+            g.addEventListener("focus", function () { return select(w.id, false); });
+            g.addEventListener("click", function () { return select(w.id, true); });
+            g.addEventListener("keydown", function (e) { if (e.key === "Enter") {
+                select(w.id, true);
+            } });
+            refs.w[w.id] = { g: g, path: path, glide: glide, gend: gend, dot: dot, ord: ord, lab: lab, ipa: ipa };
+        });
+        refs.yearMark = el("text", { x: (X0 + X1) / 2, y: Y1 + 24, class: "axlab", "text-anchor": "middle" });
+        updatePaths();
+        labelAxes();
+    }
+    function labelAxes() { var L = refs.axlabs; L[0].textContent = T("front"); L[1].textContent = T("back"); L[2].textContent = T("close").split(" ")[0] + " ↑"; L[3].textContent = "↓ " + T("open").split(" ")[0]; refs.yearMark.textContent = "← " + T("tongue") + " →"; }
+    function updatePaths() {
+        WORDS.forEach(function (w) {
+            var s = seq(w, region), r = refs.w[w.id];
+            if (!s) {
+                r.path.setAttribute("d", "");
+                return;
+            }
+            var pts = [];
+            for (var y = 1400; y <= 1900; y += 10) {
+                var st = stateAt(w, y, region);
+                pts.push(xy(st.nuc));
+            }
+            r.path.setAttribute("d", "M" + pts.map(function (p) { return p[0].toFixed(1) + "," + p[1].toFixed(1); }).join("L"));
+        });
+    }
+    // label offsets so labels don't sit on each other
+    var OFF = { bite: [-14, -14, "end"], meet: [-14, -14, "end"], meat: [-14, 22, "end"], mate: [-14, 24, "end"], out: [14, -14, "start"], boot: [14, 20, "start"], boat: [14, 22, "start"] };
+    var K = 1;
+    function draw(y) {
+        WORDS.forEach(function (w) {
+            var r = refs.w[w.id], st = stateAt(w, y, region);
+            r.g.classList.toggle("off", !st);
+            r.g.classList.toggle("dim", !!selected && selected !== w.id && !!st);
+            r.g.style.display = st ? "" : "none";
+            if (!st)
+                return;
+            var n = xy(st.nuc), g = xy(st.gli);
+            r.dot.setAttribute("cx", n[0]);
+            r.dot.setAttribute("cy", n[1]);
+            if (st.glide > 0.02) {
+                var ex = n[0] + (g[0] - n[0]) * st.glide, ey = n[1] + (g[1] - n[1]) * st.glide;
+                r.glide.setAttribute("d", "M".concat(n[0], ",").concat(n[1], "L").concat(ex, ",").concat(ey));
+                r.glide.style.opacity = Math.min(1, st.glide);
+                r.gend.setAttribute("cx", ex);
+                r.gend.setAttribute("cy", ey);
+                r.gend.style.display = "";
+            }
+            else {
+                r.glide.setAttribute("d", "");
+                r.gend.style.display = "none";
+            }
+            var o = OFF[w.id];
+            r.lab.setAttribute("x", n[0] + o[0] * K);
+            r.lab.setAttribute("y", n[1] + o[1] * K);
+            r.lab.setAttribute("text-anchor", o[2]);
+            r.ipa.setAttribute("x", n[0] + o[0] * K);
+            r.ipa.setAttribute("y", n[1] + (o[1] + (o[1] < 0 ? -15 : 15)) * K);
+            r.ipa.setAttribute("text-anchor", o[2]);
+            r.ipa.textContent = "[" + st.now + "]";
+            var num = (region === "north" && (w.id === "out" || w.id === "boot")) ? 0 : ORDER[model][w.id];
+            r.ord.textContent = num ? String(num) : "";
+            r.ord.setAttribute("x", n[0]);
+            r.ord.setAttribute("y", n[1] + 4 * K);
+        });
+        updateCards(y);
+        updateReadout(y);
+    }
+    /* ---------- word cards, info, readout ---------- */
+    var wordsEl = document.getElementById("words");
+    function buildCards() {
+        wordsEl.innerHTML = "";
+        WORDS.forEach(function (w) {
+            var d = document.createElement("button");
+            d.type = "button";
+            d.className = "w";
+            d.dataset.id = w.id;
+            d.innerHTML = "<div class=\"wd\"><span class=\"sw\" style=\"background:".concat(w.c, "\"></span>").concat(w.id, "</div><div class=\"now\"></div><div class=\"was\"></div>");
+            d.addEventListener("pointerenter", function () { return select(w.id, false); });
+            d.addEventListener("focus", function () { return select(w.id, false); });
+            d.addEventListener("click", function () { return select(w.id, true); });
+            wordsEl.appendChild(d);
+        });
+    }
+    function updateCards(y) {
+        wordsEl.querySelectorAll(".w").forEach(function (d) {
+            var w = WORDS.find(function (x) { return x.id === d.dataset.id; }), st = stateAt(w, y, region);
+            d.classList.toggle("off", !st);
+            d.classList.toggle("sel", selected === w.id);
+            if (!st) {
+                d.querySelector(".now").textContent = "—";
+                d.querySelector(".was").textContent = "";
+                return;
+            }
+            d.querySelector(".now").textContent = "[" + st.ipa + "]";
+            d.querySelector(".was").textContent = st.moving ? T("inTrans", { a: st.from, b: st.to }) : T("was", { a: stateAt(w, 1400, region).now });
+        });
+    }
+    var info = document.getElementById("info"), readout = document.getElementById("readout"), modelnote = document.getElementById("modelnote");
+    function updateInfo() {
+        if (!selected) {
+            info.innerHTML = "";
+            return;
+        }
+        var k = "w_" + selected;
+        var kn = k + "_n";
+        info.innerHTML = (region === "north" && STR[lang][kn]) ? T(kn) : T(k);
+    }
+    function updateModelNote() { modelnote.innerHTML = T(model + "_note") + (region === "north" ? "<br>" + T("north_note") : ""); }
+    function updateReadout(y) {
+        var yr = Math.round(y), yy = yr >= 1890 ? T("modern") : yr;
+        if (selected) {
+            var w = WORDS.find(function (x) { return x.id === selected; }), st = stateAt(w, y, region);
+            if (st) {
+                readout.textContent = T("readoutSel", { y: yy, w: w.id, ipa: st.ipa });
+                return;
+            }
+        }
+        var live = WORDS.map(function (w) { return stateAt(w, y, region); }).filter(Boolean);
+        readout.textContent = T("readout", { y: yy, n: live.filter(function (s) { return s.moved; }).length, t: live.length });
+    }
+    function select(id, sticky) { if (selected === id && sticky) {
+        selected = null;
+    }
+    else
+        selected = id; updateInfo(); draw(shown); }
+    /* ---------- motion: exponential follow, idle tour, pause, offscreen, reduced motion ---------- */
+    var slider = document.getElementById("slider"), yrEl = document.getElementById("yr"), playBtn = document.getElementById("play");
+    var reduced = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var target = 1400, shown = 1400, playing = !reduced, onscreen = true, last = performance.now(), hold = 0, raf = 0;
+    function setYearText(y) { var r = Math.round(y); yrEl.textContent = r >= 1890 ? T("modern") : (lang === "fr" ? "v. " : "c. ") + r; }
+    function setPlayIcon() { playBtn.textContent = playing ? "❚❚" : "▶"; playBtn.setAttribute("aria-pressed", String(playing)); }
+    function frame(now) {
+        raf = 0;
+        var dt = Math.min(.1, (now - last) / 1000);
+        last = now;
+        if (playing) {
+            if (target >= 1900) {
+                hold += dt;
+                if (hold > 3) {
+                    target = 1400;
+                    shown = 1400;
+                    hold = 0;
+                }
+            }
+            else
+                target = Math.min(1900, target + dt * 22); // ~23 s for the whole tour
+            slider.value = Math.round(target);
+        }
+        shown += (target - shown) * (1 - Math.exp(-dt * 6));
+        if (Math.abs(target - shown) < .05)
+            shown = target;
+        setYearText(shown);
+        draw(shown);
+        if (onscreen && (playing || shown !== target))
+            raf = requestAnimationFrame(frame);
+    }
+    function kick() { if (!raf && onscreen) {
+        last = performance.now();
+        raf = requestAnimationFrame(frame);
+    } }
+    slider.addEventListener("input", function () { playing = false; setPlayIcon(); target = +slider.value; if (reduced) {
+        shown = target;
+        setYearText(shown);
+        draw(shown);
+    }
+    else
+        kick(); });
+    playBtn.addEventListener("click", function () { playing = !playing; if (playing && target >= 1900) {
+        target = 1400;
+        shown = 1400;
+    } setPlayIcon(); kick(); });
+    document.addEventListener("keydown", function (e) { if (e.code === "Space" && !/INPUT|BUTTON|TEXTAREA/.test(document.activeElement.tagName) && !(document.activeElement.closest && document.activeElement.closest("svg"))) {
+        e.preventDefault();
+        playBtn.click();
+    } });
+    if ("IntersectionObserver" in window) {
+        new IntersectionObserver(function (es) { onscreen = es[0].isIntersecting; if (onscreen)
+            kick(); }).observe(svg);
+    }
+    function seg(id, cb) { var s = document.getElementById(id); s.addEventListener("click", function (e) { var b = e.target.closest("button"); if (!b)
+        return; s.querySelectorAll("button").forEach(function (x) { return x.setAttribute("aria-pressed", String(x === b)); }); cb(b.dataset.v); }); }
+    seg("regionSeg", function (v) { region = v; if (region === "north" && selected === "boat")
+        selected = null; updatePaths(); updateInfo(); updateModelNote(); draw(shown); });
+    seg("modelSeg", function (v) { model = v; updateModelNote(); draw(shown); });
+    document.querySelectorAll(".lang button").forEach(function (b) { return b.addEventListener("click", function () { lang = b.dataset.lang; try {
+        localStorage.setItem("ell-lang", lang);
+    }
+    catch (e) { } applyStatic(); labelAxes(); updateInfo(); updateModelNote(); setYearText(shown); draw(shown); }); });
+    function rescale() {
+        var wpx = svg.getBoundingClientRect().width || 640;
+        K = Math.max(1, Math.min(2.2, 0.8 * 640 / wpx));
+        svg.style.setProperty("--k", K);
+        var L = refs.axlabs, xl = X0 - 40 - 10 * K;
+        L[0].setAttribute("y", Y1 + 18 * K);
+        L[1].setAttribute("y", Y1 + 18 * K);
+        L[2].setAttribute("transform", "translate(".concat(xl, ",").concat(Y0, ") rotate(-90)"));
+        L[3].setAttribute("transform", "translate(".concat(xl, ",").concat(Y1, ") rotate(-90)"));
+        refs.yearMark.setAttribute("y", Y1 + 40 * K);
+        svg.setAttribute("viewBox", "0 0 640 ".concat(Math.round(Y1 + 48 * K)));
+        Object.values(refs.w || {}).forEach(function (r) { r.dot.setAttribute("r", 11 * K); r.gend.setAttribute("r", 3.5 * K); });
+    }
+    applyStatic();
+    build();
+    buildCards();
+    updateModelNote();
+    rescale();
+    window.addEventListener("resize", function () { rescale(); draw(shown); });
+    if (reduced) {
+        target = shown = 1600;
+        slider.value = 1600;
+    } // still frame mid-shift
+    setPlayIcon();
+    setYearText(shown);
+    draw(shown);
+    kick();
+})();
+</script>
+</body>
+</html>

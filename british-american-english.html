@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><script src="legacy.js"></script><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Emerald"><meta name="theme-color" content="#49B190"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why British and American English differ · Emerald Language Learning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --emerald:#49B190; --emerald-link:#53AC90; --emerald-dark:#457865; --emerald-soft:#72B1A0;
+  --text-strong:#323232; --text:#777777; --bg:#FFFFFF; --bg-soft:#F9F9F9;
+  --line:#DADADA; --line-strong:#BBBBBB; --hover:#3f9c7e;
+  --font-head:'Montserrat',sans-serif; --font-body:'Open Sans',sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-body);line-height:1.9}
+button{font-family:inherit}
+:focus-visible{outline:2px solid var(--emerald);outline-offset:2px}
+
+/* header */
+header.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 5%;border-bottom:1px solid var(--line);background:#fff;position:-webkit-sticky;position:sticky;top:0;z-index:10}
+header.top img{height:60px;width:auto;display:block}
+.lang{display:flex;border:1px solid var(--emerald);border-radius:4px;overflow:hidden}
+.lang button{border:0;background:#fff;color:var(--emerald-dark);font-weight:600;font-size:.85rem;padding:6px 12px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--emerald);color:#fff}
+.lang button+button{border-left:1px solid var(--emerald)}
+@media (max-width:600px){header.top img{height:44px}}
+
+main{width:90%;max-width:1080px;margin:0 auto;padding-bottom:60px}
+h1.section{font-family:var(--font-head);font-weight:300;text-transform:uppercase;color:var(--emerald-dark);text-align:center;font-size:clamp(2rem,5vw,3.4rem);line-height:1.25;margin:56px 0 8px;letter-spacing:.02em}
+p.lede{text-align:center;max-width:720px;margin:0 auto 36px}
+h2.sub{font-family:var(--font-head);font-weight:400;text-transform:uppercase;color:var(--emerald-dark);text-align:center;font-size:clamp(1.3rem,3vw,1.9rem);margin:56px 0 20px;letter-spacing:.03em}
+
+/* figure card (anima-style frame) */
+.card{position:relative;background:var(--bg-soft);border:1px solid var(--line);border-radius:4px;padding:48px 20px 52px}
+.card .fig{position:absolute;top:12px;left:16px;font-family:var(--font-head);font-weight:700;font-size:.8rem;color:var(--emerald-dark);letter-spacing:.08em;text-transform:uppercase}
+.card .ttl{position:absolute;top:12px;right:16px;font-family:var(--font-head);font-weight:400;font-size:.8rem;color:var(--text-strong);letter-spacing:.06em;text-transform:uppercase;text-align:right;max-width:60%}
+.card .hint{position:absolute;bottom:12px;left:16px;font-size:.75rem;max-width:48%;line-height:1.4}
+.card .readout{position:absolute;bottom:12px;right:16px;font-size:.8rem;color:var(--text-strong);font-weight:600;text-align:right;max-width:50%;line-height:1.4;font-variant-numeric:tabular-nums}
+@media (max-width:600px){.card{padding-top:12px}.card .fig,.card .ttl{position:static;display:block;max-width:none;text-align:left;margin-bottom:6px}.card .hint{display:none}.card .readout{max-width:90%}}
+
+.controls{display:flex;flex-wrap:wrap;gap:14px 26px;justify-content:center;align-items:center;margin:4px 0 10px}
+.seg{display:inline-flex;border:1px solid var(--emerald);border-radius:4px;overflow:hidden}
+.seg button{border:0;background:#fff;color:var(--emerald-dark);font-size:.8rem;font-weight:600;padding:5px 11px;cursor:pointer;line-height:1.5}
+.seg button+button{border-left:1px solid var(--emerald)}
+.seg button[aria-pressed="true"]{background:var(--emerald);color:#fff}
+.ctl-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;margin-right:8px;color:var(--text)}
+.btn{background:var(--emerald);color:#fff;border:0;border-radius:4px;padding:6px 14px;font-weight:600;font-size:.85rem;cursor:pointer}
+.btn:hover{background:var(--hover)}
+.btn.outline{background:#fff;color:var(--emerald-dark);border:1px solid var(--emerald)}
+.btn.outline:hover{background:#eef7f3}
+
+.timeline{display:flex;align-items:center;gap:14px;max-width:720px;margin:6px auto 0}
+.timeline .yr{font-family:var(--font-head);font-weight:700;color:var(--emerald-dark);font-size:1.6rem;min-width:110px;text-align:center;font-variant-numeric:tabular-nums}
+input[type=range]{flex:1;accent-color:var(--emerald);height:28px}
+.ticks{display:flex;justify-content:space-between;max-width:720px;margin:-4px auto 0;padding-left:124px;padding-right:2px;font-size:.7rem}
+@media (max-width:600px){.timeline .yr{min-width:80px;font-size:1.25rem}.ticks{padding-left:94px}}
+
+svg#chart{display:block;width:100%;max-width:760px;height:auto;margin:6px auto 0;overflow:visible}
+.ax{fill:none;stroke:var(--line-strong);stroke-width:1.2}
+.grid{stroke:var(--line);stroke-width:1;stroke-dasharray:0}
+.axlab{font-family:var(--font-body);font-size:calc(12px * var(--k,1));fill:var(--text)}
+.ref{font-family:var(--font-body);font-size:calc(13px * var(--k,1));fill:#b7b7b7}
+.path{fill:none;stroke-width:1.4;stroke-linecap:round;opacity:.35}
+.glide{fill:none;stroke-width:2.6;stroke-linecap:round}
+.dot{stroke:#fff;stroke-width:2;cursor:pointer}
+.wlab{font-family:var(--font-head);font-weight:700;font-size:calc(13px * var(--k,1));pointer-events:none}
+.ipa{font-family:var(--font-body);font-size:calc(12px * var(--k,1));fill:var(--text-strong);pointer-events:none}
+.order{font-family:var(--font-head);font-weight:700;font-size:calc(11px * var(--k,1));fill:#fff;pointer-events:none}
+g.v.dim{opacity:.18}
+g.v.off{opacity:.12}
+
+.info{min-height:3.4em;max-width:760px;margin:6px auto 0;text-align:center;font-size:.9rem;line-height:1.6;color:var(--text-strong)}
+.modelnote{max-width:760px;margin:4px auto 0;text-align:center;font-size:.8rem;line-height:1.6}
+
+/* word cards */
+.words{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;margin-top:22px}
+.w{background:#fff;border:1px solid var(--line);border-radius:4px;padding:12px 10px 10px;text-align:center;cursor:pointer;line-height:1.5;transition:border-color .2s}
+.w:hover,.w.sel{border-color:var(--emerald)}
+.w .wd{font-family:var(--font-head);font-weight:700;font-size:1.15rem;color:var(--text-strong)}
+.w .now{font-size:1.05rem;color:var(--emerald-dark);font-weight:600;margin-top:2px}
+.w .was{font-size:.72rem;margin-top:4px}
+.w .sw{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.w.off{opacity:.45}
+
+/* established vs debated */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media (max-width:720px){.two{grid-template-columns:1fr}}
+.feat{position:relative;background:var(--bg-soft);border-radius:4px;padding:64px 22px 22px;margin-top:46px;text-align:center}
+.feat .circ{position:absolute;top:-44px;left:50%;transform:translateX(-50%);width:88px;height:88px;border-radius:50%;background:var(--emerald);display:flex;align-items:center;justify-content:center}
+.feat h3{font-family:var(--font-head);font-weight:700;color:var(--text-strong);margin:0 0 10px;font-size:1.05rem}
+.feat ul{text-align:left;margin:0;padding-left:18px}
+.feat li{margin:6px 0;line-height:1.7}
+
+.src{font-size:.85rem;line-height:1.7}
+.src ol{padding-left:20px}
+.src li{margin:6px 0}
+.src a{color:var(--emerald-link)}
+.note{border-left:3px solid var(--emerald);padding:6px 14px;background:var(--bg-soft);font-size:.85rem;line-height:1.7;margin-top:18px}
+footer{border-top:1px solid var(--line);text-align:center;font-size:.75rem;padding:18px;line-height:1.6}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* Fig 2 */
+svg#fork{display:block;width:100%;max-width:980px;height:auto;margin:8px auto 0;overflow:visible}
+.branch{fill:none;stroke-width:7;stroke-linecap:round}
+.br-uk{stroke:#457865}.br-us{stroke:#b08a4a}
+.sea{fill:#eaf4f1}
+.sealab{font-family:var(--font-head);font-weight:300;letter-spacing:.3em;text-transform:uppercase;fill:#9cc8ba}
+.bname{font-family:var(--font-head);font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.tick{stroke:var(--line-strong);stroke-width:1}
+.ticklab{font-family:var(--font-body);fill:var(--text)}
+.land{stroke:var(--line-strong);stroke-width:1;stroke-dasharray:3 4}
+.landlab{font-family:var(--font-body);fill:#9a9a9a;font-style:italic}
+.now{stroke:var(--emerald);stroke-width:2}
+.mk{cursor:pointer;transition:opacity .35s}
+.mk circle{stroke:#fff;stroke-width:2.5}
+.mk text.ic{font-family:var(--font-head);font-weight:700;fill:#fff;pointer-events:none}
+.mk text.ml{font-family:var(--font-body);font-weight:600;fill:var(--text-strong);pointer-events:none}
+.mk line{stroke:var(--line-strong);stroke-width:1}
+.mk.future{opacity:.16}
+.mk.dim{opacity:.12}
+.mk.sel circle{stroke:var(--text-strong)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:center;font-size:.78rem;margin-top:6px}
+.legend span i{display:inline-block;width:16px;height:16px;border-radius:50%;margin-right:6px;vertical-align:-3px;color:#fff;font-style:normal;font-family:var(--font-head);font-weight:700;font-size:10px;text-align:center;line-height:16px}
+.w{text-align:left;padding:12px 14px}
+.w .wd{text-align:center;margin-bottom:6px;font-size:1.05rem}
+.w .row{display:flex;justify-content:space-between;gap:8px;font-size:.88rem;line-height:1.5;padding:2px 0}
+.w .row b{font-family:var(--font-head);font-size:.72rem;letter-spacing:.06em;color:var(--text);font-weight:700;min-width:44px}
+.w .row span{color:var(--text-strong);text-align:right}
+.w .row.chg span{color:var(--emerald-dark);font-weight:600}
+.w .row.chg span::after{content:" ●";color:var(--emerald);font-size:.7em}
+.w .when{font-size:.72rem;text-align:center;margin-top:6px}
+.w.future{opacity:.5}
+.words{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+</style>
+</head>
+<body>
+<header class="top">
+  <img alt="Emerald Language Learning" width="306" height="90" src="data:image/png;base64,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">
+  <div class="lang" role="group" aria-label="Language / Langue">
+    <button type="button" data-lang="fr" aria-pressed="true">FR</button>
+    <button type="button" data-lang="en" aria-pressed="false">EN</button>
+  </div>
+</header>
+
+<main>
+  <h1 class="section" data-i18n="h1"></h1>
+  <p class="lede" data-i18n-html="lede"></p>
+
+  <section class="card" aria-labelledby="figttl">
+    <div class="fig" data-i18n="fig"></div>
+    <div class="ttl" id="figttl" data-i18n="figTitle"></div>
+
+    <div class="controls">
+      <div><span class="ctl-label" data-i18n="show"></span>
+        <span class="seg" id="sideSeg">
+          <button type="button" data-v="all" aria-pressed="true" data-i18n="all"></button>
+          <button type="button" data-v="uk" aria-pressed="false" data-i18n="ukChanged"></button>
+          <button type="button" data-v="us" aria-pressed="false" data-i18n="usChanged"></button>
+        </span></div>
+    </div>
+
+    <div class="timeline">
+      <div class="yr" id="yr">1600</div>
+      <input type="range" id="slider" min="1600" max="2000" step="1" value="1600" data-i18n-aria="sliderAria">
+      <button type="button" class="btn outline" id="play" data-i18n-aria="playAria">▶</button>
+    </div>
+    <div class="ticks" aria-hidden="true"><span>1600</span><span>1700</span><span>1800</span><span>1900</span><span>2000</span></div>
+
+    <svg id="fork" viewBox="0 0 900 330" role="img" data-i18n-aria="chartAria"></svg>
+    <div class="legend" id="legend"></div>
+    <div class="info" id="info" aria-live="polite"></div>
+
+    <div class="words" id="words"></div>
+
+    <div class="hint" data-i18n="hint"></div>
+    <div class="readout" id="readout"></div>
+  </section>
+
+  <h2 class="sub" data-i18n="howSure"></h2>
+  <div class="two">
+    <div class="feat">
+      <div class="circ" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+      <h3 data-i18n="estTitle"></h3>
+      <ul id="estList"></ul>
+    </div>
+    <div class="feat">
+      <div class="circ" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14"/><path d="M12 17.5h.01"/></svg></div>
+      <h3 data-i18n="debTitle"></h3>
+      <ul id="debList"></ul>
+    </div>
+  </div>
+
+  <h2 class="sub" data-i18n="srcTitle"></h2>
+  <div class="src">
+    <ol>
+      <li><a href="https://en.wikipedia.org/wiki/Rhoticity_in_English">Wikipedia, “Rhoticity in English”</a>. <span data-i18n="s1"></span></li>
+      <li>Labov, W. (1966). <i>The Social Stratification of English in New York City</i>. Center for Applied Linguistics. <span data-i18n="s2"></span></li>
+      <li><a href="https://en.wikipedia.org/wiki/Trap%E2%80%93bath_split">Wikipedia, “Trap–bath split”</a>, drawing on Wells, J. C. (1982), <i>Accents of English</i>, Cambridge University Press. <span data-i18n="s3"></span></li>
+      <li><a href="https://en.wikipedia.org/wiki/Webster%27s_Dictionary">Wikipedia, “Webster’s Dictionary”</a>; <a href="https://www.encyclopedia.com/history/encyclopedias-almanacs-transcripts-and-maps/webster-noah">Encyclopedia.com, “Webster, Noah (1758–1843)”</a>. <span data-i18n="s4"></span></li>
+      <li><a href="https://www.merriam-webster.com/words-at-play/autumn-vs-fall">Merriam-Webster, “Is it ‘autumn’ or ‘fall’?”</a>; <a href="https://grammarist.com/?p=13060">Grammarist, “Fall vs. autumn”</a>. <span data-i18n="s5"></span></li>
+      <li>Anderwald, L. (2020). “American English <i>gotten</i>: historical retention, change from below, or something else?” In E. Jonsson &amp; T. Larsson (eds.), <i>Studies in Corpus Linguistics</i> 97, pp. 187–204. John Benjamins. <a href="https://benjamins.com/catalog/scl.97.12and">benjamins.com</a>. <span data-i18n="s6"></span></li>
+      <li><a href="https://www.etymonline.com/word/cookie">Online Etymology Dictionary, “cookie”</a>. <span data-i18n="s7"></span></li>
+      <li><a href="https://dictionaryblog.cambridge.org/2016/09/28/words-connected-with-driving">Cambridge Dictionary blog, “Words connected with driving”</a>. <span data-i18n="s8"></span></li>
+    </ol>
+    <h3 style="font-family:var(--font-head);color:var(--text-strong);font-size:1rem;margin:22px 0 4px" data-i18n="simpTitle"></h3>
+    <ul id="simpList"></ul>
+    <div class="note" data-i18n-html="recon"></div>
+  </div>
+</main>
+<footer>Emerald Language Learning · <span data-i18n="footer"></span></footer>
+
+<script>var __values = (this && this.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+};
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+(function () {
+    "use strict";
+    var STR = {
+        en: {
+            h1: "Why British and American English differ",
+            lede: "English crossed the Atlantic in the 1600s. After that, <b>both sides kept changing, separately</b>. Most differences today are not America “keeping old English” or Britain “keeping the original”: each side changed some things and kept others.",
+            fig: "Fig 2", figTitle: "Who changed what, and when",
+            show: "Show", all: "All changes", ukChanged: "Changed in Britain", usChanged: "Changed in America",
+            sliderAria: "Year", playAria: "Play or pause (Space)",
+            chartAria: "A timeline that splits in two after 1607: Britain above, America below. Each dot is a change, placed on the side where it happened.",
+            hint: "Drag the year, or press Space to play. Hover or tab to a dot or card for an explanation.",
+            uk: "Britain", us: "America", atlantic: "Atlantic", jamestown: "Jamestown 1607", indep: "Independence 1776",
+            P: "Pronunciation", S: "Spelling", V: "Vocabulary", G: "Grammar",
+            readout: "c. {y} · {n} differences so far: {a} began in Britain, {b} in America, {c} on both sides",
+            readout0: "c. {y} · one language on both sides of the Atlantic",
+            ukL: "UK", usL: "US", when: "{d} · changed in {side}", whenBoth: "{d} · named separately on both sides", sideUK: "Britain", sideUS: "America",
+            notYet: "(no cars yet)",
+            m_gotten: "<b>Gotten.</b> In the 1600s <i>has gotten</i> was normal in England. British English then settled on <i>has got</i>, keeping <i>gotten</i> only in fixed phrases like “ill-gotten gains”. <b>Changed in Britain</b>, although American <i>gotten</i> has its own complicated story (see “Still debated”).",
+            m_autumn: "<b>Fall / autumn.</b> Both words were in use in 17th-century England. In the 18th century <i>autumn</i> became the usual British word and <i>fall</i> came to sound old-fashioned there. <b>Changed in Britain.</b>",
+            m_r: "<b>The r in car.</b> Early settlers pronounced r after vowels. In the late 18th century, fashionable southern English began dropping it, and by the early 1800s the southern standard was r-less. Most of America kept it, except some port cities with close ties to London (Boston, New York, Charleston). <b>Changed in Britain.</b>",
+            m_bath: "<b>Bath and laugh.</b> In southern England the short a of <i>bath, grass, laugh</i> lengthened to a long “ah”. It was mocked as a Cockney habit until well into the 1800s, then became part of upper-class British speech in the late 19th century. America kept the short vowel. <b>Changed in Britain.</b>",
+            m_cookie: "<b>Cookie.</b> Dutch settlers in New Amsterdam (later New York) said <i>koekje</i>, “little cake”. American English took it up as <i>cookie</i>, recorded by 1808 in that sense. British English kept <i>biscuit</i>. <b>Changed in America</b>, through contact with other languages.",
+            m_spell: "<b>Color, center, defense.</b> Noah Webster’s dictionaries (1806, 1828) promoted these spellings to give the new nation its own standard. He mostly chose forms that already existed (<i>color</i> and <i>center</i> are common in Shakespeare’s First Folio), and Britain settled on <i>colour, centre, defence</i>. <b>Changed in America.</b>",
+            m_car: "<b>Bonnet / hood, boot / trunk, petrol / gas.</b> Cars arrived around 1900, long after the split, so each side named the new parts separately. This is why so much everyday vocabulary differs. <b>New on both sides.</b>",
+            m_nyc: "<b>New York gets its r back.</b> r-dropping had been prestigious in New York, but after the Second World War pronouncing r became the prestige form. Labov’s 1966 department-store study showed this change in progress. <b>Changed in America</b>, and a reminder that change keeps going.",
+            howSure: "How sure are we?",
+            estTitle: "Well established",
+            est: ["Settlers took 17th-century English to America; both varieties have changed since.", "Southern British English lost r after vowels in the late 18th to early 19th century; most American speech kept it.", "Webster’s dictionaries (1806, 1828) set the American spellings color, center, defense.", "Words for things invented after the split, like car parts, were coined separately."],
+            debTitle: "Still debated",
+            deb: ["<b>Gotten:</b> often called a survival from older British English, but corpus work (Anderwald, 2020) shows it nearly died out in America too and was later revived.", "Exact dates: each dot marks roughly when a change became usual, not when it started. The long “ah” in bath appears as early as the 17th century.", "Why the Boston and coastal-South accents dropped r: copying London fashion is the usual explanation, but the details are disputed.", "Claims that some American accent “is how Shakespeare spoke” are too simple: every accent today has changed since 1600."],
+            srcTitle: "Sources",
+            s1: "Loss of r in southern England and the r-less port cities of the US.",
+            s2: "New York r coming back as the prestige form.",
+            s3: "The bath/trap split: early origins, Cockney stigma, adoption in Received Pronunciation from the late 19th century.",
+            s4: "Webster’s 1806 and 1828 dictionaries and the spellings they promoted.",
+            s5: "Fall and autumn in British and American use.",
+            s6: "The history of American gotten.",
+            s7: "Cookie from Dutch koekje, in American English by 1808.",
+            s8: "Bonnet/hood, boot/trunk and other driving words.",
+            simpTitle: "What this figure simplifies",
+            simp: ["Only eight well-documented differences are shown; there are many more.", "“Britain” means mainly the southern English standard and “America” mainly General American; both countries have many regional accents (e.g. northern England has no long a in bath).", "Each change is placed at one round date, although it spread gradually.", "Contact never stopped: books, trade and later films, radio and the internet carried words back and forth."],
+            recon: "<b>Before recordings.</b> Older pronunciations are worked out from spelling, rhymes and the comments of dictionary-makers such as John Walker (1791). Dates are approximate.",
+            footer: "Educational illustration of the history of English."
+        },
+        fr: {
+            h1: "Pourquoi l’anglais britannique et l’anglais américain sont si différents",
+            lede: "L’anglais a traversé l’Atlantique au XVII<sup>e</sup> siècle. Ensuite, <b>les deux côtés ont continué de changer, chacun de leur côté</b>. La plupart des différences actuelles ne viennent pas d’une Amérique qui aurait « gardé le vieil anglais » ni d’une Grande-Bretagne qui aurait « gardé l’original » : chaque côté a changé certaines choses et en a gardé d’autres.",
+            fig: "Fig 2", figTitle: "Qui a changé quoi, et quand",
+            show: "Afficher", all: "Tous les changements", ukChanged: "Changé en Grande-Bretagne", usChanged: "Changé en Amérique",
+            sliderAria: "Année", playAria: "Lecture ou pause (Espace)",
+            chartAria: "Une frise qui se divise en deux après 1607 : la Grande-Bretagne en haut, l’Amérique en bas. Chaque point est un changement, placé du côté où il s’est produit.",
+            hint: "Faites glisser l’année ou appuyez sur Espace. Survolez un point ou une carte, ou utilisez Tab, pour une explication.",
+            uk: "Grande-Bretagne", us: "Amérique", atlantic: "Atlantique", jamestown: "Jamestown 1607", indep: "Indépendance 1776",
+            P: "Prononciation", S: "Orthographe", V: "Vocabulaire", G: "Grammaire",
+            readout: "v. {y} · {n} différences : {a} venues de Grande-Bretagne, {b} d’Amérique, {c} des deux côtés",
+            readout0: "v. {y} · une seule langue des deux côtés de l’Atlantique",
+            ukL: "R.-U.", usL: "É.-U.", when: "{d} · changé en {side}", whenBoth: "{d} · nommé séparément des deux côtés", sideUK: "Grande-Bretagne", sideUS: "Amérique",
+            notYet: "(pas encore de voitures)",
+            m_gotten: "<b>Gotten.</b> Au XVII<sup>e</sup> siècle, <i>has gotten</i> était normal en Angleterre. L’anglais britannique a ensuite adopté <i>has got</i> et n’a gardé <i>gotten</i> que dans des expressions figées comme « ill-gotten gains ». <b>Changé en Grande-Bretagne</b>, même si l’histoire de <i>gotten</i> en Amérique est plus compliquée (voir « Encore débattu »).",
+            m_autumn: "<b>Fall / autumn.</b> Les deux mots existaient dans l’Angleterre du XVII<sup>e</sup> siècle. Au XVIII<sup>e</sup>, <i>autumn</i> est devenu le mot habituel en Grande-Bretagne, où <i>fall</i> a fini par sembler vieilli. <b>Changé en Grande-Bretagne.</b>",
+            m_r: "<b>Le r de car.</b> Les premiers colons prononçaient le r après une voyelle. À la fin du XVIII<sup>e</sup> siècle, l’anglais à la mode du sud de l’Angleterre a commencé à l’omettre, et au début des années 1800 la norme du sud ne le prononçait plus. La plus grande partie de l’Amérique l’a gardé, sauf quelques ports très liés à Londres (Boston, New York, Charleston). <b>Changé en Grande-Bretagne.</b>",
+            m_bath: "<b>Bath et laugh.</b> Dans le sud de l’Angleterre, le a bref de <i>bath, grass, laugh</i> s’est allongé en un « ah » long. Raillé comme une habitude cockney jusqu’au milieu du XIX<sup>e</sup> siècle, il est entré dans la prononciation des classes aisées à la fin du XIX<sup>e</sup>. L’Amérique a gardé la voyelle brève. <b>Changé en Grande-Bretagne.</b>",
+            m_cookie: "<b>Cookie.</b> Les colons néerlandais de La Nouvelle-Amsterdam (future New York) disaient <i>koekje</i>, « petit gâteau ». L’anglais américain l’a adopté sous la forme <i>cookie</i>, attesté dans ce sens dès 1808. L’anglais britannique a gardé <i>biscuit</i>. <b>Changé en Amérique</b>, au contact d’autres langues.",
+            m_spell: "<b>Color, center, defense.</b> Les dictionnaires de Noah Webster (1806, 1828) ont imposé ces orthographes pour donner à la jeune nation sa propre norme. Il a surtout choisi des formes qui existaient déjà (<i>color</i> et <i>center</i> sont fréquents dans le Premier Folio de Shakespeare), tandis que la Grande-Bretagne a retenu <i>colour, centre, defence</i>. <b>Changé en Amérique.</b>",
+            m_car: "<b>Bonnet / hood, boot / trunk, petrol / gas.</b> La voiture arrive vers 1900, bien après la séparation : chaque côté a nommé les nouvelles pièces de son côté. C’est pourquoi tant de vocabulaire courant diffère. <b>Nouveau des deux côtés.</b>",
+            m_nyc: "<b>New York retrouve son r.</b> Omettre le r avait été prestigieux à New York, mais après la Seconde Guerre mondiale c’est le r prononcé qui est devenu la forme prestigieuse. L’étude de Labov (1966) dans des grands magasins a montré ce changement en cours. <b>Changé en Amérique</b> : la langue continue de bouger.",
+            howSure: "Quel est notre degré de certitude ?",
+            estTitle: "Bien établi",
+            est: ["Les colons ont emporté l’anglais du XVII<sup>e</sup> siècle en Amérique ; les deux variétés ont changé depuis.", "L’anglais britannique du sud a perdu le r après voyelle entre la fin du XVIII<sup>e</sup> et le début du XIX<sup>e</sup> siècle ; la plupart des accents américains l’ont gardé.", "Les dictionnaires de Webster (1806, 1828) ont fixé les orthographes américaines color, center, defense.", "Les mots pour des choses inventées après la séparation, comme les pièces de voiture, ont été créés séparément."],
+            debTitle: "Encore débattu",
+            deb: ["<b>Gotten :</b> souvent présenté comme un vestige de l’ancien anglais britannique, mais une étude de corpus (Anderwald, 2020) montre qu’il a presque disparu en Amérique aussi, avant de revenir.", "Les dates exactes : chaque point indique à peu près quand un changement est devenu courant, pas quand il a commencé. Le « ah » long de bath apparaît dès le XVII<sup>e</sup> siècle.", "Pourquoi Boston et le sud côtier ont perdu le r : on invoque souvent l’imitation de la mode londonienne, mais le détail est discuté.", "Dire qu’un accent américain « est l’anglais de Shakespeare » est trop simple : tous les accents actuels ont changé depuis 1600."],
+            srcTitle: "Sources",
+            s1: "Perte du r dans le sud de l’Angleterre et dans les ports américains.",
+            s2: "Le r new-yorkais qui revient comme forme prestigieuse.",
+            s3: "La distinction bath/trap : origines anciennes, mépris pour le cockney, adoption dans la prononciation standard à partir de la fin du XIX<sup>e</sup> siècle.",
+            s4: "Les dictionnaires de Webster de 1806 et 1828 et les orthographes qu’ils ont imposées.",
+            s5: "Fall et autumn en anglais britannique et américain.",
+            s6: "L’histoire de gotten en anglais américain.",
+            s7: "Cookie, du néerlandais koekje, attesté en anglais américain dès 1808.",
+            s8: "Bonnet/hood, boot/trunk et autres mots de la conduite.",
+            simpTitle: "Ce que cette figure simplifie",
+            simp: ["Seules huit différences bien documentées sont montrées ; il y en a beaucoup d’autres.", "« Grande-Bretagne » désigne surtout la norme du sud de l’Angleterre et « Amérique » surtout l’américain standard ; chaque pays a de nombreux accents régionaux (le nord de l’Angleterre, par exemple, n’a pas le « ah » long de bath).", "Chaque changement est placé à une date ronde, alors qu’il s’est diffusé progressivement.", "Le contact n’a jamais cessé : livres, commerce, puis cinéma, radio et internet ont fait circuler les mots dans les deux sens."],
+            recon: "<b>Avant les enregistrements.</b> Les prononciations anciennes sont déduites de l’orthographe, des rimes et des remarques de lexicographes comme John Walker (1791). Les dates sont approximatives.",
+            footer: "Illustration pédagogique de l’histoire de l’anglais."
+        }
+    };
+    var lang = "fr";
+    try {
+        var s = localStorage.getItem("ell-lang");
+        if (s === "en" || s === "fr")
+            lang = s;
+    }
+    catch (e) { }
+    function T(k, v) { var _a, _b; var s = ((_b = (_a = STR[lang][k]) !== null && _a !== void 0 ? _a : STR.en[k]) !== null && _b !== void 0 ? _b : k); if (v)
+        s = s.replace(/\{(\w+)\}/g, function (m, n) { return v[n] !== undefined ? v[n] : m; }); return s; }
+    function applyStatic() {
+        document.documentElement.lang = lang;
+        document.querySelectorAll("[data-i18n]").forEach(function (el) { return el.textContent = T(el.dataset.i18n); });
+        document.querySelectorAll("[data-i18n-html]").forEach(function (el) { return el.innerHTML = T(el.dataset.i18nHtml); });
+        document.querySelectorAll("[data-i18n-aria]").forEach(function (el) { return el.setAttribute("aria-label", T(el.dataset.i18nAria)); });
+        var list = function (id, k) { document.getElementById(id).innerHTML = STR[lang][k].map(function (x) { return "<li>" + x + "</li>"; }).join(""); };
+        list("estList", "est");
+        list("debList", "deb");
+        list("simpList", "simp");
+        document.querySelectorAll(".lang button").forEach(function (b) { return b.setAttribute("aria-pressed", String(b.dataset.lang === lang)); });
+    }
+    /* ---------- the model: dated changes, each on the side where it happened ---------- */
+    var CAT = { P: "#457865", S: "#8a6d3b", V: "#49B190", G: "#72B1A0" };
+    // d = approximate date it became usual; side uk|us|both; before/uk/us = forms shown on the cards
+    var CH = [
+        { id: "gotten", d: 1730, side: "uk", cat: "G", lv: 0, lab: "has got", word: "has gotten / has got", before: ["has gotten", "has gotten"], after: ["has got", "has gotten"], dl: ["18th c.", "XVIIIe s."] },
+        { id: "autumn", d: 1765, side: "uk", cat: "V", lv: 1, lab: "autumn", word: "autumn / fall", before: ["fall ~ autumn", "fall ~ autumn"], after: ["autumn", "fall"], dl: ["18th c.", "XVIIIe s."] },
+        { id: "r", d: 1800, side: "uk", cat: "P", lv: 0, lab: "car → [kɑː]", word: "car", before: ["[kar] r sounded", "[kar] r sounded"], after: ["[kɑː] no r", "[kɑɹ] r sounded"], dl: ["c. 1790–1820", "v. 1790–1820"] },
+        { id: "bath", d: 1880, side: "uk", cat: "P", lv: 1, lab: "bath → [bɑːθ]", word: "bath, laugh, grass", before: ["[baθ] short a", "[baθ] short a"], after: ["[bɑːθ] long “ah”", "[bæθ] short a"], dl: ["late 19th c.", "fin XIXe s."] },
+        { id: "cookie", d: 1808, side: "us", cat: "V", lv: 0, lab: "cookie", word: "biscuit / cookie", before: ["biscuit, little cake", "biscuit, little cake"], after: ["biscuit", "cookie"], dl: ["by 1808", "dès 1808"] },
+        { id: "spell", d: 1828, side: "us", cat: "S", lv: 1, lab: "color, center", word: "colour / color", before: ["colour ~ color", "colour ~ color"], after: ["colour, centre", "color, center"], dl: ["1806–1828", "1806–1828"] },
+        { id: "car", d: 1905, side: "both", cat: "V", lv: 0, lab: "bonnet / hood", word: "bonnet / hood", before: ["—", "—"], after: ["bonnet, boot, petrol", "hood, trunk, gas"], dl: ["c. 1900", "v. 1900"] },
+        { id: "nyc", d: 1955, side: "us", cat: "P", lv: 0, lab: "New York r", word: "New York “car”", before: ["—", "[kɑː] often r-less"], after: ["—", "[kɑɹ] r returning"], dl: ["after 1945", "après 1945"] }
+    ];
+    var shiftedBy = function (y) { return CH.filter(function (c) { return c.d <= y; }); };
+    /* ---------- drawing ---------- */
+    var svg = document.getElementById("fork"), NS = "http://www.w3.org/2000/svg";
+    var XA = 150, XB = 870, YUK = 95, YUS = 225, YMID = 160, Y0 = 1600, Y1 = 2000;
+    var xOf = function (y) { return XA + (y - Y0) / (Y1 - Y0) * (XB - XA); };
+    function el(t, a, p) { var e = document.createElementNS(NS, t); for (var k in a)
+        e.setAttribute(k, a[k]); (p || svg).appendChild(e); return e; }
+    var K = 1, side = "all", selected = null;
+    var R = {};
+    function build() {
+        var e_1, _a;
+        svg.innerHTML = "";
+        var xs = xOf(1607), xf = xOf(1650);
+        el("path", { class: "sea", d: "M".concat(xf, ",").concat(YUK + 18, "L").concat(XB + 20, ",").concat(YUK + 18, "L").concat(XB + 20, ",").concat(YUS - 18, "L").concat(xf, ",").concat(YUS - 18, "Q").concat(xs + 20, ",").concat(YMID, " ").concat(xf, ",").concat(YUK + 18, "Z") });
+        R.sea = el("text", { class: "sealab", x: (xf + XB) / 2, y: YMID + 5, "text-anchor": "middle" });
+        // year ticks
+        for (var y = 1600; y <= 2000; y += 50) {
+            var x = xOf(y);
+            el("line", { class: "tick", x1: x, y1: 300, x2: x, y2: y % 100 ? 304 : 308 });
+            if (y % 100 === 0)
+                R["t" + y] = el("text", { class: "ticklab", x: x, y: 324, "text-anchor": "middle" });
+        }
+        el("line", { class: "tick", x1: XA, y1: 300, x2: XB, y2: 300 });
+        try {
+            // landmarks
+            for (var _b = __values([[1607, "jamestown"], [1776, "indep"]]), _c = _b.next(); !_c.done; _c = _b.next()) {
+                var _d = __read(_c.value, 2), y = _d[0], k = _d[1];
+                var x = xOf(y);
+                el("line", { class: "land", x1: x, y1: 40, x2: x, y2: 300 });
+                R[k] = el("text", { class: "landlab", x: x + 4, y: 292 });
+            }
+        }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
+        // the fork
+        el("path", { class: "branch br-uk", d: "M".concat(xOf(1560), ",").concat(YMID, "L").concat(xs, ",").concat(YMID, "C").concat(xs + 28, ",").concat(YMID, " ").concat(xf - 24, ",").concat(YUK, " ").concat(xf, ",").concat(YUK, "L").concat(XB, ",").concat(YUK) });
+        el("path", { class: "branch br-us", d: "M".concat(xs, ",").concat(YMID, "C").concat(xs + 28, ",").concat(YMID, " ").concat(xf - 24, ",").concat(YUS, " ").concat(xf, ",").concat(YUS, "L").concat(XB, ",").concat(YUS) });
+        R.nuk = el("text", { class: "bname", x: XB, y: YUK - 50, "text-anchor": "end", fill: "#457865" });
+        R.nus = el("text", { class: "bname", x: XB, y: YUS + 66, "text-anchor": "end", fill: "#b08a4a" });
+        R.trunk = el("text", { class: "ticklab", x: xOf(1560), y: YMID - 14 });
+        R.now = el("line", { class: "now", x1: 0, y1: 30, x2: 0, y2: 300 });
+        R.m = {};
+        CH.forEach(function (c) {
+            var lanes = c.side === "both" ? ["uk", "us"] : [c.side];
+            lanes.forEach(function (l) {
+                var g = el("g", { class: "mk", tabindex: "0", role: "button" });
+                g.dataset.id = c.id;
+                var ln = el("line", {}, g), ci = el("circle", { fill: CAT[c.cat] }, g), ic = el("text", { class: "ic", "text-anchor": "middle" }, g), ml = el("text", { class: "ml", "text-anchor": "middle" }, g);
+                ic.textContent = c.cat;
+                ml.textContent = c.lab;
+                ["pointerenter", "focus", "click"].forEach(function (ev) { return g.addEventListener(ev, function () { return select(c.id); }); });
+                g.addEventListener("keydown", function (e) { if (e.key === "Enter")
+                    select(c.id); });
+                (R.m[c.id] = R.m[c.id] || []).push({ g: g, ln: ln, ci: ci, ic: ic, ml: ml, lane: l, c: c });
+            });
+        });
+        layout();
+        labels();
+    }
+    function layout() {
+        Object.values(R.m).flat().forEach(function (m) {
+            var x = xOf(m.c.d), y = m.lane === "uk" ? YUK : YUS, up = m.lane === "uk";
+            var ly = up ? y - (16 + m.c.lv * 18) * K - 6 * K : y + (26 + m.c.lv * 18) * K + 4 * K;
+            m.ci.setAttribute("cx", x);
+            m.ci.setAttribute("cy", y);
+            m.ci.setAttribute("r", 10 * K);
+            m.ic.setAttribute("x", x);
+            m.ic.setAttribute("y", y + 4 * K);
+            m.ic.style.fontSize = (11 * K) + "px";
+            m.ml.setAttribute("x", x);
+            m.ml.setAttribute("y", ly);
+            m.ml.style.fontSize = (12 * K) + "px";
+            var small = K > 1.4;
+            m.ml.style.display = m.ln.style.display = small ? "none" : "";
+            m.ln.setAttribute("x1", x);
+            m.ln.setAttribute("x2", x);
+            m.ln.setAttribute("y1", up ? y - 10 * K : y + 10 * K);
+            m.ln.setAttribute("y2", up ? ly + 4 : ly - 12 * K);
+        });
+        svg.querySelectorAll(".ticklab,.landlab").forEach(function (t) { return t.style.fontSize = (12 * K) + "px"; });
+        svg.querySelectorAll(".bname").forEach(function (t) { return t.style.fontSize = (13 * K) + "px"; });
+        R.sea.style.fontSize = (14 * K) + "px";
+        var small = K > 1.4;
+        R.nuk.setAttribute("x", small ? xOf(1660) : XB);
+        R.nuk.setAttribute("text-anchor", small ? "start" : "end");
+        R.nuk.setAttribute("y", small ? YUK - 20 * K : YUK - 50);
+        R.nus.setAttribute("x", small ? xOf(1660) : XB);
+        R.nus.setAttribute("text-anchor", small ? "start" : "end");
+        R.nus.setAttribute("y", small ? YUS + 30 * K : YUS + 66);
+        R.indep.style.display = R.jamestown.style.display = small ? "none" : "";
+    }
+    function labels() {
+        R.sea.textContent = T("atlantic");
+        R.nuk.textContent = T("uk");
+        R.nus.textContent = T("us");
+        R.jamestown.textContent = T("jamestown");
+        R.indep.textContent = T("indep");
+        R.trunk.textContent = "1600";
+        for (var y = 1600; y <= 2000; y += 100)
+            R["t" + y].textContent = y;
+        R.trunk.textContent = "";
+        document.getElementById("legend").innerHTML = Object.keys(CAT).map(function (k) { return "<span><i style=\"background:".concat(CAT[k], "\">").concat(k, "</i>").concat(T(k), "</span>"); }).join("");
+    }
+    function rescale() { var w = svg.getBoundingClientRect().width || 900; K = Math.max(1, Math.min(2.2, 0.8 * 900 / w)); layout(); }
+    /* ---------- cards, info, readout ---------- */
+    var wordsEl = document.getElementById("words"), info = document.getElementById("info"), readout = document.getElementById("readout");
+    function buildCards() {
+        wordsEl.innerHTML = "";
+        CH.forEach(function (c) {
+            var b = document.createElement("button");
+            b.type = "button";
+            b.className = "w";
+            b.dataset.id = c.id;
+            b.innerHTML = "<div class=\"wd\"><span class=\"sw\" style=\"background:".concat(CAT[c.cat], "\"></span>").concat(c.word, "</div><div class=\"row r-uk\"><b></b><span></span></div><div class=\"row r-us\"><b></b><span></span></div><div class=\"when\"></div>");
+            ["pointerenter", "focus", "click"].forEach(function (ev) { return b.addEventListener(ev, function () { return select(c.id); }); });
+            wordsEl.appendChild(b);
+        });
+    }
+    function updateCards(y) {
+        wordsEl.querySelectorAll(".w").forEach(function (b) {
+            var c = CH.find(function (x) { return x.id === b.dataset.id; }), done = y >= c.d;
+            var v = done ? c.after : c.before;
+            var show = function (r, lab, val, chg) { r.querySelector("b").textContent = lab; r.querySelector("span").textContent = (c.id === "car" && !done) ? T("notYet") : val; r.classList.toggle("chg", done && chg); };
+            show(b.querySelector(".r-uk"), T("ukL"), v[0], c.side !== "us");
+            show(b.querySelector(".r-us"), T("usL"), v[1], c.side !== "uk");
+            b.querySelector(".when").textContent = c.side === "both" ? T("whenBoth", { d: c.dl[lang === "fr" ? 1 : 0] }) : T("when", { d: c.dl[lang === "fr" ? 1 : 0], side: T(c.side === "uk" ? "sideUK" : "sideUS") });
+            b.classList.toggle("future", !done);
+            b.classList.toggle("sel", selected === c.id);
+            b.style.display = (side === "all" || c.side === side || c.side === "both") ? "" : "none";
+        });
+    }
+    function draw(y) {
+        R.now.setAttribute("x1", xOf(y));
+        R.now.setAttribute("x2", xOf(y));
+        Object.values(R.m).flat().forEach(function (m) {
+            m.g.classList.toggle("future", y < m.c.d);
+            m.g.classList.toggle("dim", side !== "all" && m.c.side !== side && m.c.side !== "both");
+            m.g.classList.toggle("sel", selected === m.c.id);
+        });
+        updateCards(y);
+        var yy = Math.round(y), s = shiftedBy(y);
+        readout.textContent = s.length ? T("readout", { y: yy, n: s.length, a: s.filter(function (c) { return c.side === "uk"; }).length, b: s.filter(function (c) { return c.side === "us"; }).length, c: s.filter(function (c) { return c.side === "both"; }).length }) : T("readout0", { y: yy });
+    }
+    function updateInfo() { info.innerHTML = selected ? T("m_" + selected) : ""; }
+    function select(id) { selected = id; updateInfo(); draw(shown); }
+    /* ---------- motion ---------- */
+    var slider = document.getElementById("slider"), yrEl = document.getElementById("yr"), playBtn = document.getElementById("play");
+    var reduced = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var target = 1600, shown = 1600, playing = !reduced, onscreen = true, last = performance.now(), hold = 0, raf = 0;
+    var setYear = function (y) { yrEl.textContent = (lang === "fr" ? "v. " : "c. ") + Math.round(y); };
+    var setPlay = function () { playBtn.textContent = playing ? "❚❚" : "▶"; playBtn.setAttribute("aria-pressed", String(playing)); };
+    function frame(now) {
+        raf = 0;
+        var dt = Math.min(.1, (now - last) / 1000);
+        last = now;
+        if (playing) {
+            if (target >= 2000) {
+                hold += dt;
+                if (hold > 3) {
+                    target = shown = 1600;
+                    hold = 0;
+                }
+            }
+            else
+                target = Math.min(2000, target + dt * 16);
+            slider.value = Math.round(target);
+        }
+        shown += (target - shown) * (1 - Math.exp(-dt * 6));
+        if (Math.abs(target - shown) < .05)
+            shown = target;
+        setYear(shown);
+        draw(shown);
+        if (onscreen && (playing || shown !== target))
+            raf = requestAnimationFrame(frame);
+    }
+    function kick() { if (!raf && onscreen) {
+        last = performance.now();
+        raf = requestAnimationFrame(frame);
+    } }
+    slider.addEventListener("input", function () { playing = false; setPlay(); target = +slider.value; if (reduced) {
+        shown = target;
+        setYear(shown);
+        draw(shown);
+    }
+    else
+        kick(); });
+    playBtn.addEventListener("click", function () { playing = !playing; if (playing && target >= 2000) {
+        target = shown = 1600;
+    } setPlay(); kick(); });
+    document.addEventListener("keydown", function (e) { if (e.code === "Space" && !/INPUT|BUTTON|TEXTAREA/.test(document.activeElement.tagName) && !(document.activeElement.closest && document.activeElement.closest("svg"))) {
+        e.preventDefault();
+        playBtn.click();
+    } });
+    if ("IntersectionObserver" in window)
+        new IntersectionObserver(function (es) { onscreen = es[0].isIntersecting; if (onscreen)
+            kick(); }).observe(svg);
+    document.getElementById("sideSeg").addEventListener("click", function (e) { var b = e.target.closest("button"); if (!b)
+        return; document.querySelectorAll("#sideSeg button").forEach(function (x) { return x.setAttribute("aria-pressed", String(x === b)); }); side = b.dataset.v; draw(shown); });
+    document.querySelectorAll(".lang button").forEach(function (b) { return b.addEventListener("click", function () { lang = b.dataset.lang; try {
+        localStorage.setItem("ell-lang", lang);
+    }
+    catch (e) { } applyStatic(); labels(); updateInfo(); setYear(shown); draw(shown); }); });
+    window.addEventListener("resize", function () { rescale(); draw(shown); });
+    applyStatic();
+    build();
+    buildCards();
+    rescale();
+    if (reduced) {
+        target = shown = 2000;
+        slider.value = 2000;
+    }
+    setPlay();
+    setYear(shown);
+    draw(shown);
+    kick();
+})();
+</script>
+</body>
+</html>
