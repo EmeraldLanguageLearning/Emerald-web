@@ -59,7 +59,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:300;text-transform:uppercase;
   <!-- Locked view -->
   <section id="locked">
     <h1>Trainer area</h1>
-    <p class="intro">Enter the trainer PIN to open the quizzes.</p>
+    <p class="intro">Enter the trainer PIN to open the quizzes and tools.</p>
     <div class="pin">
       <div class="dots" id="dots"><span></span><span></span><span></span><span></span></div>
       <div class="err" id="err"></div>
@@ -69,7 +69,7 @@ h1{font-family:'Montserrat',sans-serif;font-weight:300;text-transform:uppercase;
 
   <!-- Unlocked view -->
   <section id="open" class="hidden">
-    <h1>Quizzes</h1>
+    <h1>Quizzes &amp; tools</h1>
     <p class="intro">Open a quiz on this iPad and hand it to the team. Each quiz saves its progress on the device; use “Start again” inside the quiz for a new team.</p>
     <div class="grid" id="grid"></div>
     <p class="note">The trainer area locks again when Safari is closed, or when you tap Lock.</p>
@@ -87,10 +87,13 @@ var QUIZZES = [
   {title:'Aviation History Hunt', where:'Walking tour · Toulouse', url:'aviation-hunt/', icon:'map',
    text:'From Emerald to the Capitole and the public gardens: riddles, a photo trail and an aviation crossword to reveal three pioneers.'},
   {title:'Aircraft Mechanics Jeopardy', where:'Classroom game · ENAC mechanics', url:'https://emeraldlanguagelearning.github.io/Aviation-mechanics-Jepoardy/', icon:'plane',
-   text:'A Jeopardy game on light training aircraft for 6 players or 2 teams, with an aircraft recognition row, a Daily Double and a Final round.'}
+   text:'A Jeopardy game on light training aircraft for 6 players or 2 teams, with an aircraft recognition row, a Daily Double and a Final round.'},
+  {title:'In-session Vocabulary Flashcards', where:'Vocabulary · Any session', url:'https://emeraldlanguagelearning.github.io/In-session-Vocabulary-Flashcards/', icon:'cards', btn:'Open flashcards',
+   text:'Vocabulary decks from the Google Sheet: study online, print PDF cards, share decks or learner packs. The Teachers area (same PIN) builds session decks.'}
 ];
 var ICONS = {
   plane:'<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg>',
+  cards:'<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="3" width="13" height="16" rx="2"/><path d="M4 7v12a2 2 0 0 0 2 2h10"/><path d="M11 9h5M11 13h5"/></svg>',
   map:'<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14"/></svg>'
 };
 
@@ -147,7 +150,7 @@ function buildGrid(){
     var q = QUIZZES[k];
     html += '<div class="card"><div class="badge">'+(ICONS[q.icon]||ICONS.plane)+'</div>'+
       '<h3>'+q.title+'</h3><p class="where">'+q.where+'</p><p>'+q.text+'</p>'+
-      '<a class="btn" href="'+q.url+'">Open quiz</a></div>';
+      '<a class="btn" href="'+q.url+'">'+(q.btn||'Open quiz')+'</a></div>';
   }
   $('grid').innerHTML = html;
 }
