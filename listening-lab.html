@@ -363,15 +363,15 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
             playSeq: "▶ Play the sequence", addVideo: "Add a video in setup",
             playsRange: "Plays {a} → {b} in a new tab and stops by itself.",
             wontPlay: "Won't play? Open it on YouTube",
-            apPlay: "Play", apPause: "Pause", apSeek: "Position in the audio", apVolume: "Volume", apMute: "Mute", apUnmute: "Unmute", apSlower: "Slower", apFaster: "Faster", apReset: "Back to normal speed",
+            noAudioYet: "The audio for this exercise isn\u2019t ready yet. You\u2019ll watch the video in the final listening.", noAudioAdd: "Add an audio file in Teacher setup", apPlay: "Play", apPause: "Pause", apSeek: "Position in the audio", apVolume: "Volume", apMute: "Mute", apUnmute: "Unmute", apSlower: "Slower", apFaster: "Faster", apReset: "Back to normal speed",
             speedGroup: "Playback speed", slower: "Slower", normalSpeed: "Normal speed",
             embedNote: "{text} The sequence runs from {a} to {b} and stops by itself.",
             videoSeq: "Video sequence", watchSeqAria: "Watch the sequence in a new tab", watchSeq: "Watch the sequence", long: "{d} long",
             finalWatchNote: "Watch the sequence while you read your transcript. It opens in a new tab and stops at {e} by itself.",
             finalWatchEmbed: "Watch the sequence while you read your transcript.",
             followTranscript: "Follow the transcript as you listen.",
-            audioNoteEmpty: "Upload an MP3 of the sequence to Google Drive, set sharing to “Anyone with the link”, and paste its link here. Learners then hear audio only in steps 1 to 3 and see the video in the final listening. Without audio, the video is used in every step.",
-            audioNoteOk: "Audio found. Learners hear it in steps 1 to 3; the video is shown in the final listening.",
+            audioNoteEmpty: "Upload an MP3 of the sequence to Google Drive, set sharing to “Anyone with the link”, and paste its link here. Learners then hear audio only in steps 1 to 3 and see the video in the final listening. Without audio, learners can only watch the video in the final listening.",
+            audioNoteOk: "Audio found. Learners hear it in steps 1 to 3; the video is shown in the final listening. Put the link in the exercises sheet too: the website keeps its own copy of the file, ready within the hour.",
             audioNoteBad: "This doesn't look like a Google Drive file link. Use Share → Copy link on the file in Drive.",
             audioPlayer: "Audio player", audioDrive: "The audio is playing through Google Drive's player.",
             t_selectWord: "Select a word or phrase first", t_alreadyKey: "That is already a key word", t_cursorInside: "Put the cursor inside a key word",
@@ -800,7 +800,11 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     function driveId(u) { if (!u)
         return null; var m = u.match(/\/file\/d\/([A-Za-z0-9_-]{10,})/) || u.match(/[?&]id=([A-Za-z0-9_-]{10,})/); return m ? m[1] : null; }
     var audioNote = function () { return !setup.audio ? T("audioNoteEmpty") : driveId(setup.audio) ? T("audioNoteOk") : T("audioNoteBad"); };
-    var audioSrc = function () { var id = driveId(setup.audio); return id ? "https://drive.google.com/uc?export=download&id=".concat(id) : null; };
+    // Google Drive no longer streams files to other sites' players, so a GitHub Action (Emerald-web, "Copy exercise audio")
+    // copies every audio file listed in the exercises sheet to the website as audio/<Drive file ID>.mp3 within the hour.
+    var AUDIO_HOST = "https://emeraldlanguagelearning.github.io/Emerald-web/audio/";
+    var audioSrc = function () { var id = driveId(setup.audio); return id ? "".concat(AUDIO_HOST).concat(id, ".mp3") : null; };
+    var audioAlt = function () { var id = driveId(setup.audio); return id ? "https://drive.google.com/uc?export=download&id=".concat(id) : ""; };
     var audioPreview = function () { var id = driveId(setup.audio); return id ? "https://drive.google.com/file/d/".concat(id, "/preview") : null; };
     var AP_ICON = {
         play: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l10.5-6.5z"/></svg>',
@@ -813,7 +817,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     var rateTxt = function (r) { return (Math.round(r * 100) / 100).toString().replace(/\.?0+$/, "") + "×"; };
     function audioPlayer(step, text) {
         var n = work.listens[step], cnt = "<span class=\"count\" data-count=\"".concat(step, "\">").concat(listensTxt(n), "</span>"), pr = apPrefs();
-        return "<div class=\"listen audio\">\n    <div class=\"info\">".concat(text, "</div>\n    <div class=\"aplayer\">\n      <audio preload=\"metadata\" src=\"").concat(esc(audioSrc()), "\" data-astep=\"").concat(step, "\" data-preview=\"").concat(esc(audioPreview()), "\"></audio>\n      <div class=\"ap\">\n        <button type=\"button\" class=\"ap-play\" data-ap=\"toggle\" aria-label=\"").concat(T("apPlay"), "\">").concat(AP_ICON.play, "</button>\n        <div class=\"ap-main\">\n          <input type=\"range\" class=\"ap-seek\" min=\"0\" max=\"1000\" step=\"1\" value=\"0\" aria-label=\"").concat(T("apSeek"), "\">\n          <div class=\"ap-row\">\n            <span class=\"ap-time mono\">0:00 / \u2013:\u2013\u2013</span>\n            <div class=\"ap-vol\">\n              <button type=\"button\" class=\"ap-btn\" data-ap=\"mute\" aria-label=\"").concat(T(pr.muted ? "apUnmute" : "apMute"), "\">").concat(pr.muted || !pr.vol ? AP_ICON.mute : AP_ICON.vol, "</button>\n              <input type=\"range\" class=\"ap-volr\" min=\"0\" max=\"100\" step=\"1\" value=\"").concat(pr.muted ? 0 : Math.round(pr.vol * 100), "\" aria-label=\"").concat(T("apVolume"), "\">\n            </div>\n            <div class=\"ap-speed\" role=\"group\" aria-label=\"").concat(T("speedGroup"), "\">\n              <button type=\"button\" class=\"ap-btn\" data-ap=\"slower\" aria-label=\"").concat(T("apSlower"), "\">\u2212</button>\n              <button type=\"button\" class=\"ap-btn ap-rate mono\" data-ap=\"rate1\" aria-label=\"").concat(T("apReset"), "\" aria-pressed=\"").concat(pr.rate === 1, "\">").concat(rateTxt(pr.rate), "</button>\n              <button type=\"button\" class=\"ap-btn\" data-ap=\"faster\" aria-label=\"").concat(T("apFaster"), "\">+</button>\n            </div>\n          </div>\n        </div>\n      </div>\n    </div>").concat(cnt, "\n  </div>");
+        return "<div class=\"listen audio\">\n    <div class=\"info\">".concat(text, "</div>\n    <div class=\"aplayer\">\n      <audio preload=\"metadata\" src=\"").concat(esc(audioSrc()), "\" data-astep=\"").concat(step, "\" data-alt=\"").concat(esc(audioAlt()), "\" data-preview=\"").concat(esc(audioPreview()), "\"></audio>\n      <div class=\"ap\">\n        <button type=\"button\" class=\"ap-play\" data-ap=\"toggle\" aria-label=\"").concat(T("apPlay"), "\">").concat(AP_ICON.play, "</button>\n        <div class=\"ap-main\">\n          <input type=\"range\" class=\"ap-seek\" min=\"0\" max=\"1000\" step=\"1\" value=\"0\" aria-label=\"").concat(T("apSeek"), "\">\n          <div class=\"ap-row\">\n            <span class=\"ap-time mono\">0:00 / \u2013:\u2013\u2013</span>\n            <div class=\"ap-vol\">\n              <button type=\"button\" class=\"ap-btn\" data-ap=\"mute\" aria-label=\"").concat(T(pr.muted ? "apUnmute" : "apMute"), "\">").concat(pr.muted || !pr.vol ? AP_ICON.mute : AP_ICON.vol, "</button>\n              <input type=\"range\" class=\"ap-volr\" min=\"0\" max=\"100\" step=\"1\" value=\"").concat(pr.muted ? 0 : Math.round(pr.vol * 100), "\" aria-label=\"").concat(T("apVolume"), "\">\n            </div>\n            <div class=\"ap-speed\" role=\"group\" aria-label=\"").concat(T("speedGroup"), "\">\n              <button type=\"button\" class=\"ap-btn\" data-ap=\"slower\" aria-label=\"").concat(T("apSlower"), "\">\u2212</button>\n              <button type=\"button\" class=\"ap-btn ap-rate mono\" data-ap=\"rate1\" aria-label=\"").concat(T("apReset"), "\" aria-pressed=\"").concat(pr.rate === 1, "\">").concat(rateTxt(pr.rate), "</button>\n              <button type=\"button\" class=\"ap-btn\" data-ap=\"faster\" aria-label=\"").concat(T("apFaster"), "\">+</button>\n            </div>\n          </div>\n        </div>\n      </div>\n    </div>").concat(cnt, "\n  </div>");
     }
     var AP_RATES = [0.5, 0.6, 0.7, 0.75, 0.8, 0.9, 1, 1.1, 1.25, 1.5];
     var apAudio = function (el) { var b = el && el.closest(".aplayer"); return b ? b.querySelector("audio") : null; };
@@ -1319,7 +1323,10 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
         var url = clipUrl(), n = work.listens[step];
         if (audioSrc())
             return audioPlayer(step, text);
-        if (EMBED_VIDEO && url)
+        // Steps 1 to 3 are audio only: the video is kept for the final listening.
+        if (!EMBED_VIDEO)
+            return "<div class=\"listen\">\n    <div class=\"info\">".concat(text, "<br><span class=\"note\">").concat(T("noAudioYet"), "</span>").concat(unlocked ? " <button type=\"button\" class=\"linkbtn\" data-go=\"setup\">".concat(T("noAudioAdd"), "</button>") : "", "</div>\n    <span class=\"count\" aria-live=\"polite\">").concat(listensTxt(n), "</span>\n  </div>");
+        if (url)
             return embedPlayer(step, text, false);
         return "<div class=\"listen\">\n    <div class=\"info\">".concat(text, "<br><span class=\"mono muted\">").concat(T("playsRange", { a: fmt(toSec(setup.start)), b: fmt(toSec(setup.end)) }), "</span>").concat(url ? " <a class=\"alt\" href=\"".concat(esc(watchUrl()), "\" target=\"_blank\" rel=\"noopener\" data-listen=\"").concat(step, "\">").concat(T("wontPlay"), "</a>") : "", "</div>\n    ").concat(url ? "<a class=\"btn\" href=\"".concat(esc(url), "\" target=\"_blank\" rel=\"noopener\" data-listen=\"").concat(step, "\">").concat(T("playSeq"), "</a>") : "<button type=\"button\" class=\"btn\" aria-disabled=\"true\" data-go=\"setup\">".concat(T("addVideo"), "</button>"), "\n    <span class=\"count\" aria-live=\"polite\">").concat(listensTxt(n), "</span>\n  </div>");
     }
@@ -1874,6 +1881,13 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
         var a = e.target;
         if (!a || a.tagName !== "AUDIO" || !a.dataset.preview)
             return;
+        if (a.dataset.alt) {
+            var alt = a.dataset.alt;
+            a.dataset.alt = "";
+            a.src = alt;
+            a.load();
+            return;
+        }
         var box = a.closest(".aplayer");
         var step = a.dataset.astep;
         box.closest(".listen").classList.add("fallback");

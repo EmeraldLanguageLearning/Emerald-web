@@ -1,0 +1,38 @@
+# Keeps audio/ in step with the Listening Lab exercises sheet (see .github/scripts/sync_audio.py),
+# so the audio plays inside Listening Lab instead of in Google Drive.
+# Runs every hour; run it now from Actions → "Copy exercise audio" → Run workflow.
+name: Copy exercise audio
+
+on:
+  schedule:
+    - cron: '23 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: audio-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: command -v ffmpeg || (sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg)
+      - run: python3 .github/scripts/sync_audio.py
+      - name: Publish changes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git add -A audio
+          if git diff --cached --quiet; then echo "No changes"; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Update Listening Lab audio copies"
+          git pull --rebase -q origin main
+          git push
+          # Pushes made with the workflow token don't start other workflows, so start the website deploy here.
+          gh workflow run pages.yml --ref main
