@@ -169,8 +169,27 @@ main a:not(.btn){color:var(--emerald-link)}
 .player.small{max-width:640px}
 .listen.audio .info{flex:1 1 100%}
 .aplayer{display:flex;flex-direction:column;gap:8px;flex:1 1 280px;min-width:0}
-.aplayer audio{width:100%;display:block}
-.speeds{display:flex;gap:6px;flex-wrap:wrap}
+.aplayer audio{display:none}
+.ap{display:flex;align-items:center;gap:14px}
+.ap-play{all:unset;cursor:pointer;flex:none;display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:var(--emerald);color:#fff}
+.ap-play:hover{background:var(--emerald-hover)}
+.ap-play:focus-visible,.ap-btn:focus-visible{outline:2px solid var(--emerald-dark);outline-offset:2px}
+.ap-play svg{width:24px;height:24px;display:block}
+.ap-main{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:8px}
+.ap-row{display:flex;align-items:center;gap:10px 16px;flex-wrap:wrap}
+.ap-time{font-size:.82rem;color:var(--muted);min-width:7.5em}
+.ap input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:3px;background:var(--line);accent-color:var(--emerald);margin:0;cursor:pointer}
+.ap input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--emerald);border:2px solid #fff;box-shadow:0 0 0 1px var(--emerald)}
+.ap input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--emerald);border:2px solid #fff}
+.ap-seek{width:100%}
+.ap-vol{display:flex;align-items:center;gap:6px}
+.ap-vol input{width:90px}
+.ap-btn{all:unset;cursor:pointer;display:grid;place-items:center;min-width:30px;height:30px;border-radius:999px;color:var(--emerald-dark);font-family:var(--body);font-weight:600}
+.ap-btn:hover{background:var(--line)}
+.ap-btn svg{width:20px;height:20px;display:block}
+.ap-speed{display:flex;align-items:center;gap:2px;border:1px solid var(--line);border-radius:999px;padding:1px 3px;margin-left:auto}
+.ap-rate{min-width:3.4em;font-size:.88rem}
+.ap-rate[aria-pressed="true"]{color:var(--muted)}
 .dframe{width:100%;aspect-ratio:5/1;min-height:240px;height:auto;border:0;border-radius:4px;background:#000;display:block}
 .listen.audio.fallback .aplayer{flex:1 1 100%}
 .listen.audio.fallback .count{margin-left:auto}
@@ -344,7 +363,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
             playSeq: "▶ Play the sequence", addVideo: "Add a video in setup",
             playsRange: "Plays {a} → {b} in a new tab and stops by itself.",
             wontPlay: "Won't play? Open it on YouTube",
-            audioOnly: "Audio only. It opens in a new tab.", playAudio: "▶ Play the audio",
+            apPlay: "Play", apPause: "Pause", apSeek: "Position in the audio", apVolume: "Volume", apMute: "Mute", apUnmute: "Unmute", apSlower: "Slower", apFaster: "Faster", apReset: "Back to normal speed",
             speedGroup: "Playback speed", slower: "Slower", normalSpeed: "Normal speed",
             embedNote: "{text} The sequence runs from {a} to {b} and stops by itself.",
             videoSeq: "Video sequence", watchSeqAria: "Watch the sequence in a new tab", watchSeq: "Watch the sequence", long: "{d} long",
@@ -783,11 +802,90 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     var audioNote = function () { return !setup.audio ? T("audioNoteEmpty") : driveId(setup.audio) ? T("audioNoteOk") : T("audioNoteBad"); };
     var audioSrc = function () { var id = driveId(setup.audio); return id ? "https://drive.google.com/uc?export=download&id=".concat(id) : null; };
     var audioPreview = function () { var id = driveId(setup.audio); return id ? "https://drive.google.com/file/d/".concat(id, "/preview") : null; };
+    var AP_ICON = {
+        play: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l10.5-6.5z"/></svg>',
+        pause: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6.5" y="5" width="4" height="14" rx="1"/><rect x="13.5" y="5" width="4" height="14" rx="1"/></svg>',
+        vol: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6A1.4 1.4 0 0 1 5.4 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.4 18.4a9 9 0 0 0 0-12.7"/></svg>',
+        mute: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6A1.4 1.4 0 0 1 5.4 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg>'
+    };
+    // Speed and volume are remembered on this device for every exercise.
+    var apPrefs = function () { return Object.assign({ rate: 1, vol: 1, muted: false }, store.get("ll-audio") || {}); };
+    var rateTxt = function (r) { return (Math.round(r * 100) / 100).toString().replace(/\.?0+$/, "") + "×"; };
     function audioPlayer(step, text) {
-        var n = work.listens[step], cnt = "<span class=\"count\" data-count=\"".concat(step, "\">").concat(listensTxt(n), "</span>");
-        if (!EMBED_VIDEO)
-            return "<div class=\"listen\">\n    <div class=\"info\">".concat(text, "<br><span class=\"mono muted\">").concat(T("audioOnly"), "</span></div>\n    <a class=\"btn\" href=\"").concat(esc(audioPreview()), "\" target=\"_blank\" rel=\"noopener\" data-listen=\"").concat(step, "\">").concat(T("playAudio"), "</a>").concat(cnt, "\n  </div>");
-        return "<div class=\"listen audio\">\n    <div class=\"info\">".concat(text, "</div>\n    <div class=\"aplayer\">\n      <audio controls preload=\"metadata\" src=\"").concat(esc(audioSrc()), "\" data-astep=\"").concat(step, "\" data-preview=\"").concat(esc(audioPreview()), "\"></audio>\n      <div class=\"speeds\" role=\"group\" aria-label=\"").concat(T("speedGroup"), "\">\n        <button class=\"chip\" data-rate=\"0.75\" aria-pressed=\"false\">").concat(T("slower"), "</button>\n        <button class=\"chip\" data-rate=\"1\" aria-pressed=\"true\">").concat(T("normalSpeed"), "</button>\n      </div>\n    </div>").concat(cnt, "\n  </div>");
+        var n = work.listens[step], cnt = "<span class=\"count\" data-count=\"".concat(step, "\">").concat(listensTxt(n), "</span>"), pr = apPrefs();
+        return "<div class=\"listen audio\">\n    <div class=\"info\">".concat(text, "</div>\n    <div class=\"aplayer\">\n      <audio preload=\"metadata\" src=\"").concat(esc(audioSrc()), "\" data-astep=\"").concat(step, "\" data-preview=\"").concat(esc(audioPreview()), "\"></audio>\n      <div class=\"ap\">\n        <button type=\"button\" class=\"ap-play\" data-ap=\"toggle\" aria-label=\"").concat(T("apPlay"), "\">").concat(AP_ICON.play, "</button>\n        <div class=\"ap-main\">\n          <input type=\"range\" class=\"ap-seek\" min=\"0\" max=\"1000\" step=\"1\" value=\"0\" aria-label=\"").concat(T("apSeek"), "\">\n          <div class=\"ap-row\">\n            <span class=\"ap-time mono\">0:00 / \u2013:\u2013\u2013</span>\n            <div class=\"ap-vol\">\n              <button type=\"button\" class=\"ap-btn\" data-ap=\"mute\" aria-label=\"").concat(T(pr.muted ? "apUnmute" : "apMute"), "\">").concat(pr.muted || !pr.vol ? AP_ICON.mute : AP_ICON.vol, "</button>\n              <input type=\"range\" class=\"ap-volr\" min=\"0\" max=\"100\" step=\"1\" value=\"").concat(pr.muted ? 0 : Math.round(pr.vol * 100), "\" aria-label=\"").concat(T("apVolume"), "\">\n            </div>\n            <div class=\"ap-speed\" role=\"group\" aria-label=\"").concat(T("speedGroup"), "\">\n              <button type=\"button\" class=\"ap-btn\" data-ap=\"slower\" aria-label=\"").concat(T("apSlower"), "\">\u2212</button>\n              <button type=\"button\" class=\"ap-btn ap-rate mono\" data-ap=\"rate1\" aria-label=\"").concat(T("apReset"), "\" aria-pressed=\"").concat(pr.rate === 1, "\">").concat(rateTxt(pr.rate), "</button>\n              <button type=\"button\" class=\"ap-btn\" data-ap=\"faster\" aria-label=\"").concat(T("apFaster"), "\">+</button>\n            </div>\n          </div>\n        </div>\n      </div>\n    </div>").concat(cnt, "\n  </div>");
+    }
+    var AP_RATES = [0.5, 0.6, 0.7, 0.75, 0.8, 0.9, 1, 1.1, 1.25, 1.5];
+    var apAudio = function (el) { var b = el && el.closest(".aplayer"); return b ? b.querySelector("audio") : null; };
+    function apSync(a) {
+        var box = a.closest(".aplayer");
+        if (!box)
+            return;
+        var d = isFinite(a.duration) ? a.duration : 0, t = a.currentTime || 0;
+        var seek = box.querySelector(".ap-seek");
+        if (seek && !seek.dataset.drag)
+            seek.value = d ? Math.round(t / d * 1000) : 0;
+        var tm = box.querySelector(".ap-time");
+        if (tm)
+            tm.textContent = "".concat(fmt(Math.floor(t)), " / ").concat(d ? fmt(Math.round(d)) : "–:––");
+        var pl = box.querySelector(".ap-play");
+        if (pl) {
+            pl.innerHTML = a.paused ? AP_ICON.play : AP_ICON.pause;
+            pl.setAttribute("aria-label", T(a.paused ? "apPlay" : "apPause"));
+        }
+        var mu = box.querySelector("[data-ap=mute]");
+        if (mu) {
+            var off = a.muted || !a.volume;
+            mu.innerHTML = off ? AP_ICON.mute : AP_ICON.vol;
+            mu.setAttribute("aria-label", T(off ? "apUnmute" : "apMute"));
+        }
+        var vr = box.querySelector(".ap-volr");
+        if (vr && document.activeElement !== vr)
+            vr.value = a.muted ? 0 : Math.round(a.volume * 100);
+        var rb = box.querySelector(".ap-rate");
+        if (rb) {
+            rb.textContent = rateTxt(a.playbackRate);
+            rb.setAttribute("aria-pressed", a.playbackRate === 1);
+        }
+    }
+    function apSave(a) { store.set("ll-audio", { rate: a.playbackRate, vol: a.volume, muted: a.muted }); }
+    function apInit(a) { var pr = apPrefs(); a.volume = Math.min(1, Math.max(0, +pr.vol || 0)); a.muted = !!pr.muted; a.defaultPlaybackRate = a.playbackRate = +pr.rate || 1; apSync(a); }
+    function apClick(t) {
+        var a = apAudio(t);
+        if (!a)
+            return;
+        var act = t.dataset.ap;
+        if (act === "toggle") {
+            document.querySelectorAll(".aplayer audio").forEach(function (o) { if (o !== a && !o.paused)
+                o.pause(); });
+            if (a.paused) {
+                var p = a.play();
+                if (p && p.catch)
+                    p.catch(function () { });
+            }
+            else
+                a.pause();
+        }
+        else if (act === "mute") {
+            if (a.muted || !a.volume) {
+                a.muted = false;
+                if (!a.volume)
+                    a.volume = 0.8;
+            }
+            else
+                a.muted = true;
+        }
+        else if (act === "rate1") {
+            a.playbackRate = 1;
+        }
+        else {
+            var r_1 = a.playbackRate, i = AP_RATES.findIndex(function (x) { return x >= r_1 - 0.001; });
+            var k = act === "faster" ? (AP_RATES[i] > r_1 + 0.001 ? i : i + 1) : i - 1;
+            a.playbackRate = AP_RATES[Math.max(0, Math.min(AP_RATES.length - 1, k < 0 ? 0 : k))];
+        }
+        a.defaultPlaybackRate = a.playbackRate;
+        apSave(a);
+        apSync(a);
     }
     function bumpListen(step) {
         work.listens[step]++;
@@ -1330,6 +1428,10 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
             tool(t.dataset.tool);
             return;
         }
+        if (t.dataset.ap) {
+            apClick(t);
+            return;
+        }
         if (t.dataset.rate) {
             var box = t.closest(".aplayer"), a = box && box.querySelector("audio");
             if (a)
@@ -1595,6 +1697,22 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     });
     document.addEventListener("input", function (e) {
         var t = e.target;
+        if (t.classList && t.classList.contains("ap-seek")) {
+            var a = apAudio(t);
+            if (a && isFinite(a.duration))
+                a.currentTime = t.value / 1000 * a.duration;
+            return;
+        }
+        if (t.classList && t.classList.contains("ap-volr")) {
+            var a = apAudio(t);
+            if (a) {
+                a.volume = t.value / 100;
+                a.muted = +t.value === 0;
+                apSave(a);
+                apSync(a);
+            }
+            return;
+        }
         if (t.dataset.kw !== undefined) {
             work.keys[+t.dataset.kw].word = t.value;
             save();
@@ -1720,6 +1838,38 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     }, true);
     document.addEventListener("ended", function (e) { if (e.target && e.target.tagName === "AUDIO")
         e.target.dataset.fresh = "1"; }, true);
+    ["loadedmetadata", "timeupdate", "play", "pause", "ended", "volumechange", "ratechange", "durationchange"].forEach(function (ev) { return document.addEventListener(ev, function (e) {
+        var a = e.target;
+        if (!a || a.tagName !== "AUDIO" || !a.closest(".aplayer"))
+            return;
+        if (ev === "loadedmetadata" && !a.dataset.init) {
+            a.dataset.init = "1";
+            apInit(a);
+            return;
+        }
+        apSync(a);
+    }, true); });
+    ["pointerdown", "pointerup", "pointercancel"].forEach(function (ev) { return document.addEventListener(ev, function (e) {
+        var t = e.target;
+        if (!t.classList || !t.classList.contains("ap-seek"))
+            return;
+        if (ev === "pointerdown")
+            t.dataset.drag = "1";
+        else
+            delete t.dataset.drag;
+    }, true); });
+    // Space bar plays/pauses the player when one of its controls has focus.
+    document.addEventListener("keydown", function (e) {
+        if (e.key !== " " || !e.target.closest)
+            return;
+        var box = e.target.closest(".aplayer");
+        if (!box || e.target.tagName === "BUTTON")
+            return;
+        e.preventDefault();
+        var b = box.querySelector(".ap-play");
+        if (b)
+            apClick(b);
+    });
     document.addEventListener("error", function (e) {
         var a = e.target;
         if (!a || a.tagName !== "AUDIO" || !a.dataset.preview)
