@@ -184,10 +184,8 @@ main a:not(.btn){color:var(--emerald-link)}
 .pitem.current{border-color:var(--emerald);box-shadow:inset 3px 0 0 var(--emerald)}
 .pnum{display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:var(--emerald);color:#fff;font-family:var(--display);font-weight:700;font-size:1rem;align-self:start}
 .pbody{display:flex;flex-direction:column;gap:6px;min-width:0}
-.ph3{display:flex;align-items:center;gap:10px}
-.picon{flex:none;display:inline-grid;place-items:center;width:30px;height:30px;color:var(--emerald)}
-.picon svg{width:24px;height:24px;display:block}
-.picon.emoji{font-size:1.3rem;line-height:1}
+.pnum svg{width:24px;height:24px;display:block;color:#fff}
+.pnum.emoji{font-size:1.35rem;line-height:1}
 .pmeta{font-size:.8rem}
 .pbar{height:6px;border-radius:3px;background:var(--line);overflow:hidden;max-width:240px}
 .pbar span{display:block;height:100%;background:var(--emerald)}
@@ -754,13 +752,14 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
         }
         return iconCache[src] = out;
     }
-    function iconHtml(s) {
+    // The playlist circle shows the exercise's icon, or its number when it has none.
+    function numHtml(s, i) {
         var name = String(s.icon || "").trim(), shapes = cleanIconSvg(s.iconSvg);
         if (!name && !shapes)
-            return "";
-        if (!shapes && name && !/^[a-z0-9-]+$/i.test(name))
-            return "<span class=\"picon emoji\" aria-hidden=\"true\">".concat(esc(name.slice(0, 8)), "</span>");
-        return "<span class=\"picon\" aria-hidden=\"true\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">".concat(shapes || ICON_FALLBACK, "</svg></span>");
+            return "<span class=\"pnum\" aria-hidden=\"true\">".concat(String(i + 1).padStart(2, "0"), "</span>");
+        if (!shapes && !/^[a-z0-9-]+$/i.test(name))
+            return "<span class=\"pnum emoji\" aria-hidden=\"true\">".concat(esc(name.slice(0, 8)), "</span>");
+        return "<span class=\"pnum\" aria-hidden=\"true\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">".concat(shapes || ICON_FALLBACK, "</svg></span>");
     }
     var toSec = function (t) { var p = String(t || "").trim().split(":").map(Number); if (p.some(isNaN))
         return 0; return p.reduce(function (a, b) { return a * 60 + b; }, 0); };
@@ -1239,7 +1238,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
                 var status = work.checked ? T("finished", { r: right, t: ans.length }) : started ? T("stepsDone", { n: done }) : T("notStarted");
                 var label = work.checked ? T("review") : started ? T("cont") : T("start");
                 var last = i === lib.items.length - 1;
-                return "<li class=\"pitem ".concat(it.id === lib.current ? "current" : "", "\">\n      <span class=\"pnum\" aria-hidden=\"true\">").concat(String(i + 1).padStart(2, "0"), "</span>\n      <div class=\"pbody\">\n        <h3 class=\"ph3\">").concat(iconHtml(setup), "<span>").concat(esc(setup.title || T("untitled")), "</span></h3>\n        <span class=\"mono muted pmeta\">").concat(videoId(setup.url) ? "".concat(fmt(toSec(setup.start)), " \u2192 ").concat(fmt(toSec(setup.end))) : T("noVideo"), " \u00B7 ").concat(T("kwCount", { n: ans.length }), "</span>\n        <div class=\"pbar\" role=\"img\" aria-label=\"").concat(T("stepsDone", { n: done }), "\"><span style=\"width:").concat(done * 25, "%\"></span></div>\n        <span class=\"note ").concat(work.checked ? "pdone" : "", "\">").concat(status, "</span>\n      </div>\n      <div class=\"pact\">\n        <button class=\"btn ").concat(work.checked ? "ghost" : "", "\" data-open=\"").concat(it.id, "\">").concat(label, "</button>\n        ").concat(unlocked ? "<div class=\"ptools\">\n          <button class=\"btn quiet\" data-edit=\"".concat(it.id, "\">").concat(T("edit"), "</button>\n          <button class=\"btn quiet\" data-dup=\"").concat(it.id, "\">").concat(T("duplicate"), "</button>\n          <button class=\"btn quiet\" data-move=\"").concat(it.id, "\" data-dir=\"-1\" aria-label=\"").concat(T("moveUp"), "\" ").concat(i === 0 ? 'aria-disabled="true"' : "", ">\u2191</button>\n          <button class=\"btn quiet\" data-move=\"").concat(it.id, "\" data-dir=\"1\" aria-label=\"").concat(T("moveDown"), "\" ").concat(last ? 'aria-disabled="true"' : "", ">\u2193</button>\n          <button class=\"btn quiet pdel\" data-rm=\"").concat(it.id, "\">").concat(T("del"), "</button>\n        </div>") : "", "\n      </div>\n    </li>");
+                return "<li class=\"pitem ".concat(it.id === lib.current ? "current" : "", "\">\n      ").concat(numHtml(setup, i), "\n      <div class=\"pbody\">\n        <h3>").concat(esc(setup.title || T("untitled")), "</h3>\n        <span class=\"mono muted pmeta\">").concat(videoId(setup.url) ? "".concat(fmt(toSec(setup.start)), " \u2192 ").concat(fmt(toSec(setup.end))) : T("noVideo"), " \u00B7 ").concat(T("kwCount", { n: ans.length }), "</span>\n        <div class=\"pbar\" role=\"img\" aria-label=\"").concat(T("stepsDone", { n: done }), "\"><span style=\"width:").concat(done * 25, "%\"></span></div>\n        <span class=\"note ").concat(work.checked ? "pdone" : "", "\">").concat(status, "</span>\n      </div>\n      <div class=\"pact\">\n        <button class=\"btn ").concat(work.checked ? "ghost" : "", "\" data-open=\"").concat(it.id, "\">").concat(label, "</button>\n        ").concat(unlocked ? "<div class=\"ptools\">\n          <button class=\"btn quiet\" data-edit=\"".concat(it.id, "\">").concat(T("edit"), "</button>\n          <button class=\"btn quiet\" data-dup=\"").concat(it.id, "\">").concat(T("duplicate"), "</button>\n          <button class=\"btn quiet\" data-move=\"").concat(it.id, "\" data-dir=\"-1\" aria-label=\"").concat(T("moveUp"), "\" ").concat(i === 0 ? 'aria-disabled="true"' : "", ">\u2191</button>\n          <button class=\"btn quiet\" data-move=\"").concat(it.id, "\" data-dir=\"1\" aria-label=\"").concat(T("moveDown"), "\" ").concat(last ? 'aria-disabled="true"' : "", ">\u2193</button>\n          <button class=\"btn quiet pdel\" data-rm=\"").concat(it.id, "\">").concat(T("del"), "</button>\n        </div>") : "", "\n      </div>\n    </li>");
             }); };
             return "<section class=\"sheet\">\n    <div class=\"intro\"><span class=\"label\">".concat(T("pl_label"), "</span><h2>").concat(T("pl_h"), "</h2>\n    <p class=\"muted\">").concat(T("pl_intro"), "</p></div>\n    <ol class=\"plist\">").concat(lib.items.map(card).join(""), "</ol>\n    ").concat(canSync() ? "<div><button type=\"button\" class=\"btn quiet\" id=\"p-sync\">\u21BB Check for new exercises</button></div>" : "", "\n    ").concat(unlocked ? "<div class=\"group\">\n      <span class=\"label\">".concat(T("teacherTools"), "</span>\n      <div style=\"display:flex;gap:10px;flex-wrap:wrap\">\n        <button class=\"btn\" id=\"p-new\">").concat(T("newEx"), "</button>\n        <button class=\"btn ghost\" id=\"s-rows\">Copy for the spreadsheet</button>\n        <button class=\"btn ghost\" id=\"s-export\">").concat(T("copyCode"), "</button>\n        <button class=\"btn ghost\" id=\"s-importToggle\">").concat(T("loadCode"), "</button>\n      </div>\n      <div id=\"s-import\" hidden class=\"group\">\n        <span class=\"note\">").concat(T("pasteCodeNote"), "</span>\n        <textarea id=\"s-code\" placeholder=\"").concat(T("pastePh"), "\"></textarea>\n        <div><button class=\"btn\" id=\"s-load\">").concat(T("loadThis"), "</button></div>\n      </div>\n      <p class=\"note\">Learners get the exercises from the <a href=\"").concat(REMOTE_EDIT, "\" target=\"_blank\" rel=\"noopener\">exercises spreadsheet</a>, one exercise per row. Edit it directly, or build the exercises here, tap <b>Copy for the spreadsheet</b>, then in the sheet select all, delete, click cell A1 and paste. Learners\u2019 apps update the next time they open Listening Lab.</p>\n    </div>") : "<p class=\"note\">".concat(T("teachersUnlock", { btn: "<button type=\"button\" class=\"linkbtn\" data-go=\"setup\">".concat(T("teacherSetupLink"), "</button>") }), "</p>"), "\n  </section>");
         },
