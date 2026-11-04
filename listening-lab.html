@@ -184,6 +184,10 @@ main a:not(.btn){color:var(--emerald-link)}
 .pitem.current{border-color:var(--emerald);box-shadow:inset 3px 0 0 var(--emerald)}
 .pnum{display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:var(--emerald);color:#fff;font-family:var(--display);font-weight:700;font-size:1rem;align-self:start}
 .pbody{display:flex;flex-direction:column;gap:6px;min-width:0}
+.ph3{display:flex;align-items:center;gap:10px}
+.picon{flex:none;display:inline-grid;place-items:center;width:30px;height:30px;color:var(--emerald)}
+.picon svg{width:24px;height:24px;display:block}
+.picon.emoji{font-size:1.3rem;line-height:1}
 .pmeta{font-size:.8rem}
 .pbar{height:6px;border-radius:3px;background:var(--line);overflow:hidden;max-width:240px}
 .pbar span{display:block;height:100%;background:var(--emerald)}
@@ -506,7 +510,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
         }
         catch (e) { } }
     };
-    var DEFAULTS = { title: "New exercise", url: "", start: "0:00", end: "0:30", transcript: "", audio: "", wordBank: true, keyFeedback: true, minWords: 30, model: "" };
+    var DEFAULTS = { title: "New exercise", url: "", start: "0:00", end: "0:30", transcript: "", audio: "", wordBank: true, keyFeedback: true, minWords: 30, model: "", icon: "", iconSvg: "" };
     var SAMPLE2 = {
         title: "Platform announcement", url: "", start: "0:00", end: "0:30",
         transcript: "A: The ten fifteen service to Leeds is [delayed] by approximately [twenty] minutes.\nA: We [apologise] for any inconvenience this may cause.\nA: Passengers for York should [change] at Doncaster.\nA: Please do [not] leave your luggage unattended.",
@@ -538,10 +542,15 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     var REMOTE_SHEET_ID = "16z4gUtwyRlwHIPSjgKIvfeBmIkw3T3RQamY_AEdFPXw";
     var REMOTE_EDIT = "https://docs.google.com/spreadsheets/d/" + REMOTE_SHEET_ID + "/edit";
     // Column headings in the sheet (matched by their first words, so they can be reworded a little).
-    var SHEET_COLS = [["id", "ID"], ["title", "Title"], ["url", "YouTube link"], ["start", "Start (m:ss)"], ["end", "End (m:ss)"], ["audio", "Audio (Google Drive link)"], ["transcript", "Transcript (key words in [brackets])"], ["wordBank", "Word bank (yes/no)"], ["keyFeedback", "Key word feedback (yes/no)"], ["model", "Model interpretation"]];
+    var SHEET_COLS = [["id", "ID"], ["title", "Title"], ["url", "YouTube link"], ["start", "Start (m:ss)"], ["end", "End (m:ss)"], ["audio", "Audio (Google Drive link)"], ["transcript", "Transcript (key words in [brackets])"], ["wordBank", "Word bank (yes/no)"], ["keyFeedback", "Key word feedback (yes/no)"], ["model", "Model interpretation"], ["icon", "Icon"], ["iconSvg", "Icon SVG"]];
     var yes = function (v) { return /^(yes|y|oui|o|true|1|x|✓)$/i.test(String(v || "").trim()); };
     function rowsToPlaylist(table) {
-        var find = function (label) { var want = label.toLowerCase().split(" (")[0]; return table.cols.findIndex(function (c) { return c.toLowerCase().trim().indexOf(want) === 0; }); };
+        var find = function (label) {
+            var want = label.toLowerCase().split(" (")[0];
+            var cols = table.cols.map(function (c) { return c.toLowerCase().trim(); });
+            var exact = cols.findIndex(function (c) { return c === want || c.split(" (")[0] === want; });
+            return exact >= 0 ? exact : cols.findIndex(function (c) { return c.indexOf(want) === 0 && !(want === "icon" && c.indexOf("icon svg") === 0); });
+        };
         var idx = {};
         SHEET_COLS.forEach(function (_a) {
             var _b = __read(_a, 2), k = _b[0], label = _b[1];
@@ -552,7 +561,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
         var get = function (r, k) { return idx[k] >= 0 ? String(r[idx[k]] || "").replace(/\r/g, "") : ""; };
         return table.rows.map(function (r) {
             var s = { title: get(r, "title").trim(), url: get(r, "url").trim(), start: get(r, "start").trim() || "0:00", end: get(r, "end").trim() || "0:30",
-                audio: get(r, "audio").trim(), transcript: get(r, "transcript").trim(), model: get(r, "model").trim(),
+                audio: get(r, "audio").trim(), transcript: get(r, "transcript").trim(), model: get(r, "model").trim(), icon: get(r, "icon").trim(), iconSvg: get(r, "iconSvg").trim(),
                 wordBank: idx.wordBank < 0 ? true : yes(get(r, "wordBank")), keyFeedback: idx.keyFeedback < 0 ? true : yes(get(r, "keyFeedback")) };
             var id = get(r, "id").trim();
             if (id)
@@ -564,7 +573,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     function copySheetRows() {
         var esc2 = function (t) { return String(t || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>"); };
         var head = SHEET_COLS.map(function (c) { return c[1]; });
-        var rows = lib.items.map(function (it) { var s = it.setup; return [it.id, s.title, s.url, s.start, s.end, s.audio, s.transcript, s.wordBank ? "yes" : "no", s.keyFeedback !== false ? "yes" : "no", s.model]; });
+        var rows = lib.items.map(function (it) { var s = it.setup; return [it.id, s.title, s.url, s.start, s.end, s.audio, s.transcript, s.wordBank ? "yes" : "no", s.keyFeedback !== false ? "yes" : "no", s.model, s.icon || "", s.iconSvg || ""]; });
         var html = "<table><tr>" + head.map(function (h) { return "<td>" + esc2(h) + "</td>"; }).join("") + "</tr>" + rows.map(function (r) { return "<tr>" + r.map(function (c) { return "<td>" + esc2(c) + "</td>"; }).join("") + "</tr>"; }).join("") + "</table>";
         var box = document.createElement("div");
         box.innerHTML = html;
@@ -713,6 +722,46 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
         return el.querySelector(s);
     };
     var esc = function (s) { return String(s !== null && s !== void 0 ? s : "").replace(/[&<>"]/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]); }); };
+    // ---------- exercise icons
+    // The sheet's "Icon" column holds a Lucide icon name (lucide.dev, ISC licence) or an emoji;
+    // "Icon SVG" holds that icon's shapes, so new icons need no app update. Only plain outline shapes are kept.
+    var ICON_TAGS = { path: ["d"], circle: ["cx", "cy", "r"], rect: ["x", "y", "width", "height", "rx", "ry"], line: ["x1", "y1", "x2", "y2"], polyline: ["points"], polygon: ["points"], ellipse: ["cx", "cy", "rx", "ry"] };
+    var ICON_FALLBACK = '<path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/>';
+    var iconCache = {};
+    function cleanIconSvg(src) {
+        if (!src)
+            return "";
+        if (src in iconCache)
+            return iconCache[src];
+        var out = "";
+        var re = /<\s*(path|circle|rect|line|polyline|polygon|ellipse)\b([^>]*)>/gi;
+        var m;
+        var _loop_1 = function () {
+            var tag = m[1].toLowerCase(), attrs = m[2];
+            var a = "";
+            ICON_TAGS[tag].forEach(function (k) {
+                var _a;
+                var v = new RegExp("\\s" + k + "\\s*=\\s*(\"([^\"]*)\"|'([^']*)')", "i").exec(attrs);
+                var val = v ? ((_a = v[2]) !== null && _a !== void 0 ? _a : v[3]) : null;
+                if (val != null && /^[-0-9.,\s MmLlHhVvCcSsQqTtAaZzEe]*$/.test(val))
+                    a += " ".concat(k, "=\"").concat(val, "\"");
+            });
+            if (a)
+                out += "<".concat(tag).concat(a, "/>");
+        };
+        while ((m = re.exec(src)) && out.length < 20000) {
+            _loop_1();
+        }
+        return iconCache[src] = out;
+    }
+    function iconHtml(s) {
+        var name = String(s.icon || "").trim(), shapes = cleanIconSvg(s.iconSvg);
+        if (!name && !shapes)
+            return "";
+        if (!shapes && name && !/^[a-z0-9-]+$/i.test(name))
+            return "<span class=\"picon emoji\" aria-hidden=\"true\">".concat(esc(name.slice(0, 8)), "</span>");
+        return "<span class=\"picon\" aria-hidden=\"true\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">".concat(shapes || ICON_FALLBACK, "</svg></span>");
+    }
     var toSec = function (t) { var p = String(t || "").trim().split(":").map(Number); if (p.some(isNaN))
         return 0; return p.reduce(function (a, b) { return a * 60 + b; }, 0); };
     var fmt = function (s) { return "".concat(Math.floor(s / 60), ":").concat(String(s % 60).padStart(2, "0")); };
@@ -1190,7 +1239,7 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
                 var status = work.checked ? T("finished", { r: right, t: ans.length }) : started ? T("stepsDone", { n: done }) : T("notStarted");
                 var label = work.checked ? T("review") : started ? T("cont") : T("start");
                 var last = i === lib.items.length - 1;
-                return "<li class=\"pitem ".concat(it.id === lib.current ? "current" : "", "\">\n      <span class=\"pnum\" aria-hidden=\"true\">").concat(String(i + 1).padStart(2, "0"), "</span>\n      <div class=\"pbody\">\n        <h3>").concat(esc(setup.title || T("untitled")), "</h3>\n        <span class=\"mono muted pmeta\">").concat(videoId(setup.url) ? "".concat(fmt(toSec(setup.start)), " \u2192 ").concat(fmt(toSec(setup.end))) : T("noVideo"), " \u00B7 ").concat(T("kwCount", { n: ans.length }), "</span>\n        <div class=\"pbar\" role=\"img\" aria-label=\"").concat(T("stepsDone", { n: done }), "\"><span style=\"width:").concat(done * 25, "%\"></span></div>\n        <span class=\"note ").concat(work.checked ? "pdone" : "", "\">").concat(status, "</span>\n      </div>\n      <div class=\"pact\">\n        <button class=\"btn ").concat(work.checked ? "ghost" : "", "\" data-open=\"").concat(it.id, "\">").concat(label, "</button>\n        ").concat(unlocked ? "<div class=\"ptools\">\n          <button class=\"btn quiet\" data-edit=\"".concat(it.id, "\">").concat(T("edit"), "</button>\n          <button class=\"btn quiet\" data-dup=\"").concat(it.id, "\">").concat(T("duplicate"), "</button>\n          <button class=\"btn quiet\" data-move=\"").concat(it.id, "\" data-dir=\"-1\" aria-label=\"").concat(T("moveUp"), "\" ").concat(i === 0 ? 'aria-disabled="true"' : "", ">\u2191</button>\n          <button class=\"btn quiet\" data-move=\"").concat(it.id, "\" data-dir=\"1\" aria-label=\"").concat(T("moveDown"), "\" ").concat(last ? 'aria-disabled="true"' : "", ">\u2193</button>\n          <button class=\"btn quiet pdel\" data-rm=\"").concat(it.id, "\">").concat(T("del"), "</button>\n        </div>") : "", "\n      </div>\n    </li>");
+                return "<li class=\"pitem ".concat(it.id === lib.current ? "current" : "", "\">\n      <span class=\"pnum\" aria-hidden=\"true\">").concat(String(i + 1).padStart(2, "0"), "</span>\n      <div class=\"pbody\">\n        <h3 class=\"ph3\">").concat(iconHtml(setup), "<span>").concat(esc(setup.title || T("untitled")), "</span></h3>\n        <span class=\"mono muted pmeta\">").concat(videoId(setup.url) ? "".concat(fmt(toSec(setup.start)), " \u2192 ").concat(fmt(toSec(setup.end))) : T("noVideo"), " \u00B7 ").concat(T("kwCount", { n: ans.length }), "</span>\n        <div class=\"pbar\" role=\"img\" aria-label=\"").concat(T("stepsDone", { n: done }), "\"><span style=\"width:").concat(done * 25, "%\"></span></div>\n        <span class=\"note ").concat(work.checked ? "pdone" : "", "\">").concat(status, "</span>\n      </div>\n      <div class=\"pact\">\n        <button class=\"btn ").concat(work.checked ? "ghost" : "", "\" data-open=\"").concat(it.id, "\">").concat(label, "</button>\n        ").concat(unlocked ? "<div class=\"ptools\">\n          <button class=\"btn quiet\" data-edit=\"".concat(it.id, "\">").concat(T("edit"), "</button>\n          <button class=\"btn quiet\" data-dup=\"").concat(it.id, "\">").concat(T("duplicate"), "</button>\n          <button class=\"btn quiet\" data-move=\"").concat(it.id, "\" data-dir=\"-1\" aria-label=\"").concat(T("moveUp"), "\" ").concat(i === 0 ? 'aria-disabled="true"' : "", ">\u2191</button>\n          <button class=\"btn quiet\" data-move=\"").concat(it.id, "\" data-dir=\"1\" aria-label=\"").concat(T("moveDown"), "\" ").concat(last ? 'aria-disabled="true"' : "", ">\u2193</button>\n          <button class=\"btn quiet pdel\" data-rm=\"").concat(it.id, "\">").concat(T("del"), "</button>\n        </div>") : "", "\n      </div>\n    </li>");
             }); };
             return "<section class=\"sheet\">\n    <div class=\"intro\"><span class=\"label\">".concat(T("pl_label"), "</span><h2>").concat(T("pl_h"), "</h2>\n    <p class=\"muted\">").concat(T("pl_intro"), "</p></div>\n    <ol class=\"plist\">").concat(lib.items.map(card).join(""), "</ol>\n    ").concat(canSync() ? "<div><button type=\"button\" class=\"btn quiet\" id=\"p-sync\">\u21BB Check for new exercises</button></div>" : "", "\n    ").concat(unlocked ? "<div class=\"group\">\n      <span class=\"label\">".concat(T("teacherTools"), "</span>\n      <div style=\"display:flex;gap:10px;flex-wrap:wrap\">\n        <button class=\"btn\" id=\"p-new\">").concat(T("newEx"), "</button>\n        <button class=\"btn ghost\" id=\"s-rows\">Copy for the spreadsheet</button>\n        <button class=\"btn ghost\" id=\"s-export\">").concat(T("copyCode"), "</button>\n        <button class=\"btn ghost\" id=\"s-importToggle\">").concat(T("loadCode"), "</button>\n      </div>\n      <div id=\"s-import\" hidden class=\"group\">\n        <span class=\"note\">").concat(T("pasteCodeNote"), "</span>\n        <textarea id=\"s-code\" placeholder=\"").concat(T("pastePh"), "\"></textarea>\n        <div><button class=\"btn\" id=\"s-load\">").concat(T("loadThis"), "</button></div>\n      </div>\n      <p class=\"note\">Learners get the exercises from the <a href=\"").concat(REMOTE_EDIT, "\" target=\"_blank\" rel=\"noopener\">exercises spreadsheet</a>, one exercise per row. Edit it directly, or build the exercises here, tap <b>Copy for the spreadsheet</b>, then in the sheet select all, delete, click cell A1 and paste. Learners\u2019 apps update the next time they open Listening Lab.</p>\n    </div>") : "<p class=\"note\">".concat(T("teachersUnlock", { btn: "<button type=\"button\" class=\"linkbtn\" data-go=\"setup\">".concat(T("teacherSetupLink"), "</button>") }), "</p>"), "\n  </section>");
         },
