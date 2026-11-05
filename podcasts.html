@@ -140,6 +140,11 @@
   .card img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:4px;background:var(--accent-soft)}
   .card b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-family:var(--font-head);font-size:.9rem;line-height:1.25;color:var(--text-strong)}
   .card span{font-size:.8rem;color:var(--text);display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+  .why-label{font:700 .68rem var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--emerald-dark);margin-top:2px}
+  .card .why{font-style:normal;font-size:.78rem;line-height:1.35;color:var(--text);text-align:left;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+  #whyBox{margin:10px 0 4px;padding:12px 14px;background:var(--accent-soft);border-left:4px solid var(--emerald);border-radius:4px}
+  #whyBox h3{margin:0 0 4px;font:700 .8rem var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--emerald-dark)}
+  #whyBox p{margin:0;font-size:.92rem;line-height:1.5;color:var(--text-strong)}
   #follow{margin-left:auto;flex:none;max-width:100%;background:#fff;color:var(--emerald-dark);border:1px solid var(--emerald);border-radius:4px;padding:8px 12px;font-weight:600;font-size:.85rem}
   #follow:hover{background:var(--accent-soft)}
   #follow.on{background:var(--emerald);color:#fff}
@@ -159,7 +164,7 @@
   #player.live .seek,#player.live #pBack,#player.live #pFwd,#player.live #pSpeed,
   body.radio-mode #player.idle .seek,body.radio-mode #player.idle #pBack,body.radio-mode #player.idle #pFwd,body.radio-mode #player.idle #pSpeed{display:none}
   #player.live #pShow{color:#c0392b;font-weight:600}
-  body.radio-mode .controls,body.radio-mode #chips,body.radio-mode .tabs,body.radio-mode #back,body.radio-mode #showHeader{display:none!important}
+  body.radio-mode .controls,body.radio-mode #chips,body.radio-mode .tabs,body.radio-mode #back,body.radio-mode #showHeader,body.radio-mode #whyBox{display:none!important}
   body.radio-mode #radioChips{margin-bottom:14px}
   .smeta .cc{font-style:normal;font-weight:700;color:var(--emerald-dark)}
   .xswitch{display:flex;width:max-content;max-width:100%;margin:26px auto 0;border:1px solid var(--emerald);border-radius:999px;overflow:hidden}
@@ -186,6 +191,8 @@
   #back,#follow{background:transparent}
   #follow.on{background:#49B190;color:#fff}
   .card:hover{box-shadow:0 4px 14px rgba(0,0,0,.45)}
+  #whyBox{background:#1d3a31}
+  .why-label,#whyBox h3{color:#7fcbb0}
 
   .site{background:#161e1b!important;border-bottom-color:#2f3b37!important}
   .brand-logo{background:#fff;border-radius:6px;padding:4px 8px;box-sizing:content-box}
@@ -274,6 +281,7 @@
   <div id="status" aria-live="polite"></div>
   <button id="back" hidden data-i18n="backResults">← Retour aux résultats</button>
   <div id="showHeader"><img id="shImg" alt=""><div><h2 id="shTitle"></h2><div class="info" id="shArtist"></div></div><button id="follow" type="button"></button></div>
+  <section id="whyBox" hidden aria-labelledby="whyH"><h3 id="whyH"></h3><p id="whyP"></p></section>
   <div id="results" lang="en"></div>
 </main>
 
@@ -353,7 +361,7 @@ var __read = (this && this.__read) || function (o, n) {
             recCount: "{n} podcasts recommended by Emerald", recEmpty: "No recommended podcasts yet.",
             recOffline: "Couldn't load the recommended list. Check your connection.", recWeb: "The recommended list is available in the Emerald Tools app.",
             mineEmpty: "You haven't added any podcasts yet. Open a podcast and tap “＋ Add to my podcasts”.", mineCount: "{n} podcasts in your list",
-            follow: "＋ Add to my podcasts", following: "✓ In my podcasts", followingT: "Tap to remove it from your list" },
+            follow: "＋ Add to my podcasts", following: "✓ In my podcasts", followingT: "Tap to remove it from your list", whyTitle: "Why listen?" },
         fr: { langGroup: "Langue", title: "Explorateur de podcasts", sub: "Trouvez des podcasts en anglais sur tous les sujets et écoutez-les ici.",
             placeholder: "Cherchez un thème en anglais, par ex. space, football, Ancient Rome…", search: "Rechercher", store: "Catalogue anglophone",
             c_US: "États-Unis", c_GB: "Royaume-Uni", c_AU: "Australie", c_CA: "Canada", c_IE: "Irlande",
@@ -373,7 +381,7 @@ var __read = (this && this.__read) || function (o, n) {
             recCount: "{n} podcasts recommandés par Emerald", recEmpty: "Aucun podcast recommandé pour l’instant.",
             recOffline: "Impossible de charger la liste recommandée. Vérifiez votre connexion.", recWeb: "La liste recommandée est disponible dans l’application Emerald Tools.",
             mineEmpty: "Vous n’avez encore ajouté aucun podcast. Ouvrez un podcast et touchez « ＋ Ajouter à mes podcasts ».", mineCount: "{n} podcasts dans votre liste",
-            follow: "＋ Ajouter à mes podcasts", following: "✓ Dans mes podcasts", followingT: "Touchez pour le retirer de votre liste" }
+            follow: "＋ Ajouter à mes podcasts", following: "✓ Dans mes podcasts", followingT: "Touchez pour le retirer de votre liste", whyTitle: "Pourquoi l’écouter ?" }
     };
     Object.assign(STR.en, { podSwitch: "Podcasts", radioSwitch: "Live radio", explorers: "Podcasts or live radio",
         radioTitle: "Radio Explorer", radioSub: "Listen live to English-language news, talk and documentary stations from the UK, Ireland, Australia, Canada, the US and New Zealand.",
@@ -483,9 +491,28 @@ var __read = (this && this.__read) || function (o, n) {
         });
     }
     // ---------- recommended (teacher's Google Doc) and my podcasts (this device) ----------
-    // Recommended podcasts: first column of this Google Sheet, one podcast (name or Apple Podcasts link) per row.
+    // Recommended podcasts come from this Google Sheet (shared as "Anyone with the link: Viewer"), one podcast per row:
+    //   A = podcast name or Apple Podcasts link, B = note for the teacher (not shown),
+    //   C = why it's worth listening to (shown to learners), D = the same in French (optional; C is used if empty).
     var REC_SHEET_ID = "1KUEjNRo7h1e_TSvnQs9VT4vPsULJu7kdxsphEXcv-LU";
+    // Built-in list, used when the sheet can't be read and nothing is cached yet.
+    var DEFAULT_REC = [
+        ["262026947",
+            "Six minutes, two presenters and one topical subject, with six useful words explained along the way. Clear British English at a comfortable pace: an easy daily habit, even on a coffee break.",
+            "Six minutes, deux présentateurs et un sujet d’actualité, avec six mots utiles expliqués au fil de l’épisode. Un anglais britannique clair, à un rythme confortable : une habitude facile à prendre chaque jour, même pendant une pause café."],
+        ["121493675",
+            "A five-minute news bulletin, updated every hour. Real American English at natural news speed: perfect for training your ear on authentic speech while keeping up with world events.",
+            "Un bulletin d’information de cinq minutes, mis à jour toutes les heures. De l’anglais américain authentique, au rythme réel des journalistes : idéal pour entraîner votre oreille tout en suivant l’actualité mondiale."],
+        ["1039991663",
+            "Short lessons on science, history and big ideas, told as stories. You learn something new each time while picking up the vocabulary used to explain and describe things in English.",
+            "De courtes leçons de sciences, d’histoire et de culture générale, racontées comme des histoires. Vous apprenez quelque chose de nouveau à chaque fois tout en enrichissant le vocabulaire qui sert à expliquer et décrire en anglais."],
+        ["957223102",
+            "Bite-sized lessons on everyday vocabulary, expressions and common mistakes, spoken slowly and clearly. A gentle start if you find native-speed English hard to follow.",
+            "Des mini-leçons sur le vocabulaire courant, les expressions et les erreurs fréquentes, avec une diction lente et claire. Un bon point de départ si l’anglais à vitesse native vous semble difficile à suivre."]
+    ];
     var slim = function (r) { return ({ collectionId: r.collectionId, collectionName: r.collectionName, artistName: r.artistName || "", artworkUrl600: r.artworkUrl600 || "", artworkUrl100: r.artworkUrl100 || "" }); };
+    var whyText = function (s) { return s ? (LANG === "fr" && s.whyFr ? s.whyFr : (s.why || "")) : ""; };
+    var recInfo = function (id) { return (state.rec || []).find(function (x) { return String(x.collectionId) === String(id); }); };
     var store = { get: function (k) { try {
             return JSON.parse(localStorage.getItem(k));
         }
@@ -526,44 +553,86 @@ var __read = (this && this.__read) || function (o, n) {
             });
         });
     }
+    function resolveRows(rows) {
+        return __awaiter(this, void 0, void 0, function () {
+            var shows;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, Promise.all(rows.map(function (row) { return __awaiter(_this, void 0, void 0, function () {
+                            var s;
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, resolveLine(row[0]).catch(function () { return null; })];
+                                    case 1:
+                                        s = _a.sent();
+                                        if (s) {
+                                            s.why = row[1] || "";
+                                            s.whyFr = row[2] || "";
+                                        }
+                                        return [2 /*return*/, s];
+                                }
+                            });
+                        }); }))];
+                    case 1:
+                        shows = _a.sent();
+                        return [2 /*return*/, shows.filter(Boolean)];
+                }
+            });
+        });
+    }
     function loadRecommended() {
         return __awaiter(this, void 0, void 0, function () {
-            var cache, table, lines, sig, shows, e_1;
+            var cache, rows, table, e_1, sig, shows, e_2;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!(window.EmeraldApp && window.EmeraldApp.sheet)) {
-                            state.rec = [];
-                            return [2 /*return*/, "recOffline"];
-                        }
                         cache = store.get("pod-rec-cache");
+                        rows = null;
                         _a.label = 1;
                     case 1:
-                        _a.trys.push([1, 4, , 5]);
+                        _a.trys.push([1, 3, , 4]);
+                        if (!(window.EmeraldApp && window.EmeraldApp.sheet))
+                            throw new Error("no sheet reader");
                         return [4 /*yield*/, window.EmeraldApp.sheet(REC_SHEET_ID)];
                     case 2:
                         table = _a.sent();
-                        lines = table.rows.map(function (r) { return String(r[0] || "").trim(); }).filter(Boolean);
-                        sig = JSON.stringify(lines) + "|" + country();
-                        if (cache && cache.sig === sig) {
+                        rows = table.rows.map(function (r) { return [String(r[0] || "").trim(), String(r[2] || "").trim(), String(r[3] || "").trim()]; }).filter(function (r) { return r[0]; });
+                        if (!rows.length)
+                            rows = null;
+                        return [3 /*break*/, 4];
+                    case 3:
+                        e_1 = _a.sent();
+                        rows = null;
+                        return [3 /*break*/, 4];
+                    case 4:
+                        if (!rows) {
+                            if (cache && cache.shows && cache.shows.length) {
+                                state.rec = cache.shows;
+                                return [2 /*return*/, null];
+                            } // offline: last known list
+                            rows = DEFAULT_REC; // sheet unreadable: built-in list
+                        }
+                        sig = "v2|" + JSON.stringify(rows) + "|" + country();
+                        if (cache && cache.sig === sig && cache.shows.length) {
                             state.rec = cache.shows;
                             return [2 /*return*/, null];
                         }
-                        return [4 /*yield*/, Promise.all(lines.map(function (l) { return resolveLine(l).catch(function () { return null; }); }))];
-                    case 3:
-                        shows = (_a.sent()).filter(Boolean);
+                        _a.label = 5;
+                    case 5:
+                        _a.trys.push([5, 7, , 8]);
+                        return [4 /*yield*/, resolveRows(rows)];
+                    case 6:
+                        shows = _a.sent();
                         state.rec = shows;
-                        store.set("pod-rec-cache", { sig: sig, shows: shows });
-                        return [2 /*return*/, null];
-                    case 4:
-                        e_1 = _a.sent();
-                        if (cache) {
-                            state.rec = cache.shows;
-                            return [2 /*return*/, null];
-                        } // offline: last known list
+                        if (shows.length)
+                            store.set("pod-rec-cache", { sig: sig, shows: shows });
+                        return [2 /*return*/, shows.length ? null : "recOffline"];
+                    case 7:
+                        e_2 = _a.sent();
                         state.rec = [];
                         return [2 /*return*/, "recOffline"];
-                    case 5: return [2 /*return*/];
+                    case 8: return [2 /*return*/];
                 }
             });
         });
@@ -584,6 +653,7 @@ var __read = (this && this.__read) || function (o, n) {
                         if (state.mode !== "rec")
                             return [2 /*return*/];
                         if (err) {
+                            state.rec = null;
                             setStatus(err);
                             return [2 /*return*/];
                         }
@@ -607,7 +677,18 @@ var __read = (this && this.__read) || function (o, n) {
         renderShows(state.mine);
         setStatus("mineCount", { n: state.mine.length });
     }
-    function hideShow() { state.inShow = false; $("back").hidden = true; $("showHeader").style.display = "none"; }
+    function hideShow() { state.inShow = false; $("back").hidden = true; $("showHeader").style.display = "none"; $("whyBox").hidden = true; }
+    // "Why listen?" panel on a recommended podcast's page.
+    function renderWhy() {
+        var box = $("whyBox");
+        var why = state.inShow && state.show ? whyText(recInfo(state.show.collectionId)) : "";
+        box.hidden = !why;
+        if (why) {
+            $("whyH").textContent = T("whyTitle");
+            $("whyP").textContent = why;
+            box.setAttribute("lang", LANG);
+        }
+    }
     function setFollow() {
         var b = $("follow");
         if (!state.show) {
@@ -722,7 +803,10 @@ var __read = (this && this.__read) || function (o, n) {
     function renderShows(list) {
         var box = $("results");
         box.className = "grid";
-        box.innerHTML = list.map(function (s) { return "<button class=\"card\" data-show=\"".concat(esc(s.collectionId), "\">\n      <img src=\"").concat(esc(s.artworkUrl600 || s.artworkUrl100 || ""), "\" alt=\"\" loading=\"lazy\">\n      <b>").concat(esc(s.collectionName), "</b><span>").concat(esc(s.artistName || ""), "</span></button>"); }).join("");
+        box.innerHTML = list.map(function (s) {
+            var why = state.mode === "rec" ? whyText(s) : "";
+            return "<button class=\"card".concat(why ? " has-why" : "", "\" data-show=\"").concat(esc(s.collectionId), "\">\n      <img src=\"").concat(esc(s.artworkUrl600 || s.artworkUrl100 || ""), "\" alt=\"\" loading=\"lazy\">\n      <b>").concat(esc(s.collectionName), "</b><span>").concat(esc(s.artistName || ""), "</span>\n      ").concat(why ? "<small class=\"why-label\" lang=\"".concat(LANG, "\">").concat(esc(T("whyTitle")), "</small><i class=\"why\" lang=\"").concat(LANG, "\">").concat(esc(why), "</i>") : "", "</button>");
+        }).join("");
     }
     function rerender() {
         if (state.mode === "radio" && !state.inShow) {
@@ -739,6 +823,7 @@ var __read = (this && this.__read) || function (o, n) {
         else
             renderShows(state.shows);
         setFollow();
+        renderWhy();
     }
     var currentList = function () { return state.episodes; };
     // ---------- actions ----------
@@ -757,6 +842,7 @@ var __read = (this && this.__read) || function (o, n) {
                         state.inShow = false;
                         $("back").hidden = true;
                         $("showHeader").style.display = "none";
+                        $("whyBox").hidden = true;
                         document.querySelectorAll(".chip").forEach(function (c) { return c.classList.toggle("active", c.dataset.t.toLowerCase() === term.toLowerCase()); });
                         $("q").value = term;
                         setStatus("searching", { t: term });
@@ -816,6 +902,7 @@ var __read = (this && this.__read) || function (o, n) {
                             $("shArtist").textContent = show.artistName || "";
                             $("showHeader").style.display = "flex";
                         }
+                        renderWhy();
                         renderEpisodes(eps);
                         eps.length ? setStatus("latest", { n: eps.length }) : setStatus("noPlayable");
                         window.scrollTo({ top: 0, behavior: "smooth" });
