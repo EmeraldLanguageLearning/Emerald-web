@@ -42,6 +42,9 @@ h1{font-family:var(--font-head);font-weight:300;text-transform:uppercase;color:v
   .install b{color:var(--text-strong)}
   .install a{color:var(--emerald-dark);font-weight:600}
   .install svg{width:16px;height:16px;vertical-align:-3px;stroke:currentColor;fill:none;stroke-width:2}
+.sec{text-align:center;padding:24px 0 0;border-top:1px solid var(--line)}
+.sec h2{font-family:var(--font-head);font-weight:400;text-transform:uppercase;color:var(--emerald-dark);font-size:clamp(1.3rem,4vw,1.9rem);letter-spacing:.03em;line-height:1.3;margin:24px 0 8px}
+.sec p{margin:0 auto;max-width:56ch}
 footer{border-top:1px solid var(--line);text-align:center;font-size:.8rem;color:var(--line-strong);padding:18px 0 calc(18px + env(safe-area-inset-bottom,0px))}
 @media (prefers-reduced-motion:reduce){.card{transition:none}}
 </style>
@@ -101,6 +104,24 @@ footer{border-top:1px solid var(--line);text-align:center;font-size:.8rem;color:
       <h2>Vocabulary Flashcards</h2><p>Study the vocabulary from your sessions with flashcards, or print them as PDF cards.</p><span class="go">Open →</span>
     </a>
   </section>
+  <section class="sec" aria-labelledby="exH">
+    <h2 id="exH" data-i18n="ex_h"></h2>
+    <p data-i18n="ex_d"></p>
+  </section>
+  <section class="cards">
+    <a class="card" href="great-vowel-shift.html">
+      <span class="circle" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M8 38 18 26l8 6 14-18"/><path d="M32 14h8v8"/></svg></span>
+      <h2 data-i18n="gvs_t"></h2><p data-i18n="gvs_d"></p><span class="go" data-i18n="open"></span>
+    </a>
+    <a class="card" href="british-american-english.html">
+      <span class="circle" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M6 24h12"/><path d="M18 24c8 0 8-10 24-10"/><path d="M18 24c8 0 8 10 24 10"/><circle cx="42" cy="14" r="2"/><circle cx="42" cy="34" r="2"/></svg></span>
+      <h2 data-i18n="ukus_t"></h2><p data-i18n="ukus_d"></p><span class="go" data-i18n="open"></span>
+    </a>
+    <a class="card" href="thou-to-you.html">
+      <span class="circle" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M6 10h22v14H16l-6 5v-5H6z"/><path d="M42 20H22v14h12l6 5v-5h2z"/></svg></span>
+      <h2 data-i18n="ty_t"></h2><p data-i18n="ty_d"></p><span class="go" data-i18n="open"></span>
+    </a>
+  </section>
 </main>
 <footer>Emerald Language Learning</footer>
 <script>(function () {
@@ -112,6 +133,10 @@ footer{border-top:1px solid var(--line);text-align:center;font-size:.8rem;color:
             ll_d: "Exercices d'écoute en quatre étapes sur des extraits vidéo (en anglais).",
             installIos: "<b>Sur iPad ou iPhone :</b> touchez Partager <svg viewBox='0 0 24 24' aria-hidden='true'><path d='M12 3v12M8 7l4-4 4 4'/><path d='M5 12v8h14v-8'/></svg> puis <b>Sur l’écran d’accueil</b> pour installer ces outils comme une application.",
             installAndroid: "<b>Sur Android :</b> <a href=\"EmeraldTools.apk\">téléchargez l’application Emerald Tools</a> et ouvrez le fichier pour l’installer.",
+            ex_h: "Comprendre l'histoire de l'anglais", ex_d: "Des schémas animés et sourcés qui expliquent pourquoi l'anglais est tel qu'il est.",
+            gvs_t: "Le Grand Changement vocalique", gvs_d: "Pourquoi bite, meet et house ne se prononcent plus comme ils s'écrivent.",
+            ukus_t: "Anglais britannique et américain", ukus_d: "Qui a changé quoi, et quand, de chaque côté de l'Atlantique.",
+            ty_t: "De thou à you", ty_d: "Comment l'anglais a perdu son tutoiement, et qui l'a gardé le plus longtemps.",
             pod_t: "Podcasts et radio", pod_d: "Trouvez des podcasts en anglais sur tous les sujets, ou écoutez la radio anglophone en direct." },
         en: { langGroup: "Language", title: "English Practise Tools", open: "Open →",
             intro: "Choose a tool to practise pronunciation, rhythm and listening.",
@@ -120,6 +145,10 @@ footer{border-top:1px solid var(--line);text-align:center;font-size:.8rem;color:
             ll_d: "Four-step listening exercises on video clips.",
             installIos: "<b>On iPad or iPhone:</b> tap Share <svg viewBox='0 0 24 24' aria-hidden='true'><path d='M12 3v12M8 7l4-4 4 4'/><path d='M5 12v8h14v-8'/></svg> then <b>Add to Home Screen</b> to install these tools as an app.",
             installAndroid: "<b>On Android:</b> <a href=\"EmeraldTools.apk\">download the Emerald Tools app</a> and open the file to install it.",
+            ex_h: "Understanding the history of English", ex_d: "Animated, sourced figures that explain why English is the way it is.",
+            gvs_t: "The Great Vowel Shift", gvs_d: "Why bite, meet and house no longer sound the way they are spelled.",
+            ukus_t: "British and American English", ukus_d: "Who changed what, and when, on each side of the Atlantic.",
+            ty_t: "From thou to you", ty_d: "How English lost its familiar “thou”, and who kept it longest.",
             pod_t: "Podcasts & Radio", pod_d: "Find English-language podcasts on any topic, or listen to live English-language radio." }
     };
     var LANG = "fr";

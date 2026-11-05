@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><script src="legacy.js"></script><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Emerald"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#49B190"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>From thou to you · Emerald Language Learning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --emerald:#49B190; --emerald-link:#53AC90; --emerald-dark:#457865; --emerald-soft:#72B1A0;
+  --text-strong:#323232; --text:#777777; --bg:#FFFFFF; --bg-soft:#F9F9F9;
+  --line:#DADADA; --line-strong:#BBBBBB; --hover:#3f9c7e;
+  --font-head:'Montserrat',sans-serif; --font-body:'Open Sans',sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-body);line-height:1.9}
+button{font-family:inherit}
+:focus-visible{outline:2px solid var(--emerald);outline-offset:2px}
+
+/* header */
+header.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 5%;border-bottom:1px solid var(--line);background:#fff;position:-webkit-sticky;position:sticky;top:0;z-index:10}
+header.top img{height:60px;width:auto;display:block}
+.lang{display:flex;border:1px solid var(--emerald);border-radius:4px;overflow:hidden}
+.lang button{border:0;background:#fff;color:var(--emerald-dark);font-weight:600;font-size:.85rem;padding:6px 12px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--emerald);color:#fff}
+.lang button+button{border-left:1px solid var(--emerald)}
+@media (max-width:600px){header.top img{height:44px}}
+
+main{width:90%;max-width:1080px;margin:0 auto;padding-bottom:60px}
+h1.section{font-family:var(--font-head);font-weight:300;text-transform:uppercase;color:var(--emerald-dark);text-align:center;font-size:clamp(2rem,5vw,3.4rem);line-height:1.25;margin:56px 0 8px;letter-spacing:.02em}
+p.lede{text-align:center;max-width:720px;margin:0 auto 36px}
+h2.sub{font-family:var(--font-head);font-weight:400;text-transform:uppercase;color:var(--emerald-dark);text-align:center;font-size:clamp(1.3rem,3vw,1.9rem);margin:56px 0 20px;letter-spacing:.03em}
+
+/* figure card (anima-style frame) */
+.card{position:relative;background:var(--bg-soft);border:1px solid var(--line);border-radius:4px;padding:48px 20px 52px}
+.card .fig{position:absolute;top:12px;left:16px;font-family:var(--font-head);font-weight:700;font-size:.8rem;color:var(--emerald-dark);letter-spacing:.08em;text-transform:uppercase}
+.card .ttl{position:absolute;top:12px;right:16px;font-family:var(--font-head);font-weight:400;font-size:.8rem;color:var(--text-strong);letter-spacing:.06em;text-transform:uppercase;text-align:right;max-width:60%}
+.card .hint{position:absolute;bottom:12px;left:16px;font-size:.75rem;max-width:48%;line-height:1.4}
+.card .readout{position:absolute;bottom:12px;right:16px;font-size:.8rem;color:var(--text-strong);font-weight:600;text-align:right;max-width:50%;line-height:1.4;font-variant-numeric:tabular-nums}
+@media (max-width:600px){.card{padding-top:12px}.card .fig,.card .ttl{position:static;display:block;max-width:none;text-align:left;margin-bottom:6px}.card .hint{display:none}.card .readout{max-width:90%}}
+
+.controls{display:flex;flex-wrap:wrap;gap:14px 26px;justify-content:center;align-items:center;margin:4px 0 10px}
+.seg{display:inline-flex;border:1px solid var(--emerald);border-radius:4px;overflow:hidden}
+.seg button{border:0;background:#fff;color:var(--emerald-dark);font-size:.8rem;font-weight:600;padding:5px 11px;cursor:pointer;line-height:1.5}
+.seg button+button{border-left:1px solid var(--emerald)}
+.seg button[aria-pressed="true"]{background:var(--emerald);color:#fff}
+.ctl-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;margin-right:8px;color:var(--text)}
+.btn{background:var(--emerald);color:#fff;border:0;border-radius:4px;padding:6px 14px;font-weight:600;font-size:.85rem;cursor:pointer}
+.btn:hover{background:var(--hover)}
+.btn.outline{background:#fff;color:var(--emerald-dark);border:1px solid var(--emerald)}
+.btn.outline:hover{background:#eef7f3}
+
+.timeline{display:flex;align-items:center;gap:14px;max-width:720px;margin:6px auto 0}
+.timeline .yr{font-family:var(--font-head);font-weight:700;color:var(--emerald-dark);font-size:1.6rem;min-width:110px;text-align:center;font-variant-numeric:tabular-nums}
+input[type=range]{flex:1;accent-color:var(--emerald);height:28px}
+.ticks{display:flex;justify-content:space-between;max-width:720px;margin:-4px auto 0;padding-left:124px;padding-right:2px;font-size:.7rem}
+@media (max-width:600px){.timeline .yr{min-width:80px;font-size:1.25rem}.ticks{padding-left:94px}}
+
+svg#chart{display:block;width:100%;max-width:760px;height:auto;margin:6px auto 0;overflow:visible}
+.ax{fill:none;stroke:var(--line-strong);stroke-width:1.2}
+.grid{stroke:var(--line);stroke-width:1;stroke-dasharray:0}
+.axlab{font-family:var(--font-body);font-size:calc(12px * var(--k,1));fill:var(--text)}
+.ref{font-family:var(--font-body);font-size:calc(13px * var(--k,1));fill:#b7b7b7}
+.path{fill:none;stroke-width:1.4;stroke-linecap:round;opacity:.35}
+.glide{fill:none;stroke-width:2.6;stroke-linecap:round}
+.dot{stroke:#fff;stroke-width:2;cursor:pointer}
+.wlab{font-family:var(--font-head);font-weight:700;font-size:calc(13px * var(--k,1));pointer-events:none}
+.ipa{font-family:var(--font-body);font-size:calc(12px * var(--k,1));fill:var(--text-strong);pointer-events:none}
+.order{font-family:var(--font-head);font-weight:700;font-size:calc(11px * var(--k,1));fill:#fff;pointer-events:none}
+g.v.dim{opacity:.18}
+g.v.off{opacity:.12}
+
+.info{min-height:3.4em;max-width:760px;margin:6px auto 0;text-align:center;font-size:.9rem;line-height:1.6;color:var(--text-strong)}
+.modelnote{max-width:760px;margin:4px auto 0;text-align:center;font-size:.8rem;line-height:1.6}
+
+/* word cards */
+.words{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;margin-top:22px}
+.w{background:#fff;border:1px solid var(--line);border-radius:4px;padding:12px 10px 10px;text-align:center;cursor:pointer;line-height:1.5;transition:border-color .2s}
+.w:hover,.w.sel{border-color:var(--emerald)}
+.w .wd{font-family:var(--font-head);font-weight:700;font-size:1.15rem;color:var(--text-strong)}
+.w .now{font-size:1.05rem;color:var(--emerald-dark);font-weight:600;margin-top:2px}
+.w .was{font-size:.72rem;margin-top:4px}
+.w .sw{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.w.off{opacity:.45}
+
+/* established vs debated */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media (max-width:720px){.two{grid-template-columns:1fr}}
+.feat{position:relative;background:var(--bg-soft);border-radius:4px;padding:64px 22px 22px;margin-top:46px;text-align:center}
+.feat .circ{position:absolute;top:-44px;left:50%;transform:translateX(-50%);width:88px;height:88px;border-radius:50%;background:var(--emerald);display:flex;align-items:center;justify-content:center}
+.feat h3{font-family:var(--font-head);font-weight:700;color:var(--text-strong);margin:0 0 10px;font-size:1.05rem}
+.feat ul{text-align:left;margin:0;padding-left:18px}
+.feat li{margin:6px 0;line-height:1.7}
+
+.src{font-size:.85rem;line-height:1.7}
+.src ol{padding-left:20px}
+.src li{margin:6px 0}
+.src a{color:var(--emerald-link)}
+.note{border-left:3px solid var(--emerald);padding:6px 14px;background:var(--bg-soft);font-size:.85rem;line-height:1.7;margin-top:18px}
+footer{border-top:1px solid var(--line);text-align:center;font-size:.75rem;padding:18px;line-height:1.6}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* Fig 3 */
+.howto{max-width:640px;margin:4px auto 14px;text-align:center;font-size:.95rem;line-height:1.6;color:var(--text-strong)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 22px;justify-content:center;font-size:.85rem;margin:14px 0 4px}
+.legend i{display:inline-block;width:22px;height:6px;border-radius:3px;margin-right:6px;vertical-align:3px}
+.modelnote{max-width:680px;margin:14px auto 0;padding:10px 16px;background:#fff;border:1px solid var(--line);border-radius:4px;text-align:left;font-size:.88rem;line-height:1.65}
+.rows{max-width:720px;margin:4px auto 0}
+.grp h4{font-family:var(--font-head);font-weight:700;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--emerald-dark);margin:28px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.row{display:grid;grid-template-columns:140px 1fr 120px;gap:18px;align-items:center;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:4px;padding:14px 16px;margin:10px 0;cursor:pointer;font:inherit;color:inherit;transition:border-color .2s}
+.row:hover,.row.sel{border-color:var(--emerald)}
+.who{font-family:var(--font-head);font-weight:700;color:var(--text-strong);font-size:.9rem;line-height:1.35}
+.who span{display:block;font-family:var(--font-body);font-weight:400;font-size:.8rem;color:var(--text)}
+.bub{border-left:5px solid;padding:6px 14px;background:var(--bg-soft);font-style:italic;color:var(--text-strong);font-size:1rem;line-height:1.55;transition:border-color .4s}
+.bub b{font-style:normal}
+.tag{text-align:center;font-family:var(--font-head);font-weight:700;font-size:1.2rem;line-height:1.3}
+.tag small{display:block;font-family:var(--font-body);font-weight:400;font-size:.7rem;color:var(--text);margin-top:2px}
+.info{margin-top:14px}
+.note.side{max-width:720px;margin:28px auto 0}
+@media (max-width:600px){.row{grid-template-columns:1fr auto;gap:10px}.bub{grid-column:1/-1;grid-row:2}}
+</style>
+</head>
+<body>
+<header class="top">
+  <a href="index.html" title="Home" aria-label="Emerald Language Learning – Home"><img alt="Emerald Language Learning" width="306" height="90" src="data:image/png;base64,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"></a>
+  <div class="lang" role="group" aria-label="Language / Langue">
+    <button type="button" data-lang="fr" aria-pressed="true">FR</button>
+    <button type="button" data-lang="en" aria-pressed="false">EN</button>
+  </div>
+</header>
+
+<main>
+  <h1 class="section" data-i18n="h1"></h1>
+  <p class="lede" data-i18n-html="lede"></p>
+
+  <section class="card" aria-labelledby="figttl">
+    <div class="fig" data-i18n="fig"></div>
+    <div class="ttl" id="figttl" data-i18n="figTitle"></div>
+
+    <p class="howto" data-i18n-html="howto"></p>
+    <div class="controls">
+      <div><span class="ctl-label" data-i18n="mode"></span>
+        <span class="seg" id="sideSeg">
+          <button type="button" data-v="all" aria-pressed="true" data-i18n="m_all"></button>
+          <button type="button" data-v="quaker" aria-pressed="false" data-i18n="m_quaker"></button>
+        </span></div>
+    </div>
+
+    <div class="timeline">
+      <div class="yr" id="yr">1200</div>
+      <input type="range" id="slider" min="1200" max="1800" step="1" value="1200" data-i18n-aria="sliderAria">
+      <button type="button" class="btn outline" id="play" data-i18n-aria="playAria">▶</button>
+    </div>
+    <div class="ticks" aria-hidden="true"><span>1200</span><span>1300</span><span>1400</span><span>1500</span><span>1600</span><span>1700</span><span>1800</span></div>
+
+    <div class="modelnote" id="modelnote"></div>
+    <div class="legend" id="legend"></div>
+    <div class="rows" id="rows" role="group" data-i18n-aria="chartAria"></div>
+    <aside class="note side" data-i18n-html="angrySide"></aside>
+    <div class="info" id="info" aria-live="polite"></div>
+
+
+    <div class="hint" data-i18n="hint"></div>
+    <div class="readout" id="readout"></div>
+  </section>
+
+  <h2 class="sub" data-i18n="howSure"></h2>
+  <div class="two">
+    <div class="feat">
+      <div class="circ" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+      <h3 data-i18n="estTitle"></h3>
+      <ul id="estList"></ul>
+    </div>
+    <div class="feat">
+      <div class="circ" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14"/><path d="M12 17.5h.01"/></svg></div>
+      <h3 data-i18n="debTitle"></h3>
+      <ul id="debList"></ul>
+    </div>
+  </div>
+
+  <h2 class="sub" data-i18n="srcTitle"></h2>
+  <div class="src">
+    <ol>
+      <li><a href="https://en.wikipedia.org/wiki/T%E2%80%93V_distinction_in_the_world%27s_languages">Wikipedia, “T–V distinction in the world’s languages”</a> (English section, drawing on the <i>Oxford English Dictionary</i>). <span data-i18n="s1"></span></li>
+      <li>Jucker, A. H. (2020). “Terms of address in Middle English”, ch. 4 of <i>Politeness in the History of English: From the Middle Ages to the Present Day</i>, pp. 53–77. Cambridge University Press. <a href="https://cambridge.org/core/books/politeness-in-the-history-of-english/terms-of-address-in-middle-english/0AC6DD8A9842D1045D59C3AEB71B715B">cambridge.org</a>. <span data-i18n="s2"></span></li>
+      <li>Harvard’s Geoffrey Chaucer Website, <a href="https://chaucer.fas.harvard.edu/lesson-5">“Lesson 5: Chaucer’s Grammar”</a>. <span data-i18n="s3"></span></li>
+      <li>Brown, R. &amp; Gilman, A. (1960). “The pronouns of power and solidarity.” In T. Sebeok (ed.), <i>Style in Language</i>, pp. 253–276. MIT Press. <span data-i18n="s4"></span> <a href="https://www.usc-teresafanego.es/7_1_fanego_sederi.pdf">Fanego, “Pronouns of address in Early Modern English” (summary)</a></li>
+      <li>Lass, R. (1999). “Phonology and morphology”, in R. Lass (ed.), <i>The Cambridge History of the English Language, Vol. III</i>, p. 153, as cited in <a href="https://cpercy.artsci.utoronto.ca/courses/6362Yaswen1.htm">University of Toronto course notes</a>. <span data-i18n="s5"></span></li>
+      <li>Walker, T. (2007). <i>Thou and You in Early Modern English Dialogues: Trials, Depositions, and Drama Comedy</i>. John Benjamins. <a href="https://benjamins.com/online/ebop/publications/45571">benjamins.com</a>. <span data-i18n="s6"></span></li>
+      <li>Coke, E., at the trial of Sir Walter Raleigh, Winchester, 17 November 1603, in Cobbett’s <i>State Trials</i>, vol. II. <a href="https://wehd.com/litcrit/Sir_Walter_Raleigh.html">extracts (wehd.com)</a>. <span data-i18n="s7"></span></li>
+      <li>Fox, G., Stubbs, J. &amp; Furly, B. (1660). <i>A Battle-Door for Teachers &amp; Professors to Learn Singular &amp; Plural</i>. London. <a href="https://www.themorgan.org/printed-books/172420">Morgan Library record</a>. <span data-i18n="s8"></span></li>
+    </ol>
+    <h3 style="font-family:var(--font-head);color:var(--text-strong);font-size:1rem;margin:22px 0 4px" data-i18n="simpTitle"></h3>
+    <ul id="simpList"></ul>
+    <div class="note" data-i18n-html="recon"></div>
+  </div>
+</main>
+<footer>Emerald Language Learning · <span data-i18n="footer"></span></footer>
+
+<script>var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+(function () {
+    "use strict";
+    var STR = {
+        en: {
+            h1: "From thou to you",
+            lede: "Old English had <b>thou</b> for one person and <b>ye/you</b> for several. From the 13th century, English copied French <i>tu</i> and <i>vous</i>: <b>you</b> became the polite way to speak to one person. Then polite <i>you</i> kept spreading, until by about 1700 ordinary speech had no <i>thou</i> left.",
+            howto: "Each line is one person speaking to another, with a sentence they might say. Watch the word they use for <b>“you”</b>: <b style=\"color:#b08a4a\">thou</b> was the familiar word, <b style=\"color:#49B190\">you</b> the polite one. Press ▶ to travel from 1200 to 1800.",
+            g_up: "Speaking up: to someone above you",
+            g_down: "Speaking down: to someone below you",
+            g_equal: "Speaking to an equal",
+            g_god: "Speaking to God",
+            both: "both in use",
+            angrySide: "<b>Side note: thou as an insult.</b> While thou was still in use, saying it to someone who expected <i>you</i> was a deliberate put-down, a bit like saying <i>tu</i> to a stranger in French today. At Sir Walter Raleigh’s treason trial in 1603, the prosecutor Edward Coke attacked him with “I thou thee, thou traitor!” Once thou had left everyday speech, it lost this sting.",
+            fig: "Fig 3", figTitle: "Who says thou to whom, 1200 to 1800",
+            mode: "Who is speaking?", m_all: "Most people", m_quaker: "A Quaker (from the 1650s)",
+            sliderAria: "Year", playAria: "Play or pause (Space)",
+            chartAria: "Relationships, grouped by direction, each with an example sentence using thou or you for the selected year.",
+            hint: "Press Space or drag the year. Tap a line for the story behind it.",
+            n_god: "God", n_lord: "Master", n_gent: "Gentleman", n_parent: "Parent", n_child: "Child", n_serv: "Servant", n_neigh: "Neighbour",
+            r_up: "Servant → master", r_down: "Master → servant", r_gentry: "Gentleman ↔ gentleman", r_commons: "Neighbour ↔ neighbour", r_childUp: "Child → parent", r_parentDown: "Parent → child", r_god: "Anyone → God",
+            thou: "thou", you: "you", mixed: "thou ~ you",
+            readout: "c. {y} · of 7 relationships: {a} thou, {m} mixed, {b} you",
+            since: "you from c. {d}", always: "thou throughout", quakerFrom: "Quakers: thou again from the 1650s",
+            x_up: "<b>Servant → master.</b> The first use of polite <i>you</i>: following French <i>vous</i>, people spoke to a superior with the plural, as to a king. It appears in the early 13th century and spreads fast in the second half.",
+            x_down: "<b>Master → servant.</b> The superior <b>gives thou and receives you</b> (Brown and Gilman’s “power” rule). Masters went on saying thou to servants into the 17th century, long after it had become rude elsewhere.",
+            x_gentry: "<b>Between upper-class equals</b> the polite form was mutual: gentlemen, ladies and spouses of rank said you to each other. Switching to thou signalled sudden closeness, or contempt (see the side note on insults).",
+            x_commons: "<b>Between lower-class equals</b> mutual thou stayed normal much longer. Polite you spread down the social ladder in the 16th and 17th centuries; thou lasted longest in country and northern speech.",
+            x_childUp: "<b>Child → parent.</b> The family followed the same power rule: parents gave thou, children (especially in well-off families) gave you. Practice varied a lot from family to family.",
+            x_parentDown: "<b>Parent → child.</b> Parents said thou to children, a sign of both authority and affection. In the 17th century this gave way too, and you became normal to children.",
+            x_god: "<b>Anyone → God.</b> God was always thou: intimate, not disrespectful. The King James Bible (1611) and the Prayer Book fixed this use, which is why thou now sounds solemn and religious, the opposite of its old everyday meaning.",
+            note_all: "<b>The pattern:</b> polite <i>you</i> started with people speaking <i>up</i> to their superiors (13th century), then spread to equals, and finally to people speaking <i>down</i>. By 1700 everyone said <i>you</i> to everyone, except to God.",
+            note_quaker: "<b>Why the Quakers matter.</b> By the 1650s, choosing thou or you was a way of showing rank: you to people above, thou to people below. The Quakers, a new religious movement, refused this. Since all people are equal before God, they said <i>thou</i> to everyone, even lords and judges (George Fox defended this in a book in 1660). People found it shocking, and Quakers were mocked and sometimes punished for it. Their protest shows that thou/you was about social rank, not grammar. It may also have made thou sound like a Quaker habit, one reason others stopped using it (debated).",
+            howSure: "How sure are we?",
+            estTitle: "Well established",
+            est: ["Old English <i>þū</i> (thou) was singular and <i>ġē</i> (ye) plural, with no politeness meaning.", "From the 13th century, under French influence, ye/you was used to address a superior politely.", "Superiors gave thou and received you; upper-class equals exchanged you; God was always thou.", "In the 16th century the object form you also replaced ye as the subject, leaving one form.", "By about 1700 thou had left ordinary standard speech; it survived in the Bible and prayer, among Quakers and in northern and western dialects."],
+            debTitle: "Still debated",
+            deb: ["<b>Why thou disappeared.</b> Usual explanations: polite you spread down the social ladder as the middle classes grew, until it was simply neutral; and thou became marked, linked with contempt and later with Quakers. Scholars weigh these differently.", "<b>How strict the rules were.</b> Brown and Gilman (1960) admit “much inexplicable fluctuation”, and corpus studies (Walker, 2007) show speakers switching between thou and you in one conversation, often to show emotion.", "<b>What you meant.</b> Some researchers see Early Modern you as already neutral, with only thou carrying special meaning; others argue you kept a polite, distant value as long as thou existed.", "Exact dates for each relationship: the evidence comes mostly from writing by educated people."],
+            srcTitle: "Sources",
+            s1: "Dates: first polite ye in the early 13th century, spread in the later 13th, ye/you merging in the 16th, thou leaving standard English in the 17th.",
+            s2: "Middle English took the two-pronoun system from French.",
+            s3: "Chaucer: thou to children and servants, ye to superiors, used fairly but not fully consistently.",
+            s4: "The power and solidarity rules: superior gives thou and receives you; upper-class equals say you, lower-class equals thou.",
+            s5: "By the mid-18th century you was the only normal spoken form.",
+            s6: "Corpus study of thou and you in trials, depositions and comedies, 1560–1760.",
+            s7: "Coke’s use of thou against Raleigh.",
+            s8: "The Quaker defence of thou to one person and you to many.",
+            simpTitle: "What this figure simplifies",
+            simp: ["Only seven relationships are shown; real choices also depended on mood, topic, age, gender and place.", "“Most people” means mainly southern, London-based English. Northern and western dialects kept thou (e.g. Yorkshire <i>tha</i>) into the 20th century.", "Each change is placed near a round date; the grey “thou ~ you” stage means both were in use.", "The forms thee, thy, thine and ye are grouped under thou and you."],
+            recon: "<b>Written evidence only.</b> We know this from letters, plays, sermons and trial records, not recordings. Plays may exaggerate, and ordinary speakers left few traces. Dates are approximate.",
+            footer: "Educational illustration of the history of English."
+        },
+        fr: {
+            h1: "De thou à you",
+            lede: "Le vieil anglais avait <b>thou</b> pour une personne et <b>ye/you</b> pour plusieurs. À partir du XIII<sup>e</sup> siècle, l’anglais a copié le <i>tu</i> et le <i>vous</i> du français : <b>you</b> est devenu la façon polie de s’adresser à une personne. Puis ce <i>you</i> poli n’a cessé de s’étendre, si bien que vers 1700 il n’y avait plus de <i>thou</i> dans la langue courante.",
+            howto: "Chaque ligne montre une personne qui parle à une autre, avec une phrase qu’elle pourrait dire. Regardez le mot employé pour <b>« you »</b> : <b style=\"color:#b08a4a\">thou</b> était le mot familier (comme « tu »), <b style=\"color:#49B190\">you</b> le mot poli (comme « vous »). Appuyez sur ▶ pour voyager de 1200 à 1800.",
+            g_up: "Parler à quelqu’un au-dessus de soi",
+            g_down: "Parler à quelqu’un en dessous de soi",
+            g_equal: "Parler à un égal",
+            g_god: "Parler à Dieu",
+            both: "les deux coexistent",
+            angrySide: "<b>À noter : thou comme insulte.</b> Tant que thou existait, l’employer avec quelqu’un qui attendait <i>you</i> était une façon délibérée de le rabaisser, un peu comme tutoyer un inconnu aujourd’hui en français. Au procès pour trahison de Sir Walter Raleigh en 1603, le procureur Edward Coke l’a attaqué par « I thou thee, thou traitor! » (« Je te tutoie, toi le traître ! »). Une fois thou sorti de la langue courante, l’insulte a perdu sa force.",
+            fig: "Fig 3", figTitle: "Qui tutoie qui, de 1200 à 1800",
+            mode: "Qui parle ?", m_all: "La plupart des gens", m_quaker: "Un quaker (dès les années 1650)",
+            sliderAria: "Année", playAria: "Lecture ou pause (Espace)",
+            chartAria: "Relations, regroupées par direction, chacune avec une phrase d’exemple employant thou ou you pour l’année choisie.",
+            hint: "Appuyez sur Espace ou faites glisser l’année. Touchez une ligne pour son histoire.",
+            n_god: "Dieu", n_lord: "Maître", n_gent: "Gentilhomme", n_parent: "Parent", n_child: "Enfant", n_serv: "Serviteur", n_neigh: "Voisin",
+            r_up: "Serviteur → maître", r_down: "Maître → serviteur", r_gentry: "Gentilhomme ↔ gentilhomme", r_commons: "Voisin ↔ voisin", r_childUp: "Enfant → parent", r_parentDown: "Parent → enfant", r_god: "Tout le monde → Dieu",
+            thou: "thou", you: "you", mixed: "thou ~ you",
+            readout: "v. {y} · sur 7 relations : {a} thou, {m} mixtes, {b} you",
+            since: "you dès v. {d}", always: "thou à toutes les époques", quakerFrom: "Quakers : de nouveau thou dès les années 1650",
+            x_up: "<b>Serviteur → maître.</b> Le premier emploi du <i>you</i> de politesse : sur le modèle du <i>vous</i> français, on s’adressait à un supérieur au pluriel, comme à un roi. Il apparaît au début du XIII<sup>e</sup> siècle et se répand vite dans la seconde moitié.",
+            x_down: "<b>Maître → serviteur.</b> Le supérieur <b>donne thou et reçoit you</b> (la règle du « pouvoir » de Brown et Gilman). Les maîtres ont continué à dire thou à leurs serviteurs jusqu’au XVII<sup>e</sup> siècle, bien après que ce soit devenu impoli ailleurs.",
+            x_gentry: "<b>Entre égaux des classes aisées</b>, la politesse était réciproque : gentilshommes, dames et époux de rang se disaient you. Passer à thou marquait une soudaine intimité, ou du mépris (voir la note sur les insultes).",
+            x_commons: "<b>Entre égaux des classes populaires</b>, le thou réciproque est resté normal bien plus longtemps. Le you poli a descendu l’échelle sociale aux XVI<sup>e</sup> et XVII<sup>e</sup> siècles ; thou a duré le plus longtemps à la campagne et dans le nord.",
+            x_childUp: "<b>Enfant → parent.</b> La famille suivait la même règle de pouvoir : les parents donnaient thou, les enfants (surtout dans les familles aisées) donnaient you. Les usages variaient beaucoup d’une famille à l’autre.",
+            x_parentDown: "<b>Parent → enfant.</b> Les parents disaient thou aux enfants, signe à la fois d’autorité et d’affection. Au XVII<sup>e</sup> siècle, cet usage a cédé lui aussi, et you est devenu normal avec les enfants.",
+            x_god: "<b>Tout le monde → Dieu.</b> On a toujours dit thou à Dieu : un tutoiement intime, pas irrespectueux. La Bible du roi Jacques (1611) et le livre de prières ont figé cet usage : voilà pourquoi thou sonne aujourd’hui solennel et religieux, le contraire de son ancien sens courant.",
+            note_all: "<b>Le schéma :</b> le <i>you</i> poli a commencé chez ceux qui s’adressaient à leurs supérieurs (XIII<sup>e</sup> siècle), s’est étendu aux égaux, puis enfin à ceux qui parlaient à leurs inférieurs. Vers 1700, tout le monde disait <i>you</i> à tout le monde, sauf à Dieu.",
+            note_quaker: "<b>Pourquoi les quakers comptent.</b> Dans les années 1650, choisir thou ou you servait à marquer le rang : you vers le haut, thou vers le bas. Les quakers, un nouveau mouvement religieux, ont refusé ce système. Tous étant égaux devant Dieu, ils disaient <i>thou</i> à tout le monde, même aux seigneurs et aux juges (George Fox l’a défendu dans un livre en 1660). Cela choquait : les quakers étaient moqués, parfois punis. Leur protestation montre que thou/you était une affaire de rang social, pas de grammaire. Elle a peut-être aussi fait de thou une habitude « quaker », une des raisons pour lesquelles les autres l’ont abandonné (débattu).",
+            howSure: "Quel est notre degré de certitude ?",
+            estTitle: "Bien établi",
+            est: ["En vieil anglais, <i>þū</i> (thou) était singulier et <i>ġē</i> (ye) pluriel, sans aucune nuance de politesse.", "À partir du XIII<sup>e</sup> siècle, sous l’influence du français, ye/you s’est employé pour s’adresser poliment à un supérieur.", "Les supérieurs donnaient thou et recevaient you ; les égaux des classes aisées se disaient you ; Dieu recevait toujours thou.", "Au XVI<sup>e</sup> siècle, la forme complément you a aussi remplacé ye comme sujet : il ne restait qu’une forme.", "Vers 1700, thou avait disparu de la langue standard courante ; il a survécu dans la Bible et la prière, chez les quakers et dans les dialectes du nord et de l’ouest."],
+            debTitle: "Encore débattu",
+            deb: ["<b>Pourquoi thou a disparu.</b> Explications courantes : le you poli a descendu l’échelle sociale avec l’essor des classes moyennes, jusqu’à devenir simplement neutre ; et thou est devenu marqué, associé au mépris puis aux quakers. Les chercheurs leur accordent un poids différent.", "<b>Des règles plus ou moins strictes.</b> Brown et Gilman (1960) reconnaissent eux-mêmes beaucoup de fluctuations inexpliquées, et les études de corpus (Walker, 2007) montrent des locuteurs qui passent de thou à you dans une même conversation, souvent pour exprimer une émotion.", "<b>Le sens de you.</b> Pour certains chercheurs, le you de l’anglais moderne naissant était déjà neutre, seul thou ayant un sens particulier ; d’autres pensent que you a gardé une valeur polie et distante tant que thou existait.", "Les dates exactes pour chaque relation : les sources sont surtout des écrits de personnes instruites."],
+            srcTitle: "Sources",
+            s1: "Dates : premier ye de politesse au début du XIII<sup>e</sup> siècle, diffusion à la fin du XIII<sup>e</sup>, fusion de ye et you au XVI<sup>e</sup>, disparition de thou de l’anglais standard au XVII<sup>e</sup>.",
+            s2: "Le moyen anglais a emprunté au français le système à deux pronoms.",
+            s3: "Chaucer : thou aux enfants et aux serviteurs, ye aux supérieurs, de façon assez mais pas totalement régulière.",
+            s4: "Les règles de pouvoir et de solidarité : le supérieur donne thou et reçoit you ; les égaux des classes aisées se disent you, ceux des classes populaires thou.",
+            s5: "Au milieu du XVIII<sup>e</sup> siècle, you était la seule forme orale normale.",
+            s6: "Étude de corpus de thou et you dans des procès, des dépositions et des comédies, 1560–1760.",
+            s7: "Le thou de Coke contre Raleigh.",
+            s8: "La défense quaker de thou pour une personne et you pour plusieurs.",
+            simpTitle: "Ce que cette figure simplifie",
+            simp: ["Seules sept relations sont montrées ; le choix dépendait aussi de l’humeur, du sujet, de l’âge, du sexe et du lieu.", "« La plupart des gens » désigne surtout l’anglais du sud, centré sur Londres. Les dialectes du nord et de l’ouest ont gardé thou (par ex. <i>tha</i> dans le Yorkshire) jusqu’au XX<sup>e</sup> siècle.", "Chaque changement est placé près d’une date ronde ; l’étape grise « thou ~ you » signifie que les deux formes coexistaient.", "Les formes thee, thy, thine et ye sont regroupées sous thou et you."],
+            recon: "<b>Seulement des sources écrites.</b> On connaît ces usages par des lettres, des pièces de théâtre, des sermons et des comptes rendus de procès, pas par des enregistrements. Le théâtre peut exagérer, et les gens ordinaires ont laissé peu de traces. Les dates sont approximatives.",
+            footer: "Illustration pédagogique de l’histoire de l’anglais."
+        }
+    };
+    var lang = "fr";
+    try {
+        var s = localStorage.getItem("ell-lang");
+        if (s === "en" || s === "fr")
+            lang = s;
+    }
+    catch (e) { }
+    function T(k, v) { var _a, _b; var s = ((_b = (_a = STR[lang][k]) !== null && _a !== void 0 ? _a : STR.en[k]) !== null && _b !== void 0 ? _b : k); if (v)
+        s = s.replace(/\{(\w+)\}/g, function (m, n) { return v[n] !== undefined ? v[n] : m; }); return s; }
+    function applyStatic() {
+        document.documentElement.lang = lang;
+        document.querySelectorAll("[data-i18n]").forEach(function (el) { return el.textContent = T(el.dataset.i18n); });
+        document.querySelectorAll("[data-i18n-html]").forEach(function (el) { return el.innerHTML = T(el.dataset.i18nHtml); });
+        document.querySelectorAll("[data-i18n-aria]").forEach(function (el) { return el.setAttribute("aria-label", T(el.dataset.i18nAria)); });
+        var list = function (id, k) { document.getElementById(id).innerHTML = STR[lang][k].map(function (x) { return "<li>" + x + "</li>"; }).join(""); };
+        list("estList", "est");
+        list("debList", "deb");
+        list("simpList", "simp");
+        document.querySelectorAll(".lang button").forEach(function (b) { return b.setAttribute("aria-pressed", String(b.dataset.lang === lang)); });
+    }
+    /* ---------- the model: pronoun per relationship per stage ---------- */
+    // T = thou, M = both in use, Y = you. Stages are approximate (see sources 1, 4, 5).
+    var STAGES = [1200, 1300, 1450, 1580, 1640, 1720];
+    var REL = [
+        { id: "up", a: "serv", b: "lord", off: -16, std: "TYYYYY", lab: [-14, 0, "end"], ex: ["Wilt thou ride today, my lord?", "Will you ride today, my lord?"] },
+        { id: "down", a: "lord", b: "serv", off: -16, std: "TTTTMY", lab: [14, 0, "start"], ex: ["Fetch thy cloak, boy.", "Fetch your cloak, boy."] },
+        { id: "gentry", a: "lord", b: "gent", both: 1, std: "TMYYYY", lab: [-110, -12, "middle"], ex: ["Thou art welcome, sir.", "You are welcome, sir."] },
+        { id: "commons", a: "serv", b: "neigh", both: 1, std: "TTTTMY", lab: [0, 30, "middle"], ex: ["How dost thou, neighbour?", "How do you, neighbour?"] },
+        { id: "childUp", a: "child", b: "parent", off: -16, std: "TMYYYY", lab: [-14, 0, "end"], ex: ["Father, thou art home!", "Father, you are home!"] },
+        { id: "parentDown", a: "parent", b: "child", off: -16, std: "TTTTMY", lab: [14, 0, "start"], ex: ["Where hast thou been, child?", "Where have you been, child?"] },
+        { id: "god", a: "parent", b: "god", dash: 1, std: "TTTTTT", lab: [14, -26, "start"], ex: ["Thy will be done.", "Thy will be done."] }
+    ];
+    var V = { T: 0, M: .5, Y: 1 };
+    var ease = function (t) { return t <= 0 ? 0 : t >= 1 ? 1 : t * t * (3 - 2 * t); };
+    var ramp = function (y, a, b) { return ease((y - a) / (b - a)); };
+    // 0 = thou … 1 = you, for one relationship, one year, one speaker type
+    function valueAt(r, y, mode) {
+        var i = 0;
+        while (i < STAGES.length - 1 && y >= STAGES[i + 1])
+            i++;
+        var v = V[r.std[i]];
+        if (i < STAGES.length - 1) {
+            var n = STAGES[i + 1];
+            v += (V[r.std[i + 1]] - v) * ramp(y, n - 30, n);
+        }
+        if (r.id !== "god") {
+            if (mode === "angry")
+                v *= ramp(y, 1660, 1700); // thou as insult, while thou is alive
+            if (mode === "quaker")
+                v *= 1 - ramp(y, 1640, 1660); // Quaker plain speech from the 1650s
+        }
+        return v;
+    }
+    var word = function (v) { return v < .25 ? "thou" : v > .75 ? "you" : "mixed"; };
+    var C_T = [176, 138, 74], C_Y = [73, 177, 144];
+    var C_M = [138, 138, 138], mix = function (p, q, t) { return p.map(function (c, k) { return Math.round(c + (q[k] - c) * t); }); };
+    var col = function (v) { return "rgb(" + (v < .5 ? mix(C_T, C_M, v * 2) : mix(C_M, C_Y, (v - .5) * 2)).join(",") + ")"; };
+    var colWord = function (w) { return w === "thou" ? col(0) : w === "you" ? col(1) : "#8a8a8a"; };
+    /* ---------- drawing: one row per relationship, grouped by direction ---------- */
+    var GROUPS = [["g_up", ["up", "childUp"]], ["g_down", ["down", "parentDown"]], ["g_equal", ["gentry", "commons"]], ["g_god", ["god"]]];
+    var rowsEl = document.getElementById("rows");
+    var side = "all", selected = null;
+    var R = {};
+    var hi = function (s) { return s.replace(/\b(thou|thee|thy|thine|hast|wilt|dost|art|you|your)\b/gi, "<b>$1</b>"); };
+    function build() {
+        rowsEl.innerHTML = "";
+        R.g = [];
+        GROUPS.forEach(function (_a) {
+            var _b = __read(_a, 2), gk = _b[0], ids = _b[1];
+            var g = document.createElement("div");
+            g.className = "grp";
+            var h = document.createElement("h4");
+            g.appendChild(h);
+            R.g.push([h, gk]);
+            ids.forEach(function (id) {
+                var r = REL.find(function (x) { return x.id === id; }), b = document.createElement("button");
+                b.type = "button";
+                b.className = "row";
+                b.dataset.id = id;
+                b.innerHTML = "<div class=\"who\"></div><div class=\"bub\"></div><div class=\"tag\"></div>";
+                ["pointerenter", "focus", "click"].forEach(function (ev) { return b.addEventListener(ev, function () { return select(id); }); });
+                g.appendChild(b);
+                R[id] = b;
+            });
+            rowsEl.appendChild(g);
+        });
+        labels();
+    }
+    function labels() {
+        R.g.forEach(function (_a) {
+            var _b = __read(_a, 2), h = _b[0], k = _b[1];
+            return h.textContent = T(k);
+        });
+        document.getElementById("legend").innerHTML = "<span><i style=\"background:".concat(col(0), "\"></i>thou</span><span><i style=\"background:#8a8a8a\"></i>").concat(T("both"), "</span><span><i style=\"background:").concat(col(1), "\"></i>you</span>");
+    }
+    function buildCards() { }
+    function rescale() { }
+    /* ---------- rows, info, readout ---------- */
+    var info = document.getElementById("info"), readout = document.getElementById("readout"), modelnote = document.getElementById("modelnote");
+    function whenText(r) {
+        if (r.id === "god")
+            return T("always");
+        if (side === "quaker")
+            return T("quakerFrom");
+        return T("since", { d: STAGES[r.std.indexOf("Y")] });
+    }
+    function draw(y) {
+        var a = 0, b = 0, m = 0;
+        REL.forEach(function (r) {
+            var v = valueAt(r, y, side), w = word(v), c = colWord(w), el = R[r.id];
+            if (w === "thou")
+                a++;
+            else if (w === "you")
+                b++;
+            else
+                m++;
+            var _a = __read(T("r_" + r.id).split(/ [→↔] /), 2), s = _a[0], l = _a[1];
+            var arr = T("r_" + r.id).includes("↔") ? "↔ " : "→ ";
+            el.querySelector(".who").innerHTML = "".concat(s, "<span>").concat(arr).concat(l, "</span>");
+            var bub = el.querySelector(".bub");
+            bub.style.borderLeftColor = c;
+            bub.innerHTML = w === "thou" ? hi(r.ex[0]) : w === "you" ? hi(r.ex[1]) : hi(r.ex[0]) + "<br>" + hi(r.ex[1]);
+            el.querySelector(".tag").innerHTML = "<span style=\"color:".concat(c, "\">").concat(w === "mixed" ? "thou / you" : w, "</span><small>").concat(w === "mixed" ? T("both") : whenText(r), "</small>");
+            el.classList.toggle("sel", selected === r.id);
+        });
+        readout.textContent = T("readout", { y: Math.round(y), a: a, m: m, b: b });
+        modelnote.innerHTML = T("note_" + side);
+    }
+    function updateInfo() { info.innerHTML = selected ? T("x_" + selected) : ""; }
+    function select(id) { selected = id; R[id].after(info); updateInfo(); draw(shown); }
+    /* ---------- motion ---------- */
+    var slider = document.getElementById("slider"), yrEl = document.getElementById("yr"), playBtn = document.getElementById("play");
+    var reduced = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var target = 1200, shown = 1200, playing = !reduced, onscreen = true, last = performance.now(), hold = 0, raf = 0;
+    var setYear = function (y) { yrEl.textContent = (lang === "fr" ? "v. " : "c. ") + Math.round(y); };
+    var setPlay = function () { playBtn.textContent = playing ? "❚❚" : "▶"; playBtn.setAttribute("aria-pressed", String(playing)); };
+    function frame(now) {
+        raf = 0;
+        var dt = Math.min(.1, (now - last) / 1000);
+        last = now;
+        if (playing) {
+            if (target >= 1800) {
+                hold += dt;
+                if (hold > 3) {
+                    target = shown = 1200;
+                    hold = 0;
+                }
+            }
+            else
+                target = Math.min(1800, target + dt * 26);
+            slider.value = Math.round(target);
+        }
+        shown += (target - shown) * (1 - Math.exp(-dt * 6));
+        if (Math.abs(target - shown) < .05)
+            shown = target;
+        setYear(shown);
+        draw(shown);
+        if (onscreen && (playing || shown !== target))
+            raf = requestAnimationFrame(frame);
+    }
+    function kick() { if (!raf && onscreen) {
+        last = performance.now();
+        raf = requestAnimationFrame(frame);
+    } }
+    slider.addEventListener("input", function () { playing = false; setPlay(); target = +slider.value; if (reduced) {
+        shown = target;
+        setYear(shown);
+        draw(shown);
+    }
+    else
+        kick(); });
+    playBtn.addEventListener("click", function () { playing = !playing; if (playing && target >= 1800) {
+        target = shown = 1200;
+    } setPlay(); kick(); });
+    document.addEventListener("keydown", function (e) { if (e.code === "Space" && !/INPUT|BUTTON|TEXTAREA/.test(document.activeElement.tagName) && !(document.activeElement.closest && document.activeElement.closest("svg"))) {
+        e.preventDefault();
+        playBtn.click();
+    } });
+    if ("IntersectionObserver" in window)
+        new IntersectionObserver(function (es) { onscreen = es[0].isIntersecting; if (onscreen)
+            kick(); }).observe(rowsEl);
+    document.getElementById("sideSeg").addEventListener("click", function (e) { var b = e.target.closest("button"); if (!b)
+        return; document.querySelectorAll("#sideSeg button").forEach(function (x) { return x.setAttribute("aria-pressed", String(x === b)); }); side = b.dataset.v; draw(shown); });
+    document.querySelectorAll(".lang button").forEach(function (b) { return b.addEventListener("click", function () { lang = b.dataset.lang; try {
+        localStorage.setItem("ell-lang", lang);
+    }
+    catch (e) { } applyStatic(); labels(); updateInfo(); setYear(shown); draw(shown); }); });
+    window.addEventListener("resize", function () { rescale(); draw(shown); });
+    applyStatic();
+    build();
+    buildCards();
+    rescale();
+    if (reduced) {
+        target = shown = 1600;
+        slider.value = 1600;
+    }
+    setPlay();
+    setYear(shown);
+    draw(shown);
+    kick();
+})();
+</script>
+</body>
+</html>
