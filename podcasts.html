@@ -142,6 +142,11 @@
   .card span{font-size:.8rem;color:var(--text);display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
   .why-label{font:700 .68rem var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--emerald-dark);margin-top:2px}
   .card .why{font-style:normal;font-size:.78rem;line-height:1.35;color:var(--text);text-align:left;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+  .rec-group{margin:14px 0 22px}
+  .rec-h{display:flex;align-items:center;gap:8px;margin:0 0 4px;font-family:var(--font-head);font-weight:700;font-size:1.05rem;color:var(--text-strong)}
+  .rec-ic{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:var(--accent-soft);font-size:1rem}
+  .rec-p{margin:0 0 4px;font-size:.88rem;line-height:1.45;color:var(--text);max-width:70ch}
+  .rec-group+.rec-group{border-top:1px solid var(--line);padding-top:18px}
   #whyBox{margin:10px 0 4px;padding:12px 14px;background:var(--accent-soft);border-left:4px solid var(--emerald);border-radius:4px}
   #whyBox h3{margin:0 0 4px;font:700 .8rem var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--emerald-dark)}
   #whyBox p{margin:0;font-size:.92rem;line-height:1.5;color:var(--text-strong)}
@@ -361,7 +366,9 @@ var __read = (this && this.__read) || function (o, n) {
             recCount: "{n} podcasts recommended by Emerald", recEmpty: "No recommended podcasts yet.",
             recOffline: "Couldn't load the recommended list. Check your connection.", recWeb: "The recommended list is available in the Emerald Tools app.",
             mineEmpty: "You haven't added any podcasts yet. Open a podcast and tap “＋ Add to my podcasts”.", mineCount: "{n} podcasts in your list",
-            follow: "＋ Add to my podcasts", following: "✓ In my podcasts", followingT: "Tap to remove it from your list", whyTitle: "Why listen?" },
+            follow: "＋ Add to my podcasts", following: "✓ In my podcasts", followingT: "Tap to remove it from your list", whyTitle: "Why listen?",
+            activeH: "Active listening", activeP: "Sit down, focus and listen carefully, ideally more than once. Best for learning new words and checking you understand.",
+            passiveH: "Passive listening", passiveP: "Play it in the background while you commute, cook or work. Great for immersion: it gets your ear used to the sound and rhythm of English." },
         fr: { langGroup: "Langue", title: "Explorateur de podcasts", sub: "Trouvez des podcasts en anglais sur tous les sujets et écoutez-les ici.",
             placeholder: "Cherchez un thème en anglais, par ex. space, football, Ancient Rome…", search: "Rechercher", store: "Catalogue anglophone",
             c_US: "États-Unis", c_GB: "Royaume-Uni", c_AU: "Australie", c_CA: "Canada", c_IE: "Irlande",
@@ -381,7 +388,9 @@ var __read = (this && this.__read) || function (o, n) {
             recCount: "{n} podcasts recommandés par Emerald", recEmpty: "Aucun podcast recommandé pour l’instant.",
             recOffline: "Impossible de charger la liste recommandée. Vérifiez votre connexion.", recWeb: "La liste recommandée est disponible dans l’application Emerald Tools.",
             mineEmpty: "Vous n’avez encore ajouté aucun podcast. Ouvrez un podcast et touchez « ＋ Ajouter à mes podcasts ».", mineCount: "{n} podcasts dans votre liste",
-            follow: "＋ Ajouter à mes podcasts", following: "✓ Dans mes podcasts", followingT: "Touchez pour le retirer de votre liste", whyTitle: "Pourquoi l’écouter ?" }
+            follow: "＋ Ajouter à mes podcasts", following: "✓ Dans mes podcasts", followingT: "Touchez pour le retirer de votre liste", whyTitle: "Pourquoi l’écouter ?",
+            activeH: "Écoute active", activeP: "Asseyez-vous, concentrez-vous et écoutez attentivement, idéalement plusieurs fois. Idéal pour apprendre du vocabulaire et vérifier votre compréhension.",
+            passiveH: "Écoute passive", passiveP: "À écouter en fond sonore pendant vos trajets, en cuisinant ou en travaillant. Parfait pour l’immersion : votre oreille s’habitue aux sons et au rythme de l’anglais." }
     };
     Object.assign(STR.en, { podSwitch: "Podcasts", radioSwitch: "Live radio", explorers: "Podcasts or live radio",
         radioTitle: "Radio Explorer", radioSub: "Listen live to English-language news, talk and documentary stations from the UK, Ireland, Australia, Canada, the US and New Zealand.",
@@ -493,25 +502,27 @@ var __read = (this && this.__read) || function (o, n) {
     // ---------- recommended (teacher's Google Doc) and my podcasts (this device) ----------
     // Recommended podcasts come from this Google Sheet (shared as "Anyone with the link: Viewer"), one podcast per row:
     //   A = podcast name or Apple Podcasts link, B = note for the teacher (not shown),
-    //   C = why it's worth listening to (shown to learners), D = the same in French (optional; C is used if empty).
+    //   C = why it's worth listening to (shown to learners), D = the same in French (optional; C is used if empty),
+    //   E = listening type: "active" (sit down and concentrate) or "passive" (background listening for immersion); empty = active.
     var REC_SHEET_ID = "1KUEjNRo7h1e_TSvnQs9VT4vPsULJu7kdxsphEXcv-LU";
     // Built-in list, used when the sheet can't be read and nothing is cached yet.
     var DEFAULT_REC = [
         ["262026947",
             "Six minutes, two presenters and one topical subject, with six useful words explained along the way. Clear British English at a comfortable pace: an easy daily habit, even on a coffee break.",
-            "Six minutes, deux présentateurs et un sujet d’actualité, avec six mots utiles expliqués au fil de l’épisode. Un anglais britannique clair, à un rythme confortable : une habitude facile à prendre chaque jour, même pendant une pause café."],
+            "Six minutes, deux présentateurs et un sujet d’actualité, avec six mots utiles expliqués au fil de l’épisode. Un anglais britannique clair, à un rythme confortable : une habitude facile à prendre chaque jour, même pendant une pause café.", "active"],
         ["121493675",
             "A five-minute news bulletin, updated every hour. Real American English at natural news speed: perfect for training your ear on authentic speech while keeping up with world events.",
-            "Un bulletin d’information de cinq minutes, mis à jour toutes les heures. De l’anglais américain authentique, au rythme réel des journalistes : idéal pour entraîner votre oreille tout en suivant l’actualité mondiale."],
+            "Un bulletin d’information de cinq minutes, mis à jour toutes les heures. De l’anglais américain authentique, au rythme réel des journalistes : idéal pour entraîner votre oreille tout en suivant l’actualité mondiale.", "passive"],
         ["1039991663",
             "Short lessons on science, history and big ideas, told as stories. You learn something new each time while picking up the vocabulary used to explain and describe things in English.",
-            "De courtes leçons de sciences, d’histoire et de culture générale, racontées comme des histoires. Vous apprenez quelque chose de nouveau à chaque fois tout en enrichissant le vocabulaire qui sert à expliquer et décrire en anglais."],
+            "De courtes leçons de sciences, d’histoire et de culture générale, racontées comme des histoires. Vous apprenez quelque chose de nouveau à chaque fois tout en enrichissant le vocabulaire qui sert à expliquer et décrire en anglais.", "active"],
         ["957223102",
             "Bite-sized lessons on everyday vocabulary, expressions and common mistakes, spoken slowly and clearly. A gentle start if you find native-speed English hard to follow.",
-            "Des mini-leçons sur le vocabulaire courant, les expressions et les erreurs fréquentes, avec une diction lente et claire. Un bon point de départ si l’anglais à vitesse native vous semble difficile à suivre."]
+            "Des mini-leçons sur le vocabulaire courant, les expressions et les erreurs fréquentes, avec une diction lente et claire. Un bon point de départ si l’anglais à vitesse native vous semble difficile à suivre.", "active"]
     ];
     var slim = function (r) { return ({ collectionId: r.collectionId, collectionName: r.collectionName, artistName: r.artistName || "", artworkUrl600: r.artworkUrl600 || "", artworkUrl100: r.artworkUrl100 || "" }); };
     var whyText = function (s) { return s ? (LANG === "fr" && s.whyFr ? s.whyFr : (s.why || "")) : ""; };
+    var recKind = function (v) { return /^\s*p/i.test(v || "") ? "passive" : "active"; }; // passive / passif → passive, anything else → active
     var recInfo = function (id) { return (state.rec || []).find(function (x) { return String(x.collectionId) === String(id); }); };
     var store = { get: function (k) { try {
             return JSON.parse(localStorage.getItem(k));
@@ -569,6 +580,7 @@ var __read = (this && this.__read) || function (o, n) {
                                         if (s) {
                                             s.why = row[1] || "";
                                             s.whyFr = row[2] || "";
+                                            s.kind = recKind(row[3]);
                                         }
                                         return [2 /*return*/, s];
                                 }
@@ -597,7 +609,7 @@ var __read = (this && this.__read) || function (o, n) {
                         return [4 /*yield*/, window.EmeraldApp.sheet(REC_SHEET_ID)];
                     case 2:
                         table = _a.sent();
-                        rows = table.rows.map(function (r) { return [String(r[0] || "").trim(), String(r[2] || "").trim(), String(r[3] || "").trim()]; }).filter(function (r) { return r[0]; });
+                        rows = table.rows.map(function (r) { return [String(r[0] || "").trim(), String(r[2] || "").trim(), String(r[3] || "").trim(), String(r[4] || "").trim()]; }).filter(function (r) { return r[0]; });
                         if (!rows.length)
                             rows = null;
                         return [3 /*break*/, 4];
@@ -613,7 +625,7 @@ var __read = (this && this.__read) || function (o, n) {
                             } // offline: last known list
                             rows = DEFAULT_REC; // sheet unreadable: built-in list
                         }
-                        sig = "v2|" + JSON.stringify(rows) + "|" + country();
+                        sig = "v3|" + JSON.stringify(rows) + "|" + country();
                         if (cache && cache.sig === sig && cache.shows.length) {
                             state.rec = cache.shows;
                             return [2 /*return*/, null];
@@ -802,8 +814,17 @@ var __read = (this && this.__read) || function (o, n) {
     window.addEventListener("resize", function () { clearTimeout(rsz); rsz = setTimeout(function () { checkMore(); fitAll(); fitMarquee($("pTitle")); fitMarquee($("pShow")); }, 150); });
     function renderShows(list) {
         var box = $("results");
+        if (state.mode === "rec" && !state.inShow) {
+            var groups = ["active", "passive"].map(function (k) { return ({ k: k, items: list.filter(function (s) { return (s.kind || "active") === k; }) }); }).filter(function (g) { return g.items.length; });
+            box.className = "";
+            box.innerHTML = groups.map(function (g) { return "<section class=\"rec-group rec-".concat(g.k, "\" lang=\"").concat(LANG, "\">\n        <h3 class=\"rec-h\"><span class=\"rec-ic\" aria-hidden=\"true\">").concat(g.k === "active" ? "🎧" : "🌊", "</span>").concat(esc(T(g.k === "active" ? "activeH" : "passiveH")), "</h3>\n        <p class=\"rec-p\">").concat(esc(T(g.k === "active" ? "activeP" : "passiveP")), "</p>\n        <div class=\"grid\" lang=\"en\">").concat(showCards(g.items), "</div></section>"); }).join("");
+            return;
+        }
         box.className = "grid";
-        box.innerHTML = list.map(function (s) {
+        box.innerHTML = showCards(list);
+    }
+    function showCards(list) {
+        return list.map(function (s) {
             var why = state.mode === "rec" ? whyText(s) : "";
             return "<button class=\"card".concat(why ? " has-why" : "", "\" data-show=\"").concat(esc(s.collectionId), "\">\n      <img src=\"").concat(esc(s.artworkUrl600 || s.artworkUrl100 || ""), "\" alt=\"\" loading=\"lazy\">\n      <b>").concat(esc(s.collectionName), "</b><span>").concat(esc(s.artistName || ""), "</span>\n      ").concat(why ? "<small class=\"why-label\" lang=\"".concat(LANG, "\">").concat(esc(T("whyTitle")), "</small><i class=\"why\" lang=\"").concat(LANG, "\">").concat(esc(why), "</i>") : "", "</button>");
         }).join("");
