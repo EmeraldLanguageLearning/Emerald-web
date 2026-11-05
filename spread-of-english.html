@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><script src="legacy.js"></script><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Emerald"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#49B190"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Where English came from, and how it spread · Emerald Language Learning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --emerald:#49B190; --emerald-link:#53AC90; --emerald-dark:#457865; --emerald-soft:#72B1A0;
+  --text-strong:#323232; --text:#777777; --bg:#FFFFFF; --bg-soft:#F9F9F9;
+  --line:#DADADA; --line-strong:#BBBBBB; --hover:#3f9c7e;
+  --font-head:'Montserrat',sans-serif; --font-body:'Open Sans',sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-body);line-height:1.9}
+button{font-family:inherit}
+:focus-visible{outline:2px solid var(--emerald);outline-offset:2px}
+
+/* header */
+header.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 5%;border-bottom:1px solid var(--line);background:#fff;position:-webkit-sticky;position:sticky;top:0;z-index:10}
+header.top img{height:60px;width:auto;display:block}
+.lang{display:flex;border:1px solid var(--emerald);border-radius:4px;overflow:hidden}
+.lang button{border:0;background:#fff;color:var(--emerald-dark);font-weight:600;font-size:.85rem;padding:6px 12px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--emerald);color:#fff}
+.lang button+button{border-left:1px solid var(--emerald)}
+@media (max-width:600px){header.top img{height:44px}}
+
+main{width:90%;max-width:1080px;margin:0 auto;padding-bottom:60px}
+h1.section{font-family:var(--font-head);font-weight:300;text-transform:uppercase;color:var(--emerald-dark);text-align:center;font-size:clamp(2rem,5vw,3.4rem);line-height:1.25;margin:56px 0 8px;letter-spacing:.02em}
+p.lede{text-align:center;max-width:720px;margin:0 auto 36px}
+h2.sub{font-family:var(--font-head);font-weight:400;text-transform:uppercase;color:var(--emerald-dark);text-align:center;font-size:clamp(1.3rem,3vw,1.9rem);margin:56px 0 20px;letter-spacing:.03em}
+
+/* figure card (anima-style frame) */
+.card{position:relative;background:var(--bg-soft);border:1px solid var(--line);border-radius:4px;padding:48px 20px 52px}
+.card .fig{position:absolute;top:12px;left:16px;font-family:var(--font-head);font-weight:700;font-size:.8rem;color:var(--emerald-dark);letter-spacing:.08em;text-transform:uppercase}
+.card .ttl{position:absolute;top:12px;right:16px;font-family:var(--font-head);font-weight:400;font-size:.8rem;color:var(--text-strong);letter-spacing:.06em;text-transform:uppercase;text-align:right;max-width:60%}
+.card .hint{position:absolute;bottom:12px;left:16px;font-size:.75rem;max-width:48%;line-height:1.4}
+.card .readout{position:absolute;bottom:12px;right:16px;font-size:.8rem;color:var(--text-strong);font-weight:600;text-align:right;max-width:50%;line-height:1.4;font-variant-numeric:tabular-nums}
+@media (max-width:600px){.card{padding-top:12px}.card .fig,.card .ttl{position:static;display:block;max-width:none;text-align:left;margin-bottom:6px}.card .hint{display:none}.card .readout{max-width:90%}}
+
+.controls{display:flex;flex-wrap:wrap;gap:14px 26px;justify-content:center;align-items:center;margin:4px 0 10px}
+.seg{display:inline-flex;border:1px solid var(--emerald);border-radius:4px;overflow:hidden}
+.seg button{border:0;background:#fff;color:var(--emerald-dark);font-size:.8rem;font-weight:600;padding:5px 11px;cursor:pointer;line-height:1.5}
+.seg button+button{border-left:1px solid var(--emerald)}
+.seg button[aria-pressed="true"]{background:var(--emerald);color:#fff}
+.ctl-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;margin-right:8px;color:var(--text)}
+.btn{background:var(--emerald);color:#fff;border:0;border-radius:4px;padding:6px 14px;font-weight:600;font-size:.85rem;cursor:pointer}
+.btn:hover{background:var(--hover)}
+.btn.outline{background:#fff;color:var(--emerald-dark);border:1px solid var(--emerald)}
+.btn.outline:hover{background:#eef7f3}
+
+.timeline{display:flex;align-items:center;gap:14px;max-width:720px;margin:6px auto 0}
+.timeline .yr{font-family:var(--font-head);font-weight:700;color:var(--emerald-dark);font-size:1.6rem;min-width:110px;text-align:center;font-variant-numeric:tabular-nums}
+input[type=range]{flex:1;accent-color:var(--emerald);height:28px}
+.ticks{display:flex;justify-content:space-between;max-width:720px;margin:-4px auto 0;padding-left:124px;padding-right:2px;font-size:.7rem}
+@media (max-width:600px){.timeline .yr{min-width:80px;font-size:1.25rem}.ticks{padding-left:94px}}
+
+svg#chart{display:block;width:100%;max-width:760px;height:auto;margin:6px auto 0;overflow:visible}
+.ax{fill:none;stroke:var(--line-strong);stroke-width:1.2}
+.grid{stroke:var(--line);stroke-width:1;stroke-dasharray:0}
+.axlab{font-family:var(--font-body);font-size:calc(12px * var(--k,1));fill:var(--text)}
+.ref{font-family:var(--font-body);font-size:calc(13px * var(--k,1));fill:#b7b7b7}
+.path{fill:none;stroke-width:1.4;stroke-linecap:round;opacity:.35}
+.glide{fill:none;stroke-width:2.6;stroke-linecap:round}
+.dot{stroke:#fff;stroke-width:2;cursor:pointer}
+.wlab{font-family:var(--font-head);font-weight:700;font-size:calc(13px * var(--k,1));pointer-events:none}
+.ipa{font-family:var(--font-body);font-size:calc(12px * var(--k,1));fill:var(--text-strong);pointer-events:none}
+.order{font-family:var(--font-head);font-weight:700;font-size:calc(11px * var(--k,1));fill:#fff;pointer-events:none}
+g.v.dim{opacity:.18}
+g.v.off{opacity:.12}
+
+.info{min-height:3.4em;max-width:760px;margin:6px auto 0;text-align:center;font-size:.9rem;line-height:1.6;color:var(--text-strong)}
+.modelnote{max-width:760px;margin:4px auto 0;text-align:center;font-size:.8rem;line-height:1.6}
+
+/* word cards */
+.words{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;margin-top:22px}
+.w{background:#fff;border:1px solid var(--line);border-radius:4px;padding:12px 10px 10px;text-align:center;cursor:pointer;line-height:1.5;transition:border-color .2s}
+.w:hover,.w.sel{border-color:var(--emerald)}
+.w .wd{font-family:var(--font-head);font-weight:700;font-size:1.15rem;color:var(--text-strong)}
+.w .now{font-size:1.05rem;color:var(--emerald-dark);font-weight:600;margin-top:2px}
+.w .was{font-size:.72rem;margin-top:4px}
+.w .sw{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.w.off{opacity:.45}
+
+/* established vs debated */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media (max-width:720px){.two{grid-template-columns:1fr}}
+.feat{position:relative;background:var(--bg-soft);border-radius:4px;padding:64px 22px 22px;margin-top:46px;text-align:center}
+.feat .circ{position:absolute;top:-44px;left:50%;transform:translateX(-50%);width:88px;height:88px;border-radius:50%;background:var(--emerald);display:flex;align-items:center;justify-content:center}
+.feat h3{font-family:var(--font-head);font-weight:700;color:var(--text-strong);margin:0 0 10px;font-size:1.05rem}
+.feat ul{text-align:left;margin:0;padding-left:18px}
+.feat li{margin:6px 0;line-height:1.7}
+
+.src{font-size:.85rem;line-height:1.7}
+.src ol{padding-left:20px}
+.src li{margin:6px 0}
+.src a{color:var(--emerald-link)}
+.note{border-left:3px solid var(--emerald);padding:6px 14px;background:var(--bg-soft);font-size:.85rem;line-height:1.7;margin-top:18px}
+footer{border-top:1px solid var(--line);text-align:center;font-size:.75rem;padding:18px;line-height:1.6}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* Fig 4 */
+svg#map{display:block;width:100%;max-width:980px;height:auto;margin:8px auto 0}
+.ocean{fill:#eef6f3}
+.land{fill:#e2e2e2;stroke:#fff;stroke-width:.6}
+.cty{stroke:#fff;stroke-width:.6;transition:fill-opacity .6s,opacity .35s;cursor:pointer}
+.cty.dim{opacity:.25}
+.route{fill:none;stroke-width:1.8;stroke-linecap:round;opacity:.75;pointer-events:none}
+.route.done{opacity:.35}
+.route.dim{opacity:.08}
+.mk{cursor:pointer;transition:opacity .35s}
+.mk circle{stroke:#fff;stroke-width:2}
+.mk text{font-family:var(--font-head);paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round;pointer-events:none}
+.mk text.ml{font-weight:700;fill:var(--text-strong)}
+.mk text.yl{font-weight:400;fill:var(--text)}
+.mk.future{opacity:0;pointer-events:none}
+.mk.dim{opacity:.15}
+.mk.sel circle{stroke:var(--text-strong)}
+.home circle{fill:#9a9a9a;stroke:#fff;stroke-width:2}
+.home text{font-family:var(--font-body);font-style:italic;fill:#777;paint-order:stroke;stroke:#fff;stroke-width:3px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:center;font-size:.78rem;margin-top:6px}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.ticks{display:block}
+.ticks .tk{position:relative;height:1.4em;margin-right:58px}
+.ticks .tk span{position:absolute;transform:translateX(-50%);white-space:nowrap}
+.ticks .tk span:first-child{transform:none}
+.ticks .tk span:last-child{transform:translateX(-100%)}
+.w{text-align:left;padding:12px 14px}
+.w .wd{text-align:center;margin-bottom:6px;font-size:1.05rem}
+.w .row{display:flex;justify-content:space-between;gap:8px;font-size:.85rem;line-height:1.45;padding:2px 0}
+.w .row b{font-family:var(--font-head);font-size:.72rem;letter-spacing:.06em;color:var(--text);font-weight:700;min-width:60px}
+.w .row span{color:var(--text-strong);text-align:right}
+.w.future{opacity:.45}
+@media (max-width:600px){.ticks .tk span:nth-child(n+3):not(:last-child){display:none}}
+.words{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+</style>
+</head>
+<body>
+<header class="top">
+  <a href="index.html" title="Home" aria-label="Emerald Language Learning – Home"><img alt="Emerald Language Learning" width="306" height="90" src="data:image/png;base64,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"></a>
+  <div class="lang" role="group" aria-label="Language / Langue">
+    <button type="button" data-lang="fr" aria-pressed="true">FR</button>
+    <button type="button" data-lang="en" aria-pressed="false">EN</button>
+  </div>
+</header>
+
+<main>
+  <h1 class="section" data-i18n="h1"></h1>
+  <p class="lede" data-i18n-html="lede"></p>
+
+  <section class="card" aria-labelledby="figttl">
+    <div class="fig" data-i18n="fig"></div>
+    <div class="ttl" id="figttl" data-i18n="figTitle"></div>
+
+    <div class="controls">
+      <div><span class="ctl-label" data-i18n="show"></span>
+        <span class="seg" id="cirSeg">
+          <button type="button" data-v="all" aria-pressed="true" data-i18n="all"></button>
+          <button type="button" data-v="inner" aria-pressed="false" data-i18n="inner"></button>
+          <button type="button" data-v="outer" aria-pressed="false" data-i18n="outer"></button>
+          <button type="button" data-v="exp" aria-pressed="false" data-i18n="exp"></button>
+        </span></div>
+    </div>
+
+    <div class="timeline">
+      <div class="yr" id="yr">400</div>
+      <input type="range" id="slider" min="0" max="1000" step="1" value="0" data-i18n-aria="sliderAria">
+      <button type="button" class="btn outline" id="play" data-i18n-aria="playAria">▶</button>
+    </div>
+    <div class="ticks" aria-hidden="true"><div class="tk" id="ticks"></div></div>
+
+    <svg id="map" role="img" data-i18n-aria="chartAria"></svg>
+    <div class="legend" id="legend"></div>
+    <div class="modelnote" id="modelnote"></div>
+    <div class="info" id="info" aria-live="polite"></div>
+
+    <div class="words" id="words"></div>
+
+    <div class="hint" data-i18n="hint"></div>
+    <div class="readout" id="readout"></div>
+  </section>
+
+  <h2 class="sub" data-i18n="howSure"></h2>
+  <div class="two">
+    <div class="feat">
+      <div class="circ" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+      <h3 data-i18n="estTitle"></h3>
+      <ul id="estList"></ul>
+    </div>
+    <div class="feat">
+      <div class="circ" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14"/><path d="M12 17.5h.01"/></svg></div>
+      <h3 data-i18n="debTitle"></h3>
+      <ul id="debList"></ul>
+    </div>
+  </div>
+
+  <h2 class="sub" data-i18n="srcTitle"></h2>
+  <div class="src">
+    <ol>
+      <li>Crystal, D. (2003). <i>English as a Global Language</i>, 2nd ed., ch. 2 “Why English? The historical context”. Cambridge University Press. <span data-i18n="s1"></span> <a href="https://doi.org/10.1017/CBO9780511486999">doi:10.1017/CBO9780511486999</a></li>
+      <li>Crystal, D. (2008). “Two thousand million?” <i>English Today</i> 24(1), 3–6. <span data-i18n="s2"></span> <a href="https://core-cms.cambridgecore.org/core/services/aop-cambridge-core/content/view/68BFD87E5C867F7C3C47FD0749C7D417/S0266078408000023a.pdf/two-thousand-million.pdf">cambridge.org (PDF)</a></li>
+      <li>Gretzinger, J. et al. (2022). “The Anglo-Saxon migration and the formation of the early English gene pool.” <i>Nature</i> 610, 112–119. <span data-i18n="s3"></span> <a href="https://doi.org/10.1038/s41586-022-05247-2">doi:10.1038/s41586-022-05247-2</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Anglo-Saxon_settlement_of_Britain">Wikipedia, “Anglo-Saxon settlement of Britain”</a>; <a href="https://en.wikipedia.org/wiki/Hiberno-English">“Hiberno-English”</a>. <span data-i18n="s4"></span></li>
+      <li><a href="https://en.wikipedia.org/wiki/English_Education_Act_1835">Wikipedia, “English Education Act 1835”</a>. <span data-i18n="s5"></span></li>
+      <li><a href="https://en.wikipedia.org/wiki/Languages_of_Singapore">Wikipedia, “Languages of Singapore”</a>, citing the Singapore Census of Population 2020. <span data-i18n="s6"></span></li>
+      <li>Kachru, B. B. (1985). “Standards, codification and sociolinguistic realism: the English language in the outer circle.” In R. Quirk &amp; H. G. Widdowson (eds.), <i>English in the World</i>, 11–30. Cambridge University Press. <a href="https://en.wikipedia.org/wiki/Braj_Kachru">Wikipedia, “Braj Kachru”</a>. <span data-i18n="s7"></span></li>
+      <li><a href="https://en.wikipedia.org/wiki/English-speaking_world">Wikipedia, “English-speaking world”</a>, citing Ethnologue (2025). <span data-i18n="s8"></span></li>
+    </ol>
+    <h3 style="font-family:var(--font-head);color:var(--text-strong);font-size:1rem;margin:22px 0 4px" data-i18n="simpTitle"></h3>
+    <ul id="simpList"></ul>
+    <div class="note" data-i18n-html="recon"></div>
+  </div>
+</main>
+<footer>Emerald Language Learning · <span data-i18n="footer"></span></footer>
+
+<script>var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+(function () {
+    "use strict";
+    var STR = {
+        en: {
+            h1: "Where English came from, and how it spread",
+            lede: "English began around <b>450</b> as the speech of settlers from the North Sea coast. By <b>1600</b> it still had only <b>5 to 7 million</b> speakers, nearly all in England. Today it has about <b>1.5 billion</b>, and most of them learned it as a second or foreign language.",
+            fig: "Fig 4", figTitle: "From the North Sea to the world, 450 to today",
+            show: "Show", all: "All", inner: "Inner circle", outer: "Outer circle", exp: "Expanding circle",
+            sliderAria: "Year", playAria: "Play or pause (Space)", today: "today",
+            chartAria: "World map. As the year changes, places where English arrived light up, with a line from where it came from. Colours show Kachru's three circles.",
+            hint: "Drag the year, or press Space to play. Hover or tab to a place or card for an explanation.",
+            home: "Angles, Saxons, Jutes", legHome: "Homeland, before 450",
+            readout: "c. {y} · English in {n} of {t} places on the map · {sp}",
+            sp0: "no reliable speaker counts yet",
+            sp1: "c. 5–7 million speakers, nearly all in England",
+            sp2: "c. 350 million speakers (Quirk, 1962)",
+            sp3: "c. 1.5 billion speakers, c. 390 million native",
+            since: "Since", role: "Today",
+            note_all: "Colours follow <b>Kachru’s three circles</b> (1985): where English is the main native language, where it is an official second language left by colonial rule, and where it is learned as a foreign language.",
+            note_inner: "<b>Inner circle:</b> English spread by <b>settlement</b>. Settlers brought their own language and it became most people’s first language, often pushing out indigenous languages.",
+            note_outer: "<b>Outer circle:</b> English spread by <b>colonial rule</b>. A small British elite ran schools, courts and government in English, so it was added on top of local languages as a second, official language.",
+            note_exp: "<b>Expanding circle:</b> English spread without settlers or rulers, through <b>trade, science, technology and media</b>, mostly after 1945. It is learned at school as a foreign language.",
+            n_britain: "Britain", n_ireland: "Ireland", n_america: "North America", n_australia: "Australia", n_southafrica: "South Africa", n_singapore: "Singapore", n_india: "India", n_world: "France, Germany, Japan…",
+            r_britain: "native language", r_ireland: "native language", r_america: "native language", r_australia: "native language", r_southafrica: "home language of a minority, public life", r_singapore: "official; main home language", r_india: "second language, official", r_world: "foreign language",
+            m_britain: "<b>Britain, c. 450.</b> English began as the related dialects of Angles, Saxons and Jutes from the coast of today’s Denmark, northern Germany and the Netherlands. Bede gives 449 for their arrival. Their speech replaced Latin and the Celtic language of Roman Britain in most of what became England; Welsh and Cornish are its descendants in the west. <b>Inner circle.</b>",
+            m_ireland: "<b>Ireland, 1169.</b> English arrived with the Anglo-Norman invasion of 1169–71, but for centuries it stayed mostly around Dublin. It only became the majority language in the 1800s. <b>Inner circle</b>, although Irish is the first official language.",
+            m_america: "<b>North America, 1607.</b> Jamestown, Virginia (1607) was the first lasting English settlement, followed by the Pilgrims in Massachusetts in 1620. After American independence, Loyalists moved north and took English to Canada. The USA now has the most English speakers of any country, about 319 million. <b>Inner circle.</b>",
+            m_australia: "<b>Australia, 1788.</b> The First Fleet, mostly carrying convicts, reached Sydney in 1788. New Zealand followed with organised settlement from 1840. Their accents grew out of a mix of southern English and Irish speech. <b>Inner circle.</b>",
+            m_southafrica: "<b>South Africa, 1820.</b> Britain took the Cape from the Dutch (1795, and again in 1806), and a few thousand British settlers arrived in 1820. English is the home language of a minority but a main language of public life, beside Afrikaans, Zulu, Xhosa and others. It fits Kachru’s circles badly: it has native speakers <i>and</i> second-language users.",
+            m_singapore: "<b>Singapore, 1819.</b> Stamford Raffles founded a British trading post in 1819. English became the language of schooling, and in the 2020 census <b>48.3%</b> of residents said it was the language they spoke most at home. Usually placed in the <b>outer circle</b>, but for many young Singaporeans it is now a first language.",
+            m_india: "<b>India, 1835.</b> English came with East India Company traders around 1600, but the turning point was 1835: Macaulay’s Minute and the English Education Act made English the language of higher education and government. India now has the second-largest number of English speakers, about 276 million, nearly all using it as a second language. <b>Outer circle.</b>",
+            m_world: "<b>The expanding circle, after 1945.</b> In countries such as France, Germany, Japan, China and Brazil, English has no colonial or official role, but it is the main foreign language at school and the usual language of science, business, international aviation and the internet. American economic and cultural power after the Second World War did much to spread it. <b>Expanding circle.</b>",
+            dl_britain: "c. 450", dl_ireland: "1169", dl_america: "1607", dl_australia: "1788", dl_southafrica: "1820", dl_singapore: "1819", dl_india: "1835", dl_world: "after 1945",
+            howSure: "How sure are we?",
+            estTitle: "Well established",
+            est: ["English grew out of the West Germanic dialects of settlers from the North Sea coast, from the 5th century.", "Around 1600 only 5 to 7 million people spoke English, nearly all of them in England.", "It spread first by settlement (America, Australia, New Zealand), where it became the main language, and then by colonial rule (India, Africa, Asia), where it was added as a second language.", "Today people who speak English as a second or foreign language far outnumber native speakers, by about three to one."],
+            debTitle: "Still debated",
+            deb: ["<b>How many settlers came?</b> Some historians argued for a small ruling elite that others copied. Ancient DNA (Gretzinger et al., 2022) found up to 76% continental ancestry in people buried in eastern England, which points to large-scale migration, with big differences from place to place.", "<b>449</b> is Bede’s traditional date, written almost 300 years later. Archaeology shows settlement during much of the 5th century, as a gradual process rather than a single landing.", "<b>Kachru’s circles</b> are criticised because many countries do not fit (Singapore, South Africa, Nigeria) and the status of English keeps changing.", "<b>Speaker numbers</b> range from 1.5 to 2 billion, because there is no agreed level at which someone “speaks English”."],
+            srcTitle: "Sources",
+            s1: "Routes and dates of the spread: North America, Australia and New Zealand, South Africa, South Asia, Singapore, and the role of the USA after 1945.",
+            s2: "5 to 7 million speakers under Elizabeth I; Quirk’s 1962 estimate of 250 million native and 100 million other speakers; non-native speakers outnumbering native ones.",
+            s3: "Up to 76% continental North Sea ancestry in early medieval eastern England.",
+            s4: "Bede’s date of 449 and the debate on the settlement; the Anglo-Norman arrival of English in Ireland and its later spread.",
+            s5: "Macaulay’s Minute and the 1835 Act making English the medium of higher education.",
+            s6: "48.3% of residents speaking English most at home in 2020.",
+            s7: "The inner, outer and expanding circles.",
+            s8: "About 1.5 billion speakers in total; 319 million in the USA and 276 million in India.",
+            simpTitle: "What this figure simplifies",
+            simp: ["Each place has one date, the arrival of English; in most places it took centuries to spread (in Ireland, for example, it became the majority language only in the 1800s).", "Whole modern countries are coloured, though their borders did not exist at the time.", "Routes are drawn as simple curves, not real sea routes.", "Only a sample of places is shown: the Caribbean, West and East Africa (Nigeria, Kenya…), the Philippines and many others are left out.", "The expanding circle is represented by five example countries."],
+            recon: "<b>Dates mark beginnings.</b> Each date shows when English arrived, not when most people spoke it. Speaker numbers before the 20th century are rough estimates, and even today’s figures vary widely between sources.",
+            footer: "Educational illustration of the history of English."
+        },
+        fr: {
+            h1: "D’où vient l’anglais, et comment il s’est répandu",
+            lede: "L’anglais est né vers <b>450</b>, avec la langue de colons venus des côtes de la mer du Nord. En <b>1600</b>, il ne comptait encore que <b>5 à 7 millions</b> de locuteurs, presque tous en Angleterre. Aujourd’hui, il en compte environ <b>1,5 milliard</b>, et la plupart l’ont appris comme deuxième langue ou langue étrangère.",
+            fig: "Fig 4", figTitle: "De la mer du Nord au monde entier, de 450 à aujourd’hui",
+            show: "Afficher", all: "Tout", inner: "Cercle intérieur", outer: "Cercle extérieur", exp: "Cercle en expansion",
+            sliderAria: "Année", playAria: "Lecture ou pause (Espace)", today: "aujourd’hui",
+            chartAria: "Carte du monde. Quand l’année change, les lieux où l’anglais arrive s’allument, avec une ligne depuis son point de départ. Les couleurs montrent les trois cercles de Kachru.",
+            hint: "Faites glisser l’année ou appuyez sur Espace. Survolez un lieu ou une carte, ou utilisez Tab, pour une explication.",
+            home: "Angles, Saxons, Jutes", legHome: "Berceau, avant 450",
+            readout: "v. {y} · l’anglais est présent dans {n} lieux sur {t} · {sp}",
+            sp0: "pas encore de chiffres fiables",
+            sp1: "v. 5 à 7 millions de locuteurs, presque tous en Angleterre",
+            sp2: "v. 350 millions de locuteurs (Quirk, 1962)",
+            sp3: "v. 1,5 milliard de locuteurs, dont v. 390 millions natifs",
+            since: "Depuis", role: "Aujourd’hui",
+            note_all: "Les couleurs suivent les <b>trois cercles de Kachru</b> (1985) : là où l’anglais est la principale langue maternelle, là où c’est une deuxième langue officielle héritée de la colonisation, et là où on l’apprend comme langue étrangère.",
+            note_inner: "<b>Cercle intérieur :</b> l’anglais s’est diffusé par le <b>peuplement</b>. Les colons ont apporté leur langue, qui est devenue la langue maternelle de la plupart des habitants, souvent au détriment des langues autochtones.",
+            note_outer: "<b>Cercle extérieur :</b> l’anglais s’est diffusé par la <b>domination coloniale</b>. Une petite élite britannique faisait fonctionner écoles, tribunaux et administration en anglais : il s’est ajouté aux langues locales comme deuxième langue, officielle.",
+            note_exp: "<b>Cercle en expansion :</b> l’anglais s’est diffusé sans colons ni administrateurs, par le <b>commerce, la science, la technologie et les médias</b>, surtout après 1945. On l’apprend à l’école comme langue étrangère.",
+            n_britain: "Grande-Bretagne", n_ireland: "Irlande", n_america: "Amérique du Nord", n_australia: "Australie", n_southafrica: "Afrique du Sud", n_singapore: "Singapour", n_india: "Inde", n_world: "France, Allemagne, Japon…",
+            r_britain: "langue maternelle", r_ireland: "langue maternelle", r_america: "langue maternelle", r_australia: "langue maternelle", r_southafrica: "langue d’une minorité, vie publique", r_singapore: "officielle ; 1re langue du foyer", r_india: "deuxième langue, officielle", r_world: "langue étrangère",
+            m_britain: "<b>Grande-Bretagne, v. 450.</b> L’anglais est né des dialectes apparentés des Angles, des Saxons et des Jutes, venus des côtes de l’actuel Danemark, du nord de l’Allemagne et des Pays-Bas. Bède date leur arrivée de 449. Leur langue a remplacé le latin et la langue celtique de la Bretagne romaine dans la majeure partie de la future Angleterre ; le gallois et le cornique en sont les descendants à l’ouest. <b>Cercle intérieur.</b>",
+            m_ireland: "<b>Irlande, 1169.</b> L’anglais arrive avec l’invasion anglo-normande de 1169–1171, mais il reste pendant des siècles concentré autour de Dublin. Il ne devient majoritaire qu’au XIX<sup>e</sup> siècle. <b>Cercle intérieur</b>, même si l’irlandais est la première langue officielle.",
+            m_america: "<b>Amérique du Nord, 1607.</b> Jamestown, en Virginie (1607), est la première colonie anglaise durable, suivie des Pèlerins du Massachusetts en 1620. Après l’indépendance américaine, les loyalistes partent vers le nord et emportent l’anglais au Canada. Les États-Unis sont aujourd’hui le pays qui compte le plus d’anglophones, environ 319 millions. <b>Cercle intérieur.</b>",
+            m_australia: "<b>Australie, 1788.</b> La First Fleet, chargée surtout de bagnards, arrive à Sydney en 1788. La Nouvelle-Zélande suit, avec une colonisation organisée à partir de 1840. Leurs accents sont nés d’un mélange de parlers du sud de l’Angleterre et d’Irlande. <b>Cercle intérieur.</b>",
+            m_southafrica: "<b>Afrique du Sud, 1820.</b> La Grande-Bretagne prend le Cap aux Néerlandais (1795, puis de nouveau en 1806), et quelques milliers de colons britanniques arrivent en 1820. L’anglais est la langue maternelle d’une minorité mais une langue principale de la vie publique, à côté de l’afrikaans, du zoulou, du xhosa et d’autres. Il entre mal dans les cercles de Kachru : il a des locuteurs natifs <i>et</i> des locuteurs de deuxième langue.",
+            m_singapore: "<b>Singapour, 1819.</b> Stamford Raffles fonde un comptoir britannique en 1819. L’anglais devient la langue de l’école et, au recensement de 2020, <b>48,3 %</b> des résidents disent que c’est la langue qu’ils parlent le plus à la maison. On le place en général dans le <b>cercle extérieur</b>, mais pour beaucoup de jeunes Singapouriens c’est désormais une langue maternelle.",
+            m_india: "<b>Inde, 1835.</b> L’anglais arrive avec les marchands de la Compagnie des Indes orientales vers 1600, mais le tournant date de 1835 : la Minute de Macaulay et l’English Education Act font de l’anglais la langue de l’enseignement supérieur et de l’administration. L’Inde compte aujourd’hui le deuxième plus grand nombre d’anglophones, environ 276 millions, presque tous en deuxième langue. <b>Cercle extérieur.</b>",
+            m_world: "<b>Le cercle en expansion, après 1945.</b> Dans des pays comme la France, l’Allemagne, le Japon, la Chine ou le Brésil, l’anglais n’a aucun rôle colonial ni officiel, mais c’est la principale langue étrangère apprise à l’école et la langue habituelle de la science, des affaires, de l’aviation internationale et d’internet. La puissance économique et culturelle américaine après la Seconde Guerre mondiale a beaucoup contribué à cette diffusion. <b>Cercle en expansion.</b>",
+            dl_britain: "v. 450", dl_ireland: "1169", dl_america: "1607", dl_australia: "1788", dl_southafrica: "1820", dl_singapore: "1819", dl_india: "1835", dl_world: "après 1945",
+            howSure: "Quel est notre degré de certitude ?",
+            estTitle: "Bien établi",
+            est: ["L’anglais est issu des dialectes germaniques occidentaux de colons venus des côtes de la mer du Nord, à partir du V<sup>e</sup> siècle.", "Vers 1600, seules 5 à 7 millions de personnes parlaient anglais, presque toutes en Angleterre.", "Il s’est d’abord diffusé par le peuplement (Amérique, Australie, Nouvelle-Zélande), où il est devenu la langue principale, puis par la domination coloniale (Inde, Afrique, Asie), où il s’est ajouté comme deuxième langue.", "Aujourd’hui, les personnes qui parlent anglais en deuxième langue ou en langue étrangère sont bien plus nombreuses que les natifs, environ trois pour un."],
+            debTitle: "Encore débattu",
+            deb: ["<b>Combien de colons ?</b> Certains historiens pensaient à une petite élite dominante imitée par la population. L’ADN ancien (Gretzinger et al., 2022) révèle jusqu’à 76 % d’ascendance continentale chez des personnes inhumées dans l’est de l’Angleterre, ce qui indique une migration de grande ampleur, avec de fortes différences d’un lieu à l’autre.", "<b>449</b> est la date traditionnelle de Bède, écrite près de 300 ans plus tard. L’archéologie montre une installation étalée sur une bonne partie du V<sup>e</sup> siècle, progressive plutôt qu’un débarquement unique.", "<b>Les cercles de Kachru</b> sont critiqués car beaucoup de pays n’y entrent pas bien (Singapour, Afrique du Sud, Nigeria) et le statut de l’anglais ne cesse d’évoluer.", "<b>Le nombre de locuteurs</b> varie de 1,5 à 2 milliards, car il n’existe pas de niveau reconnu à partir duquel on « parle anglais »."],
+            srcTitle: "Sources",
+            s1: "Itinéraires et dates de la diffusion : Amérique du Nord, Australie et Nouvelle-Zélande, Afrique du Sud, Asie du Sud, Singapour, et rôle des États-Unis après 1945.",
+            s2: "5 à 7 millions de locuteurs sous Élisabeth I<sup>re</sup> ; estimation de Quirk en 1962 (250 millions de natifs et 100 millions d’autres locuteurs) ; non-natifs plus nombreux que les natifs.",
+            s3: "Jusqu’à 76 % d’ascendance continentale (mer du Nord) dans l’est de l’Angleterre au haut Moyen Âge.",
+            s4: "La date de 449 selon Bède et le débat sur l’installation ; l’arrivée anglo-normande de l’anglais en Irlande et sa diffusion ultérieure.",
+            s5: "La Minute de Macaulay et la loi de 1835 faisant de l’anglais la langue de l’enseignement supérieur.",
+            s6: "48,3 % des résidents parlant surtout anglais à la maison en 2020.",
+            s7: "Les cercles intérieur, extérieur et en expansion.",
+            s8: "Environ 1,5 milliard de locuteurs au total ; 319 millions aux États-Unis et 276 millions en Inde.",
+            simpTitle: "Ce que cette figure simplifie",
+            simp: ["Chaque lieu a une seule date, celle de l’arrivée de l’anglais ; presque partout, sa diffusion a pris des siècles (en Irlande, par exemple, il n’est devenu majoritaire qu’au XIX<sup>e</sup> siècle).", "Ce sont les pays actuels entiers qui sont colorés, alors que leurs frontières n’existaient pas encore.", "Les itinéraires sont de simples courbes, pas de vraies routes maritimes.", "Seul un échantillon de lieux est montré : les Caraïbes, l’Afrique de l’Ouest et de l’Est (Nigeria, Kenya…), les Philippines et bien d’autres sont laissés de côté.", "Le cercle en expansion est représenté par cinq pays donnés en exemple."],
+            recon: "<b>Les dates marquent un début.</b> Chaque date indique l’arrivée de l’anglais, pas le moment où la majorité le parlait. Les nombres de locuteurs avant le XX<sup>e</sup> siècle sont des estimations grossières, et même les chiffres actuels varient beaucoup selon les sources.",
+            footer: "Illustration pédagogique de l’histoire de l’anglais."
+        }
+    };
+    var lang = "fr";
+    try {
+        var s = localStorage.getItem("ell-lang");
+        if (s === "en" || s === "fr")
+            lang = s;
+    }
+    catch (e) { }
+    function T(k, v) { var _a, _b; var s = ((_b = (_a = STR[lang][k]) !== null && _a !== void 0 ? _a : STR.en[k]) !== null && _b !== void 0 ? _b : k); if (v)
+        s = s.replace(/\{(\w+)\}/g, function (m, n) { return v[n] !== undefined ? v[n] : m; }); return s; }
+    function applyStatic() {
+        document.documentElement.lang = lang;
+        document.querySelectorAll("[data-i18n]").forEach(function (el) { return el.textContent = T(el.dataset.i18n); });
+        document.querySelectorAll("[data-i18n-html]").forEach(function (el) { return el.innerHTML = T(el.dataset.i18nHtml); });
+        document.querySelectorAll("[data-i18n-aria]").forEach(function (el) { return el.setAttribute("aria-label", T(el.dataset.i18nAria)); });
+        var list = function (id, k) { document.getElementById(id).innerHTML = STR[lang][k].map(function (x) { return "<li>" + x + "</li>"; }).join(""); };
+        list("estList", "est");
+        list("debList", "deb");
+        list("simpList", "simp");
+        document.querySelectorAll(".lang button").forEach(function (b) { return b.setAttribute("aria-pressed", String(b.dataset.lang === lang)); });
+    }
+    /* ---------- the model: places English reached, when, from where, and which circle ---------- */
+    // Map geometry: world-atlas 110m (Natural Earth, public domain), pre-projected (Natural Earth projection) by gen.mjs.
+    var MAP = { "w": 900, "h": 440, "land": "M888.4,303.9L888.4,303.9L888.4,303.9ZM893.7,301.2L891.9,301.9L894,299.8L894,299.8L893.7,301.2ZM6,299.8L6,299.8L6,299.8L6.3,301.2L6.3,301.2L6,299.8ZM563.4,142.2L564.5,144.4L572,146.9L575.7,145.5L574.7,140.4L571.3,137.3L571.4,134.8L575.5,134.6L572.5,131.3L569.9,132.2L569.4,129.3L566.5,128.4L563.4,124.1L565.3,122.3L569.1,122.3L568.1,117.8L563.9,117.2L559.6,119L555.2,124.1L561,132.2L564,135.7ZM108.4,58.9L108.4,58.9L113.1,63.6L117.9,64L119,66.3L112.3,67.7L109.5,70.1L106.4,70.6L104.9,67.9L100.8,67.8L102.3,66L99.2,66.6L96.3,68.8L96.3,68.8L108.4,58.9ZM803.7,68.8L803.7,68.8L799.6,69.8L808.3,73.9L809.9,75.7L805.6,75.1L800.6,77.4L798.1,80.8L798.6,82L793.8,80.2L790.5,82.3L784.7,82.1L785.6,86.4L789.6,88L792.8,92L791,92.1L793.9,95.5L791.4,96.9L793.2,100L790.5,100.7L792.1,103.5L790.9,106.1L778.6,94.1L775.8,87.5L778.5,86.9L780.1,80.8L781.7,78.7L779.6,75L777.4,75.3L778.4,77.4L776,80.3L771.3,77.1L766.9,77.9L765.9,82.3L769,84L762.1,84.9L760.6,83L757,82.6L755.6,83.9L748.9,83.5L742.8,84.2L736.9,95.8L740.5,96.2L745.2,98.5L748.1,97.3L753.4,100.3L755.3,105.5L759.2,113.3L758.7,119.3L755.8,127.6L753.6,129.3L750.1,127.9L748.2,131L747.5,134.8L744,138.1L747.4,141.4L752.2,146.7L753.3,151.6L747.9,153.6L743.4,143.9L739.5,142.8L739.5,139.1L736.3,137.6L730.1,140.6L730.8,136.2L729,134.6L722.2,141L729,145.6L730.8,143.5L735.8,146.2L732.8,147.1L730.1,152.1L733.2,153.7L739.8,161.5L739.2,164.4L741.9,166.9L742.3,171.5L741.1,171.8L737.8,182.2L732.3,187.4L727.4,188.1L726.3,189.5L720.7,191.4L719.1,194.6L718.4,191.4L713.9,190.9L711.1,193.4L709.3,198.2L714.6,205L718.9,209.2L720.7,214.5L720.9,219.6L711.6,228.5L711.1,224.7L709.2,223L707,222.6L704.4,218.1L699.9,216.8L697.8,214.6L696.4,224.5L698.4,226.7L700.2,231.9L704.6,235.3L707.8,239.3L708.3,245.3L710.2,249.6L708.4,249.8L703,245.3L699.8,238L699.4,234.6L695.1,229.1L694.9,224.6L695.1,220.3L690.7,206.8L689.3,204.4L685.4,207.9L682.3,206.9L681.9,200.6L676,193.5L672.7,187.4L670.4,187.3L670.3,190.1L667.2,189.5L662.4,191.1L661.9,195L658.6,197L652.4,204.1L652.6,205.4L648.2,207.3L647.7,209.6L648.9,215.7L648.4,223.4L643,230.3L640.5,227.6L638,220.6L635.5,216.5L634,211.1L631.4,207.1L628.7,197.8L627.5,191.5L622.3,192.9L618.7,189.4L619.8,188.3L615.7,184.7L610.7,179.7L599,180.7L588.8,178.8L586.1,174.7L582.1,176.6L573.9,172.6L569.7,166L566.1,166.6L564.7,166.5L566.2,170.6L571,176L573.2,181.6L574.6,182L575.2,183.1L581.2,183.5L585.5,177.9L586.1,178.9L586.7,181.1L589.5,184.2L592.8,185.1L595.8,188.7L591.8,198.2L589.1,199.6L586.1,203.5L580.9,205.2L578.8,208.2L572.5,210.8L570.4,212.8L563,214.9L561.5,216.6L557.8,216.8L555.5,206L550.4,196.9L545.6,191.7L545.2,188L534.4,172L533.7,168.3L533.6,167.8L531.6,173.2L528.5,170.2L532.4,177.6L536.7,184L536.5,186.4L540,189.6L542.1,199.5L544.4,201.3L546.9,207.3L556.8,216.6L557.1,220.2L559.6,223.1L571.5,220.3L576.8,218.6L576.8,222.6L573.2,233.7L571.2,237.9L566.2,245.1L557.7,252.5L553.8,258.2L550.5,260.8L547.8,266.8L547.8,266.8L546.7,272L548.3,273.1L547.5,277.8L550.2,283.1L550.8,295.8L547.2,301.7L542.1,304.2L535.3,310.6L536.8,317.3L536.5,322L535,324.2L528.8,327.8L529.2,330.8L528,335.3L521.6,343.6L516.8,348.3L510.8,351.7L503.3,351.5L496.1,354.3L493,351.5L493.3,345.1L489.2,336.1L486.7,331.8L485,322.4L484.8,317.3L482.7,313.7L478.9,303.4L478.7,301.5L481.5,291.3L483.8,288.1L484,284.3L482,279.8L482.9,278.1L480.7,270.9L480.4,270L479.7,267.9L477.7,264.8L472,256.5L473.7,250.4L474.1,246.7L474.4,244.4L471.2,239.5L464.7,241L460.8,235.2L456.7,235.2L454.7,235.6L452.6,236.2L445.1,239.7L442.9,238.9L435.5,238.9L430.8,240.7L427.5,239.4L421.5,233.7L417.8,230.8L417,227.6L412.4,221.4L408.7,217.5L408.3,215.3L408.6,214L406.4,210.7L409.4,206.7L410.3,200.9L410.1,195.2L408.3,192.6L408.4,191.3L411.2,184.6L413.4,182.3L415.1,177.3L419.7,172.1L421.9,171.8L427.1,166.6L426.6,163L429.5,157L433.7,154.4L436.1,149.6L444.9,151.4L453.4,147.2L464.6,145.7L469.6,146.2L472.1,145L474.8,147.8L475.4,152.3L473.9,153.8L477.2,157.3L486.2,159.8L487.4,162.4L495.6,165.6L497.8,163.5L497.1,161.3L499.4,158.5L504.3,158.7L509.8,161.8L513,161.8L518.9,163.9L521.6,162.1L530.5,163.6L531.6,162.8L533.1,157.4L534.7,152.9L534.7,149.5L531,146.6L526.1,148.6L521.5,147L519.5,148.5L514.6,147L511.1,142.5L510.4,138.9L512.7,136.2L516.2,136L517,133.9L521.4,134.2L526.5,131.6L530.2,131.5L537.9,134.6L542.6,134.5L545,132.9L544.3,129.8L540.6,127.5L532.4,122.3L535.4,119.5L535,117.1L529.9,118.3L528.4,120.9L531.7,122.7L526.4,124.9L522.9,122.1L524.8,120.3L518.6,118.5L516.5,122.2L514.6,126.7L513,130L513.9,131.6L516,134.3L513.3,134.5L510.7,136.9L509.8,135L502.4,136L503.1,140.3L505.8,142.5L503.1,145.2L504.1,147.7L500.6,146.5L496.5,138.5L494.6,136.6L494.2,132L492,130.2L486.3,127.3L483.5,122.8L480.8,121.6L481.2,121.3L477.7,121.9L478.4,125.6L486.3,132.9L492.3,136.3L488.8,136.1L489.6,139L487.4,143.2L485.5,137.2L479.5,133.8L473.9,128.9L473.1,126.1L470.1,124.8L466.8,126.8L464.8,128.4L460.3,127.6L457,128.5L456.8,130.3L454.8,133.8L451.9,134.4L449.4,139.4L450.3,141L448.4,144.2L445,147L439.8,147L437.4,149.1L432.6,145.8L429.2,146.4L429.5,142.4L427.9,141L429.9,135.2L429.4,132L428.7,128.7L431.9,126.6L440.1,127.6L445.7,127.5L446.9,125.8L447.3,120.1L443.4,115.7L440.1,114.7L439.9,112.6L446.4,112.7L445.8,109.5L447.8,110.7L452.9,108.5L455.5,105.7L457.2,105.2L460.1,100.3L464.8,99.3L468.8,97.8L468.1,95.2L467,90.9L467.8,89.4L472,87.7L472.9,91.1L470.4,93.8L471,95.1L473.3,97.8L476.6,96.5L480.2,98.5L487.4,95.5L491.8,96.7L495,94.6L494.3,92.3L495,88.6L496.8,87.7L498.7,89.7L500.5,87.6L498,83.9L503,82.7L507.4,83.1L509.5,81.6L507.2,80.4L496.8,82.1L493.4,79.8L492.2,74.9L494.5,71.8L499.8,68.5L496.6,66.2L493.3,66.9L492.2,70.3L485.7,74.5L484.6,78.2L488.4,81.5L486.8,84.5L484.7,85.1L483.4,92.1L480.8,91.8L479.8,94L477.4,94.1L472.7,84.7L471.3,83.1L467.4,86.2L464.6,86.8L461.7,85.4L460.1,76.5L461.8,74.9L467,72.7L470.8,70.1L478.3,61.7L486.1,56.8L490.1,55.7L493.2,55.9L495.7,53.9L502.4,53.5L508.6,55.2L506.3,55.9L508.7,57.4L510.4,56.6L513.9,58L519.2,58.6L527.2,61.4L529.6,64.3L524.8,66.2L515.6,64.3L517.9,66.5L519,70.3L523.4,71.7L522.9,68.4L528.1,70L527.8,67.5L531.7,65L535.6,66.1L536.2,64.3L534.1,62.9L532.7,59.8L538.3,60.6L537.5,62.3L539.8,64.6L542.6,64L542.5,62.4L552,59.1L552.2,60.8L559.3,60.1L561.7,59.1L564.4,60.6L565.9,58.9L564,56.7L569.9,57.4L581,61L581.7,59.7L576.5,56.5L574.2,53.9L577.7,49.1L582.9,49.7L583.3,52.9L586.3,55.4L587.6,58.7L590.5,60.2L588.5,65.4L590.9,65.8L594,61.8L592.2,58.8L588.8,57.3L589,54.8L585.5,52.9L589.2,50.8L590.2,51.8L596.4,50.8L600.7,52.1L597.8,50.2L596.1,47.7L607.1,47L604.8,45.8L605.8,44.3L615,42.2L621.3,42.5L624.3,41.3L627.5,41.3L628,39.4L631.3,38.5L634.9,39.2L633.1,39.8L640,40.6L645.1,40.7L652.4,42.6L653.1,43.8L647.4,46.4L656.6,48.4L659.5,47.4L665.6,47.8L667.1,48.9L675.1,49.2L673.4,47.5L680.6,47.8L684.8,49.1L687,51.6L695,54.4L694.3,51.9L698.3,53L700.8,52.4L705.2,53.1L709.2,52.8L705.6,50.5L706.9,49.5L725.2,51.1L728.3,52.5L735.3,54.3L742.3,53.9L746.4,54.2L751,57L754.1,57.7L759.3,57.2L766.7,57.4L772.6,59.5L774,58.8L770.1,56.1L780.7,56.6L787.6,57.8L791.6,58.9L803.7,68.8ZM184.3,57L190.8,59L196.5,57.3L199,57.5L206.5,55.9L206.8,56.9L210.2,55.2L212.5,57.6L216.5,56L215.1,57.8L219.1,56.7L232.8,60.3L229.1,61.5L232.2,62L239.5,61.3L240.5,62.8L243.5,61.5L242.3,60.5L248.3,59.3L250.3,61.2L255.2,62.1L261.2,61.8L262,60.3L268.9,61.1L271.4,58.6L268.8,56.1L270.8,53.5L274.3,51.7L277.6,53.2L278.3,55.9L275.8,57.1L279,57.6L277.4,60.1L281.2,58.2L282.5,59.7L280.8,61.6L281.6,63.2L287.3,59.3L289.1,56.6L294.2,57.2L296,58.4L293.3,60.9L293,63.5L288.2,65.2L283.7,64.8L278.1,69.3L274.9,71.1L271.9,71.2L268.7,74L266.2,74.3L258.6,79.3L254.9,84.5L257.7,84.9L257.2,89.5L260.4,88.9L263.7,90.1L270.2,94.3L275.8,94.7L274.5,97.1L274.3,102.9L276.5,105.5L280.7,101.8L281.4,97.4L280.4,96L284.4,94.7L289.5,90.9L289.6,86.9L288,84.9L291.7,82.1L293.2,75.6L294.8,75L299.9,76L301.9,75.3L305.3,78.7L308.9,78.9L307.2,84.5L309.8,86.4L313.4,85L318.3,80.8L321.6,89.8L320.2,91.5L323.9,94.5L328.2,96.1L330.5,99.8L329.8,102.9L322.2,105.9L318.9,108.2L315,108.7L304.9,108.3L299.3,111.5L291.6,117.9L293.6,117.4L298.3,113.7L303.7,111.3L308.6,112.4L306,114.3L305.9,119.5L308.5,120.9L312.3,120.5L315.3,117.3L316.2,120.4L307.5,124L301.9,127.2L300.8,124.6L305.3,122.2L299.1,122.6L299.2,123.6L291.3,126.8L289,129.1L290,132.7L283.1,133.9L285,134.7L280.1,135.6L278.9,138.2L274.1,143.3L272.7,141.1L272.4,150.2L270.4,152.4L264.6,155.2L256.5,162.2L255.7,164.3L256.9,175.5L255.3,180.3L253.4,180.3L250.7,172.5L251.6,170.6L249.9,166.6L246.4,167.4L243.8,165.2L236,165.9L235.8,168.8L230.8,167.3L223.3,167.9L218,171.3L215.5,174L215.1,178.4L211.4,188.4L212.2,193.6L214.5,198.9L217.9,200.8L227.3,197.5L229.3,192.6L237.4,191L234.1,200.5L233.1,199.8L232.2,205.5L230.6,207.4L232.3,207.8L237.8,207L241.8,207.5L244.6,210L241.9,220.5L242.3,221.7L244.8,225.7L247.4,227.9L252.2,225.5L257.5,228.3L261.8,226L262.5,222.6L267.8,220.9L272.1,217.4L273.1,219.3L271.5,220.3L271.7,227.1L273.4,224.8L272.7,221.6L279.1,220.2L280.6,222.8L285.5,222.5L288.8,224.2L290.3,222.6L296.3,222.4L295,224.6L298.7,226.2L301.3,229.1L307.6,236.1L315.5,236.7L318.1,237.7L321.1,241.3L322,241.2L325.3,250.3L324.2,253.5L328.6,254L337.9,257.8L338.7,261.1L341.6,260.2L346.5,261.7L350.2,261.6L357.2,267.2L362.2,269.1L363.5,274.5L362.6,279.3L358,285.2L353.6,293.2L354,298.6L352.5,310L350.1,316.8L347.8,319.8L341.4,320.9L337.1,323.1L332.7,328.3L332.7,336.4L329.2,343.1L326,346.8L324,351.2L320.9,354.7L313.9,353.2L312.2,351.6L315.7,355.6L317.5,360.3L316,364L312.8,365.6L305.7,365.9L307.3,371.2L303.9,372.6L300.7,372.3L301.7,375.2L305.6,376.6L302.3,379.3L302.6,383.7L300.5,383.7L299,387.3L304.1,390L304.1,392.5L301.9,394.1L301.5,397.4L299.4,399.8L302.1,404.1L297.8,405.8L298.3,408.3L294.7,407.5L288.3,404L283.3,394L285,389.1L281.3,388.3L282.7,385.8L282,381L284.8,382.1L284.3,376.1L282.6,375.4L282.9,378.9L281.3,378.5L280.3,369.1L280.8,367.1L278.5,361L279.5,360.9L280.6,347.3L278.6,336.9L279.4,333.4L278.8,315.2L277.1,306.4L274.1,303.5L262.1,295.7L258.8,288.6L251.3,274.1L247.5,271L247,267L249.6,263.2L250.9,261L247.9,259.8L250,251.1L253.1,249.3L254.3,245.7L257.6,242.2L256,232.4L253.2,227.3L249.7,229.9L250.8,231.5L243.5,229.6L242,227.2L236.8,224L237.2,221.3L233.7,215.8L232.6,214.6L227,213.6L222,211.3L216.5,206.5L211.7,208.1L195.6,200.4L192.4,197.4L191.2,194.2L192.8,191.3L191.7,187.4L187.4,180.4L186.1,176.7L180.9,169.4L180.6,163L177.2,161.1L176.1,165.9L180.7,176.1L181.6,181.4L183.8,185.7L181.7,185.5L178,181.7L178.6,178L174.2,174.7L176,170.6L173.5,167.7L172.3,159L170.5,154.7L166.6,153.5L163.8,140.4L163.9,136.5L166.8,129.4L172.1,121.5L174.9,113.5L178.3,116.3L179.7,111.7L175.9,107.7L172.6,106.6L174.3,102.4L172.3,101.3L173,95.6L171.3,93.7L172.4,91.4L172,86.7L166.9,86.4L163,82.9L158.7,81.5L155.7,81.7L151.3,79.4L147.3,81.8L137.8,83.9L142.2,79.8L133.6,83.4L133.9,84.7L124.3,88.6L116.5,92.4L103.7,95.9L99.4,96.3L109.2,92.7L112.1,92.4L121.7,88.2L126.3,84.6L121,85.9L119.9,84.2L115.5,85.2L118.1,82.7L114.6,82.2L113.2,80.4L114.3,77.8L121.7,73.5L124.5,73.7L130.9,71.9L133.6,69.3L124.5,70.2L122.2,69.6L121.6,67.1L131.2,64.8L131.2,66.1L135.4,66L133.6,61.1L131.8,60.4L134.4,59.1L137.9,59L146.6,55.5L159.4,53.1L165.4,54.9L170,55.1L177.6,56.4L180.5,56ZM281.5,75.3L286.4,74.1L283,76.1ZM304,49.6L304.4,47.4L308.4,47.6L310.5,49.6ZM288.4,76.3L288.4,76.3L288.4,76.3ZM282.5,44.6L280.8,45.5L276.6,44.7L281.4,43.1ZM286.7,38.9L286.7,38.9L286.7,38.9ZM284.1,36.2L285.4,37L281.3,38.2L281.1,36ZM291.3,45.9L284.3,44.9L285.3,42.5L284.4,41.5L279.5,40.6L280.9,39.7L289.2,40.5L289.1,42.1L291.4,43.1L296.2,43.4L305.9,42.9L307,44.7L302.5,45.8ZM257.8,37.5L259.9,37.9L254.7,39.1L252.9,38.4ZM259.8,36.1L261.6,36.6L256.2,37ZM329.3,105.2L325.6,109.4L332.5,111L333.2,115.8L331.7,118.3L329.3,117.9L329.8,115.2L318.6,115.6L319.3,113L325.1,106.9ZM285.4,68.5L291,72L288.8,72.8L285.5,71.1L279.3,73.8L279,71.2L282.3,66.9ZM305.2,50.7L307.5,49.8L312.8,52.1L312.5,53.1L316.2,52.6L317.3,54.1L321.3,55.1L323.2,58.3L319.2,59.5L325.7,61.6L327.5,63.9L330.4,64.1L329.1,65.8L324.4,68.8L320.5,65.3L316.9,67L321,70.3L319.8,74.7L313.5,72L316.7,76.7L311.7,75.6L306.2,72.9L307.2,72.1L302.6,69.6L302.3,70.3L296.4,70.7L295.1,69.9L297.4,68L305.3,67.6L306.4,65.5L310.1,63L309.8,61.1L304,59L305.6,58.4L301.8,55.9L296.8,57L284,55.3L282.9,54.5L284,51L289.4,47.9L294.5,47.3L292.2,48.8L292.6,50.3L295.6,48.4L300.8,47.4L302.4,49.8L301.2,51.4ZM279.4,46.5L286.1,47.2L276.2,51.5L274.1,51.4L274.5,49.3ZM232.8,42L242.7,38.9L248,38.6L246,40.3L237.9,42.1ZM166.9,97.7L169.1,97.5L166.4,100.6ZM270.3,35.1L277.2,36.1L277.3,38.1L272.5,37.1ZM177.5,113.1L173.2,112.2L170.5,106.8L175.4,108.1ZM231.3,45.8L237.9,46.4L240,48.1L231.2,50.3L226.5,53L220.6,54.2L217.5,51.8L225.2,47.6L224.8,46.2ZM258.8,42.6L262.5,42.3L259.8,44.5L253.4,44.9L248,45.9L245.6,45.2L250.3,44.2L242,44.4L239.9,44L246.8,41.2L251,41.9L252.9,43.3L255.8,43.5L255.3,41.3L259.3,40.7ZM255.6,49L256.9,49.9L255.5,53.9L260.2,56.3L256,57.6L255.3,59.4L249.3,58.3L242.8,59.3L234.2,59.9L234,58.8L230.1,58.4L229.4,56.4L239.4,55.5L236.3,54.9L229.5,55L229.3,54.1L234.4,53.2L228.9,52.6L234.1,49.9L240.3,48.4L239.9,50L244.6,49.3L246.1,50.5L249.2,49.3L249.8,52.4L252.2,49ZM266,49.9L265.2,48.3L268.3,47.2L273.5,47.4L270.9,49.2L272.9,50.2L271,52.3L267.3,53.3L261.9,50.3ZM256.5,47.8L260,48.2L257.1,49.7ZM277,40.7L277.5,41.7L274.4,44.5L269.6,44.4L270.7,43.1L267.7,43.2L269.1,41.5ZM289.2,32.4L296.6,31.2L297.6,32.2L302.3,33L303.9,35L296.4,37.2L289.9,37.1L288.8,36.3L291.5,34.9L288.3,34.9L287,33.3ZM299.3,29.9L307.8,29.2L311,28.5L314,29.1L316.4,28.2L322,27.7L332.7,27.5L343.6,27.9L349.4,28.6L348.9,29.1L338.1,30.7L341.7,30.7L333.7,32.4L329.5,34.1L319,35L320.3,36.7L315,38.1L310.6,40.1L313.3,40.5L307.7,41.9L303.5,41.2L298.1,41.6L292.4,41.2L293,40.1L296.6,39.6L297.1,38.1L302.1,38.9L298.4,37.1L305.1,35L303.7,33.1L309.3,33.5L312.6,32.7L303.1,32.6L300.8,31.9ZM305.3,62.6L301.5,63.5L303.2,60.9L306.2,61.2ZM268.2,57.6L267,59.4L261.4,57.8L265.6,56ZM308.8,109.3L312.3,109.7L313,111.5ZM307.6,117.2L311.6,118.9L309.3,120.3L306.8,119.1ZM69.3,195.2L70.3,197L67.3,198.2ZM68.4,193.2L68.4,193.2L68.4,193.2ZM66.8,192L66.8,192L66.8,192ZM64.2,190.5L64.2,190.5L64.2,190.5ZM61.3,189L61.3,189L61.3,189ZM110.6,80.7L110.6,80.7L110.6,80.7ZM132,87.1L133.3,88.1L127.5,90.4L127.8,88.5ZM109.2,71.9L113.9,73.1L111.4,73.9L108.1,72.8ZM801.9,260.8L810.7,264.5L814,269.1L818,270.9L816.2,272.7L819.9,279.6L824.6,283.1L817.5,282.6L813.5,276.6L810.4,275.4L806.6,277.1L804.7,280.3L800.8,279.7L798.8,277.3L792.4,277.6L795.4,274.5L793.9,268.9L787.2,266.2L783.5,263.5L781.8,265.2L779.4,261.5L783.7,259.7L780.1,259.7L775.9,256L780.5,254.4L784.5,255.6L785.5,261.3L788,263L790.2,260L795.3,258.2ZM830.9,263.9L830.9,263.9L830.9,263.9ZM827.2,270.2L823.1,271.6L820,269L826,269.1L830,265.8ZM835.9,268.7L838.8,272.2L837.6,273.3ZM761,280.5L757,283.3L758.3,280.2L760.9,279L766,277.2ZM784.3,273.2L784.3,273.2L784.3,273.2ZM737.8,237.6L740.8,233.3L743.3,236L747.2,237.7L744.1,241.4L742.7,244L744.2,248L747.1,250.7L744.1,251.1L743.4,255.6L741,257.6L739.8,264.9L736.6,265.2L732.6,262.3L729.6,263.4L725.1,261.8L724.8,257.9L722.4,254.6L722.3,249.4L723.7,247.5L727.5,248L728,245.5L732,244.4L734.9,240.2ZM772.9,261.4L774.4,263.3L769.2,263.1ZM766.6,264.3L766.6,264.3L766.6,264.3ZM769.3,247L771,248.9L769.8,255.9L768.1,250.4ZM756.9,250.8L762.7,249.2L760.7,252.1L750.1,252.6L751.9,257.4L757.9,255.1L753.3,258.8L755.6,262.5L757.1,268.7L754.8,268.6L750.2,261.8L750.2,269.3L747.6,268.9L748.2,263.4L746.4,261.4L749.7,251.7L751.8,249.5ZM748.9,283L745.8,280.9L748.1,280.4ZM751.9,278L751.9,278L751.9,278ZM744.3,277.5L746.4,278.5L740.4,279.4ZM720.3,271.9L725.4,273.2L726,272L730.5,273.4L731.3,275.3L737.9,277.5L735,278.6L719.6,275.8L712.5,273.1L714.4,270.4ZM710.6,256.5L711.8,260.1L714.8,262.2L713.8,270.2L711,270.3L705.9,265.5L700,255.2L697.8,252.8L696.1,248.1L687.9,239L687.6,237.5L693.1,238.2L701.2,247.3L703.8,247.3L709.2,253L708.2,255.4ZM302.3,405.1L305.3,408.4L311.9,410.7L311.4,412.1L308,411.3L306.2,413.2L299.6,411.7L293.6,408.7L289.5,405.6L298.4,409L299,405.9ZM273.7,201.1L267.3,199.3L272.3,199.3L270.7,195.7L274.2,196.3L276.5,195.8L282.2,199.5ZM606.2,31.6L609.3,31.2L619.7,34.1L621.2,36L617.7,36.2L608.7,34.8L603.3,33ZM625.2,35.1L630.8,36.3L631.2,37.2L622.3,38L622.7,35.2ZM695.4,42L700.2,42.1L708.1,43.2L708.7,44.9L702,44.9L699.7,45.4L694.4,43.9ZM714.3,43.7L719.5,44.3L718.5,45.2L711,44.1ZM704.5,48.3L707.2,47.2L711.7,48.7ZM525.1,32.5L533.5,31.8L536.2,32.2L530.3,33.6L528.9,32.5ZM547,47.4L550.4,45.4L549.5,44.3L558,41.7L563.6,41.3L569.4,40.2L570.4,41.7L559.9,43.9L555.4,46.1L551.8,50.7L553,52.6L557.4,54.6L550.2,54.5L545.7,52.8L546,49.7L548.8,47.7ZM755.5,98.6L760,104L768.3,111.8L764.5,110.8L765.7,114.9L769.7,117.8L768,120.3L762.5,112.1L759.3,106.3L756.1,103.5L753.7,99.7ZM785.7,54.3L783.8,54.5L782.5,53.7L783.5,52.7L785.7,54.3ZM116.5,52.7L116.5,52.7L116.5,52.7L120.2,53.3L114.3,54.3L114.3,54.3L116.5,52.7ZM259.5,175.7L259.5,175.7L259.5,175.7ZM262.5,175L262.5,175L262.5,175ZM260.6,180.3L260.6,180.3L260.6,180.3ZM317.6,402.9L322.8,400.8L324.8,402L321.8,403.8ZM475.7,34.3L478.7,33.6L486.9,35.8L482.7,36.6L480,40.5L474,39.2L475.5,38.4L469.2,36L467.7,34.4L472.2,33.6ZM496.2,33.5L494,34.6L489.2,34.9L484.1,34.5L479.2,33L488.4,32.3ZM492.9,38.2L489.2,39.1L486,38.6L485.9,37.3L489.4,36.9ZM373.9,28.6L380.1,27.5L385.7,27.6L388.1,27L393.8,26.8L406.5,27L416.1,28.4L412.9,29.1L397.8,29.4L404.3,29.5L409.1,30.1L412.4,29.6L413.6,30.2L411.5,31.4L424.1,29.9L428.9,30.3L429.7,31.1L420.1,33.4L416.2,36.2L415.8,38.6L417.7,40.1L411.9,40.9L414.9,42L415,44L413.1,44.2L415.1,46.2L411,46.3L412.3,48.1L407.1,48.5L408.9,51.1L405.5,50.1L409,52.8L409.4,54.7L406,55.2L402.6,52.9L403,54.5L400.6,55.8L408,56L397.1,60.1L389.2,61L383.8,64.5L379.2,66.3L372.1,67.6L370,69.2L368.1,72.6L364.3,74.7L364.5,76.7L361.4,81.4L358.5,81.6L356,79.5L352,79.4L347.4,72.3L347.5,68.3L345.6,66L346,63.3L348.9,60.4L352.1,59.4L354.3,56.5L348.9,58.1L346.8,57.3L348.6,54.4L353.9,55L350,52.6L346.7,52.4L349.7,50.1L345.7,43.4L341.7,42L328.8,42.1L325,40L333.6,39.2L326.5,38.6L323.2,37.8L324,36.9L338.2,34.9L339.4,34.2L335.3,33.4L337.4,32.6L346.8,31L346.8,30.2L356.3,29.4L361.4,29.4L362.7,29.9L367.8,28.9L376.5,30.4L373.2,29.4ZM602,393.9L605.1,395.1L604,396.9L600.6,397.1ZM469.9,129.8L471.3,128.7L471.1,133.4ZM287.2,199.8L287.2,199.8L287.2,199.8ZM259.4,199.8L262.6,201.6L260.1,202.1ZM249.8,186.2L259,188.2L263,192L268.4,194.6L264.7,195.8L259.4,195.9L261.3,194.3L257.8,190.8L250.4,189.1L248.3,187.6L244.9,189.9L244.7,188ZM572.8,289.4L574.7,297.3L571.6,305.2L564.1,325.5L559.9,327.5L556.7,325.7L555.5,317.2L558.7,311.4L558.2,303.7L559.6,300.2L564.3,298.9ZM862.6,299.3L862.6,299.3L862.6,299.3ZM861.7,298.6L861.7,298.6L861.7,298.6ZM511.7,151L508.1,152.1L505.2,151ZM436.8,98.2L435.4,102.6L431.5,104.3L428.4,103.8L430.3,101L429.3,98.2L434,94.7L438,96.3ZM855.3,314.3L857.6,317.5L854,316.1L851.9,312.5ZM852.7,283.6L852.7,283.6L852.7,283.6ZM851.9,281.1L851.9,281.1L851.9,281.1ZM849.8,281.8L849.8,281.8L849.8,281.8ZM847.4,276.5L847.4,276.5L847.4,276.5ZM841.4,273.6L841.4,273.6L841.4,273.6ZM857.3,369.5L853,373L849.9,373L852.7,370.6L851.2,367.8L854.1,365.8L857.3,359.2L856.4,353.4L859.3,355.6L858.6,361.2L862.2,363.4L865.2,362.6L861.4,366.9ZM834.4,379.5L839.6,376.5L847.1,370.7L848.1,374.4L841.6,379L841.5,380.3L837.1,381.4L831.9,386.2L827.5,388.3L822.5,387.1L825.5,383.9ZM788.9,371.6L790.2,371.8L785.6,378.5L780.9,379.5L782.3,371.3L785.4,372.5ZM749.4,346.7L744,348.9L741.8,351.6L732.8,351.8L727.3,355L724,354.9L721.1,352.5L724.8,346.7L725.4,338.7L724.4,334.8L724.5,327.5L726.2,328L725.2,323.9L728.7,316.3L735.5,313.2L737.3,313.4L746.3,310.3L750.5,306L753.3,300.8L755.4,299.9L760.8,294.5L764.4,293.3L767.2,296.3L770,295L773.7,289.6L778.7,288.3L778.6,285.5L785.4,288.7L789.5,289L784.7,295.9L792.8,303.6L796.8,303.5L800.1,296.8L801.2,289.2L803.9,284.1L805.6,290.4L805.8,295.4L807.6,294.3L809.2,296.6L809.3,308.2L814.4,312.3L814.9,318L817.5,318.2L817,321.2L820.2,326.5L819.1,334.8L813.5,345L809,349.1L800.8,358.9L799.2,361.8L794.7,362.9L788.4,366.5L785.9,364.7L782.4,365.8L776.6,363.5L776.6,358.1L773.8,356.6L775.5,353L771.2,355.5L775.6,350.8L776.3,348.7L769.7,354.5L768.2,347.9L762.4,344.6ZM653.7,231.6L653.4,234.6L650.3,236.1L648.4,229.6L649.2,224.9ZM719.1,200.7L716.9,199.8L717.4,196L721.4,195.2L721,199.3ZM745.5,182.7L744.6,189.7L742,185.1L744.2,180.1ZM484.3,142.7L486,142.5L485.3,147.1L478.9,144.3L479.2,142.8ZM470,134.8L472.5,135.9L472.3,139.7L469.5,139.8L468.7,134.6ZM476,92.1L475.7,95.6L473,93ZM443.4,99.5L442.3,96.2L438.2,94.3L437.1,90.3L439.7,85.3L443.8,85.3L441.5,88.2L445.9,87.9L443.4,92.5L445.6,92.6L449.1,96.6L451,100.8L453.6,101.3L451.2,106.8L442.1,108.3L437.4,108.5L440.6,105.5L438.6,103.4L440.9,102.5L440.2,99.2ZM421.8,65.1L421.2,66.7L423.3,68.4L420.6,70.4L412.9,72.6L404.9,71.4L407,70.3L402.9,69L406.5,67.8L402.5,67.2L404,65.6L407,65.2L409.8,66.9L413,65.5L415.3,66.3L418.6,64.9ZM749.4,216.6L749.4,216.6L749.4,216.6ZM754.6,224.5L755.3,221.9L758,220.9L755.9,227.3ZM764.5,229L764.5,235.2L763.4,232.2L762.6,237.2L759.6,235.5L757.7,230.7L754.1,233.4L754.5,230.1L758.2,229.5L763.9,226.5ZM744.7,226.4L741.6,229.1L745.6,223.3ZM750.7,200.6L751.7,203.9L750.2,207.3L751,211.9L756.7,213.5L757.5,217.1L754.3,214.1L748.5,213.3L746.7,210L746.6,199.8ZM752.9,220.3L755.5,219.8L753.1,223.2ZM761.2,218.2L760.1,224L758,217ZM777.9,139.7L777.2,142.6L779.8,149.4L777,152.8L772.9,153L770.9,156.3L767.9,153L759.1,155.1L762.3,157.2L762.4,162.2L759.8,162.3L759.5,159.6L756,156.8L761.1,150.6L768.2,150.3L768.5,145.2L770.6,146.5L773.6,142.5L771.4,133.9L773.6,133.4ZM776.9,126L777.8,124.8L780.2,128L777.2,128.8L776.8,131.6L772.2,129.7L772.6,132.8L770.1,132.8L768.2,127.8L770.5,127.6L768.4,121.5L772.7,124.4ZM762.8,156.3L765.4,153.7L768.1,155.3L765.1,158.5ZM526.9,151.4L529.8,151.7L526.9,151.4ZM296.8,222.2L296.8,222.2L296.8,222.2Z", "c": { "GB": "M436.8,98.2L433.9,97.7L434,94.7L438,96.3ZM443.4,99.5L442.3,96.2L438.2,94.3L437.1,90.3L439.7,85.3L443.8,85.3L441.5,88.2L445.9,87.9L443.4,92.5L445.6,92.6L449.1,96.6L451,100.8L453.6,101.3L451.2,106.8L442.1,108.3L437.4,108.5L440.6,105.5L438.6,103.4L440.9,102.5L440.2,99.2Z", "IE": "M436.8,98.2L435.4,102.6L431.5,104.3L428.4,103.8L430.3,101L429.3,98.2L434,94.7L433.9,97.7Z", "US": "M179.7,111.7L211.3,109.4L240.6,111.7L247.4,114.1L254.8,113.7L261,117.6L264.7,122L263.9,127.1L260.4,131.4L261.6,132.5L270.6,129.1L270.6,127.4L276,126.9L281.6,123L289.2,123L291.5,121.7L296.3,116.1L299.2,117.2L298.1,121L299.1,122.6L299.2,123.6L291.3,126.8L289,129.1L290,132.7L283.1,133.9L285,134.7L280.1,135.6L278.9,138.2L274.1,143.3L272.7,141.1L272.4,150.2L270.4,152.4L264.6,155.2L256.5,162.2L255.7,164.3L256.9,175.5L255.3,180.3L253.4,180.3L250.7,172.5L251.6,170.6L249.9,166.6L246.4,167.4L243.8,165.2L236,165.9L235.8,168.8L230.8,167.3L223.3,167.9L218,171.3L215.5,174L215.1,178.4L210.9,176.9L208.3,168.2L204.9,167.1L202.8,169.4L200,167.6L199.5,164.5L196.9,161.3L192.4,162.5L185.8,162.5L177.8,159L172.3,159L170.5,154.7L166.6,153.5L163.8,140.4L163.9,136.5L166.8,129.4L172.1,121.5L174.9,113.5L178.3,116.3ZM69.3,195.2L70.3,197L67.3,198.2ZM68.4,193.2L68.4,193.2L68.4,193.2ZM66.8,192L66.8,192L66.8,192ZM64.2,190.5L64.2,190.5L64.2,190.5ZM61.3,189L61.3,189L61.3,189ZM110.6,80.7L110.6,80.7L110.6,80.7ZM132,87.1L133.3,88.1L127.5,90.4L127.8,88.5ZM184.3,57L162.4,80.9L165.7,81.7L166.7,84.6L172.6,82.3L174.1,85.9L173.8,90.9L176.2,92.6L173,95.6L171.3,93.7L172.4,91.4L172,86.7L166.9,86.4L163,82.9L158.7,81.5L155.7,81.7L151.3,79.4L147.3,81.8L137.8,83.9L142.2,79.8L133.6,83.4L133.9,84.7L124.3,88.6L116.5,92.4L103.7,95.9L99.4,96.3L109.2,92.7L112.1,92.4L121.7,88.2L126.3,84.6L121,85.9L119.9,84.2L115.5,85.2L118.1,82.7L114.6,82.2L113.2,80.4L114.3,77.8L121.7,73.5L124.5,73.7L130.9,71.9L133.6,69.3L124.5,70.2L122.2,69.6L121.6,67.1L131.2,64.8L131.2,66.1L135.4,66L133.6,61.1L131.8,60.4L134.4,59.1L137.9,59L146.6,55.5L159.4,53.1L165.4,54.9L170,55.1L177.6,56.4L180.5,56ZM109.2,71.9L113.9,73.1L111.4,73.9L108.1,72.8Z", "CA": "M179.7,111.7L175.9,107.7L172.6,106.6L174.3,102.4L172.3,101.3L173,95.6L176.2,92.6L173.8,90.9L174.1,85.9L172.6,82.3L166.7,84.6L165.7,81.7L162.4,80.9L184.3,57L190.8,59L196.5,57.3L199,57.5L206.5,55.9L206.8,56.9L210.2,55.2L212.5,57.6L216.5,56L215.1,57.8L219.1,56.7L232.8,60.3L229.1,61.5L232.2,62L239.5,61.3L240.5,62.8L243.5,61.5L242.3,60.5L248.3,59.3L250.3,61.2L255.2,62.1L261.2,61.8L262,60.3L268.9,61.1L271.4,58.6L268.8,56.1L270.8,53.5L274.3,51.7L277.6,53.2L278.3,55.9L275.8,57.1L279,57.6L277.4,60.1L281.2,58.2L282.5,59.7L280.8,61.6L281.6,63.2L287.3,59.3L289.1,56.6L294.2,57.2L296,58.4L293.3,60.9L293,63.5L288.2,65.2L283.7,64.8L278.1,69.3L274.9,71.1L271.9,71.2L268.7,74L266.2,74.3L258.6,79.3L254.9,84.5L257.7,84.9L257.2,89.5L260.4,88.9L263.7,90.1L270.2,94.3L275.8,94.7L274.5,97.1L274.3,102.9L276.5,105.5L280.7,101.8L281.4,97.4L280.4,96L284.4,94.7L289.5,90.9L289.6,86.9L288,84.9L291.7,82.1L293.2,75.6L294.8,75L299.9,76L301.9,75.3L305.3,78.7L308.9,78.9L307.2,84.5L309.8,86.4L313.4,85L318.3,80.8L321.6,89.8L320.2,91.5L323.9,94.5L328.2,96.1L330.5,99.8L329.8,102.9L322.2,105.9L318.9,108.2L315,108.7L304.9,108.3L299.3,111.5L291.6,117.9L293.6,117.4L298.3,113.7L303.7,111.3L308.6,112.4L306,114.3L305.9,119.5L308.5,120.9L312.3,120.5L315.3,117.3L316.2,120.4L307.5,124L301.9,127.2L300.8,124.6L305.3,122.2L299.1,122.6L298.1,121L299.2,117.2L296.3,116.1L291.5,121.7L289.2,123L281.6,123L276,126.9L270.6,127.4L270.6,129.1L261.6,132.5L260.4,131.4L263.9,127.1L264.7,122L261,117.6L254.8,113.7L247.4,114.1L240.6,111.7L211.3,109.4ZM281.5,75.3L286.4,74.1L283,76.1ZM304,49.6L304.4,47.4L308.4,47.6L310.5,49.6ZM288.4,76.3L288.4,76.3L288.4,76.3ZM282.5,44.6L280.8,45.5L276.6,44.7L281.4,43.1ZM286.7,38.9L286.7,38.9L286.7,38.9ZM284.1,36.2L285.4,37L281.3,38.2L281.1,36ZM291.3,45.9L284.3,44.9L285.3,42.5L284.4,41.5L279.5,40.6L280.9,39.7L289.2,40.5L289.1,42.1L291.4,43.1L296.2,43.4L305.9,42.9L307,44.7L302.5,45.8ZM257.8,37.5L259.9,37.9L254.7,39.1L252.9,38.4ZM259.8,36.1L261.6,36.6L256.2,37ZM329.3,105.2L325.6,109.4L332.5,111L333.2,115.8L331.7,118.3L329.3,117.9L329.8,115.2L318.6,115.6L319.3,113L325.1,106.9ZM285.4,68.5L291,72L288.8,72.8L285.5,71.1L279.3,73.8L279,71.2L282.3,66.9ZM305.2,50.7L307.5,49.8L312.8,52.1L312.5,53.1L316.2,52.6L317.3,54.1L321.3,55.1L323.2,58.3L319.2,59.5L325.7,61.6L327.5,63.9L330.4,64.1L329.1,65.8L324.4,68.8L320.5,65.3L316.9,67L321,70.3L319.8,74.7L313.5,72L316.7,76.7L311.7,75.6L306.2,72.9L307.2,72.1L302.6,69.6L302.3,70.3L296.4,70.7L295.1,69.9L297.4,68L305.3,67.6L306.4,65.5L310.1,63L309.8,61.1L304,59L305.6,58.4L301.8,55.9L296.8,57L284,55.3L282.9,54.5L284,51L289.4,47.9L294.5,47.3L292.2,48.8L292.6,50.3L295.6,48.4L300.8,47.4L302.4,49.8L301.2,51.4ZM279.4,46.5L286.1,47.2L276.2,51.5L274.1,51.4L274.5,49.3ZM232.8,42L242.7,38.9L248,38.6L246,40.3L237.9,42.1ZM166.9,97.7L169.1,97.5L166.4,100.6ZM270.3,35.1L277.2,36.1L277.3,38.1L272.5,37.1ZM177.5,113.1L173.2,112.2L170.5,106.8L175.4,108.1ZM231.3,45.8L237.9,46.4L240,48.1L231.2,50.3L226.5,53L220.6,54.2L217.5,51.8L225.2,47.6L224.8,46.2ZM258.8,42.6L262.5,42.3L259.8,44.5L253.4,44.9L248,45.9L245.6,45.2L250.3,44.2L242,44.4L239.9,44L246.8,41.2L251,41.9L252.9,43.3L255.8,43.5L255.3,41.3L259.3,40.7ZM255.6,49L256.9,49.9L255.5,53.9L260.2,56.3L256,57.6L255.3,59.4L249.3,58.3L242.8,59.3L234.2,59.9L234,58.8L230.1,58.4L229.4,56.4L239.4,55.5L236.3,54.9L229.5,55L229.3,54.1L234.4,53.2L228.9,52.6L234.1,49.9L240.3,48.4L239.9,50L244.6,49.3L246.1,50.5L249.2,49.3L249.8,52.4L252.2,49ZM266,49.9L265.2,48.3L268.3,47.2L273.5,47.4L270.9,49.2L272.9,50.2L271,52.3L267.3,53.3L261.9,50.3ZM256.5,47.8L260,48.2L257.1,49.7ZM277,40.7L277.5,41.7L274.4,44.5L269.6,44.4L270.7,43.1L267.7,43.2L269.1,41.5ZM289.2,32.4L296.6,31.2L297.6,32.2L302.3,33L303.9,35L296.4,37.2L289.9,37.1L288.8,36.3L291.5,34.9L288.3,34.9L287,33.3ZM299.3,29.9L307.8,29.2L311,28.5L314,29.1L316.4,28.2L322,27.7L332.7,27.5L343.6,27.9L349.4,28.6L348.9,29.1L338.1,30.7L341.7,30.7L333.7,32.4L329.5,34.1L319,35L320.3,36.7L315,38.1L310.6,40.1L313.3,40.5L307.7,41.9L303.5,41.2L298.1,41.6L292.4,41.2L293,40.1L296.6,39.6L297.1,38.1L302.1,38.9L298.4,37.1L305.1,35L303.7,33.1L309.3,33.5L312.6,32.7L303.1,32.6L300.8,31.9ZM305.3,62.6L301.5,63.5L303.2,60.9L306.2,61.2ZM268.2,57.6L267,59.4L261.4,57.8L265.6,56ZM308.8,109.3L312.3,109.7L313,111.5ZM307.6,117.2L311.6,118.9L309.3,120.3L306.8,119.1Z", "AU": "M788.9,371.6L790.2,371.8L785.6,378.5L780.9,379.5L782.3,371.3L785.4,372.5ZM749.4,346.7L744,348.9L741.8,351.6L732.8,351.8L727.3,355L724,354.9L721.1,352.5L724.8,346.7L725.4,338.7L724.4,334.8L724.5,327.5L726.2,328L725.2,323.9L728.7,316.3L735.5,313.2L737.3,313.4L746.3,310.3L750.5,306L753.3,300.8L755.4,299.9L760.8,294.5L764.4,293.3L767.2,296.3L770,295L773.7,289.6L778.7,288.3L778.6,285.5L785.4,288.7L789.5,289L784.7,295.9L792.8,303.6L796.8,303.5L800.1,296.8L801.2,289.2L803.9,284.1L805.6,290.4L805.8,295.4L807.6,294.3L809.2,296.6L809.3,308.2L814.4,312.3L814.9,318L817.5,318.2L817,321.2L820.2,326.5L819.1,334.8L813.5,345L809,349.1L800.8,358.9L799.2,361.8L794.7,362.9L788.4,366.5L785.9,364.7L782.4,365.8L776.6,363.5L776.6,358.1L773.8,356.6L775.5,353L771.2,355.5L775.6,350.8L776.3,348.7L769.7,354.5L768.2,347.9L762.4,344.6Z", "NZ": "M857.3,369.5L853,373L849.9,373L852.7,370.6L851.2,367.8L854.1,365.8L857.3,359.2L856.4,353.4L859.3,355.6L858.6,361.2L862.2,363.4L865.2,362.6L861.4,366.9ZM834.4,379.5L839.6,376.5L847.1,370.7L848.1,374.4L841.6,379L841.5,380.3L837.1,381.4L831.9,386.2L827.5,388.3L822.5,387.1L825.5,383.9Z", "ZA": "M489.2,336.1L490.4,334.7L494.3,337.5L497.8,335.8L498.2,325L500.4,331L502.1,330.7L506.5,326.5L512.1,327.1L515.9,321.6L521.8,317.3L526.1,317.7L527.5,323.9L527,328.2L525.1,327.8L524,330.8L527.4,330.7L529.2,330.8L528,335.3L521.6,343.6L516.8,348.3L510.8,351.7L503.3,351.5L496.1,354.3L493,351.5L493.3,345.1ZM519.5,337.2L518.5,336.3L514.5,339.9L516.2,342.1L518.9,340.5Z", "IN": "M683.8,171.4L684.1,174.9L679.6,176.4L678.7,184.3L676.7,183.6L677.2,188.8L676.1,189.5L674,184.9L671.7,185.3L673.9,181L667.7,180.1L667.2,178.1L663.8,176.7L665.4,180.2L663.7,182.4L667.2,189.5L662.4,191.1L661.9,195L658.6,197L652.4,204.1L652.6,205.4L648.2,207.3L647.7,209.6L648.9,215.7L648.4,223.4L643,230.3L640.5,227.6L638,220.6L635.5,216.5L634,211.1L631.4,207.1L628.7,197.8L627.5,191.5L622.3,192.9L618.7,189.4L619.8,188.3L615.7,184.7L617.1,182.8L622.4,182.8L619.4,176.6L617.6,175.3L619.8,172.2L622.6,172.5L627.3,163.5L628.6,159.8L626.4,158.3L623.7,153.8L624.6,152.6L630.9,152.9L632.6,150.4L635.9,153.8L637.7,159.2L637.3,162L643.7,165.8L642.1,169.9L655.7,175.9L662.6,176.8L661.9,172.6L663.9,174.2L666.5,175.9L672,175.6L670.6,172.9L672.4,172.5L676.5,168.5L680.1,168L681.1,171Z", "FR": "M321.1,241.3L318.8,246.1L313.9,246.6L315.2,242.9L314.1,239.2L315.5,236.7L318.1,237.7ZM463.6,110.4L467.8,111.7L466.6,115.6L463.5,118.1L465.3,120.2L466.8,126.8L464.8,128.4L460.3,127.6L457,128.5L456.8,130.3L454.2,130.6L446.6,128.6L445.7,127.5L446.9,125.8L447.3,120.1L443.4,115.7L440.1,114.7L439.9,112.6L446.4,112.7L445.8,109.5L447.8,110.7L452.9,108.5L455.5,105.7L459.4,109.2L462.5,110.2ZM469.9,129.8L471.3,128.7L471.1,133.4Z", "JP": "M777.9,139.7L777.2,142.6L779.8,149.4L777,152.8L772.9,153L770.9,156.3L767.9,153L759.1,155.1L762.3,157.2L762.4,162.2L759.8,162.3L759.5,159.6L756,156.8L761.1,150.6L768.2,150.3L768.5,145.2L770.6,146.5L773.6,142.5L771.4,133.9L773.6,133.4ZM776.9,126L777.8,124.8L780.2,128L777.2,128.8L776.8,131.6L772.2,129.7L772.6,132.8L770.1,132.8L768.2,127.8L770.5,127.6L768.4,121.5L772.7,124.4ZM762.8,156.3L765.4,153.7L768.1,155.3L765.1,158.5Z", "BR": "M324,351.2L322.3,346.2L313.9,340.6L312.4,340.9L317.3,334.1L320.6,331.3L317.9,327.9L318.1,322.9L315.4,322.7L314.5,318.9L312.2,317.2L308.7,317.3L307.5,311.7L308.7,305.9L306.4,300.4L301.7,300.3L300.3,293.1L287.7,286.7L287.6,281.5L284.4,282L280.5,285.1L277.4,285L274.9,285.1L274.8,280.7L270.6,282.4L265.8,275.1L267.8,272.5L268.2,268.6L273.4,265.6L275.6,265.7L276.6,257.8L275.2,251.8L275.7,248.4L280.6,248.4L283,249.7L284.4,251.2L289.7,249L291.7,246.4L289.6,246.1L288.8,241.3L292.6,242.4L297.9,240.2L298.6,238.3L301.5,241.9L300.3,245.4L302.6,249.5L308.9,247.8L310.3,246.1L313.9,246.6L318.8,246.1L321.1,241.3L322,241.2L325.3,250.3L324.2,253.5L328.6,254L337.9,257.8L338.7,261.1L341.6,260.2L346.5,261.7L350.2,261.6L357.2,267.2L362.2,269.1L363.5,274.5L362.6,279.3L358,285.2L353.6,293.2L354,298.6L352.5,310L350.1,316.8L347.8,319.8L341.4,320.9L337.1,323.1L332.7,328.3L332.7,336.4L329.2,343.1L326,346.8Z", "CN": "M719.1,200.7L716.9,199.8L717.4,196L721.4,195.2L721,199.3ZM632.9,130.6L633.5,128.2L629.9,123.3L634.9,121.5L634.8,116.4L639.5,117.3L639.3,113.2L642,111.1L642.8,110.9L644.1,112.8L650.1,115.4L652.6,117.7L654.2,122.2L660.3,123.1L665.2,125.2L669.1,129.5L681.8,130.1L690,132.8L692.1,131.2L698.7,130.1L703.1,126.6L701.5,122.7L705.4,123.6L709.9,121L711.8,118.3L716.7,118.2L711.2,114.3L706.5,115.3L705.4,114.1L705.4,109.2L708.6,110.3L711,103.4L708.5,101.3L709.4,99.9L714.6,99.3L720.8,101.1L729.7,109.6L734,110.5L740.2,115.1L743.6,115.1L748,113.2L749.1,122.6L744.7,123.1L748,128.9L747.6,130.5L739.8,132.1L736.3,137.6L730.1,140.6L730.8,136.2L729,134.6L722.2,141L729,145.6L730.8,143.5L735.8,146.2L732.8,147.1L730.1,152.1L733.2,153.7L739.8,161.5L739.2,164.4L741.9,166.9L742.3,171.5L741.1,171.8L737.8,182.2L732.3,187.4L727.4,188.1L726.3,189.5L720.7,191.4L719.1,194.6L718.4,191.4L713.9,190.9L709.9,189L710,187.3L706.2,185.7L704.5,187.3L699,188.3L698.8,192L697.2,191.3L692.1,189.3L692.4,186.9L689.6,183.7L687.1,184.1L686.8,180.7L688.5,178.3L687.6,173.6L683.8,171.4L681.1,171L680.1,168L676.5,168.5L672.4,172.5L670.6,172.9L666.2,171.3L663.9,174.2L661.9,172.6L656.2,171.6L644.6,165.2L643.7,165.8L637.3,162L637.7,159.2L635.9,153.8L632.6,150.4L628.5,149.2L625.2,145.7L624.6,144.8L623.6,142.1L621.4,141.7L620.1,139L623.4,135.7L629.1,134Z", "DE": "M480.2,98.5L482.6,105.8L476.7,108.2L479.9,112.1L478.9,115.5L471.3,115.9L466.6,115.6L467.8,111.7L463.6,110.4L463.2,108.5L463.4,106.7L464.8,99.3L468.8,97.8L468.1,95.2L471,95.1L473.3,97.8L476.6,96.5Z", "NG": "M456.7,235.2L456.8,228.7L459.2,224.2L459,219.6L460.8,213.6L463.5,213.2L466.9,215.4L472.3,216.2L475,214.9L480.5,215.6L483,214.1L485.2,217.2L485.8,219.9L483.7,222.1L479.3,233.2L475.2,233L473,234.7L471.2,239.5L464.7,241L460.8,235.2Z" }, "p": { "angeln": [470.4, 96.2], "england": [446.8, 101.7], "ireland": [433.3, 100], "jamestown": [271, 145.5], "sydney": [806.7, 351.6], "cape": [512.7, 349.9], "calcutta": [665.4, 187.9], "singapore": [709.1, 249.4], "paris": [455.2, 112], "tokyo": [777.4, 149.8], "saopaulo": [336.7, 321.3], "beijing": [718.2, 137.7], "ottawa": [280.1, 121.9], "wellington": [850.2, 373] } };
+    var CIR = { inner: "#457865", outer: "#b08a4a", exp: "#49B190" };
+    // d = arrival date; from/at = map points; ctl = curve control point; fills = [country, date]; off = label offset
+    var PL = [
+        { id: "britain", d: 450, cir: "inner", from: "angeln", at: "england", ctl: [462, 84], fills: [["GB", 450]], off: [4, 24, "start"] },
+        { id: "ireland", d: 1169, cir: "inner", from: "england", at: "ireland", ctl: [440, 88], fills: [["IE", 1169]], off: [-10, -8, "end"] },
+        { id: "america", d: 1607, cir: "inner", from: "england", at: "jamestown", ctl: [360, 92], fills: [["US", 1607], ["CA", 1776]], off: [10, 18, "start"] },
+        { id: "australia", d: 1788, cir: "inner", from: "england", at: "sydney", ctl: [600, 470], fills: [["AU", 1788], ["NZ", 1840]], off: [-12, 18, "end"] },
+        { id: "southafrica", d: 1820, cir: "outer", from: "england", at: "cape", ctl: [400, 240], fills: [["ZA", 1820]], off: [-12, 18, "end"] },
+        { id: "singapore", d: 1819, cir: "outer", from: "england", at: "singapore", ctl: [600, 330], fills: [], off: [10, 18, "start"] },
+        { id: "india", d: 1835, cir: "outer", from: "england", at: "calcutta", ctl: [560, 250], fills: [["IN", 1835]], off: [-8, 22, "end"] },
+        { id: "world", d: 1945, cir: "exp", from: null, at: "tokyo", ctl: null, fills: [["FR", 1945], ["DE", 1945], ["JP", 1945], ["CN", 1945], ["BR", 1945]], off: [-10, -14, "end"] }
+    ];
+    var RY = function (id) { return id === "britain" ? 40 : 30; }; // years a route takes to draw
+    // Speaker estimates shown in the readout (Crystal 2008; Quirk 1962; Ethnologue 2025)
+    var SPEAKERS = [[1600, "sp1"], [1962, "sp2"], [1990, "sp3"]];
+    // slider units 0..1000 -> year (400-1500 compressed into the first quarter)
+    var yearOf = function (u) { return u <= 250 ? 400 + u / 250 * 1100 : 1500 + (u - 250) / 750 * 500; };
+    var unitOf = function (y) { return y <= 1500 ? (y - 400) / 1100 * 250 : 250 + (y - 1500) / 500 * 750; };
+    var TICKS = [400, 1500, 1600, 1700, 1800, 1900, 2000];
+    /* ---------- drawing ---------- */
+    var svg = document.getElementById("map"), NS = "http://www.w3.org/2000/svg";
+    var VB = [180, 28, 712, 372];
+    svg.setAttribute("viewBox", VB.join(" "));
+    function el(t, a, p) { var e = document.createElementNS(NS, t); for (var k in a)
+        e.setAttribute(k, a[k]); (p || svg).appendChild(e); return e; }
+    var K = 1, cir = "all", selected = null;
+    var R = {};
+    var owner = {};
+    PL.forEach(function (p) { return p.fills.forEach(function (_a) {
+        var _b = __read(_a, 2), c = _b[0], d = _b[1];
+        return owner[c] = { p: p, d: d };
+    }); });
+    function build() {
+        svg.innerHTML = "";
+        el("rect", { class: "ocean", x: VB[0], y: VB[1], width: VB[2], height: VB[3], rx: 4 });
+        el("path", { class: "land", d: MAP.land });
+        R.cty = {};
+        var _loop_1 = function (c) {
+            var o = owner[c];
+            var pth = el("path", { class: "cty", d: MAP.c[c], fill: CIR[o.p.cir], "fill-opacity": 0 });
+            ["pointerenter", "click"].forEach(function (ev) { return pth.addEventListener(ev, function () { if (shownYear() >= o.d)
+                select(o.p.id); }); });
+            R.cty[c] = pth;
+        };
+        for (var c in owner) {
+            _loop_1(c);
+        }
+        R.route = {};
+        PL.forEach(function (p) {
+            if (!p.from)
+                return;
+            var a = MAP.p[p.from], b = MAP.p[p.at];
+            var r = el("path", { class: "route", stroke: CIR[p.cir], d: "M".concat(a[0], ",").concat(a[1], "Q").concat(p.ctl[0], ",").concat(p.ctl[1], " ").concat(b[0], ",").concat(b[1]) });
+            r._len = r.getTotalLength();
+            R.route[p.id] = r;
+        });
+        var h = MAP.p.angeln;
+        R.home = el("g", { class: "home" });
+        R.homeDot = el("circle", { cx: h[0], cy: h[1] }, R.home);
+        R.homeLab = el("text", { "text-anchor": "start" }, R.home);
+        R.m = {};
+        PL.forEach(function (p) {
+            var g = el("g", { class: "mk", tabindex: "0", role: "button" }), q = MAP.p[p.at];
+            var ci = el("circle", { cx: q[0], cy: q[1], fill: CIR[p.cir] }, g), ml = el("text", { class: "ml" }, g), yl = el("text", { class: "yl" }, g);
+            ["pointerenter", "focus", "click"].forEach(function (ev) { return g.addEventListener(ev, function () { return select(p.id); }); });
+            g.addEventListener("keydown", function (e) { if (e.key === "Enter")
+                select(p.id); });
+            R.m[p.id] = { g: g, ci: ci, ml: ml, yl: yl, p: p, q: q };
+        });
+        layout();
+        labels();
+    }
+    function layout() {
+        var small = K > 1.4;
+        R.homeDot.setAttribute("r", 4 * K);
+        var h = MAP.p.angeln;
+        R.homeLab.setAttribute("x", h[0] + 8 * K);
+        R.homeLab.setAttribute("y", h[1] - 6 * K);
+        R.homeLab.style.fontSize = (11 * K) + "px";
+        R.homeLab.style.display = small ? "none" : "";
+        Object.values(R.m).forEach(function (m) {
+            var o = m.p.off;
+            m.ci.setAttribute("r", 5.5 * K);
+            var x = m.q[0] + o[0] * K, y = m.q[1] + o[1] * K;
+            m.ml.setAttribute("x", x);
+            m.ml.setAttribute("y", y);
+            m.ml.setAttribute("text-anchor", o[2]);
+            m.ml.style.fontSize = (11.5 * K) + "px";
+            m.yl.setAttribute("x", x);
+            m.yl.setAttribute("y", y + 12 * K);
+            m.yl.setAttribute("text-anchor", o[2]);
+            m.yl.style.fontSize = (10 * K) + "px";
+            m.yl.style.display = small ? "none" : "";
+            m.ml.style.display = (small && m.p.id === "world") ? "none" : "";
+        });
+        Object.values(R.route).forEach(function (r) { return r.style.strokeWidth = (1.8 * K) + "px"; });
+    }
+    function labels() {
+        R.homeLab.textContent = T("home");
+        Object.values(R.m).forEach(function (m) { m.ml.textContent = T("n_" + m.p.id); m.yl.textContent = T("dl_" + m.p.id); });
+        document.getElementById("legend").innerHTML = ["inner", "outer", "exp"].map(function (k) { return "<span><i style=\"background:".concat(CIR[k], "\"></i>").concat(T(k), "</span>"); }).join("") + "<span><i style=\"background:#9a9a9a\"></i>".concat(T("legHome"), "</span>");
+        document.getElementById("ticks").innerHTML = TICKS.map(function (y) { return "<span style=\"left:".concat(unitOf(y) / 10, "%\">").concat(y === 2000 ? T("today") : y, "</span>"); }).join("");
+    }
+    function rescale() { var w = svg.getBoundingClientRect().width || VB[2]; K = Math.max(1, Math.min(2.2, 0.8 * VB[2] / w)); layout(); }
+    /* ---------- cards, notes, readout ---------- */
+    var wordsEl = document.getElementById("words"), info = document.getElementById("info"), readout = document.getElementById("readout"), note = document.getElementById("modelnote");
+    function buildCards() {
+        wordsEl.innerHTML = "";
+        PL.forEach(function (p) {
+            var b = document.createElement("button");
+            b.type = "button";
+            b.className = "w";
+            b.dataset.id = p.id;
+            b.innerHTML = "<div class=\"wd\"><span class=\"sw\" style=\"background:".concat(CIR[p.cir], "\"></span><span class=\"nm\"></span></div><div class=\"row r1\"><b></b><span></span></div><div class=\"row r2\"><b></b><span></span></div>");
+            ["pointerenter", "focus", "click"].forEach(function (ev) { return b.addEventListener(ev, function () { return select(p.id); }); });
+            wordsEl.appendChild(b);
+        });
+    }
+    var inCir = function (p) { return cir === "all" || p.cir === cir; };
+    function draw(y) {
+        for (var c in R.cty) {
+            var o = owner[c];
+            R.cty[c].setAttribute("fill-opacity", y >= o.d ? .55 : 0);
+            R.cty[c].classList.toggle("dim", !inCir(o.p));
+        }
+        PL.forEach(function (p) {
+            var r = R.route[p.id];
+            if (r) {
+                var t = Math.max(0, Math.min(1, (y - (p.d - RY(p.id))) / RY(p.id)));
+                r.setAttribute("stroke-dasharray", "".concat((r._len * t).toFixed(1), " ").concat(r._len));
+                r.style.display = t > 0 ? "" : "none";
+                r.classList.toggle("done", t >= 1);
+                r.classList.toggle("dim", !inCir(p));
+            }
+            var m = R.m[p.id];
+            m.g.classList.toggle("future", y < p.d);
+            m.g.classList.toggle("dim", !inCir(p));
+            m.g.classList.toggle("sel", selected === p.id);
+        });
+        wordsEl.querySelectorAll(".w").forEach(function (b) {
+            var p = PL.find(function (x) { return x.id === b.dataset.id; });
+            b.querySelector(".nm").textContent = T("n_" + p.id);
+            b.querySelector(".r1 b").textContent = T("since");
+            b.querySelector(".r1 span").textContent = T("dl_" + p.id);
+            b.querySelector(".r2 b").textContent = T("role");
+            b.querySelector(".r2 span").textContent = T("r_" + p.id);
+            b.classList.toggle("future", y < p.d);
+            b.classList.toggle("sel", selected === p.id);
+            b.style.display = inCir(p) ? "" : "none";
+        });
+        var sp = "sp0";
+        SPEAKERS.forEach(function (_a) {
+            var _b = __read(_a, 2), yy = _b[0], k = _b[1];
+            if (y >= yy)
+                sp = k;
+        });
+        var live = PL.filter(inCir);
+        readout.textContent = T("readout", { y: yearText(y), n: live.filter(function (p) { return y >= p.d; }).length, t: live.length, sp: T(sp) });
+    }
+    function updateInfo() { info.innerHTML = selected ? T("m_" + selected) : ""; }
+    function updateNote() { note.innerHTML = T("note_" + cir); }
+    function select(id) { selected = id; updateInfo(); draw(shownYear()); }
+    /* ---------- motion (in slider units) ---------- */
+    var slider = document.getElementById("slider"), yrEl = document.getElementById("yr"), playBtn = document.getElementById("play");
+    var reduced = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var target = 0, shown = 0, playing = !reduced, onscreen = true, last = performance.now(), hold = 0, raf = 0;
+    var shownYear = function () { return yearOf(shown); };
+    var yearText = function (y) { var r = Math.round(y); return r >= 1995 ? T("today") : (lang === "fr" ? "v. " : "c. ") + r; };
+    var setYear = function (y) { yrEl.textContent = yearText(y); };
+    var setPlay = function () { playBtn.textContent = playing ? "❚❚" : "▶"; playBtn.setAttribute("aria-pressed", String(playing)); };
+    function frame(now) {
+        raf = 0;
+        var dt = Math.min(.1, (now - last) / 1000);
+        last = now;
+        if (playing) {
+            if (target >= 1000) {
+                hold += dt;
+                if (hold > 3) {
+                    target = shown = 0;
+                    hold = 0;
+                }
+            }
+            else
+                target = Math.min(1000, target + dt * 40);
+            slider.value = Math.round(target);
+        }
+        shown += (target - shown) * (1 - Math.exp(-dt * 6));
+        if (Math.abs(target - shown) < .05)
+            shown = target;
+        setYear(shownYear());
+        draw(shownYear());
+        if (onscreen && (playing || shown !== target))
+            raf = requestAnimationFrame(frame);
+    }
+    function kick() { if (!raf && onscreen) {
+        last = performance.now();
+        raf = requestAnimationFrame(frame);
+    } }
+    slider.addEventListener("input", function () { playing = false; setPlay(); target = +slider.value; if (reduced) {
+        shown = target;
+        setYear(shownYear());
+        draw(shownYear());
+    }
+    else
+        kick(); });
+    playBtn.addEventListener("click", function () { playing = !playing; if (playing && target >= 1000) {
+        target = shown = 0;
+    } setPlay(); kick(); });
+    document.addEventListener("keydown", function (e) { if (e.code === "Space" && !/INPUT|BUTTON|TEXTAREA/.test(document.activeElement.tagName) && !(document.activeElement.closest && document.activeElement.closest("svg"))) {
+        e.preventDefault();
+        playBtn.click();
+    } });
+    if ("IntersectionObserver" in window)
+        new IntersectionObserver(function (es) { onscreen = es[0].isIntersecting; if (onscreen)
+            kick(); }).observe(svg);
+    document.getElementById("cirSeg").addEventListener("click", function (e) { var b = e.target.closest("button"); if (!b)
+        return; document.querySelectorAll("#cirSeg button").forEach(function (x) { return x.setAttribute("aria-pressed", String(x === b)); }); cir = b.dataset.v; updateNote(); draw(shownYear()); });
+    document.querySelectorAll(".lang button").forEach(function (b) { return b.addEventListener("click", function () { lang = b.dataset.lang; try {
+        localStorage.setItem("ell-lang", lang);
+    }
+    catch (e) { } applyStatic(); labels(); updateInfo(); updateNote(); setYear(shownYear()); draw(shownYear()); }); });
+    window.addEventListener("resize", function () { rescale(); draw(shownYear()); });
+    applyStatic();
+    build();
+    buildCards();
+    rescale();
+    updateNote();
+    if (reduced) {
+        target = shown = 1000;
+        slider.value = 1000;
+    }
+    setPlay();
+    setYear(shownYear());
+    draw(shownYear());
+    kick();
+})();
+</script>
+</body>
+</html>
