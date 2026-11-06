@@ -13,6 +13,7 @@
   --emerald:#49B190; --emerald-link:#53AC90; --emerald-dark:#457865; --emerald-soft:#72B1A0;
   --text-strong:#323232; --text:#777777; --bg:#FFFFFF; --bg-soft:#F9F9F9;
   --line:#DADADA; --line-strong:#BBBBBB; --hover:#3f9c7e;
+  --surface:#FFFFFF; --halo:#FFFFFF; --hover-soft:#eef7f3; --ref:#b7b7b7; --muted-dot:#9a9a9a; --map-ocean:#eef6f3; --map-land:#e2e2e2;
   --font-head:'Montserrat',sans-serif; --font-body:'Open Sans',sans-serif;
 }
 *{box-sizing:border-box}
@@ -21,10 +22,10 @@ button{font-family:inherit}
 :focus-visible{outline:2px solid var(--emerald);outline-offset:2px}
 
 /* header */
-header.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 5%;border-bottom:1px solid var(--line);background:#fff;position:-webkit-sticky;position:sticky;top:0;z-index:10}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 5%;border-bottom:1px solid var(--line);background:var(--surface);position:-webkit-sticky;position:sticky;top:0;z-index:10}
 header.top img{height:60px;width:auto;display:block}
 .lang{display:flex;border:1px solid var(--emerald);border-radius:4px;overflow:hidden}
-.lang button{border:0;background:#fff;color:var(--emerald-dark);font-weight:600;font-size:.85rem;padding:6px 12px;cursor:pointer}
+.lang button{border:0;background:var(--surface);color:var(--emerald-dark);font-weight:600;font-size:.85rem;padding:6px 12px;cursor:pointer}
 .lang button[aria-pressed="true"]{background:var(--emerald);color:#fff}
 .lang button+button{border-left:1px solid var(--emerald)}
 @media (max-width:600px){header.top img{height:44px}}
@@ -44,14 +45,14 @@ h2.sub{font-family:var(--font-head);font-weight:400;text-transform:uppercase;col
 
 .controls{display:flex;flex-wrap:wrap;gap:14px 26px;justify-content:center;align-items:center;margin:4px 0 10px}
 .seg{display:inline-flex;border:1px solid var(--emerald);border-radius:4px;overflow:hidden}
-.seg button{border:0;background:#fff;color:var(--emerald-dark);font-size:.8rem;font-weight:600;padding:5px 11px;cursor:pointer;line-height:1.5}
+.seg button{border:0;background:var(--surface);color:var(--emerald-dark);font-size:.8rem;font-weight:600;padding:5px 11px;cursor:pointer;line-height:1.5}
 .seg button+button{border-left:1px solid var(--emerald)}
 .seg button[aria-pressed="true"]{background:var(--emerald);color:#fff}
 .ctl-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;margin-right:8px;color:var(--text)}
 .btn{background:var(--emerald);color:#fff;border:0;border-radius:4px;padding:6px 14px;font-weight:600;font-size:.85rem;cursor:pointer}
 .btn:hover{background:var(--hover)}
-.btn.outline{background:#fff;color:var(--emerald-dark);border:1px solid var(--emerald)}
-.btn.outline:hover{background:#eef7f3}
+.btn.outline{background:var(--surface);color:var(--emerald-dark);border:1px solid var(--emerald)}
+.btn.outline:hover{background:var(--hover-soft)}
 
 .timeline{display:flex;align-items:center;gap:14px;max-width:720px;margin:6px auto 0}
 .timeline .yr{font-family:var(--font-head);font-weight:700;color:var(--emerald-dark);font-size:1.6rem;min-width:110px;text-align:center;font-variant-numeric:tabular-nums}
@@ -63,10 +64,10 @@ svg#chart{display:block;width:100%;max-width:760px;height:auto;margin:6px auto 0
 .ax{fill:none;stroke:var(--line-strong);stroke-width:1.2}
 .grid{stroke:var(--line);stroke-width:1;stroke-dasharray:0}
 .axlab{font-family:var(--font-body);font-size:calc(12px * var(--k,1));fill:var(--text)}
-.ref{font-family:var(--font-body);font-size:calc(13px * var(--k,1));fill:#b7b7b7}
+.ref{font-family:var(--font-body);font-size:calc(13px * var(--k,1));fill:var(--ref)}
 .path{fill:none;stroke-width:1.4;stroke-linecap:round;opacity:.35}
 .glide{fill:none;stroke-width:2.6;stroke-linecap:round}
-.dot{stroke:#fff;stroke-width:2;cursor:pointer}
+.dot{stroke:var(--halo);stroke-width:2;cursor:pointer}
 .wlab{font-family:var(--font-head);font-weight:700;font-size:calc(13px * var(--k,1));pointer-events:none}
 .ipa{font-family:var(--font-body);font-size:calc(12px * var(--k,1));fill:var(--text-strong);pointer-events:none}
 .order{font-family:var(--font-head);font-weight:700;font-size:calc(11px * var(--k,1));fill:#fff;pointer-events:none}
@@ -78,7 +79,7 @@ g.v.off{opacity:.12}
 
 /* word cards */
 .words{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;margin-top:22px}
-.w{background:#fff;border:1px solid var(--line);border-radius:4px;padding:12px 10px 10px;text-align:center;cursor:pointer;line-height:1.5;transition:border-color .2s}
+.w{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:12px 10px 10px;text-align:center;cursor:pointer;line-height:1.5;transition:border-color .2s}
 .w:hover,.w.sel{border-color:var(--emerald)}
 .w .wd{font-family:var(--font-head);font-weight:700;font-size:1.15rem;color:var(--text-strong)}
 .w .now{font-size:1.05rem;color:var(--emerald-dark);font-weight:600;margin-top:2px}
@@ -103,14 +104,22 @@ g.v.off{opacity:.12}
 footer{border-top:1px solid var(--line);text-align:center;font-size:.75rem;padding:18px;line-height:1.6}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
+/* Dark theme: follows the system setting (same palette as the Emerald app pages) */
+@media screen and (prefers-color-scheme: dark){
+  :root{color-scheme:dark;--emerald-dark:#7fcbb0;--emerald-link:#6cc8a6;--emerald-soft:#7fcbb0;--text-strong:#edf2f0;--text:#b6c2bd;--bg:#121816;--bg-soft:#1a2320;--line:#2f3b37;--line-strong:#4b5a55;
+    --surface:#161e1b;--halo:#1a2320;--hover-soft:#1d3a31;--ref:#5d6b66;--muted-dot:#7d8a85;--map-ocean:#17211e;--map-land:#2e3935}
+  header.top img{background:#fff;border-radius:6px;padding:4px 8px;box-sizing:content-box}
+  .btn:hover{background:#5cc4a3}
+}
+
 /* Fig 3 */
 .howto{max-width:640px;margin:4px auto 14px;text-align:center;font-size:.95rem;line-height:1.6;color:var(--text-strong)}
 .legend{display:flex;flex-wrap:wrap;gap:6px 22px;justify-content:center;font-size:.85rem;margin:14px 0 4px}
 .legend i{display:inline-block;width:22px;height:6px;border-radius:3px;margin-right:6px;vertical-align:3px}
-.modelnote{max-width:680px;margin:14px auto 0;padding:10px 16px;background:#fff;border:1px solid var(--line);border-radius:4px;text-align:left;font-size:.88rem;line-height:1.65}
+.modelnote{max-width:680px;margin:14px auto 0;padding:10px 16px;background:var(--surface);border:1px solid var(--line);border-radius:4px;text-align:left;font-size:.88rem;line-height:1.65}
 .rows{max-width:720px;margin:4px auto 0}
 .grp h4{font-family:var(--font-head);font-weight:700;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--emerald-dark);margin:28px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
-.row{display:grid;grid-template-columns:140px 1fr 120px;gap:18px;align-items:center;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:4px;padding:14px 16px;margin:10px 0;cursor:pointer;font:inherit;color:inherit;transition:border-color .2s}
+.row{display:grid;grid-template-columns:140px 1fr 120px;gap:18px;align-items:center;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:14px 16px;margin:10px 0;cursor:pointer;font:inherit;color:inherit;transition:border-color .2s}
 .row:hover,.row.sel{border-color:var(--emerald)}
 .who{font-family:var(--font-head);font-weight:700;color:var(--text-strong);font-size:.9rem;line-height:1.35}
 .who span{display:block;font-family:var(--font-body);font-weight:400;font-size:.8rem;color:var(--text)}
@@ -124,6 +133,19 @@ footer{border-top:1px solid var(--line);text-align:center;font-size:.75rem;paddi
 </style>
 </head>
 <body>
+<script>/* Theme helper: ELL.c(colour) returns a lighter version of the darker data colours when the system is in dark mode. */
+var ELL = (function () {
+    var m = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)"), dark = !!(m && m.matches), L = { "#457865": "#7fcbb0", "#2f6b57": "#5fb79a", "#8a6d3b": "#c29a5c" };
+    if (m) {
+        var r = function () { location.reload(); };
+        if (m.addEventListener)
+            m.addEventListener("change", r);
+        else if (m.addListener)
+            m.addListener(r);
+    }
+    return { dark: dark, c: function (x) { return dark && L[x.toLowerCase()] || x; } };
+})();
+</script>
 <header class="top">
   <a href="index.html" title="Home" aria-label="Emerald Language Learning – Home"><img alt="Emerald Language Learning" width="306" height="90" src="data:image/png;base64,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"></a>
   <div class="lang" role="group" aria-label="Language / Langue">
