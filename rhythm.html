@@ -117,8 +117,13 @@ input[type=checkbox]{accent-color:var(--emerald)}
   .board{font-size:1.25rem}
   .tool .tname{display:none}
 }
+.keep-ov{position:fixed;inset:0;background:rgba(50,50,50,.45);display:flex;align-items:center;justify-content:center;z-index:100;padding:18px}
+.keep-box{background:#fff;border-radius:4px;border-top:4px solid var(--emerald);max-width:440px;width:100%;padding:22px 22px 18px;box-shadow:0 10px 30px rgba(0,0,0,.2);text-align:center}
+.keep-box h2{font-family:var(--display);font-weight:400;text-transform:uppercase;color:var(--emerald-dark);font-size:1.15rem;margin:0 0 10px}
+.keep-box p{margin:0 0 6px;color:var(--muted)}
+.keep-box .row{justify-content:center;margin:16px 0 0}
 @media print{
-  .site,.tools,.inputarea,.listen,.legend-wrap .row,.ipa .ipahead label,.ipa .ipahead button,.ipa .note{display:none!important}
+  .keep-ov,.site,.tools,.inputarea,.listen,.legend-wrap .row,.ipa .ipahead label,.ipa .ipahead button,.ipa .note{display:none!important}
   .board{border:none}
 }
 </style>
@@ -166,7 +171,7 @@ input[type=checkbox]{accent-color:var(--emerald)}
   </div>
 
   <div class="inputarea">
-    <textarea id="src" lang="en" data-i18n-ph="placeholder">I'd love to come to the party, but I have to work on Saturday. Are you free on Sunday? We could go for lunch.</textarea>
+    <textarea id="src" lang="en" autocomplete="off" data-i18n-ph="placeholder">I'd love to come to the party, but I have to work on Saturday. Are you free on Sunday? We could go for lunch.</textarea>
     <div class="row">
       <button class="primary" id="btnLoad" data-i18n="annotate">Annoter</button>
       <button class="primary" id="btnIPA" data-i18n="ipaBtn">Transcription phonétique</button>
@@ -239,6 +244,18 @@ input[type=checkbox]{accent-color:var(--emerald)}
   </div>
 </main>
 
+<div class="keep-ov" id="keepOv" hidden role="dialog" aria-modal="true" aria-labelledby="keepH">
+  <div class="keep-box">
+    <h2 id="keepH" data-i18n="keepH"></h2>
+    <p data-i18n="keepP"></p>
+    <p class="note" id="keepWhen"></p>
+    <div class="row">
+      <button class="primary" id="keepYes" data-i18n="keepYes"></button>
+      <button id="keepNo" data-i18n="keepNo"></button>
+    </div>
+  </div>
+</div>
+
 <script>(function () {
     /* ---------- language ---------- */
     var STR = {
@@ -276,7 +293,10 @@ input[type=checkbox]{accent-color:var(--emerald)}
             lg_tonic: 'Word stress (big bubble = stressed syllable)',
             lg_arr: 'Rising / falling intonation',
             lg_long: '3-second pause (after a full stop)',
-            lg_short: '1-second pause (after a comma)'
+            lg_short: '1-second pause (after a comma)',
+            keepH: 'Keep your text?', keepP: 'Your text and marks are saved on this device. Do you want to keep them or erase them?',
+            keepYes: 'Keep my text', keepNo: 'Erase it', keepWhen: 'With no answer, the text will be erased automatically at {t}.',
+            erased: 'Your text was erased automatically (no answer for 3 hours).'
         },
         fr: {
             langGroup: 'Langue', title: 'Rythme, intonation et prononciation',
@@ -312,7 +332,10 @@ input[type=checkbox]{accent-color:var(--emerald)}
             lg_tonic: 'Accent de mot (grande bulle = syllabe accentuée)',
             lg_arr: 'Intonation montante / descendante',
             lg_long: 'Pause de 3 secondes (après un point)',
-            lg_short: 'Pause d’1 seconde (après une virgule)'
+            lg_short: 'Pause d’1 seconde (après une virgule)',
+            keepH: 'Conserver votre texte ?', keepP: 'Votre texte et vos annotations sont enregistrés sur cet appareil. Voulez-vous les conserver ou les effacer ?',
+            keepYes: 'Conserver mon texte', keepNo: 'Effacer', keepWhen: 'Sans réponse, le texte sera effacé automatiquement à {t}.',
+            erased: 'Votre texte a été effacé automatiquement (sans réponse pendant 3 heures).'
         }
     };
     var LANG = 'fr';
@@ -344,6 +367,7 @@ input[type=checkbox]{accent-color:var(--emerald)}
     var PAUSE = { long: 3000, short: 1000 };
     var $ = function (id) { return document.getElementById(id); };
     var board = $('board'), src = $('src'), hint = $('hint');
+    var DEFAULT_TEXT = src.value.trim();
     var tokens = []; // {t:'w', pre, core, post, ul, hl, arr, syl, pause} | {t:'br'}
     var tool = null, undo = [], hintKey = 'h_none', hidden = false;
     function setHint(k) { hintKey = k; hint.textContent = T(k); }
@@ -355,6 +379,8 @@ input[type=checkbox]{accent-color:var(--emerald)}
         resetAnnotateBtn();
         updateIPA();
         updateVoiceNote();
+        if (!$('keepOv').hidden)
+            checkKeep();
     }
     /* ---------- storage ---------- */
     function save() { try {
@@ -1124,11 +1150,102 @@ input[type=checkbox]{accent-color:var(--emerald)}
             refreshUI();
         };
     });
+    /* ---------- hourly keep / erase prompt ---------- */
+    // Every hour after the last answer, ask: keep or erase? With no answer for 3 hours, erase.
+    // Times are stored, so this also works when the page was closed in the meantime.
+    var KEEP_KEY = KEY + '-keep', ASK_EVERY = 3600000, AUTO_ERASE = 3 * 3600000;
+    function readKeep() { try {
+        return JSON.parse(localStorage.getItem(KEEP_KEY) || 'null') || {};
+    }
+    catch (e) {
+        return {};
+    } }
+    function writeKeep(k) { try {
+        localStorage.setItem(KEEP_KEY, JSON.stringify(k));
+    }
+    catch (e) { } }
+    function hasContent() {
+        if (hasMarks())
+            return true;
+        var v = src.value.trim();
+        var b = tokens.filter(function (t) { return t.t === 'w'; }).map(function (t) { return t.pre + t.core + t.post; }).join(' ');
+        return (!!v && v !== DEFAULT_TEXT) || (!!b && b !== DEFAULT_TEXT);
+    }
+    function showKeep(askAt) {
+        var d = new Date(askAt + AUTO_ERASE);
+        $('keepWhen').textContent = T('keepWhen', { t: d.toLocaleTimeString(LANG === 'fr' ? 'fr-FR' : 'en-GB', { hour: '2-digit', minute: '2-digit' }) });
+        if ($('keepOv').hidden) {
+            $('keepOv').hidden = false;
+            $('keepYes').focus();
+        }
+    }
+    function hideKeep() { $('keepOv').hidden = true; }
+    function clearLocal() {
+        stop();
+        resetAnnotateBtn();
+        src.value = '';
+        tokens = [];
+        undo = [];
+        $('btnUndo').disabled = true;
+        render();
+    }
+    function eraseAll(auto) {
+        clearLocal();
+        save();
+        writeKeep({ keptAt: Date.now(), askedAt: null });
+        hideKeep();
+        setHint(auto ? 'erased' : 'h_none');
+    }
+    function checkKeep() {
+        var now = Date.now(), k = readKeep();
+        if (!hasContent()) {
+            writeKeep({ keptAt: now, askedAt: null });
+            hideKeep();
+            return;
+        }
+        if (!k.keptAt) {
+            k = { keptAt: now, askedAt: null };
+            writeKeep(k);
+        }
+        var askAt = k.askedAt || (k.keptAt + ASK_EVERY);
+        if (now >= askAt + AUTO_ERASE) {
+            eraseAll(true);
+            return;
+        }
+        if (now >= askAt) {
+            if (!k.askedAt) {
+                k.askedAt = askAt;
+                writeKeep(k);
+            }
+            showKeep(askAt);
+        }
+        else
+            hideKeep();
+    }
+    $('keepYes').onclick = function () { writeKeep({ keptAt: Date.now(), askedAt: null }); hideKeep(); };
+    $('keepNo').onclick = function () { eraseAll(false); };
+    setInterval(checkKeep, 30000);
+    document.addEventListener('visibilitychange', function () { if (!document.hidden)
+        checkKeep(); });
+    window.addEventListener('focus', checkKeep);
+    window.addEventListener('storage', function (e) {
+        if (e.key === KEY) { // erased in another tab
+            try {
+                var d = JSON.parse(e.newValue || 'null');
+                if (d && !d.text && (!d.tokens || !d.tokens.length))
+                    clearLocal();
+            }
+            catch (err) { }
+        }
+        if (e.key === KEY || e.key === KEEP_KEY)
+            checkKeep();
+    });
     /* ---------- init ---------- */
     if (!load())
         tokens = parse(src.value);
     render();
     refreshUI();
+    checkKeep();
 })();
 </script>
 </body>
