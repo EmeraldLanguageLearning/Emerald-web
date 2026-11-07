@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><script src="legacy.js"></script><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Emerald"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#49B190"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How French moved into English · Emerald Language Learning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --emerald:#49B190; --emerald-link:#53AC90; --emerald-dark:#457865; --emerald-soft:#72B1A0;
+  --text-strong:#323232; --text:#777777; --bg:#FFFFFF; --bg-soft:#F9F9F9;
+  --line:#DADADA; --line-strong:#BBBBBB; --hover:#3f9c7e;
+  --surface:#FFFFFF; --halo:#FFFFFF; --hover-soft:#eef7f3; --ref:#b7b7b7; --muted-dot:#9a9a9a; --map-ocean:#eef6f3; --map-land:#e2e2e2;
+  --font-head:'Montserrat',sans-serif; --font-body:'Open Sans',sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-body);line-height:1.9}
+button{font-family:inherit}
+:focus-visible{outline:2px solid var(--emerald);outline-offset:2px}
+
+/* header */
+header.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 5%;border-bottom:1px solid var(--line);background:var(--surface);position:-webkit-sticky;position:sticky;top:0;z-index:10}
+header.top img{height:60px;width:auto;display:block}
+.lang{display:flex;border:1px solid var(--emerald);border-radius:4px;overflow:hidden}
+.lang button{border:0;background:var(--surface);color:var(--emerald-dark);font-weight:600;font-size:.85rem;padding:6px 12px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--emerald);color:#fff}
+.lang button+button{border-left:1px solid var(--emerald)}
+@media (max-width:600px){header.top img{height:44px}}
+
+main{width:90%;max-width:1080px;margin:0 auto;padding-bottom:60px}
+h1.section{font-family:var(--font-head);font-weight:300;text-transform:uppercase;color:var(--emerald-dark);text-align:center;font-size:clamp(2rem,5vw,3.4rem);line-height:1.25;margin:56px 0 8px;letter-spacing:.02em}
+p.lede{text-align:center;max-width:720px;margin:0 auto 36px}
+h2.sub{font-family:var(--font-head);font-weight:400;text-transform:uppercase;color:var(--emerald-dark);text-align:center;font-size:clamp(1.3rem,3vw,1.9rem);margin:56px 0 20px;letter-spacing:.03em}
+
+/* figure card (anima-style frame) */
+.card{position:relative;background:var(--bg-soft);border:1px solid var(--line);border-radius:4px;padding:48px 20px 52px}
+.card .fig{position:absolute;top:12px;left:16px;font-family:var(--font-head);font-weight:700;font-size:.8rem;color:var(--emerald-dark);letter-spacing:.08em;text-transform:uppercase}
+.card .ttl{position:absolute;top:12px;right:16px;font-family:var(--font-head);font-weight:400;font-size:.8rem;color:var(--text-strong);letter-spacing:.06em;text-transform:uppercase;text-align:right;max-width:60%}
+.card .hint{position:absolute;bottom:12px;left:16px;font-size:.75rem;max-width:48%;line-height:1.4}
+.card .readout{position:absolute;bottom:12px;right:16px;font-size:.8rem;color:var(--text-strong);font-weight:600;text-align:right;max-width:50%;line-height:1.4;font-variant-numeric:tabular-nums}
+@media (max-width:600px){.card{padding-top:12px}.card .fig,.card .ttl{position:static;display:block;max-width:none;text-align:left;margin-bottom:6px}.card .hint{display:none}.card .readout{max-width:90%}}
+
+.controls{display:flex;flex-wrap:wrap;gap:14px 26px;justify-content:center;align-items:center;margin:4px 0 10px}
+.seg{display:inline-flex;border:1px solid var(--emerald);border-radius:4px;overflow:hidden}
+.seg button{border:0;background:var(--surface);color:var(--emerald-dark);font-size:.8rem;font-weight:600;padding:5px 11px;cursor:pointer;line-height:1.5}
+.seg button+button{border-left:1px solid var(--emerald)}
+.seg button[aria-pressed="true"]{background:var(--emerald);color:#fff}
+.ctl-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;margin-right:8px;color:var(--text)}
+.btn{background:var(--emerald);color:#fff;border:0;border-radius:4px;padding:6px 14px;font-weight:600;font-size:.85rem;cursor:pointer}
+.btn:hover{background:var(--hover)}
+.btn.outline{background:var(--surface);color:var(--emerald-dark);border:1px solid var(--emerald)}
+.btn.outline:hover{background:var(--hover-soft)}
+
+.timeline{display:flex;align-items:center;gap:14px;max-width:720px;margin:6px auto 0}
+.timeline .yr{font-family:var(--font-head);font-weight:700;color:var(--emerald-dark);font-size:1.6rem;min-width:110px;text-align:center;font-variant-numeric:tabular-nums}
+input[type=range]{flex:1;accent-color:var(--emerald);height:28px}
+.ticks{display:flex;justify-content:space-between;max-width:720px;margin:-4px auto 0;padding-left:124px;padding-right:2px;font-size:.7rem}
+@media (max-width:600px){.timeline .yr{min-width:80px;font-size:1.25rem}.ticks{padding-left:94px}}
+
+svg#chart{display:block;width:100%;max-width:760px;height:auto;margin:6px auto 0;overflow:visible}
+.ax{fill:none;stroke:var(--line-strong);stroke-width:1.2}
+.grid{stroke:var(--line);stroke-width:1;stroke-dasharray:0}
+.axlab{font-family:var(--font-body);font-size:calc(12px * var(--k,1));fill:var(--text)}
+.ref{font-family:var(--font-body);font-size:calc(13px * var(--k,1));fill:var(--ref)}
+.path{fill:none;stroke-width:1.4;stroke-linecap:round;opacity:.35}
+.glide{fill:none;stroke-width:2.6;stroke-linecap:round}
+.dot{stroke:var(--halo);stroke-width:2;cursor:pointer}
+.wlab{font-family:var(--font-head);font-weight:700;font-size:calc(13px * var(--k,1));pointer-events:none}
+.ipa{font-family:var(--font-body);font-size:calc(12px * var(--k,1));fill:var(--text-strong);pointer-events:none}
+.order{font-family:var(--font-head);font-weight:700;font-size:calc(11px * var(--k,1));fill:#fff;pointer-events:none}
+g.v.dim{opacity:.18}
+g.v.off{opacity:.12}
+
+.info{min-height:3.4em;max-width:760px;margin:6px auto 0;text-align:center;font-size:.9rem;line-height:1.6;color:var(--text-strong)}
+.modelnote{max-width:760px;margin:4px auto 0;text-align:center;font-size:.8rem;line-height:1.6}
+
+/* word cards */
+.words{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;margin-top:22px}
+.w{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:12px 10px 10px;text-align:center;cursor:pointer;line-height:1.5;transition:border-color .2s}
+.w:hover,.w.sel{border-color:var(--emerald)}
+.w .wd{font-family:var(--font-head);font-weight:700;font-size:1.15rem;color:var(--text-strong)}
+.w .now{font-size:1.05rem;color:var(--emerald-dark);font-weight:600;margin-top:2px}
+.w .was{font-size:.72rem;margin-top:4px}
+.w .sw{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.w.off{opacity:.45}
+
+/* established vs debated */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media (max-width:720px){.two{grid-template-columns:1fr}}
+.feat{position:relative;background:var(--bg-soft);border-radius:4px;padding:64px 22px 22px;margin-top:46px;text-align:center}
+.feat .circ{position:absolute;top:-44px;left:50%;transform:translateX(-50%);width:88px;height:88px;border-radius:50%;background:var(--emerald);display:flex;align-items:center;justify-content:center}
+.feat h3{font-family:var(--font-head);font-weight:700;color:var(--text-strong);margin:0 0 10px;font-size:1.05rem}
+.feat ul{text-align:left;margin:0;padding-left:18px}
+.feat li{margin:6px 0;line-height:1.7}
+
+.src{font-size:.85rem;line-height:1.7}
+.src ol{padding-left:20px}
+.src li{margin:6px 0}
+.src a{color:var(--emerald-link)}
+.note{border-left:3px solid var(--emerald);padding:6px 14px;background:var(--bg-soft);font-size:.85rem;line-height:1.7;margin-top:18px}
+footer{border-top:1px solid var(--line);text-align:center;font-size:.75rem;padding:18px;line-height:1.6}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* Dark theme: follows the system setting (same palette as the Emerald app pages) */
+@media screen and (prefers-color-scheme: dark){
+  :root{color-scheme:dark;--emerald-dark:#7fcbb0;--emerald-link:#6cc8a6;--emerald-soft:#7fcbb0;--text-strong:#edf2f0;--text:#b6c2bd;--bg:#121816;--bg-soft:#1a2320;--line:#2f3b37;--line-strong:#4b5a55;
+    --surface:#161e1b;--halo:#1a2320;--hover-soft:#1d3a31;--ref:#5d6b66;--muted-dot:#7d8a85;--map-ocean:#17211e;--map-land:#2e3935}
+  header.top img{background:#fff;border-radius:6px;padding:4px 8px;box-sizing:content-box}
+  .btn:hover{background:#5cc4a3}
+}
+
+/* Fig 5 */
+svg#tl{display:block;width:100%;max-width:980px;height:auto;margin:8px auto 0;overflow:visible}
+.axis{stroke:var(--line-strong);stroke-width:1.2}
+.tick{stroke:var(--line-strong);stroke-width:1}
+.ticklab{font-family:var(--font-body);fill:var(--text)}
+.evline{stroke:var(--line);stroke-width:1}
+.cursor{stroke:var(--emerald);stroke-width:2}
+.ev{cursor:pointer;transition:opacity .35s}
+.ev circle{fill:var(--emerald-dark);stroke:#fff;stroke-width:2}
+.ev line{stroke:var(--line-strong);stroke-width:1}
+.ev text{font-family:var(--font-body);font-weight:600;fill:var(--text-strong)}
+.ev.future{opacity:.3}
+.band{cursor:pointer;transition:opacity .35s}
+.band rect{opacity:.28}
+.band text{font-family:var(--font-head);font-weight:700;fill:var(--text-strong);letter-spacing:.03em}
+.band.future{opacity:.35}
+.lanelab{font-family:var(--font-head);font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.lanerule{stroke:var(--line);stroke-width:1;stroke-dasharray:2 4}
+.wd5{font-family:var(--font-head);font-weight:700;cursor:pointer}
+.wd5 tspan.oe{font-family:var(--font-body);font-weight:400;fill:#9a9a9a}
+.wd5.sel{text-decoration:underline}
+.w{text-align:left;padding:12px 14px}
+.w .wd{text-align:center;margin-bottom:6px;font-size:1.1rem}
+.w .row{display:flex;justify-content:space-between;gap:8px;font-size:.85rem;line-height:1.5;padding:2px 0}
+.w .row b{font-family:var(--font-head);font-size:.7rem;letter-spacing:.06em;color:var(--text);font-weight:700}
+.w .row span{color:var(--text-strong);text-align:right}
+.w .row.fr span{color:var(--emerald-dark);font-weight:600}
+.w.future{opacity:.45}
+.words{grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}
+</style>
+</head>
+<body>
+<script>/* Theme helper: ELL.c(colour) returns a lighter version of the darker data colours when the system is in dark mode. */
+var ELL = (function () {
+    var m = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)"), dark = !!(m && m.matches), L = { "#457865": "#7fcbb0", "#2f6b57": "#5fb79a", "#8a6d3b": "#c29a5c" };
+    if (m) {
+        var r = function () { location.reload(); };
+        if (m.addEventListener)
+            m.addEventListener("change", r);
+        else if (m.addListener)
+            m.addListener(r);
+    }
+    return { dark: dark, c: function (x) { return dark && L[x.toLowerCase()] || x; } };
+})();
+</script>
+<header class="top">
+  <a href="index.html" title="Home" aria-label="Emerald Language Learning – Home"><img alt="Emerald Language Learning" width="306" height="90" src="data:image/png;base64,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"></a>
+  <div class="lang" role="group" aria-label="Language / Langue">
+    <button type="button" data-lang="fr" aria-pressed="true">FR</button>
+    <button type="button" data-lang="en" aria-pressed="false">EN</button>
+  </div>
+</header>
+
+<main>
+  <h1 class="section" data-i18n="h1"></h1>
+  <p class="lede" data-i18n-html="lede"></p>
+
+  <section class="card" aria-labelledby="figttl">
+    <div class="fig" data-i18n="fig"></div>
+    <div class="ttl" id="figttl" data-i18n="figTitle"></div>
+
+    <div class="controls">
+      <div><span class="ctl-label" data-i18n="show"></span>
+        <span class="seg" id="grpSeg">
+          <button type="button" data-v="all" aria-pressed="true" data-i18n="all"></button>
+          <button type="button" data-v="tion" aria-pressed="false" data-i18n="g_tion"></button>
+          <button type="button" data-v="food" aria-pressed="false" data-i18n="g_food"></button>
+          <button type="button" data-v="pairs" aria-pressed="false" data-i18n="g_pairs"></button>
+        </span></div>
+    </div>
+
+    <div class="timeline">
+      <div class="yr" id="yr">1066</div>
+      <input type="range" id="slider" min="1066" max="1900" step="1" value="1066" data-i18n-aria="sliderAria">
+      <button type="button" class="btn outline" id="play" data-i18n-aria="playAria">▶</button>
+    </div>
+    <div class="ticks" aria-hidden="true"><span>1066</span><span>1300</span><span>1500</span><span>1700</span><span>1900</span></div>
+
+    <svg id="tl" viewBox="0 0 900 420" role="img" data-i18n-aria="chartAria"></svg>
+    <div class="info" id="info" aria-live="polite"></div>
+
+    <div class="words" id="words"></div>
+
+    <div class="hint" data-i18n="hint"></div>
+    <div class="readout" id="readout"></div>
+  </section>
+
+  <h2 class="sub" data-i18n="howSure"></h2>
+  <div class="two">
+    <div class="feat">
+      <div class="circ" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+      <h3 data-i18n="estTitle"></h3>
+      <ul id="estList"></ul>
+    </div>
+    <div class="feat">
+      <div class="circ" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14"/><path d="M12 17.5h.01"/></svg></div>
+      <h3 data-i18n="debTitle"></h3>
+      <ul id="debList"></ul>
+    </div>
+  </div>
+
+  <h2 class="sub" data-i18n="srcTitle"></h2>
+  <div class="src">
+    <ol>
+      <li>Baugh, A. C. &amp; Cable, T. (2002). <i>A History of the English Language</i>, 5th ed. Routledge, pp. 168–178, as summarised in <a href="https://en.wikipedia.org/wiki/Influence_of_French_on_English">Wikipedia, “Influence of French on English”</a>. <span data-i18n="s1"></span></li>
+      <li><a href="https://en.wikipedia.org/wiki/Pleading_in_English_Act_1362">Wikipedia, “Pleading in English Act 1362”</a>. <span data-i18n="s2"></span></li>
+      <li><a href="https://en.wikipedia.org/wiki/Henry_IV_of_England">Wikipedia, “Henry IV of England”</a>. <span data-i18n="s3"></span></li>
+      <li><a href="https://en.wikipedia.org/wiki/The_Forme_of_Cury">Wikipedia, “The Forme of Cury”</a>; <a href="https://www.gutenberg.org/ebooks/8102">Project Gutenberg edition (Pegge, 1780)</a>. <span data-i18n="s4"></span></li>
+      <li>Őrsi, T. “Cow versus Beef: Terms Denoting Animals and Their Meat in English.” <i>Eger Journal of English Studies</i>. <a href="https://ojs.uni-eszterhazy.hu/index.php/ejes/article/download/373/343/345">uni-eszterhazy.hu</a>; Burchfield, R. (1985). <i>The English Language</i>. Oxford University Press. <span data-i18n="s5"></span></li>
+      <li><a href="https://www.nationalgeographic.com/history/history-magazine/article/careme-the-worlds-first-celebrity-chef">National Geographic, “Carême, the world’s first celebrity chef”</a>; <a href="https://brightondome.org/news/the-worlds-first-celebrity-chef-and-his-royal-connection-to-brighton-2/">Brighton Dome heritage blog</a>. <span data-i18n="s6"></span></li>
+      <li><a href="https://en.wikipedia.org/wiki/Great_Vowel_Shift">Wikipedia, “Great Vowel Shift”</a>, section “Causes”. <span data-i18n="s7"></span></li>
+      <li>Online Etymology Dictionary: <a href="https://www.etymonline.com/word/nation">nation</a>, <a href="https://www.etymonline.com/word/condition">condition</a>, <a href="https://www.etymonline.com/word/information">information</a>, <a href="https://www.etymonline.com/word/civilization">civilization</a>, <a href="https://www.etymonline.com/word/mutton">mutton</a>, <a href="https://www.etymonline.com/word/sauce">sauce</a>, <a href="https://www.etymonline.com/word/cuisine">cuisine</a>, <a href="https://www.etymonline.com/word/restaurant">restaurant</a>, <a href="https://www.etymonline.com/word/menu">menu</a>, <a href="https://www.etymonline.com/word/chef">chef</a>, <a href="https://www.etymonline.com/word/purchase">purchase</a>, <a href="https://www.etymonline.com/word/commence">commence</a>, <a href="https://www.etymonline.com/word/liberty">liberty</a>, <a href="https://www.etymonline.com/word/assist">assist</a>. <span data-i18n="s8"></span></li>
+    </ol>
+    <h3 style="font-family:var(--font-head);color:var(--text-strong);font-size:1rem;margin:22px 0 4px" data-i18n="simpTitle"></h3>
+    <ul id="simpList"></ul>
+    <div class="note" data-i18n-html="recon"></div>
+  </div>
+</main>
+<footer>Emerald Language Learning · <span data-i18n="footer"></span></footer>
+
+<script>(function () {
+    "use strict";
+    var STR = {
+        en: {
+            h1: "How French moved into English",
+            lede: "After <b>1066</b>, England was ruled in French for about three centuries. Most French words, though, arrived <b>after 1250</b>, just as the nobles were switching back to English and bringing their French vocabulary with them. That is why English often has two words for one idea: an everyday one and a formal, French one.",
+            fig: "Fig 5", figTitle: "French words arriving in English, 1066 to 1900",
+            show: "Show", all: "All words", g_tion: "‑tion", g_food: "Food", g_pairs: "buy / purchase",
+            sliderAria: "Year", playAria: "Play or pause (Space)",
+            chartAria: "A timeline from 1066 to 1900. Key events sit at the top; below, example French words fade in at the date they are first recorded in English, in three rows: words in -tion, food words, and formal/everyday pairs.",
+            hint: "Drag the year, or press Space to play. Hover or tab to a word or event for an explanation.",
+            lane_tion: "Words in -tion", lane_food: "Cooking and food", lane_pairs: "Formal (French) / everyday (Old English)",
+            b_peak: "Peak of borrowing", b_hyw: "Hundred Years’ War", b_gvs: "Great Vowel Shift",
+            e_conquest_l: "Norman Conquest", e_normandy_l: "Normandy lost", e_pleading_l: "English in court", e_cury_l: "Forme of Cury", e_henry_l: "Henry IV", e_careme_l: "Carême",
+            readout: "c. {y} · {n} of {t} words have arrived · {court}",
+            court0: "French at court and in law", court1: "English allowed in court", court2: "the king speaks English",
+            first: "first recorded", from: "from", everyday: "everyday",
+            m_conquest: "<b>1066, the Norman Conquest.</b> William, Duke of Normandy, became king of England. For about three centuries the king, the nobles and the law courts used French, while most people kept speaking English. At first, few French words entered English.",
+            m_normandy: "<b>1204, Normandy lost.</b> King John lost Normandy to the French king. Over time the nobles in England were cut off from France, came to see themselves as English and moved towards the English language.",
+            m_peak: "<b>c. 1250–1400, the peak of borrowing.</b> About 40% of all the French words in English are first recorded in these 150 years. Over the whole Middle English period more than 10,000 French words came in, and about three quarters are still used (Baugh &amp; Cable).",
+            m_hyw: "<b>1337–1453, the Hundred Years’ War.</b> Long wars with France turned French into the language of the enemy and helped English gain prestige in England.",
+            m_pleading: "<b>1362, the Statute of Pleading.</b> Parliament ordered that cases in court be pleaded in English, because ordinary people could not follow French (written records stayed in Latin). In practice lawyers kept much Law French for a long time.",
+            m_cury: "<b>c. 1390, The Forme of Cury.</b> About 200 recipes by the master cooks of King Richard II, written in English but full of French cooking words. Even the title is French: <i>cury</i> comes from Old French for “cookery”.",
+            m_henry: "<b>1399, Henry IV.</b> The first king since 1066 whose mother tongue was English. His coronation may have been the first royal speech in English since the Conquest.",
+            m_gvs: "<b>c. 1400–1700, the Great Vowel Shift</b> (see Fig 1). The long vowels of English changed, and one hypothesis links this to a wish to sound <i>less</i> French during and after the wars. Other scholars suggest the opposite (imitating French) or other causes, such as migration to London. There is no consensus.",
+            m_careme: "<b>1816, Carême in England.</b> The French chef Antonin Carême cooked for the Prince Regent in London and Brighton (1816–17). Fine dining in Britain was French, and so was its new vocabulary: cuisine, menu, chef.",
+            w_nation: "<b>Nation</b>, from Old French <i>nacion</i>, c. 1300. The French ending <i>-cion/-tion</i> (from Latin <i>-tionem</i>) arrived with hundreds of nouns, then became a normal English ending.",
+            w_condition: "<b>Condition</b>, from Old French <i>condicion</i>, c. 1300. The French of law and government gave English many <i>-tion</i> nouns.",
+            w_information: "<b>Information</b>, from Old French <i>informacion</i>, late 14th century, at first meaning “the act of informing, instruction”.",
+            w_civilization: "<b>Civilization</b>, 1772, from French <i>civilisation</i>. French kept feeding English long after the Middle Ages, and by then <i>-tion</i> was simply an English ending.",
+            w_beef: "<b>Beef</b>, from Old French <i>buef</i>, c. 1300. At first it meant the animal (an ox or cow), not just its meat, and the plural was <i>beeves</i> (Őrsi).",
+            w_mutton: "<b>Mutton</b>, from Old French <i>moton</i> “sheep”, c. 1300. Like beef, it could name the living animal for centuries.",
+            w_veal: "<b>Veal</b>, from Anglo-French <i>veel</i> “calf”, recorded before 1325 (Őrsi).",
+            w_sauce: "<b>Sauce</b>, from Old French, mid-14th century. Cooking verbs came from French too: boil, fry, roast and stew (Őrsi).",
+            w_cuisine: "<b>Cuisine</b>, 1786, French for “kitchen, cooking”. A second wave of food words came with French cooks working for the British elite in the 18th and 19th centuries.",
+            w_restaurant: "<b>Restaurant</b>, 1820s, from French <i>restaurant</i>, at first a “restoring” broth, then the place that served it.",
+            w_menu: "<b>Menu</b>, 1837, from French <i>menu</i> “detailed list”.",
+            w_chef: "<b>Chef</b>, 1842, short for <i>chef de cuisine</i>, “head of the kitchen”: the title Carême held for the Prince Regent.",
+            w_purchase: "<b>Purchase</b>, from Anglo-French <i>purchacer</i> “to seek, obtain”, c. 1300. English kept its own verb <b>buy</b>; purchase is the formal partner, as in contracts and shop notices.",
+            w_commence: "<b>Commence</b>, from Old French <i>comencier</i>, c. 1300. <b>Begin</b> stays the everyday word; commence is for ceremonies and official texts.",
+            w_liberty: "<b>Liberty</b>, from Old French <i>liberte</i>, late 14th century. <b>Freedom</b> is the everyday word; liberty belongs to law and politics.",
+            w_assist: "<b>Assist</b>, from French <i>assister</i>, early 15th century. <b>Help</b> is everyday; assist is the polite or formal choice (“How may I assist you?”).",
+            howSure: "How sure are we?",
+            estTitle: "Well established",
+            est: ["After 1066, French was the language of the king, the nobility and the law courts in England for about three centuries.", "More than 10,000 French words entered Middle English, and about three quarters are still used; c. 1250–1400 was the peak (Baugh & Cable).", "English kept its everyday core words, so many French words became the formal partner: buy/purchase, begin/commence, help/assist.", "Much cooking vocabulary is French: boil, fry, roast, sauce, and later cuisine, menu and chef."],
+            debTitle: "Still debated",
+            deb: ["<b>“Cow in the field, beef on the table”:</b> the idea that Saxon peasants named the animals and Norman lords named the meat was popularised by Scott’s novel <i>Ivanhoe</i> (1819). Beef and mutton also named the live animals for centuries, and Burchfield (1985) calls the neat split a myth (see also Őrsi).", "<b>Did French help start the Great Vowel Shift?</b> Some suggest people imitated French, others that they tried to sound less French during the wars with France. Many scholars point to other causes, such as migration to London, and there is no consensus.", "Why borrowing peaked as French declined: the usual explanation is that nobles switching to English took French words with them.", "Many <i>-tion</i> words could come from French or straight from Latin, and for some words it is hard to tell which."],
+            srcTitle: "Sources",
+            s1: "10,000 French words, three quarters still in use; 40% first recorded 1250–1400.",
+            s2: "1362: pleading in English, records in Latin.",
+            s3: "1399: first king since 1066 with English as his mother tongue.",
+            s4: "c. 1390 recipe collection by Richard II’s master cooks; cury from Old French.",
+            s5: "First dates of beef, pork, veal; cooking verbs; the cow/beef myth.",
+            s6: "Carême as chef to the Prince Regent, 1816–17.",
+            s7: "Hypotheses linking the vowel shift to French (imitation or rejection) among other causes.",
+            s8: "First recorded dates of the example words.",
+            simpTitle: "What this figure simplifies",
+            simp: ["Each word is placed at the first written record of its date in the Online Etymology Dictionary, rounded; words were usually spoken earlier.", "Only 16 example words are shown, out of thousands.", "“French” covers Norman French (early on) and Parisian French (later), which sometimes gave English two forms: warden and guardian, warranty and guarantee.", "French came in mainly through rulers, law, the Church, and later fashion and cooking, rather than through trade with Normandy as such.", "Words fade back after their arrival to keep the timeline readable; they of course stayed in English."],
+            recon: "<b>Written records, not speech.</b> The dates are first written records. Old and new words existed side by side for a long time, and nobody recorded how people spoke before the 1870s.",
+            footer: "Educational illustration of the history of English."
+        },
+        fr: {
+            h1: "Comment le français est entré dans l’anglais",
+            lede: "Après <b>1066</b>, l’Angleterre a été gouvernée en français pendant environ trois siècles. Pourtant, la plupart des mots français sont arrivés <b>après 1250</b>, au moment où les nobles revenaient à l’anglais en emportant leur vocabulaire français. Voilà pourquoi l’anglais a souvent deux mots pour une même idée : un mot courant et un mot soutenu, d’origine française.",
+            fig: "Fig 5", figTitle: "L’arrivée des mots français en anglais, de 1066 à 1900",
+            show: "Afficher", all: "Tous les mots", g_tion: "‑tion", g_food: "Cuisine", g_pairs: "buy / purchase",
+            sliderAria: "Année", playAria: "Lecture ou pause (Espace)",
+            chartAria: "Une frise de 1066 à 1900. Les événements clés sont en haut ; en dessous, des mots français apparaissent à la date de leur première attestation en anglais, sur trois lignes : mots en -tion, mots de la cuisine, et paires soutenu/courant.",
+            hint: "Faites glisser l’année ou appuyez sur Espace. Survolez un mot ou un événement, ou utilisez Tab, pour une explication.",
+            lane_tion: "Mots en -tion", lane_food: "Cuisine et nourriture", lane_pairs: "Soutenu (français) / courant (vieil anglais)",
+            b_peak: "Pic des emprunts", b_hyw: "Guerre de Cent Ans", b_gvs: "Grand Changement vocalique",
+            e_conquest_l: "Conquête normande", e_normandy_l: "Perte de la Normandie", e_pleading_l: "L’anglais au tribunal", e_cury_l: "Forme of Cury", e_henry_l: "Henri IV", e_careme_l: "Carême",
+            readout: "v. {y} · {n} mots sur {t} sont arrivés · {court}",
+            court0: "le français à la cour et au tribunal", court1: "l’anglais admis au tribunal", court2: "le roi parle anglais",
+            first: "1re attestation", from: "de", everyday: "courant",
+            m_conquest: "<b>1066, la conquête normande.</b> Guillaume, duc de Normandie, devient roi d’Angleterre. Pendant environ trois siècles, le roi, les nobles et les tribunaux utilisent le français, tandis que la plupart des gens continuent de parler anglais. Au début, peu de mots français entrent en anglais.",
+            m_normandy: "<b>1204, la Normandie perdue.</b> Le roi Jean perd la Normandie face au roi de France. Peu à peu, les nobles d’Angleterre sont coupés de la France, se considèrent comme Anglais et se tournent vers la langue anglaise.",
+            m_peak: "<b>v. 1250–1400, le pic des emprunts.</b> Environ 40 % de tous les mots français de l’anglais sont attestés pour la première fois durant ces 150 ans. Sur l’ensemble du moyen anglais, plus de 10 000 mots français sont entrés, et environ les trois quarts sont encore utilisés (Baugh &amp; Cable).",
+            m_hyw: "<b>1337–1453, la guerre de Cent Ans.</b> Les longues guerres contre la France font du français la langue de l’ennemi et aident l’anglais à gagner du prestige en Angleterre.",
+            m_pleading: "<b>1362, le Statute of Pleading.</b> Le Parlement décide que les plaidoiries se feront en anglais, car les gens ordinaires ne comprennent pas le français (les actes écrits restent en latin). Dans les faits, les juristes gardent longtemps beaucoup de français juridique.",
+            m_cury: "<b>v. 1390, The Forme of Cury.</b> Environ 200 recettes des maîtres-queux du roi Richard II, écrites en anglais mais pleines de mots de cuisine français. Même le titre est français : <i>cury</i> vient de l’ancien français pour « cuisine ».",
+            m_henry: "<b>1399, Henri IV.</b> Le premier roi depuis 1066 dont la langue maternelle est l’anglais. Son couronnement a peut-être été le premier discours royal en anglais depuis la Conquête.",
+            m_gvs: "<b>v. 1400–1700, le Grand Changement vocalique</b> (voir Fig 1). Les voyelles longues de l’anglais changent, et une hypothèse relie ce changement à une volonté de sonner <i>moins</i> français pendant et après les guerres. D’autres chercheurs suggèrent l’inverse (imiter le français) ou d’autres causes, comme les migrations vers Londres. Il n’y a pas de consensus.",
+            m_careme: "<b>1816, Carême en Angleterre.</b> Le chef français Antonin Carême cuisine pour le prince régent à Londres et à Brighton (1816–17). La grande cuisine en Grande-Bretagne est française, tout comme son nouveau vocabulaire : cuisine, menu, chef.",
+            w_nation: "<b>Nation</b>, de l’ancien français <i>nacion</i>, v. 1300. La terminaison française <i>-cion/-tion</i> (du latin <i>-tionem</i>) arrive avec des centaines de noms, puis devient une terminaison anglaise normale.",
+            w_condition: "<b>Condition</b>, de l’ancien français <i>condicion</i>, v. 1300. Le français du droit et de l’administration a donné à l’anglais beaucoup de noms en <i>-tion</i>.",
+            w_information: "<b>Information</b>, de l’ancien français <i>informacion</i>, fin du XIV<sup>e</sup> siècle, d’abord au sens d’« action d’informer, instruction ».",
+            w_civilization: "<b>Civilization</b>, 1772, du français <i>civilisation</i>. Le français a continué de nourrir l’anglais bien après le Moyen Âge, et <i>-tion</i> était alors simplement une terminaison anglaise.",
+            w_beef: "<b>Beef</b>, de l’ancien français <i>buef</i>, v. 1300. Au début, le mot désignait l’animal (bœuf ou vache), pas seulement sa viande, avec le pluriel <i>beeves</i> (Őrsi).",
+            w_mutton: "<b>Mutton</b>, de l’ancien français <i>moton</i> « mouton », v. 1300. Comme beef, il a pu désigner l’animal vivant pendant des siècles.",
+            w_veal: "<b>Veal</b>, de l’anglo-normand <i>veel</i> « veau », attesté avant 1325 (Őrsi).",
+            w_sauce: "<b>Sauce</b>, de l’ancien français, milieu du XIV<sup>e</sup> siècle. Les verbes de cuisine viennent aussi du français : boil, fry, roast, stew (Őrsi).",
+            w_cuisine: "<b>Cuisine</b>, 1786. Une deuxième vague de mots de la table arrive avec les cuisiniers français au service de l’élite britannique aux XVIII<sup>e</sup> et XIX<sup>e</sup> siècles.",
+            w_restaurant: "<b>Restaurant</b>, années 1820, du français <i>restaurant</i>, d’abord un bouillon « qui restaure », puis le lieu qui le sert.",
+            w_menu: "<b>Menu</b>, 1837, du français <i>menu</i> « liste détaillée ».",
+            w_chef: "<b>Chef</b>, 1842, abréviation de <i>chef de cuisine</i> : le titre que Carême portait chez le prince régent.",
+            w_purchase: "<b>Purchase</b>, de l’anglo-normand <i>purchacer</i> « chercher, obtenir », v. 1300. L’anglais a gardé son propre verbe <b>buy</b> ; purchase est le partenaire soutenu, dans les contrats ou les affiches de magasin.",
+            w_commence: "<b>Commence</b>, de l’ancien français <i>comencier</i>, v. 1300. <b>Begin</b> reste le mot courant ; commence sert pour les cérémonies et les textes officiels.",
+            w_liberty: "<b>Liberty</b>, de l’ancien français <i>liberte</i>, fin du XIV<sup>e</sup> siècle. <b>Freedom</b> est le mot courant ; liberty appartient au droit et à la politique.",
+            w_assist: "<b>Assist</b>, du français <i>assister</i>, début du XV<sup>e</sup> siècle. <b>Help</b> est courant ; assist est le choix poli ou soutenu (« How may I assist you? »).",
+            howSure: "Quel est notre degré de certitude ?",
+            estTitle: "Bien établi",
+            est: ["Après 1066, le français a été la langue du roi, de la noblesse et des tribunaux en Angleterre pendant environ trois siècles.", "Plus de 10 000 mots français sont entrés en moyen anglais, et environ les trois quarts sont encore utilisés ; le pic se situe vers 1250–1400 (Baugh & Cable).", "L’anglais a gardé ses mots courants de base, si bien que beaucoup de mots français sont devenus le partenaire soutenu : buy/purchase, begin/commence, help/assist.", "Une grande partie du vocabulaire de la cuisine est français : boil, fry, roast, sauce, puis cuisine, menu et chef."],
+            debTitle: "Encore débattu",
+            deb: ["<b>« La vache au pré, le bœuf à table » :</b> l’idée que les paysans saxons nommaient les animaux et les seigneurs normands la viande a été popularisée par le roman <i>Ivanhoé</i> de Walter Scott (1819). Beef et mutton ont aussi désigné les animaux vivants pendant des siècles, et Burchfield (1985) qualifie cette séparation nette de mythe (voir aussi Őrsi).", "<b>Le français a-t-il déclenché le Grand Changement vocalique ?</b> Certains pensent qu’on imitait le français, d’autres qu’on cherchait à sonner moins français pendant les guerres. Beaucoup de chercheurs privilégient d’autres causes, comme les migrations vers Londres, et il n’y a pas de consensus.", "Pourquoi les emprunts culminent alors que le français recule : l’explication habituelle est que les nobles, en passant à l’anglais, ont emporté des mots français.", "Beaucoup de mots en <i>-tion</i> peuvent venir du français ou directement du latin, et pour certains il est difficile de trancher."],
+            srcTitle: "Sources",
+            s1: "10 000 mots français, dont les trois quarts encore utilisés ; 40 % attestés pour la première fois entre 1250 et 1400.",
+            s2: "1362 : plaidoiries en anglais, actes en latin.",
+            s3: "1399 : premier roi depuis 1066 de langue maternelle anglaise.",
+            s4: "Recueil de recettes des maîtres-queux de Richard II, v. 1390 ; cury vient de l’ancien français.",
+            s5: "Premières dates de beef, pork, veal ; verbes de cuisine ; le mythe vache/bœuf.",
+            s6: "Carême, chef du prince régent, 1816–17.",
+            s7: "Hypothèses reliant le changement vocalique au français (imitation ou rejet), parmi d’autres causes.",
+            s8: "Dates de première attestation des mots d’exemple.",
+            simpTitle: "Ce que cette figure simplifie",
+            simp: ["Chaque mot est placé à la date de sa première attestation écrite dans l’Online Etymology Dictionary, arrondie ; les mots étaient en général parlés avant.", "Seuls 16 mots d’exemple sont montrés, sur des milliers.", "« Français » recouvre le normand (au début) et le français de Paris (plus tard), qui ont parfois donné deux formes à l’anglais : warden et guardian, warranty et guarantee.", "Le français est surtout entré par les dirigeants, le droit, l’Église, puis la mode et la cuisine, plutôt que par le commerce avec la Normandie en tant que tel.", "Les mots s’estompent après leur arrivée pour garder la frise lisible ; ils sont bien sûr restés en anglais."],
+            recon: "<b>Des traces écrites, pas la parole.</b> Les dates sont celles des premières attestations écrites. Anciens et nouveaux mots ont longtemps coexisté, et personne n’a enregistré la parole avant les années 1870.",
+            footer: "Illustration pédagogique de l’histoire de l’anglais."
+        }
+    };
+    var lang = "fr";
+    try {
+        var s = localStorage.getItem("ell-lang");
+        if (s === "en" || s === "fr")
+            lang = s;
+    }
+    catch (e) { }
+    function T(k, v) { var _a, _b; var s = ((_b = (_a = STR[lang][k]) !== null && _a !== void 0 ? _a : STR.en[k]) !== null && _b !== void 0 ? _b : k); if (v)
+        s = s.replace(/\{(\w+)\}/g, function (m, n) { return v[n] !== undefined ? v[n] : m; }); return s; }
+    function applyStatic() {
+        document.documentElement.lang = lang;
+        document.querySelectorAll("[data-i18n]").forEach(function (el) { return el.textContent = T(el.dataset.i18n); });
+        document.querySelectorAll("[data-i18n-html]").forEach(function (el) { return el.innerHTML = T(el.dataset.i18nHtml); });
+        document.querySelectorAll("[data-i18n-aria]").forEach(function (el) { return el.setAttribute("aria-label", T(el.dataset.i18nAria)); });
+        var list = function (id, k) { document.getElementById(id).innerHTML = STR[lang][k].map(function (x) { return "<li>" + x + "</li>"; }).join(""); };
+        list("estList", "est");
+        list("debList", "deb");
+        list("simpList", "simp");
+        document.querySelectorAll(".lang button").forEach(function (b) { return b.setAttribute("aria-pressed", String(b.dataset.lang === lang)); });
+    }
+    /* ---------- the model: events, periods and dated words ---------- */
+    var LANES = [{ id: "tion", c: "#457865" }, { id: "food", c: "#b08a4a" }, { id: "pairs", c: "#2f6b57" }];
+    var EV = [{ id: "conquest", d: 1066, lv: 0 }, { id: "normandy", d: 1204, lv: 0 }, { id: "pleading", d: 1362, lv: 0 }, { id: "cury", d: 1390, lv: 1 }, { id: "henry", d: 1399, lv: 2 }, { id: "careme", d: 1816, lv: 0 }];
+    var BANDS = [{ id: "peak", a: 1250, b: 1400, c: "#49B190" }, { id: "hyw", a: 1337, b: 1453, c: "#8a6d3b" }, { id: "gvs", a: 1400, b: 1700, c: "#72B1A0" }];
+    // d = first recorded (rounded); fr = French source form; oe = everyday Old English partner
+    var W = [
+        { id: "nation", g: "tion", d: 1300, lv: 0, fr: "nacion", dl: ["c. 1300", "v. 1300"] },
+        { id: "condition", g: "tion", d: 1300, lv: 1, fr: "condicion", dl: ["c. 1300", "v. 1300"] },
+        { id: "information", g: "tion", d: 1390, lv: 2, fr: "informacion", dl: ["late 14th c.", "fin XIVe s."] },
+        { id: "civilization", g: "tion", d: 1772, lv: 0, fr: "civilisation", dl: ["1772", "1772"] },
+        { id: "beef", g: "food", d: 1300, lv: 0, fr: "buef", dl: ["c. 1300", "v. 1300"] },
+        { id: "mutton", g: "food", d: 1300, lv: 1, fr: "moton", dl: ["c. 1300", "v. 1300"] },
+        { id: "veal", g: "food", d: 1325, lv: 2, fr: "veel", dl: ["before 1325", "avant 1325"] },
+        { id: "sauce", pl: 3, g: "food", d: 1350, lv: 0, fr: "sauce", dl: ["mid-14th c.", "milieu XIVe s."] },
+        { id: "cuisine", g: "food", d: 1786, lv: 0, fr: "cuisine", dl: ["1786", "1786"] },
+        { id: "restaurant", g: "food", d: 1825, lv: 1, fr: "restaurant", dl: ["1820s", "années 1820"] },
+        { id: "menu", g: "food", d: 1837, lv: 2, fr: "menu", dl: ["1837", "1837"] },
+        { id: "chef", pl: 3, g: "food", d: 1842, lv: 0, fr: "chef", dl: ["1842", "1842"], dx: 22 },
+        { id: "purchase", g: "pairs", d: 1300, lv: 0, fr: "purchacer", oe: "buy", dl: ["c. 1300", "v. 1300"] },
+        { id: "commence", g: "pairs", d: 1300, lv: 1, fr: "comencier", oe: "begin", dl: ["c. 1300", "v. 1300"] },
+        { id: "liberty", g: "pairs", d: 1390, lv: 2, fr: "liberte", oe: "freedom", dl: ["late 14th c.", "fin XIVe s."] },
+        { id: "assist", pl: 3, g: "pairs", d: 1420, lv: 0, fr: "assister", oe: "help", dl: ["early 15th c.", "début XVe s."], dx: 30 }
+    ];
+    // fade: ghost before arrival, full for ~70 years, then rest at a low opacity
+    function op(d, y) { if (y < d - 6)
+        return .07; if (y < d + 10)
+        return .07 + .93 * (y - d + 6) / 16; if (y < d + 70)
+        return 1; if (y < d + 110)
+        return 1 - .72 * (y - d - 70) / 40; return .28; }
+    var court = function (y) { return y < 1362 ? "court0" : y < 1399 ? "court1" : "court2"; };
+    /* ---------- drawing ---------- */
+    var svg = document.getElementById("tl"), NS = "http://www.w3.org/2000/svg";
+    var XA = 70, XB = 870, Y0 = 1066, Y1 = 1900;
+    var xOf = function (y) { return XA + (y - Y0) / (Y1 - Y0) * (XB - XA); };
+    function el(t, a, p) { var e = document.createElementNS(NS, t); for (var k in a)
+        e.setAttribute(k, a[k]); (p || svg).appendChild(e); return e; }
+    var K = 1, grp = "all", selected = null;
+    var R = {};
+    function hook(g, id) { g.setAttribute("tabindex", "0"); g.setAttribute("role", "button"); ["pointerenter", "focus", "click"].forEach(function (ev) { return g.addEventListener(ev, function () { return select(id); }); }); g.addEventListener("keydown", function (e) { if (e.key === "Enter")
+        select(id); }); }
+    function build() {
+        svg.innerHTML = "";
+        R.evline = el("line", { class: "evline" });
+        R.ev = EV.map(function (e) { var g = el("g", { class: "ev" }); hook(g, e.id); return { e: e, g: g, ln: el("line", {}, g), ci: el("circle", {}, g), tx: el("text", { "text-anchor": "middle" }, g) }; });
+        R.bands = BANDS.map(function (b) { var g = el("g", { class: "band" }); hook(g, b.id); return { b: b, g: g, r: el("rect", { fill: b.c, rx: 6 }, g), tx: el("text", {}, g) }; });
+        R.lanes = LANES.map(function (l) { return ({ l: l, rule: el("line", { class: "lanerule" }), lab: el("text", { class: "lanelab", fill: l.c }) }); });
+        R.w = W.map(function (w) {
+            var t = el("text", { class: "wd5", fill: LANES.find(function (l) { return l.id === w.g; }).c });
+            hook(t, w.id);
+            t.appendChild(document.createTextNode(w.id));
+            if (w.oe) {
+                var s = el("tspan", { class: "oe" }, t);
+                s.textContent = " / " + w.oe;
+            }
+            return { w: w, t: t };
+        });
+        R.axis = el("line", { class: "axis" });
+        R.ticks = [];
+        for (var y = 1100; y <= 1900; y += 100) {
+            R.ticks.push({ y: y, ln: el("line", { class: "tick" }), tx: el("text", { class: "ticklab", "text-anchor": "middle" }) });
+            R.ticks[R.ticks.length - 1].tx.textContent = y;
+        }
+        R.cursor = el("line", { class: "cursor" });
+        layout();
+        labels();
+    }
+    function layout() {
+        var small = K > 1.4, f = function (v) { return (v * K) + "px"; };
+        var evY = small ? 28 : 104, bandY = evY + 14 * K, bandH = 13 * K, lvH = 19 * K, nlv = small ? 4 : 3, laneH = nlv * lvH + 30 * K;
+        var laneY = bandY + 3 * (bandH + 4 * K) + 22 * K, axisY = laneY + 3 * laneH;
+        R.layout = { evY: evY, axisY: axisY };
+        R.evline.setAttribute("x1", XA);
+        R.evline.setAttribute("x2", XB);
+        R.evline.setAttribute("y1", evY);
+        R.evline.setAttribute("y2", evY);
+        R.ev.forEach(function (m) {
+            var x = xOf(m.e.d), ly = evY - (18 + m.e.lv * 17) * K;
+            m.ci.setAttribute("cx", x);
+            m.ci.setAttribute("cy", evY);
+            m.ci.setAttribute("r", 6 * K);
+            m.ln.setAttribute("x1", x);
+            m.ln.setAttribute("x2", x);
+            m.ln.setAttribute("y1", evY - 6 * K);
+            m.ln.setAttribute("y2", ly + 4);
+            m.tx.setAttribute("x", x);
+            m.tx.setAttribute("y", ly);
+            m.tx.style.fontSize = f(11);
+            m.tx.style.display = m.ln.style.display = small ? "none" : "";
+        });
+        R.bands.forEach(function (m, i) {
+            var y = bandY + i * (bandH + 4 * K), x = xOf(m.b.a);
+            m.r.setAttribute("x", x);
+            m.r.setAttribute("y", y);
+            m.r.setAttribute("width", xOf(m.b.b) - x);
+            m.r.setAttribute("height", bandH);
+            m.tx.setAttribute("x", i === 0 ? x - 4 : x + 5);
+            m.tx.setAttribute("text-anchor", i === 0 ? "end" : "start");
+            m.tx.setAttribute("y", y + bandH - 3 * K);
+            m.tx.style.fontSize = f(9.5);
+        });
+        R.lanes.forEach(function (m, i) {
+            var y = laneY + i * laneH;
+            m.rule.setAttribute("x1", XA);
+            m.rule.setAttribute("x2", XB);
+            m.rule.setAttribute("y1", y - 8 * K);
+            m.rule.setAttribute("y2", y - 8 * K);
+            m.lab.setAttribute("x", XA);
+            m.lab.setAttribute("y", y + 8 * K);
+            m.lab.style.fontSize = f(10.5);
+            m.y = y;
+        });
+        R.w.forEach(function (m) {
+            var li = LANES.findIndex(function (l) { return l.id === m.w.g; }), lv = (small && m.w.pl !== undefined) ? m.w.pl : m.w.lv, y = R.lanes[li].y + (lv + 1) * lvH + 14 * K, endA = small && m.w.d > 1750;
+            m.t.setAttribute("x", xOf(m.w.d) + (m.w.dx || 0) * (small ? 0 : 1));
+            m.t.setAttribute("text-anchor", endA ? "end" : "start");
+            m.t.setAttribute("y", y);
+            m.t.style.fontSize = f(12.5);
+        });
+        R.axis.setAttribute("x1", XA);
+        R.axis.setAttribute("x2", XB);
+        R.axis.setAttribute("y1", axisY);
+        R.axis.setAttribute("y2", axisY);
+        R.ticks.forEach(function (t) {
+            var x = xOf(t.y);
+            t.ln.setAttribute("x1", x);
+            t.ln.setAttribute("x2", x);
+            t.ln.setAttribute("y1", axisY);
+            t.ln.setAttribute("y2", axisY + 6 * K);
+            t.tx.setAttribute("x", x);
+            t.tx.setAttribute("y", axisY + 20 * K);
+            t.tx.style.fontSize = f(11);
+            t.tx.style.display = (small && t.y % 200) ? "none" : "";
+        });
+        R.cursor.setAttribute("y1", evY - 8 * K);
+        R.cursor.setAttribute("y2", axisY);
+        svg.setAttribute("viewBox", "0 ".concat(small ? 0 : 0, " 900 ").concat(Math.round(axisY + 28 * K)));
+    }
+    function labels() {
+        R.ev.forEach(function (m) { return m.tx.textContent = T("e_" + m.e.id + "_l"); });
+        R.bands.forEach(function (m) { return m.tx.textContent = T("b_" + m.b.id); });
+        R.lanes.forEach(function (m) { return m.lab.textContent = T("lane_" + m.l.id); });
+    }
+    function rescale() { var w = svg.getBoundingClientRect().width || 900; K = Math.max(1, Math.min(2.2, 0.8 * 900 / w)); layout(); }
+    /* ---------- cards, info, readout ---------- */
+    var wordsEl = document.getElementById("words"), info = document.getElementById("info"), readout = document.getElementById("readout");
+    function buildCards() {
+        wordsEl.innerHTML = "";
+        W.forEach(function (w) {
+            var c = LANES.find(function (l) { return l.id === w.g; }).c, b = document.createElement("button");
+            b.type = "button";
+            b.className = "w";
+            b.dataset.id = w.id;
+            b.innerHTML = "<div class=\"wd\"><span class=\"sw\" style=\"background:".concat(c, "\"></span>").concat(w.id, "</div><div class=\"row fr\"><b></b><span></span></div>") + (w.oe ? "<div class=\"row oe\"><b></b><span>".concat(w.oe, "</span></div>") : "") + "<div class=\"row dt\"><b></b><span></span></div>";
+            ["pointerenter", "focus", "click"].forEach(function (ev) { return b.addEventListener(ev, function () { return select(w.id); }); });
+            wordsEl.appendChild(b);
+        });
+    }
+    function cardText() {
+        wordsEl.querySelectorAll(".w").forEach(function (b) {
+            var w = W.find(function (x) { return x.id === b.dataset.id; });
+            b.querySelector(".fr b").textContent = T("from");
+            b.querySelector(".fr span").textContent = w.fr;
+            if (w.oe)
+                b.querySelector(".oe b").textContent = T("everyday");
+            b.querySelector(".dt b").textContent = T("first");
+            b.querySelector(".dt span").textContent = w.dl[lang === "fr" ? 1 : 0];
+        });
+    }
+    var inGrp = function (w) { return grp === "all" || w.g === grp; };
+    function draw(y) {
+        var x = xOf(y);
+        R.cursor.setAttribute("x1", x);
+        R.cursor.setAttribute("x2", x);
+        R.ev.forEach(function (m) { return m.g.classList.toggle("future", y < m.e.d); });
+        R.bands.forEach(function (m) { return m.g.classList.toggle("future", y < m.b.a); });
+        R.w.forEach(function (m) { var o = op(m.w.d, y); m.t.style.opacity = inGrp(m.w) ? (selected === m.w.id ? Math.max(o, .6) : o) : .04; m.t.classList.toggle("sel", selected === m.w.id); });
+        R.lanes.forEach(function (m) { return m.lab.style.opacity = (grp === "all" || grp === m.l.id) ? 1 : .25; });
+        wordsEl.querySelectorAll(".w").forEach(function (b) {
+            var w = W.find(function (z) { return z.id === b.dataset.id; });
+            b.classList.toggle("future", y < w.d);
+            b.classList.toggle("sel", selected === w.id);
+            b.style.display = inGrp(w) ? "" : "none";
+        });
+        var shown = W.filter(inGrp), yy = Math.round(y);
+        readout.textContent = T("readout", { y: yy, n: shown.filter(function (w) { return w.d <= y; }).length, t: shown.length, court: T(court(y)) });
+    }
+    function updateInfo() { info.innerHTML = selected ? T((W.some(function (w) { return w.id === selected; }) ? "w_" : "m_") + selected) : ""; }
+    function select(id) { selected = id; updateInfo(); draw(shown); }
+    /* ---------- motion ---------- */
+    var slider = document.getElementById("slider"), yrEl = document.getElementById("yr"), playBtn = document.getElementById("play");
+    var reduced = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var target = 1066, shown = 1066, playing = !reduced, onscreen = true, last = performance.now(), hold = 0, raf = 0;
+    var setYear = function (y) { var r = Math.round(y); yrEl.textContent = r === 1066 ? "1066" : (lang === "fr" ? "v. " : "c. ") + r; };
+    var setPlay = function () { playBtn.textContent = playing ? "❚❚" : "▶"; playBtn.setAttribute("aria-pressed", String(playing)); };
+    function frame(now) {
+        raf = 0;
+        var dt = Math.min(.1, (now - last) / 1000);
+        last = now;
+        if (playing) {
+            if (target >= 1900) {
+                hold += dt;
+                if (hold > 3) {
+                    target = shown = 1066;
+                    hold = 0;
+                }
+            }
+            else
+                target = Math.min(1900, target + dt * 30);
+            slider.value = Math.round(target);
+        }
+        shown += (target - shown) * (1 - Math.exp(-dt * 6));
+        if (Math.abs(target - shown) < .05)
+            shown = target;
+        setYear(shown);
+        draw(shown);
+        if (onscreen && (playing || shown !== target))
+            raf = requestAnimationFrame(frame);
+    }
+    function kick() { if (!raf && onscreen) {
+        last = performance.now();
+        raf = requestAnimationFrame(frame);
+    } }
+    slider.addEventListener("input", function () { playing = false; setPlay(); target = +slider.value; if (reduced) {
+        shown = target;
+        setYear(shown);
+        draw(shown);
+    }
+    else
+        kick(); });
+    playBtn.addEventListener("click", function () { playing = !playing; if (playing && target >= 1900) {
+        target = shown = 1066;
+    } setPlay(); kick(); });
+    document.addEventListener("keydown", function (e) { if (e.code === "Space" && !/INPUT|BUTTON|TEXTAREA/.test(document.activeElement.tagName) && !(document.activeElement.closest && document.activeElement.closest("svg"))) {
+        e.preventDefault();
+        playBtn.click();
+    } });
+    if ("IntersectionObserver" in window)
+        new IntersectionObserver(function (es) { onscreen = es[0].isIntersecting; if (onscreen)
+            kick(); }).observe(svg);
+    document.getElementById("grpSeg").addEventListener("click", function (e) { var b = e.target.closest("button"); if (!b)
+        return; document.querySelectorAll("#grpSeg button").forEach(function (x) { return x.setAttribute("aria-pressed", String(x === b)); }); grp = b.dataset.v; if (selected && W.some(function (w) { return w.id === selected; }) && !inGrp(W.find(function (w) { return w.id === selected; }))) {
+        selected = null;
+        updateInfo();
+    } draw(shown); });
+    document.querySelectorAll(".lang button").forEach(function (b) { return b.addEventListener("click", function () { lang = b.dataset.lang; try {
+        localStorage.setItem("ell-lang", lang);
+    }
+    catch (e) { } applyStatic(); labels(); cardText(); updateInfo(); setYear(shown); draw(shown); }); });
+    window.addEventListener("resize", function () { rescale(); draw(shown); });
+    applyStatic();
+    build();
+    buildCards();
+    cardText();
+    rescale();
+    if (reduced) {
+        target = shown = 1400;
+        slider.value = 1400;
+    }
+    setPlay();
+    setYear(shown);
+    draw(shown);
+    kick();
+})();
+</script>
+</body>
+</html>
