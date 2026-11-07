@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head><script src="legacy.js"></script><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Emerald"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#49B190"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Silent consonants · Emerald Language Learning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --emerald:#49B190; --emerald-link:#53AC90; --emerald-dark:#457865; --emerald-soft:#72B1A0;
+  --text-strong:#323232; --text:#777777; --bg:#FFFFFF; --bg-soft:#F9F9F9;
+  --line:#DADADA; --line-strong:#BBBBBB; --hover:#3f9c7e;
+  --surface:#FFFFFF; --halo:#FFFFFF; --hover-soft:#eef7f3; --ref:#b7b7b7; --muted-dot:#9a9a9a; --map-ocean:#eef6f3; --map-land:#e2e2e2;
+  --font-head:'Montserrat',sans-serif; --font-body:'Open Sans',sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-body);line-height:1.9}
+button{font-family:inherit}
+:focus-visible{outline:2px solid var(--emerald);outline-offset:2px}
+
+/* header */
+header.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 5%;border-bottom:1px solid var(--line);background:var(--surface);position:-webkit-sticky;position:sticky;top:0;z-index:10}
+header.top img{height:60px;width:auto;display:block}
+.lang{display:flex;border:1px solid var(--emerald);border-radius:4px;overflow:hidden}
+.lang button{border:0;background:var(--surface);color:var(--emerald-dark);font-weight:600;font-size:.85rem;padding:6px 12px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--emerald);color:#fff}
+.lang button+button{border-left:1px solid var(--emerald)}
+@media (max-width:600px){header.top img{height:44px}}
+
+main{width:90%;max-width:1080px;margin:0 auto;padding-bottom:60px}
+h1.section{font-family:var(--font-head);font-weight:300;text-transform:uppercase;color:var(--emerald-dark);text-align:center;font-size:clamp(2rem,5vw,3.4rem);line-height:1.25;margin:56px 0 8px;letter-spacing:.02em}
+p.lede{text-align:center;max-width:720px;margin:0 auto 36px}
+h2.sub{font-family:var(--font-head);font-weight:400;text-transform:uppercase;color:var(--emerald-dark);text-align:center;font-size:clamp(1.3rem,3vw,1.9rem);margin:56px 0 20px;letter-spacing:.03em}
+
+/* figure card (anima-style frame) */
+.card{position:relative;background:var(--bg-soft);border:1px solid var(--line);border-radius:4px;padding:48px 20px 52px}
+.card .fig{position:absolute;top:12px;left:16px;font-family:var(--font-head);font-weight:700;font-size:.8rem;color:var(--emerald-dark);letter-spacing:.08em;text-transform:uppercase}
+.card .ttl{position:absolute;top:12px;right:16px;font-family:var(--font-head);font-weight:400;font-size:.8rem;color:var(--text-strong);letter-spacing:.06em;text-transform:uppercase;text-align:right;max-width:60%}
+.card .hint{position:absolute;bottom:12px;left:16px;font-size:.75rem;max-width:48%;line-height:1.4}
+.card .readout{position:absolute;bottom:12px;right:16px;font-size:.8rem;color:var(--text-strong);font-weight:600;text-align:right;max-width:50%;line-height:1.4;font-variant-numeric:tabular-nums}
+@media (max-width:600px){.card{padding-top:12px}.card .fig,.card .ttl{position:static;display:block;max-width:none;text-align:left;margin-bottom:6px}.card .hint{display:none}.card .readout{max-width:90%}}
+
+.controls{display:flex;flex-wrap:wrap;gap:14px 26px;justify-content:center;align-items:center;margin:4px 0 10px}
+.seg{display:inline-flex;border:1px solid var(--emerald);border-radius:4px;overflow:hidden}
+.seg button{border:0;background:var(--surface);color:var(--emerald-dark);font-size:.8rem;font-weight:600;padding:5px 11px;cursor:pointer;line-height:1.5}
+.seg button+button{border-left:1px solid var(--emerald)}
+.seg button[aria-pressed="true"]{background:var(--emerald);color:#fff}
+.ctl-label{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;margin-right:8px;color:var(--text)}
+.btn{background:var(--emerald);color:#fff;border:0;border-radius:4px;padding:6px 14px;font-weight:600;font-size:.85rem;cursor:pointer}
+.btn:hover{background:var(--hover)}
+.btn.outline{background:var(--surface);color:var(--emerald-dark);border:1px solid var(--emerald)}
+.btn.outline:hover{background:var(--hover-soft)}
+
+.timeline{display:flex;align-items:center;gap:14px;max-width:720px;margin:6px auto 0}
+.timeline .yr{font-family:var(--font-head);font-weight:700;color:var(--emerald-dark);font-size:1.6rem;min-width:110px;text-align:center;font-variant-numeric:tabular-nums}
+input[type=range]{flex:1;accent-color:var(--emerald);height:28px}
+.ticks{display:flex;justify-content:space-between;max-width:720px;margin:-4px auto 0;padding-left:124px;padding-right:2px;font-size:.7rem}
+@media (max-width:600px){.timeline .yr{min-width:80px;font-size:1.25rem}.ticks{padding-left:94px}}
+
+svg#chart{display:block;width:100%;max-width:760px;height:auto;margin:6px auto 0;overflow:visible}
+.ax{fill:none;stroke:var(--line-strong);stroke-width:1.2}
+.grid{stroke:var(--line);stroke-width:1;stroke-dasharray:0}
+.axlab{font-family:var(--font-body);font-size:calc(12px * var(--k,1));fill:var(--text)}
+.ref{font-family:var(--font-body);font-size:calc(13px * var(--k,1));fill:var(--ref)}
+.path{fill:none;stroke-width:1.4;stroke-linecap:round;opacity:.35}
+.glide{fill:none;stroke-width:2.6;stroke-linecap:round}
+.dot{stroke:var(--halo);stroke-width:2;cursor:pointer}
+.wlab{font-family:var(--font-head);font-weight:700;font-size:calc(13px * var(--k,1));pointer-events:none}
+.ipa{font-family:var(--font-body);font-size:calc(12px * var(--k,1));fill:var(--text-strong);pointer-events:none}
+.order{font-family:var(--font-head);font-weight:700;font-size:calc(11px * var(--k,1));fill:#fff;pointer-events:none}
+g.v.dim{opacity:.18}
+g.v.off{opacity:.12}
+
+.info{min-height:3.4em;max-width:760px;margin:6px auto 0;text-align:center;font-size:.9rem;line-height:1.6;color:var(--text-strong)}
+.modelnote{max-width:760px;margin:4px auto 0;text-align:center;font-size:.8rem;line-height:1.6}
+
+/* word cards */
+.words{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;margin-top:22px}
+.w{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:12px 10px 10px;text-align:center;cursor:pointer;line-height:1.5;transition:border-color .2s}
+.w:hover,.w.sel{border-color:var(--emerald)}
+.w .wd{font-family:var(--font-head);font-weight:700;font-size:1.15rem;color:var(--text-strong)}
+.w .now{font-size:1.05rem;color:var(--emerald-dark);font-weight:600;margin-top:2px}
+.w .was{font-size:.72rem;margin-top:4px}
+.w .sw{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
+.w.off{opacity:.45}
+
+/* established vs debated */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media (max-width:720px){.two{grid-template-columns:1fr}}
+.feat{position:relative;background:var(--bg-soft);border-radius:4px;padding:64px 22px 22px;margin-top:46px;text-align:center}
+.feat .circ{position:absolute;top:-44px;left:50%;transform:translateX(-50%);width:88px;height:88px;border-radius:50%;background:var(--emerald);display:flex;align-items:center;justify-content:center}
+.feat h3{font-family:var(--font-head);font-weight:700;color:var(--text-strong);margin:0 0 10px;font-size:1.05rem}
+.feat ul{text-align:left;margin:0;padding-left:18px}
+.feat li{margin:6px 0;line-height:1.7}
+
+.src{font-size:.85rem;line-height:1.7}
+.src ol{padding-left:20px}
+.src li{margin:6px 0}
+.src a{color:var(--emerald-link)}
+.note{border-left:3px solid var(--emerald);padding:6px 14px;background:var(--bg-soft);font-size:.85rem;line-height:1.7;margin-top:18px}
+footer{border-top:1px solid var(--line);text-align:center;font-size:.75rem;padding:18px;line-height:1.6}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* Dark theme: follows the system setting (same palette as the Emerald app pages) */
+@media screen and (prefers-color-scheme: dark){
+  :root{color-scheme:dark;--emerald-dark:#7fcbb0;--emerald-link:#6cc8a6;--emerald-soft:#7fcbb0;--text-strong:#edf2f0;--text:#b6c2bd;--bg:#121816;--bg-soft:#1a2320;--line:#2f3b37;--line-strong:#4b5a55;
+    --surface:#161e1b;--halo:#1a2320;--hover-soft:#1d3a31;--ref:#5d6b66;--muted-dot:#7d8a85;--map-ocean:#17211e;--map-land:#2e3935}
+  header.top img{background:#fff;border-radius:6px;padding:4px 8px;box-sizing:content-box}
+  .btn:hover{background:#5cc4a3}
+}
+
+/* Fig 6 */
+svg#fork{display:block;width:100%;max-width:980px;height:auto;margin:8px auto 0;overflow:visible}
+.lane{fill:none;stroke-width:6;stroke-linecap:round;opacity:.85;transition:opacity .35s}
+.lane.dim{opacity:.15}
+.bname{font-family:var(--font-head);font-weight:700;letter-spacing:.04em}
+.w .wd u,.pt .ex u{text-decoration:none;color:#c0392b;font-weight:700;border-bottom:2px dotted #c0392b}
+.pat{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.pt{background:var(--bg-soft);border:1px solid var(--line);border-radius:4px;padding:12px 14px;line-height:1.55}
+.pt .pp{font-family:var(--font-head);font-weight:700;color:var(--emerald-dark);font-size:1.05rem}
+.pt .ex{color:var(--text-strong);margin:4px 0 2px;font-size:.95rem}
+.pt .ru{font-size:.8rem}
+.bank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:0 0 18px}
+.bank span{border:1px solid var(--emerald);color:var(--emerald-dark);border-radius:14px;padding:2px 12px;font-weight:600;font-size:.9rem}
+.bank span.used{opacity:.35;text-decoration:line-through}
+ol.quiz{max-width:760px;margin:0 auto;padding-left:26px;color:var(--text-strong)}
+ol.quiz li{margin:10px 0;line-height:2}
+ol.quiz input{font:inherit;font-weight:600;width:8.5em;border:0;border-bottom:2px solid var(--line-strong);background:transparent;text-align:center;color:var(--emerald-dark);padding:0 4px;border-radius:0}
+ol.quiz input:focus{outline:none;border-bottom-color:var(--emerald)}
+ol.quiz input.ok{border-bottom-color:var(--emerald)}
+ol.quiz input.ko{border-bottom-color:#c0392b;color:#c0392b}
+ol.quiz .fb{display:block;font-size:.8rem;line-height:1.4}
+ol.quiz .fb.ok{color:var(--emerald-dark)}
+ol.quiz .fb.ko{color:#c0392b}
+.qbtns{display:flex;gap:12px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+.score{text-align:center;font-weight:600;color:var(--text-strong);margin-top:10px;min-height:1.6em}
+p.center{text-align:center;max-width:720px;margin:0 auto 18px}
+.tick{stroke:var(--line-strong);stroke-width:1}
+.ticklab{font-family:var(--font-body);fill:var(--text)}
+.land{stroke:var(--line-strong);stroke-width:1;stroke-dasharray:3 4}
+.landlab{font-family:var(--font-body);fill:var(--muted-dot);font-style:italic}
+.now{stroke:var(--emerald);stroke-width:2}
+.mk{cursor:pointer;transition:opacity .35s}
+.mk circle{stroke:var(--halo);stroke-width:2.5}
+.mk text.ic{font-family:var(--font-head);font-weight:700;fill:#fff;pointer-events:none}
+.mk text.ml{font-family:var(--font-body);font-weight:600;fill:var(--text-strong);pointer-events:none}
+.mk line{stroke:var(--line-strong);stroke-width:1}
+.mk.future{opacity:.16}
+.mk.dim{opacity:.12}
+.mk.sel circle{stroke:var(--text-strong)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;justify-content:center;font-size:.78rem;margin-top:6px}
+.legend span i{display:inline-block;width:16px;height:16px;border-radius:50%;margin-right:6px;vertical-align:-3px;color:#fff;font-style:normal;font-family:var(--font-head);font-weight:700;font-size:10px;text-align:center;line-height:16px}
+.w{text-align:left;padding:12px 14px}
+.w .wd{text-align:center;margin-bottom:6px;font-size:1.05rem}
+.w .row{display:flex;justify-content:space-between;gap:8px;font-size:.88rem;line-height:1.5;padding:2px 0}
+.w .row b{font-family:var(--font-head);font-size:.72rem;letter-spacing:.06em;color:var(--text);font-weight:700;min-width:44px}
+.w .row span{color:var(--text-strong);text-align:right}
+.w .row.chg span{color:var(--emerald-dark);font-weight:600}
+.w .row.chg span::after{content:" ●";color:var(--emerald);font-size:.7em}
+.w .when{font-size:.72rem;text-align:center;margin-top:6px}
+.w.future{opacity:.5}
+.words{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+</style>
+</head>
+<body>
+<script>/* Theme helper: ELL.c(colour) returns a lighter version of the darker data colours when the system is in dark mode. */
+var ELL = (function () {
+    var m = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)"), dark = !!(m && m.matches), L = { "#457865": "#7fcbb0", "#2f6b57": "#5fb79a", "#8a6d3b": "#c29a5c" };
+    if (m) {
+        var r = function () { location.reload(); };
+        if (m.addEventListener)
+            m.addEventListener("change", r);
+        else if (m.addListener)
+            m.addListener(r);
+    }
+    return { dark: dark, c: function (x) { return dark && L[x.toLowerCase()] || x; } };
+})();
+</script>
+<header class="top">
+  <a href="index.html" title="Home" aria-label="Emerald Language Learning – Home"><img alt="Emerald Language Learning" width="306" height="90" src="data:image/png;base64,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"></a>
+  <div class="lang" role="group" aria-label="Language / Langue">
+    <button type="button" data-lang="fr" aria-pressed="true">FR</button>
+    <button type="button" data-lang="en" aria-pressed="false">EN</button>
+  </div>
+</header>
+
+<main>
+  <h1 class="section" data-i18n="h1"></h1>
+  <p class="lede" data-i18n-html="lede"></p>
+
+  <section class="card" aria-labelledby="figttl">
+    <div class="fig" data-i18n="fig"></div>
+    <div class="ttl" id="figttl" data-i18n="figTitle"></div>
+
+    <div class="controls">
+      <div><span class="ctl-label" data-i18n="show"></span>
+        <span class="seg" id="sideSeg">
+          <button type="button" data-v="all" aria-pressed="true" data-i18n="all"></button>
+          <button type="button" data-v="lost" aria-pressed="false" data-i18n="tLost"></button>
+          <button type="button" data-v="added" aria-pressed="false" data-i18n="tAdded"></button>
+          <button type="button" data-v="borrowed" aria-pressed="false" data-i18n="tBorrowed"></button>
+        </span></div>
+    </div>
+
+    <div class="timeline">
+      <div class="yr" id="yr">1200</div>
+      <input type="range" id="slider" min="1200" max="2000" step="1" value="1200" data-i18n-aria="sliderAria">
+      <button type="button" class="btn outline" id="play" data-i18n-aria="playAria">▶</button>
+    </div>
+    <div class="ticks" aria-hidden="true"><span>1200</span><span>1400</span><span>1600</span><span>1800</span><span>2000</span></div>
+
+    <svg id="fork" viewBox="0 0 900 320" role="img" data-i18n-aria="chartAria"></svg>
+    <div class="info" id="info" aria-live="polite"></div>
+    <div class="modelnote" id="modelnote"></div>
+
+    <div class="words" id="words"></div>
+
+    <div class="hint" data-i18n="hint"></div>
+    <div class="readout" id="readout"></div>
+  </section>
+
+  <h2 class="sub" data-i18n="lookTitle"></h2>
+  <p class="center" data-i18n="lookLede"></p>
+  <div class="pat" id="pat"></div>
+
+  <h2 class="sub" data-i18n="howSure"></h2>
+  <div class="two">
+    <div class="feat">
+      <div class="circ" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+      <h3 data-i18n="estTitle"></h3>
+      <ul id="estList"></ul>
+    </div>
+    <div class="feat">
+      <div class="circ" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14"/><path d="M12 17.5h.01"/></svg></div>
+      <h3 data-i18n="debTitle"></h3>
+      <ul id="debList"></ul>
+    </div>
+  </div>
+
+  <h2 class="sub" data-i18n="quizTitle"></h2>
+  <p class="center" data-i18n="quizLede"></p>
+  <div class="bank" id="bank" aria-label="Word bank"></div>
+  <ol class="quiz" id="quiz"></ol>
+  <div class="qbtns">
+    <button type="button" class="btn" id="qcheck" data-i18n="qCheck"></button>
+    <button type="button" class="btn outline" id="qshow" data-i18n="qShow"></button>
+    <button type="button" class="btn outline" id="qreset" data-i18n="qReset"></button>
+  </div>
+  <div class="score" id="score" aria-live="polite"></div>
+
+  <h2 class="sub" data-i18n="srcTitle"></h2>
+  <div class="src">
+    <ol>
+      <li><a href="https://en.wikipedia.org/wiki/Phonological_history_of_English_consonant_clusters">Wikipedia, “Phonological history of English consonant clusters”</a> and <a href="https://en.wikipedia.org/wiki/Phonological_history_of_English_consonants">“Phonological history of English consonants”</a>. <span data-i18n="s1"></span></li>
+      <li><a href="https://www.etymonline.com/word/wr-">Online Etymology Dictionary, “wr-”</a>; <a href="https://grammarphobia.com/blog/2024/10/silent-w.html">Grammarphobia (2024), “Why is the ‘w’ silent in ‘write’?”</a>, citing the <i>Oxford English Dictionary</i>. <span data-i18n="s2"></span></li>
+      <li><a href="https://etymologist.ai/word/lamb">Etymologist, “lamb”</a>. <span data-i18n="s3"></span></li>
+      <li>Crystal, D. (2012). <i>Spell It Out: The Singular Story of English Spelling</i>. Profile Books. <span data-i18n="s4"></span></li>
+      <li><a href="https://en.wikipedia.org/wiki/Silent_letter">Wikipedia, “Silent letter”</a>; <a href="https://www.creators.com/read/rob-kyff-word-guy/01/24/why-the-letter-b-is-deeply-in-debt">Kyff, R. (2024), “Why the letter ‘b’ is deeply in ‘debt’”</a>. <span data-i18n="s5"></span></li>
+      <li><a href="https://www.etymonline.com/word/h">Online Etymology Dictionary, “H” and “heir”</a>. <span data-i18n="s6"></span></li>
+      <li><a href="https://www.etymonline.com/search?q=psyche">Online Etymology Dictionary, “psyche”, “psychology”</a>. <span data-i18n="s7"></span></li>
+    </ol>
+    <h3 style="font-family:var(--font-head);color:var(--text-strong);font-size:1rem;margin:22px 0 4px" data-i18n="simpTitle"></h3>
+    <ul id="simpList"></ul>
+    <div class="note" data-i18n-html="recon"></div>
+  </div>
+</main>
+<footer>Emerald Language Learning · <span data-i18n="footer"></span></footer>
+
+<script>var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
+(function () {
+    "use strict";
+    var STR = {
+        en: {
+            h1: "Silent consonants",
+            lede: "Why is there a <b>k</b> in <b>knee</b>, a <b>b</b> in <b>doubt</b> and a <b>p</b> in <b>psychology</b>? Silent letters are not random. Most come from one of three stories: <b>a sound English stopped saying</b>, <b>a letter scholars added</b>, or <b>a spelling borrowed with a word</b>.",
+            fig: "Fig 6", figTitle: "How English got its silent consonants",
+            show: "Show", all: "All", tLost: "Sound lost", tAdded: "Letter added", tBorrowed: "Borrowed spelling",
+            lLost: "Sound lost", lAdded: "Letter added", lBorrowed: "Borrowed",
+            sliderAria: "Year", playAria: "Play or pause (Space)",
+            chartAria: "A timeline from 1200 to today with three lanes: sounds English stopped pronouncing, letters added by scholars, and spellings borrowed from other languages. Each dot marks roughly when a group of words got its silent letter.",
+            hint: "Drag the year, or press Space to play. Hover or tab to a dot or card for an explanation.",
+            readout: "c. {y} · {n} of 8 silent letters in place: {a} sound lost, {b} letter added, {c} borrowed",
+            readout0: "c. {y} · the letters below are still pronounced (or not yet in English)",
+            spelled: "Written", said: "Said", notYet: "(not in English yet)",
+            when: "{d} · {lane}",
+            note_all: "Most silent letters are <b>fossils</b>: English spelling settled, especially after printing arrived in 1476, while pronunciation kept changing.",
+            note_lost: "<b>Sound lost.</b> The letter was pronounced for centuries. Speakers stopped saying it, but the written form stayed the same.",
+            note_added: "<b>Letter added.</b> In the 16th and 17th centuries, scholars respelled some French loans to show their Latin roots. The new letter was never pronounced in English.",
+            note_borrowed: "<b>Borrowed spelling.</b> The word arrived from French or Greek with its spelling, but English speakers did not say every letter.",
+            m_lamb: "<b>Lamb, climb, comb, thumb.</b> In Old English the b after m was pronounced: <i>lam-b</i>. Between roughly the 13th and 14th centuries it fell silent, because m and b are both made with the lips and merged. Related words sometimes kept it: <i>crumb / crumble</i>, <i>climb / clamber</i>.",
+            m_night: "<b>Night, light, daughter, though.</b> Gh once spelled a rough sound at the back of the mouth, like German <i>Nacht</i> or Scottish <i>loch</i>. It disappeared from southern English during the 15th and 16th centuries. Scots kept it (<i>nicht</i>), and in a few words it became f (<i>laugh, rough, enough</i>).",
+            m_write: "<b>Write, wrong, wrist, wrap.</b> The w was pronounced in Old English. Spellings like <i>rong</i> for wrong appear from the mid-15th century, and a spelling guide of 1644 already marks the w as silent. Today <i>write</i> and <i>right</i>, <i>wrap</i> and <i>rap</i> sound the same.",
+            m_knight: "<b>Know, knee, knife, knight.</b> The k was pronounced, as it still is in German <i>Knie</i> (knee). It faded during the 1500s and 1600s and was gone from standard speech by around 1700. Now <i>knot</i> sounds like <i>not</i>.",
+            m_debt: "<b>Debt, doubt, subtle.</b> English borrowed French <i>dette</i> and <i>doute</i> with no b, and said them with no b. Renaissance scholars added a b to show the Latin roots <i>debitum</i> and <i>dubitare</i>. Nobody ever pronounced it in English, but it links the words to <i>debit</i> and <i>dubious</i>.",
+            m_island: "<b>Island.</b> A scholars’ mistake. The word is native English (Old English <i>īegland</i>, later <i>iland</i>). An s was added because people wrongly linked it to French <i>isle</i> and Latin <i>insula</i>. <i>Isle</i> really does come from Latin, which is why both words have an s.",
+            m_hour: "<b>Hour, honest, heir, honour.</b> These came from French, where h was already silent (compare <i>heure, honnête, héritier</i>). English kept both the letter and the silence, which is why we say <i>an hour</i>, not <i>a hour</i>.",
+            m_psych: "<b>Psychology, psyche.</b> From Greek <i>psykhē</i> “soul, mind”, recorded in English from the 1640s–1650s. Greek pronounced ps at the start of a word, but English does not allow that combination, so the p is silent. In <i>psalm</i> and <i>pseudo-</i> too.",
+            lookTitle: "Common ones to look out for",
+            lookLede: "Learn the pattern, not each word. The silent letters are shown in red.",
+            pat: [
+                ["kn-", "<u>k</u>now, <u>k</u>nee, <u>k</u>nife, <u>k</u>nock", "At the start of a word, k before n is always silent."],
+                ["wr-", "<u>w</u>rite, <u>w</u>rong, <u>w</u>rist, <u>w</u>rap", "At the start of a word, w before r is silent."],
+                ["-mb", "clim<u>b</u>, com<u>b</u>, thum<u>b</u>, lam<u>b</u>", "Final b after m is silent, even in climber and climbing. But say it in number."],
+                ["-gh / -ght", "ni<u>gh</u>t, dau<u>gh</u>ter, thou<u>gh</u>t, wei<u>gh</u>t", "Usually silent. Sometimes said as f: laugh, enough, rough."],
+                ["-bt", "de<u>b</u>t, dou<u>b</u>t, su<u>b</u>tle", "b before t is silent."],
+                ["h-", "<u>h</u>our, <u>h</u>onest, <u>h</u>eir, <u>h</u>onour", "A short list from French. Use an: an hour, an honest man."],
+                ["ps-", "<u>p</u>sychology, <u>p</u>salm, <u>p</u>seudonym", "Greek words: start with the s sound."],
+                ["-stle / -sten", "cas<u>t</u>le, whis<u>t</u>le, lis<u>t</u>en, fas<u>t</u>en", "t after s is silent before -le and -en."],
+                ["-lk / -lf / -lm", "wa<u>l</u>k, ta<u>l</u>k, ha<u>l</u>f, ca<u>l</u>m", "After a, l is usually silent before k, f and m. Also could, would, should."],
+                ["gn", "<u>g</u>naw, <u>g</u>nome, si<u>g</u>n, forei<u>g</u>n", "g next to n is often silent. But say it in signature."],
+                ["w (other)", "ans<u>w</u>er, s<u>w</u>ord, t<u>w</u>o, <u>w</u>ho", "A few common words to learn by heart."],
+                ["s / p", "i<u>s</u>land, ai<u>s</u>le, recei<u>p</u>t, cu<u>p</u>board", "Letters added or kept for their history."]
+            ],
+            howSure: "How sure are we?",
+            estTitle: "Well established",
+            est: ["Most silent consonants were once pronounced: kn-, wr-, -mb and gh all had real sounds in Old and Middle English.", "Spelling became fixed (manuscript tradition, then printing) while pronunciation kept changing.", "The b in debt and doubt and the s in island were added on purpose and never pronounced in English.", "Silent h in hour, honest and heir comes from French, where the h was already silent."],
+            debTitle: "Still debated",
+            deb: ["<b>Why</b> kn- and wr- were simplified: “easier to say” is the usual explanation, but the exact cause is not known.", "<b>Exact dates:</b> sources place the loss of k anywhere from the 1500s to around 1700, and the s in island from the 1400s to the 1600s. The dots show approximate dates.", "<b>“Pointless” letters?</b> Some argue the scholars’ b in doubt and debt is useful because it links word families (doubt, dubious; debt, debit). Island has no such excuse.", "<b>A common myth:</b> “all silent letters were once pronounced”. Not true for debt, doubt, island or psychology."],
+            quizTitle: "Quiz: fill in the blanks",
+            quizLede: "Type the missing word. Each answer has a silent consonant. Use each word in the bank once.",
+            qCheck: "Check answers", qShow: "Show answers", qReset: "Try again",
+            qOk: "✓ Correct · silent {l}", qKo: "✗ Answer: {a} · silent {l}",
+            qScore: "Score: {n} / {t}", qPerfect: "Score: {n} / {t} · perfect!",
+            srcTitle: "Sources",
+            s1: "Reduction of kn- and wr- to n- and r- around the 17th century; -mb still a cluster in early Middle English; gh sounds lost in late Middle or Early Modern English.",
+            s2: "The w in wr- stopped being pronounced c. 1450–1700; w-less spellings from the mid-15th century; Hodges (1644) marks it silent.",
+            s3: "Final b in lamb, climb, comb fell silent c. 13th–14th century.",
+            s4: "Gh (/x/) disappeared from southern English during the 15th and 16th centuries but stayed in Scots (nicht).",
+            s5: "The b in debt and doubt inserted to match Latin; the s of isle extended to the unrelated word island; silent letters can separate homophones.",
+            s6: "Silent h in heir and hour from French; heir recorded c. 1300.",
+            s7: "Psyche recorded in English in the 1640s, psychology in the 1650s.",
+            simpTitle: "What this figure simplifies",
+            simp: ["Only eight groups of words are shown; English has many more silent letters.", "Each dot is a round date for a change that spread slowly and varied by region and social class.", "“Said” uses simple respellings (lam, rite, nite), not phonetic symbols, and refers to the southern British standard.", "Dialects differ: Scots still says the gh in nicht, and the h in herb is silent in American English but said in British English.", "Silent e and the r of non-rhotic accents (car, hard) are left out: they belong to vowels and accents rather than to these three stories."],
+            recon: "<b>Before recordings.</b> Older pronunciations are worked out from spelling, rhymes and the comments of early spelling reformers such as Hodges (1644). Dates are approximate.",
+            footer: "Educational illustration of the history of English."
+        },
+        fr: {
+            h1: "Les consonnes muettes",
+            lede: "Pourquoi y a-t-il un <b>k</b> dans <b>knee</b>, un <b>b</b> dans <b>doubt</b> et un <b>p</b> dans <b>psychology</b> ? Les lettres muettes ne sont pas dues au hasard. La plupart viennent de l’une de ces trois histoires : <b>un son que l’anglais a cessé de prononcer</b>, <b>une lettre ajoutée par des érudits</b>, ou <b>une orthographe empruntée avec le mot</b>.",
+            fig: "Fig 6", figTitle: "D’où viennent les consonnes muettes de l’anglais",
+            show: "Afficher", all: "Tout", tLost: "Son disparu", tAdded: "Lettre ajoutée", tBorrowed: "Orthographe empruntée",
+            lLost: "Son disparu", lAdded: "Lettre ajoutée", lBorrowed: "Emprunt",
+            sliderAria: "Année", playAria: "Lecture ou pause (Espace)",
+            chartAria: "Une frise de 1200 à aujourd’hui avec trois lignes : les sons que l’anglais a cessé de prononcer, les lettres ajoutées par des érudits, et les orthographes empruntées à d’autres langues. Chaque point indique à peu près quand un groupe de mots a reçu sa lettre muette.",
+            hint: "Faites glisser l’année ou appuyez sur Espace. Survolez un point ou une carte, ou utilisez Tab, pour une explication.",
+            readout: "v. {y} · {n} lettres muettes sur 8 en place : {a} son disparu, {b} lettre ajoutée, {c} emprunt",
+            readout0: "v. {y} · les lettres ci-dessous se prononcent encore (ou ne sont pas encore en anglais)",
+            spelled: "Écrit", said: "Prononcé", notYet: "(pas encore en anglais)",
+            when: "{d} · {lane}",
+            note_all: "La plupart des lettres muettes sont des <b>fossiles</b> : l’orthographe anglaise s’est figée, surtout après l’arrivée de l’imprimerie en 1476, alors que la prononciation continuait de changer.",
+            note_lost: "<b>Son disparu.</b> La lettre s’est prononcée pendant des siècles. On a cessé de la dire, mais l’écrit n’a pas changé.",
+            note_added: "<b>Lettre ajoutée.</b> Aux XVI<sup>e</sup> et XVII<sup>e</sup> siècles, des érudits ont modifié l’orthographe de certains mots venus du français pour montrer leur origine latine. Cette lettre ne s’est jamais prononcée en anglais.",
+            note_borrowed: "<b>Orthographe empruntée.</b> Le mot est arrivé du français ou du grec avec son orthographe, mais les anglophones ne prononçaient pas toutes les lettres.",
+            m_lamb: "<b>Lamb, climb, comb, thumb.</b> En vieil anglais, le b après m se prononçait : <i>lam-b</i>. Il est devenu muet vers les XIII<sup>e</sup>–XIV<sup>e</sup> siècles, car m et b se forment tous deux avec les lèvres et ont fusionné. Des mots apparentés l’ont parfois gardé : <i>crumb / crumble</i>, <i>climb / clamber</i>.",
+            m_night: "<b>Night, light, daughter, though.</b> Gh notait autrefois un son rauque au fond de la bouche, comme dans l’allemand <i>Nacht</i> ou l’écossais <i>loch</i>. Il a disparu de l’anglais du sud aux XV<sup>e</sup> et XVI<sup>e</sup> siècles. L’écossais l’a gardé (<i>nicht</i>), et dans quelques mots il est devenu f (<i>laugh, rough, enough</i>).",
+            m_write: "<b>Write, wrong, wrist, wrap.</b> Le w se prononçait en vieil anglais. Des graphies comme <i>rong</i> pour wrong apparaissent dès le milieu du XV<sup>e</sup> siècle, et un manuel d’orthographe de 1644 indique déjà que le w est muet. Aujourd’hui, <i>write</i> et <i>right</i>, <i>wrap</i> et <i>rap</i> se prononcent pareil.",
+            m_knight: "<b>Know, knee, knife, knight.</b> Le k se prononçait, comme encore en allemand <i>Knie</i> (genou). Il s’est effacé aux XVI<sup>e</sup> et XVII<sup>e</sup> siècles et avait disparu de la prononciation standard vers 1700. Désormais, <i>knot</i> se dit comme <i>not</i>.",
+            m_debt: "<b>Debt, doubt, subtle.</b> L’anglais a emprunté au français <i>dette</i> et <i>doute</i>, sans b à l’écrit comme à l’oral. Les érudits de la Renaissance ont ajouté un b pour rappeler les racines latines <i>debitum</i> et <i>dubitare</i>. Personne ne l’a jamais prononcé en anglais, mais il rattache ces mots à <i>debit</i> et <i>dubious</i>.",
+            m_island: "<b>Island.</b> Une erreur d’érudits. Le mot est d’origine anglaise (vieil anglais <i>īegland</i>, puis <i>iland</i>). On y a ajouté un s en le croyant, à tort, apparenté au français <i>isle</i> et au latin <i>insula</i>. <i>Isle</i> vient bien du latin : voilà pourquoi les deux mots ont un s.",
+            m_hour: "<b>Hour, honest, heir, honour.</b> Ces mots viennent du français, où le h était déjà muet (comparez <i>heure, honnête, héritier</i>). L’anglais a gardé la lettre et le silence : on dit donc <i>an hour</i>, et non <i>a hour</i>.",
+            m_psych: "<b>Psychology, psyche.</b> Du grec <i>psykhē</i> « âme, esprit », attesté en anglais dans les années 1640–1650. Le grec prononçait ps en début de mot, mais l’anglais n’admet pas cette combinaison : le p est donc muet. De même dans <i>psalm</i> et <i>pseudo-</i>.",
+            lookTitle: "Les plus courantes à repérer",
+            lookLede: "Apprenez le schéma plutôt que chaque mot. Les lettres muettes sont en rouge.",
+            pat: [
+                ["kn-", "<u>k</u>now, <u>k</u>nee, <u>k</u>nife, <u>k</u>nock", "En début de mot, le k devant n est toujours muet."],
+                ["wr-", "<u>w</u>rite, <u>w</u>rong, <u>w</u>rist, <u>w</u>rap", "En début de mot, le w devant r est muet."],
+                ["-mb", "clim<u>b</u>, com<u>b</u>, thum<u>b</u>, lam<u>b</u>", "Le b final après m est muet, même dans climber et climbing. Mais il se prononce dans number."],
+                ["-gh / -ght", "ni<u>gh</u>t, dau<u>gh</u>ter, thou<u>gh</u>t, wei<u>gh</u>t", "Généralement muet. Parfois prononcé f : laugh, enough, rough."],
+                ["-bt", "de<u>b</u>t, dou<u>b</u>t, su<u>b</u>tle", "Le b devant t est muet."],
+                ["h-", "<u>h</u>our, <u>h</u>onest, <u>h</u>eir, <u>h</u>onour", "Une courte liste venue du français. On dit an : an hour, an honest man."],
+                ["ps-", "<u>p</u>sychology, <u>p</u>salm, <u>p</u>seudonym", "Mots grecs : commencez par le son s."],
+                ["-stle / -sten", "cas<u>t</u>le, whis<u>t</u>le, lis<u>t</u>en, fas<u>t</u>en", "Le t après s est muet devant -le et -en."],
+                ["-lk / -lf / -lm", "wa<u>l</u>k, ta<u>l</u>k, ha<u>l</u>f, ca<u>l</u>m", "Après a, le l est souvent muet devant k, f et m. Aussi could, would, should."],
+                ["gn", "<u>g</u>naw, <u>g</u>nome, si<u>g</u>n, forei<u>g</u>n", "Le g à côté de n est souvent muet. Mais il se prononce dans signature."],
+                ["w (autres)", "ans<u>w</u>er, s<u>w</u>ord, t<u>w</u>o, <u>w</u>ho", "Quelques mots courants à apprendre par cœur."],
+                ["s / p", "i<u>s</u>land, ai<u>s</u>le, recei<u>p</u>t, cu<u>p</u>board", "Des lettres ajoutées ou gardées pour leur histoire."]
+            ],
+            howSure: "Quel est notre degré de certitude ?",
+            estTitle: "Bien établi",
+            est: ["La plupart des consonnes muettes se prononçaient autrefois : kn-, wr-, -mb et gh avaient de vrais sons en vieil anglais et en moyen anglais.", "L’orthographe s’est figée (tradition des manuscrits, puis imprimerie) alors que la prononciation continuait de changer.", "Le b de debt et doubt et le s de island ont été ajoutés exprès et ne se sont jamais prononcés en anglais.", "Le h muet de hour, honest et heir vient du français, où il était déjà muet."],
+            debTitle: "Encore débattu",
+            deb: ["<b>Pourquoi</b> kn- et wr- se sont simplifiés : « plus facile à dire » est l’explication habituelle, mais la cause exacte reste inconnue.", "<b>Les dates exactes :</b> selon les sources, la perte du k se situe entre les années 1500 et 1700 environ, et le s de island entre le XV<sup>e</sup> et le XVII<sup>e</sup> siècle. Les points indiquent des dates approximatives.", "<b>Des lettres « inutiles » ?</b> Certains défendent le b ajouté à doubt et debt, car il relie des familles de mots (doubt, dubious ; debt, debit). Island n’a pas cette excuse.", "<b>Une idée reçue :</b> « toutes les lettres muettes se prononçaient autrefois ». C’est faux pour debt, doubt, island ou psychology."],
+            quizTitle: "Quiz : complétez les phrases",
+            quizLede: "Tapez le mot manquant. Chaque réponse contient une consonne muette. Utilisez chaque mot de la liste une seule fois.",
+            qCheck: "Vérifier", qShow: "Voir les réponses", qReset: "Recommencer",
+            qOk: "✓ Correct · {l} muet", qKo: "✗ Réponse : {a} · {l} muet",
+            qScore: "Score : {n} / {t}", qPerfect: "Score : {n} / {t} · parfait !",
+            srcTitle: "Sources",
+            s1: "Réduction de kn- et wr- à n- et r- vers le XVII<sup>e</sup> siècle ; -mb encore prononcé au début du moyen anglais ; sons notés gh perdus à la fin du moyen anglais ou au début de l’anglais moderne.",
+            s2: "Le w de wr- a cessé de se prononcer v. 1450–1700 ; graphies sans w dès le milieu du XV<sup>e</sup> siècle ; Hodges (1644) le note muet.",
+            s3: "Le b final de lamb, climb, comb est devenu muet v. XIII<sup>e</sup>–XIV<sup>e</sup> siècle.",
+            s4: "Gh (/x/) a disparu de l’anglais du sud aux XV<sup>e</sup> et XVI<sup>e</sup> siècles mais s’est maintenu en écossais (nicht).",
+            s5: "Le b de debt et doubt inséré d’après le latin ; le s de isle étendu au mot sans rapport island ; les lettres muettes peuvent distinguer des homophones.",
+            s6: "Le h muet de heir et hour vient du français ; heir attesté v. 1300.",
+            s7: "Psyche attesté en anglais dans les années 1640, psychology dans les années 1650.",
+            simpTitle: "Ce que cette figure simplifie",
+            simp: ["Seuls huit groupes de mots sont montrés ; l’anglais a bien d’autres lettres muettes.", "Chaque point est une date ronde pour un changement qui s’est diffusé lentement, selon les régions et les milieux.", "« Prononcé » utilise des transcriptions simples (lam, rite, nite), pas l’alphabet phonétique, et se réfère à l’anglais britannique standard du sud.", "Les dialectes diffèrent : l’écossais prononce encore le gh de nicht, et le h de herb est muet en américain mais prononcé en britannique.", "Le e muet et le r des accents non rhotiques (car, hard) sont laissés de côté : ils relèvent des voyelles et des accents plutôt que de ces trois histoires."],
+            recon: "<b>Avant les enregistrements.</b> Les prononciations anciennes sont déduites de l’orthographe, des rimes et des remarques des premiers réformateurs de l’orthographe comme Hodges (1644). Les dates sont approximatives.",
+            footer: "Illustration pédagogique de l’histoire de l’anglais."
+        }
+    };
+    var lang = "fr";
+    try {
+        var s = localStorage.getItem("ell-lang");
+        if (s === "en" || s === "fr")
+            lang = s;
+    }
+    catch (e) { }
+    function T(k, v) { var _a, _b; var s = ((_b = (_a = STR[lang][k]) !== null && _a !== void 0 ? _a : STR.en[k]) !== null && _b !== void 0 ? _b : k); if (v)
+        s = s.replace(/\{(\w+)\}/g, function (m, n) { return v[n] !== undefined ? v[n] : m; }); return s; }
+    function applyStatic() {
+        document.documentElement.lang = lang;
+        document.querySelectorAll("[data-i18n]").forEach(function (el) { return el.textContent = T(el.dataset.i18n); });
+        document.querySelectorAll("[data-i18n-html]").forEach(function (el) { return el.innerHTML = T(el.dataset.i18nHtml); });
+        document.querySelectorAll("[data-i18n-aria]").forEach(function (el) { return el.setAttribute("aria-label", T(el.dataset.i18nAria)); });
+        var list = function (id, k) { document.getElementById(id).innerHTML = STR[lang][k].map(function (x) { return "<li>" + x + "</li>"; }).join(""); };
+        list("estList", "est");
+        list("debList", "deb");
+        list("simpList", "simp");
+        document.querySelectorAll(".src [data-i18n]").forEach(function (el) { return el.innerHTML = T(el.dataset.i18n); });
+        document.getElementById("pat").innerHTML = STR[lang].pat.map(function (p) { return "<div class=\"pt\"><div class=\"pp\">".concat(p[0], "</div><div class=\"ex\">").concat(p[1], "</div><div class=\"ru\">").concat(p[2], "</div></div>"); }).join("");
+        document.querySelectorAll(".lang button").forEach(function (b) { return b.setAttribute("aria-pressed", String(b.dataset.lang === lang)); });
+    }
+    /* ---------- the model: when each group of words got its silent letter ---------- */
+    var LANES = ["lost", "added", "borrowed"];
+    var COL = { lost: ELL.c("#457865"), added: "#b08a4a", borrowed: "#49B190" };
+    var LK = { lost: "lLost", added: "lAdded", borrowed: "lBorrowed" };
+    // d = approximate date the letter became silent (lost), was added (added) or the word arrived (borrowed)
+    // before/after = [written, said] shown on the cards; null = word not in English yet
+    var CH = [
+        { id: "lamb", d: 1300, lane: "lost", lv: 0, lab: "lamb, climb", word: "lam<u>b</u>, clim<u>b</u>, com<u>b</u>", before: ["lamb", "lam-b"], after: ["lamb", "lam"], dl: ["13th–14th c.", "XIIIe–XIVe s."] },
+        { id: "night", d: 1550, lane: "lost", lv: 0, lab: "night, light", word: "ni<u>gh</u>t, dau<u>gh</u>ter", before: ["night", "nicht"], after: ["night", "nite"], dl: ["15th–16th c.", "XVe–XVIe s."] },
+        { id: "write", d: 1640, lane: "lost", lv: 1, lab: "write, wrong", word: "<u>w</u>rite, <u>w</u>rong, <u>w</u>rist", before: ["write", "w-rite"], after: ["write", "rite"], dl: ["c. 1450–1700", "v. 1450–1700"] },
+        { id: "knight", d: 1700, lane: "lost", lv: 0, lab: "know, knee", word: "<u>k</u>now, <u>k</u>nee, <u>k</u>nife", before: ["know", "k-now"], after: ["know", "no"], dl: ["17th c.", "XVIIe s."] },
+        { id: "debt", d: 1530, lane: "added", lv: 0, lab: "debt, doubt", word: "de<u>b</u>t, dou<u>b</u>t", before: ["dette, doute", "det, dowt"], after: ["debt, doubt", "det, dowt"], dl: ["16th c.", "XVIe s."] },
+        { id: "island", d: 1600, lane: "added", lv: 1, lab: "island", word: "i<u>s</u>land", before: ["iland", "eye-land"], after: ["island", "eye-land"], dl: ["c. 1600", "v. 1600"] },
+        { id: "hour", d: 1300, lane: "borrowed", lv: 0, lab: "hour, honest", word: "<u>h</u>our, <u>h</u>onest, <u>h</u>eir", before: null, after: ["hour", "our"], dl: ["from c. 1300", "dès 1300 env."] },
+        { id: "psych", d: 1655, lane: "borrowed", lv: 0, lab: "psychology", word: "<u>p</u>sychology, <u>p</u>syche", before: null, after: ["psychology", "sy-kology"], dl: ["1640s–1650s", "années 1640–1650"] }
+    ];
+    var doneBy = function (y) { return CH.filter(function (c) { return c.d <= y; }); };
+    /* ---------- drawing ---------- */
+    var svg = document.getElementById("fork"), NS = "http://www.w3.org/2000/svg";
+    var XA = 170, XB = 870, Y0 = 1200, Y1 = 2000, LY = { lost: 70, added: 150, borrowed: 230 }, YT = 290;
+    var xOf = function (y) { return XA + (y - Y0) / (Y1 - Y0) * (XB - XA); };
+    function el(t, a, p) { var e = document.createElementNS(NS, t); for (var k in a)
+        e.setAttribute(k, a[k]); (p || svg).appendChild(e); return e; }
+    var K = 1, side = "all", selected = null;
+    var R = {};
+    function build() {
+        svg.innerHTML = "";
+        for (var y = 1200; y <= 2000; y += 100) {
+            var x = xOf(y);
+            el("line", { class: "tick", x1: x, y1: YT, x2: x, y2: y % 200 ? YT + 4 : YT + 8 });
+            if (y % 200 === 0)
+                R["t" + y] = el("text", { class: "ticklab", x: x, y: YT + 24, "text-anchor": "middle" });
+        }
+        el("line", { class: "tick", x1: XA, y1: YT, x2: XB, y2: YT });
+        var xp = xOf(1476);
+        el("line", { class: "land", x1: xp, y1: 30, x2: xp, y2: YT });
+        R.print = el("text", { class: "landlab", x: xp + 4, y: YT - 8 });
+        R.lane = {};
+        R.lname = {};
+        LANES.forEach(function (l) { R.lane[l] = el("path", { class: "lane", stroke: COL[l], d: "M".concat(XA, ",").concat(LY[l], "L").concat(XB, ",").concat(LY[l]) }); R.lname[l] = el("text", { class: "bname", fill: COL[l] }); });
+        R.now = el("line", { class: "now", x1: 0, y1: 30, x2: 0, y2: YT });
+        R.m = {};
+        CH.forEach(function (c) {
+            var g = el("g", { class: "mk", tabindex: "0", role: "button" });
+            g.dataset.id = c.id;
+            var ln = el("line", {}, g), ci = el("circle", { fill: COL[c.lane] }, g), ml = el("text", { class: "ml", "text-anchor": "middle" }, g);
+            ml.textContent = c.lab;
+            g.setAttribute("aria-label", c.lab);
+            ["pointerenter", "focus", "click"].forEach(function (ev) { return g.addEventListener(ev, function () { return select(c.id); }); });
+            g.addEventListener("keydown", function (e) { if (e.key === "Enter")
+                select(c.id); });
+            R.m[c.id] = { g: g, ln: ln, ci: ci, ml: ml, c: c };
+        });
+        layout();
+        labels();
+    }
+    function layout() {
+        var small = K > 1.4;
+        Object.values(R.m).forEach(function (m) {
+            var x = xOf(m.c.d), y = LY[m.c.lane], ly = y - (18 + m.c.lv * 16) * K;
+            m.ci.setAttribute("cx", x);
+            m.ci.setAttribute("cy", y);
+            m.ci.setAttribute("r", 9 * K);
+            m.ml.setAttribute("x", x);
+            m.ml.setAttribute("y", ly);
+            m.ml.style.fontSize = (12 * K) + "px";
+            m.ml.style.display = m.ln.style.display = small ? "none" : "";
+            m.ln.setAttribute("x1", x);
+            m.ln.setAttribute("x2", x);
+            m.ln.setAttribute("y1", y - 9 * K);
+            m.ln.setAttribute("y2", ly + 3);
+        });
+        svg.querySelectorAll(".ticklab,.landlab").forEach(function (t) { return t.style.fontSize = (12 * K) + "px"; });
+        LANES.forEach(function (l) {
+            var t = R.lname[l];
+            t.style.fontSize = (13 * K) + "px";
+            if (small) {
+                t.setAttribute("x", XA);
+                t.setAttribute("y", LY[l] - 16 * K);
+                t.setAttribute("text-anchor", "start");
+            }
+            else {
+                t.setAttribute("x", XA - 14);
+                t.setAttribute("y", LY[l] + 5);
+                t.setAttribute("text-anchor", "end");
+            }
+        });
+        R.print.style.display = small ? "none" : "";
+    }
+    function labels() {
+        LANES.forEach(function (l) { return R.lname[l].textContent = T(LK[l]); });
+        for (var y = 1200; y <= 2000; y += 200)
+            R["t" + y].textContent = y;
+        R.print.textContent = lang === "fr" ? "imprimerie 1476" : "printing 1476";
+    }
+    function rescale() { var w = svg.getBoundingClientRect().width || 900; K = Math.max(1, Math.min(2.2, 0.8 * 900 / w)); layout(); }
+    /* ---------- cards, info, readout ---------- */
+    var wordsEl = document.getElementById("words"), info = document.getElementById("info"), readout = document.getElementById("readout"), note = document.getElementById("modelnote");
+    function buildCards() {
+        wordsEl.innerHTML = "";
+        CH.forEach(function (c) {
+            var b = document.createElement("button");
+            b.type = "button";
+            b.className = "w";
+            b.dataset.id = c.id;
+            b.innerHTML = "<div class=\"wd\"><span class=\"sw\" style=\"background:".concat(COL[c.lane], "\"></span>").concat(c.word, "</div><div class=\"row r-w\"><b></b><span></span></div><div class=\"row r-s\"><b></b><span></span></div><div class=\"when\"></div>");
+            ["pointerenter", "focus", "click"].forEach(function (ev) { return b.addEventListener(ev, function () { return select(c.id); }); });
+            wordsEl.appendChild(b);
+        });
+    }
+    function updateCards(y) {
+        wordsEl.querySelectorAll(".w").forEach(function (b) {
+            var c = CH.find(function (x) { return x.id === b.dataset.id; }), done = y >= c.d, v = done ? c.after : c.before;
+            var show = function (r, lab, i, chg) { r.querySelector("b").textContent = lab; r.querySelector("span").textContent = v ? v[i] : (i ? "" : T("notYet")); r.classList.toggle("chg", done && chg); };
+            show(b.querySelector(".r-w"), T("spelled"), 0, c.lane !== "lost");
+            show(b.querySelector(".r-s"), T("said"), 1, c.lane === "lost");
+            b.querySelector(".when").textContent = T("when", { d: c.dl[lang === "fr" ? 1 : 0], lane: T(LK[c.lane]) });
+            b.classList.toggle("future", !done);
+            b.classList.toggle("sel", selected === c.id);
+            b.style.display = (side === "all" || c.lane === side) ? "" : "none";
+        });
+    }
+    function draw(y) {
+        R.now.setAttribute("x1", xOf(y));
+        R.now.setAttribute("x2", xOf(y));
+        Object.values(R.m).forEach(function (m) {
+            m.g.classList.toggle("future", y < m.c.d);
+            m.g.classList.toggle("dim", side !== "all" && m.c.lane !== side);
+            m.g.classList.toggle("sel", selected === m.c.id);
+        });
+        LANES.forEach(function (l) { return R.lane[l].classList.toggle("dim", side !== "all" && l !== side); });
+        updateCards(y);
+        var yy = Math.round(y), s = doneBy(y), n = function (l) { return s.filter(function (c) { return c.lane === l; }).length; };
+        readout.textContent = s.length ? T("readout", { y: yy, n: s.length, a: n("lost"), b: n("added"), c: n("borrowed") }) : T("readout0", { y: yy });
+    }
+    function updateInfo() { info.innerHTML = selected ? T("m_" + selected) : ""; note.innerHTML = T("note_" + side); }
+    function select(id) { selected = id; updateInfo(); draw(shown); }
+    /* ---------- quiz ---------- */
+    var Q = [
+        ["I hurt my ___ playing football.", "knee", "k"],
+        ["Sorry, I think I dialled the ___ number.", "wrong", "w"],
+        ["We had to ___ 300 steps to reach the top of the tower.", "climb", "b"],
+        ["There is no ___ that she is the best candidate.", "doubt", "b"],
+        ["The flight from Paris to Toulouse takes about an ___.", "hour", "h"],
+        ["Corsica is a beautiful ___ in the Mediterranean.", "island", "s"],
+        ["Please ___ carefully to the safety briefing.", "listen", "t"],
+        ["We finished ___ of the report before lunch.", "half", "l"],
+        ["Their ___ is studying engineering in Toulouse.", "daughter", "gh"],
+        ["She has a degree in ___ and works in human resources.", "psychology", "p"],
+        ["Could you ___ the phone? I’m driving.", "answer", "w"],
+        ["Keep the ___ for your expense report.", "receipt", "p"]
+    ];
+    var quiz = document.getElementById("quiz"), bank = document.getElementById("bank"), score = document.getElementById("score");
+    function buildQuiz() {
+        quiz.innerHTML = Q.map(function (q, i) { var _a = __read(q[0].split("___"), 2), a = _a[0], b = _a[1]; return "<li>".concat(a, "<input type=\"text\" autocomplete=\"off\" autocapitalize=\"off\" spellcheck=\"false\" data-i=\"").concat(i, "\" aria-label=\"Blank ").concat(i + 1, "\">").concat(b, "<span class=\"fb\" id=\"fb").concat(i, "\"></span></li>"); }).join("");
+        bank.innerHTML = Q.map(function (q) { return q[1]; }).sort().map(function (w) { return "<span data-w=\"".concat(w, "\">").concat(w, "</span>"); }).join("");
+        quiz.querySelectorAll("input").forEach(function (inp) { return inp.addEventListener("input", function () { inp.classList.remove("ok", "ko"); document.getElementById("fb" + inp.dataset.i).textContent = ""; markBank(); }); });
+    }
+    function markBank() { var vals = __spreadArray([], __read(quiz.querySelectorAll("input")), false).map(function (i) { return i.value.trim().toLowerCase(); }); bank.querySelectorAll("span").forEach(function (s) { return s.classList.toggle("used", vals.includes(s.dataset.w)); }); }
+    function check(reveal) {
+        var n = 0;
+        quiz.querySelectorAll("input").forEach(function (inp) {
+            var q = Q[+inp.dataset.i], fb = document.getElementById("fb" + inp.dataset.i);
+            if (reveal && inp.value.trim().toLowerCase() !== q[1])
+                inp.value = q[1];
+            if (!reveal && !inp.value.trim()) {
+                inp.classList.remove("ok", "ko");
+                fb.className = "fb";
+                fb.textContent = "";
+                return;
+            }
+            var ok = inp.value.trim().toLowerCase() === q[1];
+            if (ok)
+                n++;
+            inp.classList.toggle("ok", ok);
+            inp.classList.toggle("ko", !ok);
+            fb.className = "fb " + (ok ? "ok" : "ko");
+            fb.textContent = ok ? T("qOk", { l: q[2] }) : T("qKo", { a: q[1], l: q[2] });
+        });
+        markBank();
+        if (!reveal)
+            score.textContent = T(n === Q.length ? "qPerfect" : "qScore", { n: n, t: Q.length });
+        else
+            score.textContent = "";
+    }
+    document.getElementById("qcheck").addEventListener("click", function () { return check(false); });
+    document.getElementById("qshow").addEventListener("click", function () { return check(true); });
+    document.getElementById("qreset").addEventListener("click", function () { buildQuiz(); score.textContent = ""; });
+    /* ---------- motion ---------- */
+    var slider = document.getElementById("slider"), yrEl = document.getElementById("yr"), playBtn = document.getElementById("play");
+    var reduced = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var target = Y0, shown = Y0, playing = !reduced, onscreen = true, last = performance.now(), hold = 0, raf = 0;
+    var setYear = function (y) { yrEl.textContent = (lang === "fr" ? "v. " : "c. ") + Math.round(y); };
+    var setPlay = function () { playBtn.textContent = playing ? "❚❚" : "▶"; playBtn.setAttribute("aria-pressed", String(playing)); };
+    function frame(now) {
+        raf = 0;
+        var dt = Math.min(.1, (now - last) / 1000);
+        last = now;
+        if (playing) {
+            if (target >= Y1) {
+                hold += dt;
+                if (hold > 3) {
+                    target = shown = Y0;
+                    hold = 0;
+                }
+            }
+            else
+                target = Math.min(Y1, target + dt * 35);
+            slider.value = Math.round(target);
+        }
+        shown += (target - shown) * (1 - Math.exp(-dt * 6));
+        if (Math.abs(target - shown) < .05)
+            shown = target;
+        setYear(shown);
+        draw(shown);
+        if (onscreen && (playing || shown !== target))
+            raf = requestAnimationFrame(frame);
+    }
+    function kick() { if (!raf && onscreen) {
+        last = performance.now();
+        raf = requestAnimationFrame(frame);
+    } }
+    slider.addEventListener("input", function () { playing = false; setPlay(); target = +slider.value; if (reduced) {
+        shown = target;
+        setYear(shown);
+        draw(shown);
+    }
+    else
+        kick(); });
+    playBtn.addEventListener("click", function () { playing = !playing; if (playing && target >= Y1) {
+        target = shown = Y0;
+    } setPlay(); kick(); });
+    document.addEventListener("keydown", function (e) { if (e.code === "Space" && !/INPUT|BUTTON|TEXTAREA/.test(document.activeElement.tagName) && !(document.activeElement.closest && document.activeElement.closest("svg"))) {
+        e.preventDefault();
+        playBtn.click();
+    } });
+    if ("IntersectionObserver" in window)
+        new IntersectionObserver(function (es) { onscreen = es[0].isIntersecting; if (onscreen)
+            kick(); }).observe(svg);
+    document.getElementById("sideSeg").addEventListener("click", function (e) { var b = e.target.closest("button"); if (!b)
+        return; document.querySelectorAll("#sideSeg button").forEach(function (x) { return x.setAttribute("aria-pressed", String(x === b)); }); side = b.dataset.v; updateInfo(); draw(shown); });
+    document.querySelectorAll(".lang button").forEach(function (b) { return b.addEventListener("click", function () { lang = b.dataset.lang; try {
+        localStorage.setItem("ell-lang", lang);
+    }
+    catch (e) { } applyStatic(); labels(); updateInfo(); setYear(shown); draw(shown); if (__spreadArray([], __read(quiz.querySelectorAll(".fb")), false).some(function (f) { return f.textContent; }))
+        check(false); }); });
+    window.addEventListener("resize", function () { rescale(); draw(shown); });
+    applyStatic();
+    build();
+    buildCards();
+    buildQuiz();
+    rescale();
+    updateInfo();
+    if (reduced) {
+        target = shown = Y1;
+        slider.value = Y1;
+    }
+    setPlay();
+    setYear(shown);
+    draw(shown);
+    kick();
+})();
+</script>
+</body>
+</html>
