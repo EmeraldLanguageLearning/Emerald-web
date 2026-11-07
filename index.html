@@ -47,6 +47,38 @@ h1{font-family:var(--font-head);font-weight:300;text-transform:uppercase;color:v
 .sec p{margin:0 auto;max-width:56ch}
 footer{border-top:1px solid var(--line);text-align:center;font-size:.8rem;color:var(--line-strong);padding:18px 0 calc(18px + env(safe-area-inset-bottom,0px))}
 @media (prefers-reduced-motion:reduce){.card{transition:none}}
+/* Explainer tree (history of English) */
+.xtree svg{display:block;width:100%;max-width:900px;height:auto;margin:0 auto;overflow:visible}
+.xtree{--c-hist:var(--emerald-dark);--c-lang:var(--emerald);--c-facts:#b08a4a;padding:8px 0 56px}
+.xtree .trunk,.xtree .branch{fill:none;stroke-linecap:round}
+.xtree .trunk{stroke:var(--emerald-dark);stroke-width:9}
+.xtree .branch{stroke-width:6}
+.xtree .grow{stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:xgrow 1.1s ease-out forwards}
+@keyframes xgrow{to{stroke-dashoffset:0}}
+.xtree .bub{cursor:pointer;opacity:0;animation:xpop .45s ease-out forwards}
+@keyframes xpop{from{opacity:0}to{opacity:1}}
+.xtree .bub circle.b{fill:var(--bg);stroke-width:4;transition:fill .2s}
+.xtree .bub:hover circle.b,.xtree .bub.sel circle.b{fill:var(--bg-soft)}
+.xtree .bub.sel circle.b{stroke-width:6}
+.xtree .bub text{pointer-events:none;text-anchor:middle}
+.xtree .bub:focus{outline:none}
+.xtree .bub:focus-visible circle.b{stroke-width:7;fill:var(--bg-soft)}
+.xtree .nm{font-family:var(--font-body);font-weight:600;font-size:calc(13.5px * var(--k,1));fill:var(--text-strong)}
+.xtree .bub.soon{cursor:default}
+.xtree .bub.soon circle.b{stroke-dasharray:6 7;fill:var(--bg)}
+.xtree .bub.soon .nm{fill:var(--text);font-weight:400;font-style:italic}
+.xtree .cat{font-family:var(--font-head);font-weight:700;text-transform:uppercase;letter-spacing:.12em;font-size:calc(17px * var(--k,1));text-anchor:middle}
+.xtree .preview{max-width:620px;margin:8px auto 0;background:var(--bg-soft);border:1px solid var(--line);border-top:4px solid var(--emerald);border-radius:4px;padding:20px 22px 22px;line-height:1.7;min-height:120px;text-align:left}
+.xtree .preview .meta{font-family:var(--font-head);font-weight:700;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase}
+.xtree .preview h3{font-family:var(--font-head);font-weight:700;color:var(--text-strong);font-size:1.2rem;margin:4px 0 2px;line-height:1.35}
+.xtree .preview .per{font-size:.85rem;margin-bottom:8px}
+.xtree .preview p{margin:0 0 14px;color:var(--text-strong);font-size:.95rem}
+.xtree .preview .empty{text-align:center;padding-top:22px}
+.xtree .btn{display:inline-block;background:var(--emerald);color:#fff;border:0;border-radius:4px;padding:8px 16px;font:600 .9rem var(--font-body);text-decoration:none;cursor:pointer}
+.xtree .btn:hover{background:#3f9c7e}
+.xtree .btn.outline{background:transparent;color:var(--emerald-dark);border:1px solid var(--emerald);margin-left:8px}
+@media (prefers-reduced-motion:reduce){.xtree .grow{animation:none;stroke-dashoffset:0}.xtree .bub{animation:none;opacity:1}}
+
 </style>
 <style id="emerald-dark">
 /* Dark version of the Emerald look, used when the phone is in dark mode */
@@ -108,31 +140,9 @@ footer{border-top:1px solid var(--line);text-align:center;font-size:.8rem;color:
     <h2 id="exH" data-i18n="ex_h"></h2>
     <p data-i18n="ex_d"></p>
   </section>
-  <section class="cards">
-    <a class="card" href="great-vowel-shift.html">
-      <span class="circle" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M8 38 18 26l8 6 14-18"/><path d="M32 14h8v8"/></svg></span>
-      <h2 data-i18n="gvs_t"></h2><p data-i18n="gvs_d"></p><span class="go" data-i18n="open"></span>
-    </a>
-    <a class="card" href="british-american-english.html">
-      <span class="circle" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M6 24h12"/><path d="M18 24c8 0 8-10 24-10"/><path d="M18 24c8 0 8 10 24 10"/><circle cx="42" cy="14" r="2"/><circle cx="42" cy="34" r="2"/></svg></span>
-      <h2 data-i18n="ukus_t"></h2><p data-i18n="ukus_d"></p><span class="go" data-i18n="open"></span>
-    </a>
-    <a class="card" href="thou-to-you.html">
-      <span class="circle" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M6 10h22v14H16l-6 5v-5H6z"/><path d="M42 20H22v14h12l6 5v-5h2z"/></svg></span>
-      <h2 data-i18n="ty_t"></h2><p data-i18n="ty_d"></p><span class="go" data-i18n="open"></span>
-    </a>
-    <a class="card" href="spread-of-english.html">
-      <span class="circle" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="17"/><path d="M7 24h34"/><path d="M24 7c-6 5-6 29 0 34"/><path d="M24 7c6 5 6 29 0 34"/></svg></span>
-      <h2 data-i18n="sp_t"></h2><p data-i18n="sp_d"></p><span class="go" data-i18n="open"></span>
-    </a>
-    <a class="card" href="french-in-english.html">
-      <span class="circle" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M6 36h36"/><path d="M12 36V24M20 36V16M28 36V20M36 36V10"/></svg></span>
-      <h2 data-i18n="fe_t"></h2><p data-i18n="fe_d"></p><span class="go" data-i18n="open"></span>
-    </a>
-    <a class="card" href="silent-consonants.html">
-      <span class="circle" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M10 18h6l8-7v26l-8-7h-6z"/><path d="M32 18l10 12M42 18 32 30"/></svg></span>
-      <h2 data-i18n="sc_t"></h2><p data-i18n="sc_d"></p><span class="go" data-i18n="open"></span>
-    </a>
+  <section class="xtree">
+    <svg id="xtree" viewBox="140 90 740 780" role="group" data-i18n-aria="treeAria"></svg>
+    <div class="preview" id="xpreview" aria-live="polite"></div>
   </section>
 </main>
 <footer>Emerald Language Learning</footer>
@@ -145,7 +155,8 @@ footer{border-top:1px solid var(--line);text-align:center;font-size:.8rem;color:
             ll_d: "Exercices d'écoute en quatre étapes sur des extraits vidéo (en anglais).",
             installIos: "<b>Sur iPad ou iPhone :</b> touchez Partager <svg viewBox='0 0 24 24' aria-hidden='true'><path d='M12 3v12M8 7l4-4 4 4'/><path d='M5 12v8h14v-8'/></svg> puis <b>Sur l’écran d’accueil</b> pour installer ces outils comme une application.",
             installAndroid: "<b>Sur Android :</b> <a href=\"EmeraldTools.apk\">téléchargez l’application Emerald Tools</a> et ouvrez le fichier pour l’installer.",
-            ex_h: "Comprendre l'histoire de l'anglais", ex_d: "Des schémas animés et sourcés qui expliquent pourquoi l'anglais est tel qu'il est.",
+            ex_h: "Comprendre l'histoire de l'anglais", ex_d: "Chaque bulle est une animation interactive. Touchez une bulle pour un aperçu rapide.",
+            treeAria: "Arbre des animations avec trois branches : Histoire, Langue, Faits et chiffres.",
             gvs_t: "Le Grand Changement vocalique", gvs_d: "Pourquoi bite, meet et house ne se prononcent plus comme ils s'écrivent.",
             ukus_t: "Anglais britannique et américain", ukus_d: "Qui a changé quoi, et quand, de chaque côté de l'Atlantique.",
             ty_t: "De thou à you", ty_d: "Comment l'anglais a perdu son tutoiement, et qui l'a gardé le plus longtemps.",
@@ -160,7 +171,8 @@ footer{border-top:1px solid var(--line);text-align:center;font-size:.8rem;color:
             ll_d: "Four-step listening exercises on video clips.",
             installIos: "<b>On iPad or iPhone:</b> tap Share <svg viewBox='0 0 24 24' aria-hidden='true'><path d='M12 3v12M8 7l4-4 4 4'/><path d='M5 12v8h14v-8'/></svg> then <b>Add to Home Screen</b> to install these tools as an app.",
             installAndroid: "<b>On Android:</b> <a href=\"EmeraldTools.apk\">download the Emerald Tools app</a> and open the file to install it.",
-            ex_h: "Understanding the history of English", ex_d: "Animated, sourced figures that explain why English is the way it is.",
+            ex_h: "Understanding the history of English", ex_d: "Each bubble is one interactive explainer. Tap a bubble for a quick preview.",
+            treeAria: "Tree of explainers with three branches: History, Language, Facts and Figures.",
             gvs_t: "The Great Vowel Shift", gvs_d: "Why bite, meet and house no longer sound the way they are spelled.",
             ukus_t: "British and American English", ukus_d: "Who changed what, and when, on each side of the Atlantic.",
             ty_t: "From thou to you", ty_d: "How English lost its familiar “thou”, and who kept it longest.",
@@ -200,6 +212,180 @@ footer{border-top:1px solid var(--line);text-align:center;font-size:.8rem;color:
         document.getElementById("installIos").style.display = "block";
     if (!inApp && /Android/.test(ua) && location.protocol.indexOf("http") === 0)
         document.getElementById("installAndroid").style.display = "block";
+})();
+</script>
+<script>// Explainer tree: one bubble per figure. To move a figure, change its branch; order = position down the branch.
+(function () {
+    var S = {
+        en: { hist: "History", lang: "Language", facts: "Facts & Figures", open: "Open the explainer", close: "Close", soon: "Coming soon",
+            soonTitle: "Coming soon", soonText: "Facts & Figures explainers are on the way.", pick: "Tap a bubble to see a preview." },
+        fr: { hist: "Histoire", lang: "Langue", facts: "Faits & chiffres", open: "Ouvrir l’animation", close: "Fermer", soon: "Bientôt",
+            soonTitle: "Bientôt disponible", soonText: "Les animations « Faits & chiffres » sont en préparation.", pick: "Touchez une bulle pour voir un aperçu." }
+    };
+    var XFIGS = [
+        { n: 4, branch: "hist", url: "spread-of-english.html",
+            short: { en: ["Spread of", "English"], fr: ["Diffusion", "de l’anglais"] },
+            title: { en: "Where English came from, and how it spread", fr: "D’où vient l’anglais, et comment il s’est répandu" },
+            per: { en: "450 to today", fr: "De 450 à aujourd’hui" },
+            sum: { en: "Over the years, the English language has spread over the world. The - now debated - Kachru’s three circles shows this.",
+                fr: "Au fil des années, l’anglais s’est répandu dans le monde entier. Les trois cercles de Kachru, aujourd’hui débattus, le montrent." } },
+        { n: 5, branch: "hist", url: "french-in-english.html",
+            short: { en: ["French in", "English"], fr: ["Le français", "en anglais"] },
+            title: { en: "How French moved into English", fr: "Comment le français est entré dans l’anglais" },
+            per: { en: "1066 to 1900", fr: "De 1066 à 1900" },
+            sum: { en: "The English language is a mix of Anglo-Saxon, Latin and French. Let’s have a look at the latter’s influence.",
+                fr: "L’anglais est un mélange d’anglo-saxon, de latin et de français. Penchons-nous sur l’influence de ce dernier." } },
+        { n: 2, branch: "hist", url: "british-american-english.html",
+            short: { en: ["UK vs US", "English"], fr: ["Anglais", "UK / US"] },
+            title: { en: "Why British and American English differ", fr: "Pourquoi l’anglais britannique et l’anglais américain sont si différents" },
+            per: { en: "1600 to 2000", fr: "De 1600 à 2000" },
+            sum: { en: "Although they have the same root, UK and US English have changed over time to become very different. Here’s a few examples.",
+                fr: "Bien qu’ils aient la même racine, l’anglais britannique et l’anglais américain ont évolué au fil du temps jusqu’à devenir très différents. En voici quelques exemples." } },
+        { n: 1, branch: "lang", url: "great-vowel-shift.html",
+            short: { en: ["Great Vowel", "Shift"], fr: ["Changement", "vocalique"] },
+            title: { en: "The Great Vowel Shift", fr: "Le Grand Changement vocalique" },
+            per: { en: "1400 to modern", fr: "De 1400 à aujourd’hui" },
+            sum: { en: "English is a difficult language to pronounce, partly because of the Great Vowel Shift. Here’s a short explainer of some contributing elements.",
+                fr: "L’anglais est une langue difficile à prononcer, en partie à cause du Grand Changement vocalique. Voici une courte explication de quelques facteurs qui y ont contribué." } },
+        { n: 3, branch: "lang", url: "thou-to-you.html",
+            short: { en: ["Thou", "to you"], fr: ["De thou", "à you"] },
+            title: { en: "From thou to you", fr: "De thou à you" },
+            per: { en: "1200 to 1800", fr: "De 1200 à 1800" },
+            sum: { en: "Today, Shakespeare’s plays remain very popular. They are all marked by the use of “thee” and “thou”; but why do we not use them today?",
+                fr: "Aujourd’hui, les pièces de Shakespeare restent très populaires. Elles sont toutes marquées par l’emploi de « thee » et « thou » ; mais pourquoi ne les utilise-t-on plus aujourd’hui ?" } },
+        { n: 6, branch: "lang", url: "silent-consonants.html",
+            short: { en: ["Silent", "consonants"], fr: ["Consonnes", "muettes"] },
+            title: { en: "Silent consonants", fr: "Les consonnes muettes" },
+            per: { en: "1200 to today", fr: "De 1200 à aujourd’hui" },
+            sum: { en: "Written but not spoken, silent consonants can be a headache for English learners. Let’s have a look at some and why they changed.",
+                fr: "Écrites mais pas prononcées, les consonnes muettes peuvent être un vrai casse-tête pour les apprenants d’anglais. Découvrons-en quelques-unes et pourquoi elles ont changé." } }
+    ];
+    var BR = {
+        hist: { col: "var(--c-hist)", pts: [[490, 330], [420, 370], [360, 430], [300, 560], [225, 700]], label: [225, 845] },
+        lang: { col: "var(--c-lang)", pts: [[500, 335], [495, 400], [500, 450], [515, 590], [500, 730]], label: [500, 845] },
+        facts: { col: "var(--c-facts)", pts: [[510, 330], [580, 370], [640, 430], [705, 560], [775, 700]], label: [870, 845], anchor: "end" }
+    };
+    var KEYS = ["hist", "lang", "facts"], SLOTS = 3;
+    var lang = "fr";
+    try {
+        var l = localStorage.getItem("ell-lang");
+        if (l === "en" || l === "fr")
+            lang = l;
+    }
+    catch (e) { }
+    function T(k) { var v = S[lang][k]; return v === undefined ? S.en[k] : v; }
+    function byN(n) { for (var i = 0; i < XFIGS.length; i++)
+        if (XFIGS[i].n === n)
+            return XFIGS[i]; return null; }
+    var selected = null;
+    var svg = document.getElementById("xtree"), pv = document.getElementById("xpreview"), NS = "http://www.w3.org/2000/svg";
+    function el(t, a, p) { var e = document.createElementNS(NS, t); for (var k in a)
+        e.setAttribute(k, a[k]); (p || svg).appendChild(e); return e; }
+    function smooth(p) {
+        var d = "M" + p[0][0] + "," + p[0][1];
+        for (var i = 0; i < p.length - 1; i++) {
+            var a = p[i - 1] || p[i], b = p[i], c = p[i + 1], e = p[i + 2] || c;
+            d += "C" + (b[0] + (c[0] - a[0]) / 6) + "," + (b[1] + (c[1] - a[1]) / 6) + " " + (c[0] - (e[0] - b[0]) / 6) + "," + (c[1] - (e[1] - b[1]) / 6) + " " + c[0] + "," + c[1];
+        }
+        return d;
+    }
+    function grow(path, delay) { var L = path.getTotalLength(); path.style.setProperty("--len", L); path.style.animationDelay = delay + "s"; path.setAttribute("class", path.getAttribute("class") + " grow"); }
+    function build() {
+        grow(el("path", { "class": "trunk", d: smooth([[500, 100], [515, 170], [488, 250], [500, 335]]) }), 0);
+        KEYS.forEach(function (key) {
+            var b = BR[key], tail = b.pts[b.pts.length - 1], dx = key === "lang" ? 0 : key === "hist" ? -15 : 15;
+            grow(el("path", { "class": "branch", stroke: b.col, d: smooth(b.pts.concat([[tail[0] + dx, tail[1] + 70]])) }), .8);
+            var lab = el("text", { "class": "cat", x: b.label[0], y: b.label[1], fill: b.col });
+            if (b.anchor)
+                lab.style.textAnchor = b.anchor;
+            lab.setAttribute("data-k", key);
+        });
+        var i = 0;
+        KEYS.forEach(function (key) {
+            var b = BR[key], list = XFIGS.filter(function (f) { return f.branch === key; }), n = Math.max(SLOTS, list.length);
+            for (var s = 0; s < n; s++) {
+                (function (f, p) {
+                    var pos = el("g", { transform: "translate(" + p[0] + "," + p[1] + ")" });
+                    var g = el("g", { "class": "bub" + (f ? "" : " soon") }, pos);
+                    g.style.animationDelay = (1.4 + (i++) * .12) + "s";
+                    el("circle", { "class": "b", r: 62, stroke: b.col }, g);
+                    if (f) {
+                        g.setAttribute("tabindex", "0");
+                        g.setAttribute("role", "button");
+                        g.setAttribute("data-n", f.n);
+                        el("text", { "class": "nm" }, g);
+                        el("text", { "class": "nm" }, g);
+                        g.addEventListener("click", function () { select(f.n); });
+                        g.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            select(f.n);
+                        } });
+                    }
+                    else {
+                        el("text", { "class": "nm" }, g);
+                        g.addEventListener("click", function () { select("soon"); });
+                    }
+                })(list[s], b.pts[Math.min(2 + s, b.pts.length - 1)]);
+            }
+        });
+    }
+    function labels() {
+        Array.prototype.forEach.call(svg.querySelectorAll(".cat"), function (t) { t.textContent = T(t.getAttribute("data-k")); });
+        Array.prototype.forEach.call(svg.querySelectorAll(".bub"), function (g) {
+            var ts = g.querySelectorAll("text"), cls = g.getAttribute("class");
+            if (cls.indexOf("soon") >= 0) {
+                ts[0].textContent = T("soon");
+                return;
+            }
+            var f = byN(+g.getAttribute("data-n"));
+            ts[0].textContent = f.short[lang][0];
+            ts[1].textContent = f.short[lang][1];
+            g.setAttribute("aria-label", f.title[lang]);
+            g.setAttribute("class", "bub" + (selected === f.n ? " sel" : ""));
+        });
+    }
+    function preview() {
+        if (selected === null) {
+            pv.innerHTML = '<div class="empty">' + T("pick") + '</div>';
+            return;
+        }
+        if (selected === "soon") {
+            pv.innerHTML = '<div class="meta" style="color:var(--c-facts)">' + T("facts") + '</div><h3>' + T("soonTitle") + '</h3><p>' + T("soonText") + '</p>';
+            return;
+        }
+        var f = byN(selected), b = BR[f.branch];
+        pv.innerHTML = '<div class="meta" style="color:' + b.col + '">' + T(f.branch) + '</div><h3>' + f.title[lang] + '</h3><div class="per">' + f.per[lang] + '</div><p>' + f.sum[lang] + '</p>' +
+            '<a class="btn" href="' + f.url + '">' + T("open") + ' →</a><button type="button" class="btn outline" id="xpvClose">' + T("close") + '</button>';
+        document.getElementById("xpvClose").addEventListener("click", function () { selected = null; labels(); preview(); });
+    }
+    function select(n) {
+        selected = selected === n ? null : n;
+        labels();
+        preview();
+        if (selected !== null && window.innerWidth < 700 && pv.scrollIntoView)
+            pv.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+    function rescale() {
+        var w = svg.getBoundingClientRect().width || 720, K = Math.max(1, Math.min(1.3, 0.85 * 720 / w));
+        svg.style.setProperty("--k", K);
+        Array.prototype.forEach.call(svg.querySelectorAll(".bub"), function (g) {
+            var t = g.querySelectorAll("text");
+            if (g.getAttribute("class").indexOf("soon") >= 0) {
+                t[0].setAttribute("y", 5 * K);
+                return;
+            }
+            t[0].setAttribute("y", -4 * K);
+            t[1].setAttribute("y", 14 * K);
+        });
+    }
+    Array.prototype.forEach.call(document.querySelectorAll("[data-lang]"), function (b) {
+        b.addEventListener("click", function () { lang = b.getAttribute("data-lang"); labels(); preview(); });
+    });
+    window.addEventListener("resize", rescale);
+    build();
+    labels();
+    rescale();
+    preview();
 })();
 </script>
 </body>
