@@ -68,9 +68,15 @@ footer{border-top:1px solid var(--line);text-align:center;font-size:.8rem;color:
 .xtree .bub.soon circle.b{stroke-dasharray:6 7;fill:var(--bg)}
 .xtree .bub.soon .nm{fill:var(--text);font-weight:400;font-style:italic}
 .xtree .cat{font-family:var(--font-head);font-weight:700;text-transform:uppercase;letter-spacing:.12em;font-size:calc(17px * var(--k,1));text-anchor:middle}
-.xtree .preview{max-width:620px;margin:8px auto 0;background:var(--bg-soft);border:1px solid var(--line);border-top:4px solid var(--emerald);border-radius:4px;padding:20px 22px 22px;line-height:1.7;min-height:120px;text-align:left}
+.xtree .treewrap{position:relative;max-width:900px;margin:0 auto}
+.xtree .preview{position:absolute;z-index:5;width:340px;max-width:100%;background:var(--bg-soft);border:1px solid var(--line);border-top:4px solid var(--emerald);border-radius:4px;padding:18px 20px 20px;line-height:1.7;text-align:left;box-shadow:0 10px 28px rgba(0,0,0,.14)}
+.xtree .preview[hidden]{display:none}
+.xtree .preview .x{position:absolute;top:4px;right:6px;border:0;background:none;color:var(--text);font-size:1.5rem;line-height:1;padding:4px 8px;cursor:pointer;border-radius:4px}
+.xtree .preview .x:hover{color:var(--text-strong);background:#eee}
+.xtree .preview .arrow{position:absolute;bottom:-9px;width:16px;height:16px;background:var(--bg-soft);border-right:1px solid var(--line);border-bottom:1px solid var(--line);-webkit-transform:rotate(45deg);transform:rotate(45deg)}
+.xtree .preview.below .arrow{bottom:auto;top:-11px;background:var(--emerald);border:0}
 .xtree .preview .meta{font-family:var(--font-head);font-weight:700;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase}
-.xtree .preview h3{font-family:var(--font-head);font-weight:700;color:var(--text-strong);font-size:1.2rem;margin:4px 0 2px;line-height:1.35}
+.xtree .preview h3{font-family:var(--font-head);font-weight:700;color:var(--text-strong);font-size:1.1rem;margin:4px 24px 2px 0;line-height:1.35}
 .xtree .preview .per{font-size:.85rem;margin-bottom:8px}
 .xtree .preview p{margin:0 0 14px;color:var(--text-strong);font-size:.95rem}
 .xtree .preview .empty{text-align:center;padding-top:22px}
@@ -141,8 +147,10 @@ footer{border-top:1px solid var(--line);text-align:center;font-size:.8rem;color:
     <p data-i18n="ex_d"></p>
   </section>
   <section class="xtree">
-    <svg id="xtree" viewBox="140 90 740 780" role="group" data-i18n-aria="treeAria"></svg>
-    <div class="preview" id="xpreview" aria-live="polite"></div>
+    <div class="treewrap" id="xwrap">
+      <svg id="xtree" viewBox="140 90 740 780" role="group" data-i18n-aria="treeAria"></svg>
+      <div class="preview" id="xpreview" role="dialog" aria-live="polite" hidden></div>
+    </div>
   </section>
 </main>
 <footer>Emerald Language Learning</footer>
@@ -315,15 +323,15 @@ footer{border-top:1px solid var(--line);text-align:center;font-size:.8rem;color:
                         g.setAttribute("data-n", f.n);
                         el("text", { "class": "nm" }, g);
                         el("text", { "class": "nm" }, g);
-                        g.addEventListener("click", function () { select(f.n); });
+                        g.addEventListener("click", function () { select(f.n, g); });
                         g.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") {
                             e.preventDefault();
-                            select(f.n);
+                            select(f.n, g);
                         } });
                     }
                     else {
                         el("text", { "class": "nm" }, g);
-                        g.addEventListener("click", function () { select("soon"); });
+                        g.addEventListener("click", function () { select("soon", g); });
                     }
                 })(list[s], b.pts[Math.min(2 + s, b.pts.length - 1)]);
             }
@@ -344,27 +352,76 @@ footer{border-top:1px solid var(--line);text-align:center;font-size:.8rem;color:
             g.setAttribute("class", "bub" + (selected === f.n ? " sel" : ""));
         });
     }
+    var wrap = document.getElementById("xwrap"), anchor = null;
     function preview() {
         if (selected === null) {
-            pv.innerHTML = '<div class="empty">' + T("pick") + '</div>';
+            pv.hidden = true;
+            pv.innerHTML = "";
             return;
         }
+        var x = '<button type="button" class="x" id="xpvClose" aria-label="' + T("close") + '" title="' + T("close") + '">\u00d7</button><span class="arrow" aria-hidden="true"></span>';
         if (selected === "soon") {
-            pv.innerHTML = '<div class="meta" style="color:var(--c-facts)">' + T("facts") + '</div><h3>' + T("soonTitle") + '</h3><p>' + T("soonText") + '</p>';
+            pv.style.borderTopColor = "var(--c-facts)";
+            pv.innerHTML = x + '<div class="meta" style="color:var(--c-facts)">' + T("facts") + '</div><h3>' + T("soonTitle") + '</h3><p style="margin:0">' + T("soonText") + '</p>';
+        }
+        else {
+            var f = byN(selected), b = BR[f.branch];
+            pv.style.borderTopColor = b.col;
+            pv.innerHTML = x + '<div class="meta" style="color:' + b.col + '">' + T(f.branch) + '</div><h3>' + f.title[lang] + '</h3><div class="per">' + f.per[lang] + '</div><p>' + f.sum[lang] + '</p>' +
+                '<a class="btn" href="' + f.url + '">' + T("open") + ' \u2192</a>';
+        }
+        pv.hidden = false;
+        document.getElementById("xpvClose").addEventListener("click", close);
+        place();
+    }
+    /* card above the tapped bubble (below if no room), arrow pointing at the bubble */
+    function place() {
+        if (selected === null || !anchor)
+            return;
+        var wr = wrap.getBoundingClientRect(), r = anchor.querySelector("circle").getBoundingClientRect();
+        var pw = pv.offsetWidth, ph = pv.offsetHeight, cx = r.left + r.width / 2 - wr.left;
+        var left = Math.max(0, Math.min(wr.width - pw, cx - pw / 2)), top = r.top - wr.top - ph - 14, below = false;
+        if (top < 0) {
+            top = r.bottom - wr.top + 14;
+            below = true;
+        }
+        pv.style.left = left + "px";
+        pv.style.top = top + "px";
+        pv.className = "preview" + (below ? " below" : "");
+        var ar = pv.querySelector(".arrow");
+        if (ar)
+            ar.style.left = Math.max(12, Math.min(pw - 28, cx - left - 8)) + "px";
+    }
+    function close() { var a = anchor; selected = null; anchor = null; labels(); preview(); if (a && a.getAttribute("tabindex") && a.focus)
+        a.focus(); }
+    function select(n, g) {
+        if (selected === n) {
+            close();
             return;
         }
-        var f = byN(selected), b = BR[f.branch];
-        pv.innerHTML = '<div class="meta" style="color:' + b.col + '">' + T(f.branch) + '</div><h3>' + f.title[lang] + '</h3><div class="per">' + f.per[lang] + '</div><p>' + f.sum[lang] + '</p>' +
-            '<a class="btn" href="' + f.url + '">' + T("open") + ' →</a><button type="button" class="btn outline" id="xpvClose">' + T("close") + '</button>';
-        document.getElementById("xpvClose").addEventListener("click", function () { selected = null; labels(); preview(); });
-    }
-    function select(n) {
-        selected = selected === n ? null : n;
+        selected = n;
+        anchor = g;
         labels();
         preview();
-        if (selected !== null && window.innerWidth < 700 && pv.scrollIntoView)
+        if (pv.scrollIntoView)
             pv.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
+    function inside(node, test) { while (node && node !== document) {
+        if (test(node))
+            return true;
+        node = node.parentNode;
+    } return false; }
+    document.addEventListener("click", function (e) {
+        if (selected === null)
+            return;
+        if (inside(e.target, function (n) { return n === pv; }))
+            return;
+        if (inside(e.target, function (n) { var c = n.getAttribute && n.getAttribute("class"); return c && (" " + c + " ").indexOf(" bub ") >= 0; }))
+            return;
+        close();
+    });
+    document.addEventListener("keydown", function (e) { if ((e.key === "Escape" || e.key === "Esc") && selected !== null)
+        close(); });
     function rescale() {
         var w = svg.getBoundingClientRect().width || 720, K = Math.max(1, Math.min(1.3, 0.85 * 720 / w));
         svg.style.setProperty("--k", K);
@@ -381,7 +438,7 @@ footer{border-top:1px solid var(--line);text-align:center;font-size:.8rem;color:
     Array.prototype.forEach.call(document.querySelectorAll("[data-lang]"), function (b) {
         b.addEventListener("click", function () { lang = b.getAttribute("data-lang"); labels(); preview(); });
     });
-    window.addEventListener("resize", rescale);
+    window.addEventListener("resize", function () { rescale(); place(); });
     build();
     labels();
     rescale();
