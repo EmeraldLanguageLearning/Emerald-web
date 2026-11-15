@@ -315,7 +315,22 @@ mark.ct { color: #93531a; background: var(--contrast-tint); border-radius: 2px; 
 
 <div id="printSheet" aria-hidden="true"></div>
 
-<script>
+<script>var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
 var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
         if (ar || !(i in from)) {
@@ -324,6 +339,17 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
         }
     }
     return to.concat(ar || Array.prototype.slice.call(from));
+};
+var __values = (this && this.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
 };
 /* ============================================================
    WORD BANK  (IPA: modern Standard Southern British English)
@@ -373,7 +399,7 @@ var STRESS = new Set(['ˈ', 'ˌ']);
 var VOWELS = ['iː', 'ɪ', 'e', 'æ', 'ʌ', 'ɒ', 'ʊ', 'uː', 'ə', 'ɑː', 'ɔː', 'ɜː', 'eɪ', 'aɪ', 'ɔɪ', 'əʊ', 'aʊ', 'ɪə', 'eə', 'ʊə', 'i', 'u'];
 var CONS = ['p', 'b', 't', 'd', 'k', 'ɡ', 'f', 'v', 'θ', 'ð', 's', 'z', 'ʃ', 'ʒ', 'h', 'tʃ', 'dʒ', 'm', 'n', 'ŋ', 'l', 'r', 'j', 'w'];
 var VSET = new Set(VOWELS);
-var PH = new Set(__spreadArray(__spreadArray([], CONS, true), VOWELS, true));
+var PH = new Set(__spreadArray(__spreadArray([], __read(CONS), false), __read(VOWELS), false));
 var fixG = function (s) { return s.replace(/g/g, 'ɡ'); };
 function tok(s) { var out = []; var i = 0; while (i < s.length) {
     var two = s.substr(i, 2);
@@ -408,7 +434,7 @@ var edIPA = function (ipa) { var l = lastPh(ipa); return ipa + ((l === 't' || l 
 var edSpell = function (w) { return /e$/.test(w) ? w + 'd' : /[^aeiou]y$/.test(w) ? w.slice(0, -1) + 'ied' : w + 'ed'; };
 function parseList(str) {
     return str.split(';').map(function (s) { return s.trim(); }).filter(Boolean).map(function (e) {
-        var _a = e.split('='), l = _a[0], r = _a[1];
+        var _a = __read(e.split('='), 2), l = _a[0], r = _a[1];
         var ls = l.split('/');
         var rs = (r || '').split('/');
         return { w: ls[0].trim(), w2: ls[1] && ls[1].trim(), ipa: fixG(rs[0].trim()), ipa2: rs[1] && fixG(rs[1].trim()) };
@@ -416,31 +442,50 @@ function parseList(str) {
 }
 var LEXC = {};
 (function build() {
+    var e_1, _a, e_2, _b;
     var seen = {};
-    for (var _i = 0, _a = Object.keys(LEX); _i < _a.length; _i++) {
-        var cls = _a[_i];
-        LEXC[cls] = [];
-        seen[cls] = new Set();
-        for (var _b = 0, _c = parseList(LEX[cls]); _b < _c.length; _b++) {
-            var e = _c[_b];
-            if (seen[cls].has(e.w))
-                continue;
-            seen[cls].add(e.w);
-            var base = { text: e.w, ipa: e.ipa };
-            var f = {};
-            if (cls === 'N') {
-                f.N = base;
-                f.NS = { text: e.w2 || sSpell(e.w), ipa: e.ipa2 || sIPA(e.ipa) };
+    try {
+        for (var _c = __values(Object.keys(LEX)), _d = _c.next(); !_d.done; _d = _c.next()) {
+            var cls = _d.value;
+            LEXC[cls] = [];
+            seen[cls] = new Set();
+            try {
+                for (var _e = (e_2 = void 0, __values(parseList(LEX[cls]))), _f = _e.next(); !_f.done; _f = _e.next()) {
+                    var e = _f.value;
+                    if (seen[cls].has(e.w))
+                        continue;
+                    seen[cls].add(e.w);
+                    var base = { text: e.w, ipa: e.ipa };
+                    var f = {};
+                    if (cls === 'N') {
+                        f.N = base;
+                        f.NS = { text: e.w2 || sSpell(e.w), ipa: e.ipa2 || sIPA(e.ipa) };
+                    }
+                    else if (cls === 'V') {
+                        f.V = base;
+                        f.VD = { text: e.w2 || edSpell(e.w), ipa: e.ipa2 || edIPA(e.ipa) };
+                        f.VS = { text: sSpell(e.w), ipa: sIPA(e.ipa) };
+                    }
+                    else
+                        f[cls] = base;
+                    LEXC[cls].push({ w: e.w, f: f });
+                }
             }
-            else if (cls === 'V') {
-                f.V = base;
-                f.VD = { text: e.w2 || edSpell(e.w), ipa: e.ipa2 || edIPA(e.ipa) };
-                f.VS = { text: sSpell(e.w), ipa: sIPA(e.ipa) };
+            catch (e_2_1) { e_2 = { error: e_2_1 }; }
+            finally {
+                try {
+                    if (_f && !_f.done && (_b = _e.return)) _b.call(_e);
+                }
+                finally { if (e_2) throw e_2.error; }
             }
-            else
-                f[cls] = base;
-            LEXC[cls].push({ w: e.w, f: f });
         }
+    }
+    catch (e_1_1) { e_1 = { error: e_1_1 }; }
+    finally {
+        try {
+            if (_d && !_d.done && (_a = _c.return)) _a.call(_c);
+        }
+        finally { if (e_1) throw e_1.error; }
     }
 })();
 /* Spelling → possible sounds */
@@ -536,20 +581,30 @@ var $ = function (s) { return document.querySelector(s); };
 var rand = function (a) { return a[Math.floor(Math.random() * a.length)]; };
 /* ============================ Targets ============================ */
 function deriveCluster(s) {
+    var e_3, _a;
     if (/[aeiou]/.test(s))
         return null;
     var M = [['tch', 'tʃ'], ['th', 'θ'], ['sh', 'ʃ'], ['ch', 'tʃ'], ['ph', 'f'], ['ck', 'k'], ['ng', 'ŋ'], ['c', 'k'], ['x', 'ks'], ['q', 'k'], ['y', 'j'], ['g', 'ɡ'], ['j', 'dʒ']];
     var out = '', i = 0;
     while (i < s.length) {
         var hit = false;
-        for (var _i = 0, M_1 = M; _i < M_1.length; _i++) {
-            var _a = M_1[_i], a = _a[0], b = _a[1];
-            if (s.startsWith(a, i)) {
-                out += b;
-                i += a.length;
-                hit = true;
-                break;
+        try {
+            for (var M_1 = (e_3 = void 0, __values(M)), M_1_1 = M_1.next(); !M_1_1.done; M_1_1 = M_1.next()) {
+                var _b = __read(M_1_1.value, 2), a = _b[0], b = _b[1];
+                if (s.startsWith(a, i)) {
+                    out += b;
+                    i += a.length;
+                    hit = true;
+                    break;
+                }
             }
+        }
+        catch (e_3_1) { e_3 = { error: e_3_1 }; }
+        finally {
+            try {
+                if (M_1_1 && !M_1_1.done && (_a = M_1.return)) _a.call(M_1);
+            }
+            finally { if (e_3) throw e_3.error; }
         }
         if (!hit) {
             var ch = s[i];
@@ -575,24 +630,61 @@ function matches(form, tg) {
 function lemmaMatches(l, tg) { for (var k in l.f)
     if (matches(l.f[k], tg))
         return true; return false; }
-function countLex(tg) { var n = 0; for (var _i = 0, _a = ['P', 'N', 'A', 'V']; _i < _a.length; _i++) {
-    var c = _a[_i];
-    for (var _b = 0, _c = LEXC[c]; _b < _c.length; _b++) {
-        var l = _c[_b];
-        if (lemmaMatches(l, tg))
-            n++;
+function countLex(tg) {
+    var e_4, _a, e_5, _b;
+    var n = 0;
+    try {
+        for (var _c = __values(['P', 'N', 'A', 'V']), _d = _c.next(); !_d.done; _d = _c.next()) {
+            var c = _d.value;
+            try {
+                for (var _e = (e_5 = void 0, __values(LEXC[c])), _f = _e.next(); !_f.done; _f = _e.next()) {
+                    var l = _f.value;
+                    if (lemmaMatches(l, tg))
+                        n++;
+                }
+            }
+            catch (e_5_1) { e_5 = { error: e_5_1 }; }
+            finally {
+                try {
+                    if (_f && !_f.done && (_b = _e.return)) _b.call(_e);
+                }
+                finally { if (e_5) throw e_5.error; }
+            }
+        }
     }
-} return n; }
-function exampleFor(tg) { var _loop_1 = function (c) {
-    var l = LEXC[c].filter(function (l) { return matches(l.f[c], tg); }).sort(function (a, b) { return a.w.length - b.w.length; })[0];
-    if (l)
-        return { value: l.w };
-}; for (var _i = 0, _a = ['N', 'A', 'V']; _i < _a.length; _i++) {
-    var c = _a[_i];
-    var state_1 = _loop_1(c);
-    if (typeof state_1 === "object")
-        return state_1.value;
-} return ''; }
+    catch (e_4_1) { e_4 = { error: e_4_1 }; }
+    finally {
+        try {
+            if (_d && !_d.done && (_a = _c.return)) _a.call(_c);
+        }
+        finally { if (e_4) throw e_4.error; }
+    }
+    return n;
+}
+function exampleFor(tg) {
+    var e_6, _a;
+    var _loop_1 = function (c) {
+        var l = LEXC[c].filter(function (l) { return matches(l.f[c], tg); }).sort(function (a, b) { return a.w.length - b.w.length; })[0];
+        if (l)
+            return { value: l.w };
+    };
+    try {
+        for (var _b = __values(['N', 'A', 'V']), _c = _b.next(); !_c.done; _c = _b.next()) {
+            var c = _c.value;
+            var state_1 = _loop_1(c);
+            if (typeof state_1 === "object")
+                return state_1.value;
+        }
+    }
+    catch (e_6_1) { e_6 = { error: e_6_1 }; }
+    finally {
+        try {
+            if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+        }
+        finally { if (e_6) throw e_6.error; }
+    }
+    return '';
+}
 function resolve(raw) {
     var s0 = raw.trim();
     if (!s0)
@@ -613,7 +705,7 @@ function resolve(raw) {
     var opts, spell;
     if (GRAPH[s]) {
         opts = GRAPH[s].map(function (_a) {
-            var p = _a[0], ex = _a[1];
+            var _b = __read(_a, 2), p = _b[0], ex = _b[1];
             return ({ phon: p, ex: ex });
         });
         spell = GRAPH_RE[s] || escRe(s);
@@ -648,30 +740,41 @@ for (var len in TEMPLATE_SRC)
         return { src: src, items: items };
     });
 function pushLit(toks, lit) {
-    for (var _i = 0, _a = lit.split(/\s+/); _i < _a.length; _i++) {
-        var piece = _a[_i];
-        if (!piece)
-            continue;
-        if (piece.startsWith("'s") && toks.length) {
-            var last = toks[toks.length - 1];
-            last.core += "'s";
-            last.ipa = sIPA(last.ipa);
-            piece = piece.slice(2);
+    var e_7, _a;
+    try {
+        for (var _b = __values(lit.split(/\s+/)), _c = _b.next(); !_c.done; _c = _b.next()) {
+            var piece = _c.value;
             if (!piece)
                 continue;
-            last.post += piece;
-            continue;
+            if (piece.startsWith("'s") && toks.length) {
+                var last = toks[toks.length - 1];
+                last.core += "'s";
+                last.ipa = sIPA(last.ipa);
+                piece = piece.slice(2);
+                if (!piece)
+                    continue;
+                last.post += piece;
+                continue;
+            }
+            var m = piece.match(/^([“"(]*)([A-Za-z'’-]*)(.*)$/);
+            if (!m[2]) {
+                if (toks.length)
+                    toks[toks.length - 1].post += m[1] + m[3];
+                continue;
+            }
+            toks.push({ pre: m[1], core: m[2], post: m[3], ipa: FUNC[m[2].toLowerCase()] || m[2], slot: false });
         }
-        var m = piece.match(/^([“"(]*)([A-Za-z'’-]*)(.*)$/);
-        if (!m[2]) {
-            if (toks.length)
-                toks[toks.length - 1].post += m[1] + m[3];
-            continue;
+    }
+    catch (e_7_1) { e_7 = { error: e_7_1 }; }
+    finally {
+        try {
+            if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
         }
-        toks.push({ pre: m[1], core: m[2], post: m[3], ipa: FUNC[m[2].toLowerCase()] || m[2], slot: false });
+        finally { if (e_7) throw e_7.error; }
     }
 }
 function fill(tpl, tg, ct) {
+    var e_8, _a, e_9, _b, e_10, _c;
     var chosen = {};
     var used = new Set();
     var order = 0;
@@ -687,23 +790,41 @@ function fill(tpl, tg, ct) {
         chosen[it.key] = lem;
         used.add(lem);
     };
-    for (var _i = 0, _a = tpl.items; _i < _a.length; _i++) {
-        var it = _a[_i];
-        _loop_2(it);
+    try {
+        for (var _d = __values(tpl.items), _e = _d.next(); !_e.done; _e = _d.next()) {
+            var it = _e.value;
+            _loop_2(it);
+        }
+    }
+    catch (e_8_1) { e_8 = { error: e_8_1 }; }
+    finally {
+        try {
+            if (_e && !_e.done && (_a = _d.return)) _a.call(_d);
+        }
+        finally { if (e_8) throw e_8.error; }
     }
     var toks = [];
-    for (var _b = 0, _c = tpl.items; _b < _c.length; _b++) {
-        var it = _c[_b];
-        if (it.lit !== undefined) {
-            pushLit(toks, it.lit);
-            continue;
+    try {
+        for (var _f = __values(tpl.items), _g = _f.next(); !_g.done; _g = _f.next()) {
+            var it = _g.value;
+            if (it.lit !== undefined) {
+                pushLit(toks, it.lit);
+                continue;
+            }
+            if (it.slot === 'a') {
+                toks.push({ pre: '', core: 'a', post: '', ipa: 'ə', art: true, slot: false });
+                continue;
+            }
+            var f = chosen[it.key].f[it.slot];
+            toks.push({ pre: '', core: f.text, post: '', ipa: f.ipa, slot: true, cls: CLASS_OF[it.slot] });
         }
-        if (it.slot === 'a') {
-            toks.push({ pre: '', core: 'a', post: '', ipa: 'ə', art: true, slot: false });
-            continue;
+    }
+    catch (e_9_1) { e_9 = { error: e_9_1 }; }
+    finally {
+        try {
+            if (_g && !_g.done && (_b = _f.return)) _b.call(_f);
         }
-        var f = chosen[it.key].f[it.slot];
-        toks.push({ pre: '', core: f.text, post: '', ipa: f.ipa, slot: true, cls: CLASS_OF[it.slot] });
+        finally { if (e_9) throw e_9.error; }
     }
     toks.forEach(function (t, i) {
         var nx = toks[i + 1];
@@ -718,34 +839,53 @@ function fill(tpl, tg, ct) {
     toks.forEach(function (t, i) { if (i === 0 || /[.?!]/.test(toks[i - 1].post))
         t.core = t.core.charAt(0).toUpperCase() + t.core.slice(1); });
     var hits = 0, slots = 0, tHits = 0, cHits = 0, phonHits = 0;
-    for (var _d = 0, toks_1 = toks; _d < toks_1.length; _d++) {
-        var t = toks_1[_d];
-        t.m = matches({ text: t.core, ipa: t.ipa }, tg) ? 1 : (ct && matches({ text: t.core, ipa: t.ipa }, ct)) ? 2 : 0;
-        phonHits += tg.phon ? countSeq(t.ipa, tg.phon) : (t.m === 1 ? 1 : 0);
-        if (t.slot && t.cls !== 'NUM' && t.cls !== 'PREP') {
-            slots++;
-            if (t.m)
-                hits++;
-            if (t.m === 1)
-                tHits++;
-            if (t.m === 2)
-                cHits++;
+    try {
+        for (var toks_1 = __values(toks), toks_1_1 = toks_1.next(); !toks_1_1.done; toks_1_1 = toks_1.next()) {
+            var t = toks_1_1.value;
+            t.m = matches({ text: t.core, ipa: t.ipa }, tg) ? 1 : (ct && matches({ text: t.core, ipa: t.ipa }, ct)) ? 2 : 0;
+            phonHits += tg.phon ? countSeq(t.ipa, tg.phon) : (t.m === 1 ? 1 : 0);
+            if (t.slot && t.cls !== 'NUM' && t.cls !== 'PREP') {
+                slots++;
+                if (t.m)
+                    hits++;
+                if (t.m === 1)
+                    tHits++;
+                if (t.m === 2)
+                    cHits++;
+            }
         }
+    }
+    catch (e_10_1) { e_10 = { error: e_10_1 }; }
+    finally {
+        try {
+            if (toks_1_1 && !toks_1_1.done && (_c = toks_1.return)) _c.call(toks_1);
+        }
+        finally { if (e_10) throw e_10.error; }
     }
     var score = (slots ? hits / slots : 0) * 10 + Math.min(phonHits, 20) * 0.15 + Math.random() * 1.4 - (ct ? Math.abs(tHits - cHits) * 0.35 : 0);
     return { toks: toks, score: score };
 }
 function generateTwister() {
+    var e_11, _a;
     var res = state.res;
     if (!res || res.error)
         return null;
     var tg = targetFor(res, state.opt, state.spellOnly);
     var ct = state.contrast ? { phon: phons(state.contrast), phonStr: state.contrast, spell: null } : null;
     var cands = [];
-    for (var _i = 0, _a = TEMPLATES[state.len]; _i < _a.length; _i++) {
-        var tpl = _a[_i];
-        for (var k = 0; k < 4; k++)
-            cands.push(fill(tpl, tg, ct));
+    try {
+        for (var _b = __values(TEMPLATES[state.len]), _c = _b.next(); !_c.done; _c = _b.next()) {
+            var tpl = _c.value;
+            for (var k = 0; k < 4; k++)
+                cands.push(fill(tpl, tg, ct));
+        }
+    }
+    catch (e_11_1) { e_11 = { error: e_11_1 }; }
+    finally {
+        try {
+            if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+        }
+        finally { if (e_11) throw e_11.error; }
     }
     cands.sort(function (a, b) { return b.score - a.score; });
     var prev = state.current ? plainText(state.current) : '';
@@ -785,6 +925,7 @@ function coreHTML(t, tw, inline) {
     return markOpen(cls, inline) + esc(t.core) + markClose(inline);
 }
 function ipaHTML(ipa, tw, inline) {
+    var e_12, _a;
     var seqs = [];
     if (tw.tg.phon)
         seqs.push([phons(tw.tg.phon), 'tg']);
@@ -795,20 +936,29 @@ function ipaHTML(ipa, tw, inline) {
     t.forEach(function (x, i) { if (PH.has(x))
         idx.push(i); });
     var mark = new Array(t.length).fill(null);
-    for (var _i = 0, seqs_1 = seqs; _i < seqs_1.length; _i++) {
-        var _a = seqs_1[_i], seq = _a[0], cls = _a[1];
-        for (var a = 0; a <= idx.length - seq.length; a++) {
-            var ok = true;
-            for (var j = 0; j < seq.length; j++)
-                if (t[idx[a + j]] !== seq[j]) {
-                    ok = false;
-                    break;
-                }
-            if (ok)
+    try {
+        for (var seqs_1 = __values(seqs), seqs_1_1 = seqs_1.next(); !seqs_1_1.done; seqs_1_1 = seqs_1.next()) {
+            var _b = __read(seqs_1_1.value, 2), seq = _b[0], cls = _b[1];
+            for (var a = 0; a <= idx.length - seq.length; a++) {
+                var ok = true;
                 for (var j = 0; j < seq.length; j++)
-                    if (!mark[idx[a + j]])
-                        mark[idx[a + j]] = cls;
+                    if (t[idx[a + j]] !== seq[j]) {
+                        ok = false;
+                        break;
+                    }
+                if (ok)
+                    for (var j = 0; j < seq.length; j++)
+                        if (!mark[idx[a + j]])
+                            mark[idx[a + j]] = cls;
+            }
         }
+    }
+    catch (e_12_1) { e_12 = { error: e_12_1 }; }
+    finally {
+        try {
+            if (seqs_1_1 && !seqs_1_1.done && (_a = seqs_1.return)) _a.call(seqs_1);
+        }
+        finally { if (e_12) throw e_12.error; }
     }
     var out = '', cur = null;
     t.forEach(function (x, i) { var c = mark[i]; if (c !== cur) {
@@ -1005,26 +1155,40 @@ function speak(rate) {
 }
 var exportList = function () { return state.set.length ? state.set : (state.current ? [state.current] : []); };
 function ankiText(list) {
+    var e_13, _a;
     var clean = function (s) { return s.replace(/[\t\r\n]+/g, ' '); };
     var lines = ['#separator:tab', '#html:true', '#notetype:Basic', '#deck:Emerald::Tongue twisters', '#tags column:3'];
-    for (var _i = 0, list_1 = list; _i < list_1.length; _i++) {
-        var tw = list_1[_i];
-        var tip = tipFor(tw, 'tg');
-        var front = "<div style=\"font-size:.7em;color:#457865\">".concat(soundLabel(tw, false)).concat(tw.ct ? ' ' + esc(T('vs')) + ' ' + ctLabel(tw, false) : '', "</div><div style=\"margin-top:.4em\">").concat(textHTML(tw, true), "</div>");
-        var back = "<div style=\"font-family:'Noto Sans','Segoe UI','Lucida Sans Unicode',sans-serif\">".concat(ipaLine(tw, true, true), "</div><div style=\"font-size:.75em;color:#777;margin-top:.8em\"><b>").concat(esc(tip.title), "</b><br>").concat(esc(tip.text), "</div>");
-        if (tw.ct) {
-            var t2 = tipFor(tw, 'ct');
-            back += "<div style=\"font-size:.75em;color:#777;margin-top:.5em\"><b>".concat(esc(t2.title), "</b><br>").concat(esc(t2.text), "</div>");
+    try {
+        for (var list_1 = __values(list), list_1_1 = list_1.next(); !list_1_1.done; list_1_1 = list_1.next()) {
+            var tw = list_1_1.value;
+            var tip = tipFor(tw, 'tg');
+            var front = "<div style=\"font-size:.7em;color:#457865\">".concat(soundLabel(tw, false)).concat(tw.ct ? ' ' + esc(T('vs')) + ' ' + ctLabel(tw, false) : '', "</div><div style=\"margin-top:.4em\">").concat(textHTML(tw, true), "</div>");
+            var back = "<div style=\"font-family:'Noto Sans','Segoe UI','Lucida Sans Unicode',sans-serif\">".concat(ipaLine(tw, true, true), "</div><div style=\"font-size:.75em;color:#777;margin-top:.8em\"><b>").concat(esc(tip.title), "</b><br>").concat(esc(tip.text), "</div>");
+            if (tw.ct) {
+                var t2 = tipFor(tw, 'ct');
+                back += "<div style=\"font-size:.75em;color:#777;margin-top:.5em\"><b>".concat(esc(t2.title), "</b><br>").concat(esc(t2.text), "</div>");
+            }
+            var tag = function (s) { return s.replace(/[^\w:-]+/g, '_'); };
+            var tags = ['emerald', 'tongue_twister', 'sound::' + tag(tw.tg.phon ? (PHINFO[tw.tg.phon] ? PHINFO[tw.tg.phon][1] : tw.tg.key) : 'spelling_' + tw.tg.key)];
+            if (tw.ct)
+                tags.push('contrast::' + tag(PHINFO[tw.ct.phon] ? PHINFO[tw.ct.phon][1] : tw.ct.phon));
+            lines.push([front, back, tags.join(' ')].map(clean).join('\t'));
         }
-        var tag = function (s) { return s.replace(/[^\w:-]+/g, '_'); };
-        var tags = ['emerald', 'tongue_twister', 'sound::' + tag(tw.tg.phon ? (PHINFO[tw.tg.phon] ? PHINFO[tw.tg.phon][1] : tw.tg.key) : 'spelling_' + tw.tg.key)];
-        if (tw.ct)
-            tags.push('contrast::' + tag(PHINFO[tw.ct.phon] ? PHINFO[tw.ct.phon][1] : tw.ct.phon));
-        lines.push([front, back, tags.join(' ')].map(clean).join('\t'));
+    }
+    catch (e_13_1) { e_13 = { error: e_13_1 }; }
+    finally {
+        try {
+            if (list_1_1 && !list_1_1.done && (_a = list_1.return)) _a.call(list_1);
+        }
+        finally { if (e_13) throw e_13.error; }
     }
     return lines.join('\n') + '\n';
 }
 function downloadText(name, text) {
+    if (window.EmeraldAndroid && window.EmeraldAndroid.saveFile) {
+        window.EmeraldAndroid.saveFile(name, 'text/plain', btoa(unescape(encodeURIComponent(text))));
+        return;
+    }
     var blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
     var a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
