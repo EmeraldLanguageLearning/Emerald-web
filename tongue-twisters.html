@@ -1,0 +1,1109 @@
+<!doctype html>
+<html lang="fr">
+<head><script src="legacy.js"></script><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Emerald"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#49B190"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest"><script src="app-bridge.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tongue Twister Generator · Emerald Language Learning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Open+Sans:wght@400;600&family=Noto+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: one centred working column; builder card, result card, practice set. Emerald Language Learning tokens. */
+:root {
+  --emerald: #49B190;
+  --emerald-hover: #3f9c7e;
+  --emerald-link: #53AC90;
+  --emerald-dark: #457865;
+  --emerald-soft: #72B1A0;
+  --emerald-tint: rgba(73,177,144,.16);
+  --contrast: #C7772E;
+  --contrast-tint: rgba(217,130,59,.16);
+  --text-strong: #323232;
+  --text: #777777;
+  --bg: #FFFFFF;
+  --bg-soft: #F9F9F9;
+  --line: #DADADA;
+  --line-strong: #BBBBBB;
+  --font-head: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+  --font-body: 'Open Sans', 'Segoe UI', Arial, sans-serif;
+  --font-ipa: 'Noto Sans', 'Open Sans', 'Segoe UI', 'Lucida Sans Unicode', 'Arial Unicode MS', sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 15px; line-height: 1.7; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+button { font: inherit; }
+:focus-visible { outline: 2px solid var(--emerald); outline-offset: 2px; }
+
+.wrap { width: 100%; max-width: 1080px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+/* Header (shared Emerald Tools header) */
+.site { background: var(--bg); border-bottom: 1px solid var(--line); padding-top: env(safe-area-inset-top, 0px); }
+.site-in { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 14px; }
+.brand-logo { height: 60px; width: auto; display: block; }
+.brand-home { display: block; line-height: 0; border-radius: 6px; cursor: pointer; transition: opacity .15s; }
+.brand-home:hover { opacity: .85; }
+.brand-home:focus-visible { outline: 3px solid #49B190; outline-offset: 3px; }
+.lang { display: inline-flex; border: 1px solid var(--emerald); border-radius: 4px; overflow: hidden; }
+.lang button { border: 0; background: var(--bg); color: var(--emerald-dark); padding: 6px 12px; font-weight: 600; font-size: .85rem; cursor: pointer; letter-spacing: .04em; }
+.lang button + button { border-left: 1px solid var(--emerald); }
+.lang button[aria-pressed="true"] { background: var(--emerald); color: #fff; }
+
+/* Intro */
+.intro { text-align: center; padding-block: 48px 28px; }
+h1 { font-family: var(--font-head); font-weight: 300; text-transform: uppercase; color: var(--emerald-dark); font-size: clamp(1.9rem, 5vw, 3.1rem); line-height: 1.25; letter-spacing: .03em; margin: 0 0 14px; text-wrap: balance; }
+.lead { max-width: 640px; margin: 0 auto; font-size: 1.02rem; line-height: 1.9; }
+
+h2 { font-family: var(--font-head); font-weight: 400; text-transform: uppercase; color: var(--emerald-dark); font-size: clamp(1.3rem, 3vw, 1.75rem); letter-spacing: .04em; margin: 0 0 18px; text-align: center; text-wrap: balance; }
+
+.card { background: var(--bg-soft); border-radius: 4px; padding: 26px clamp(16px, 4vw, 34px); }
+section + section { margin-top: 34px; }
+
+/* Builder */
+.field-label { display: block; font-family: var(--font-head); font-weight: 700; color: var(--text-strong); font-size: .95rem; margin-bottom: 8px; }
+.input-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.input-row input { flex: 1 1 220px; min-width: 0; font: inherit; font-size: 1.15rem; font-family: var(--font-ipa); padding: 10px 14px; border: 1px solid var(--line-strong); border-radius: 4px; background: var(--bg); color: var(--text-strong); }
+.input-row input:focus { border-color: var(--emerald); outline: none; box-shadow: 0 0 0 3px var(--emerald-tint); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: var(--emerald); color: #fff; border: 1px solid var(--emerald); border-radius: 4px; padding: 10px 20px; font-weight: 600; cursor: pointer; text-decoration: none; line-height: 1.3; }
+.btn:hover { background: var(--emerald-hover); border-color: var(--emerald-hover); }
+.btn.ghost { background: var(--bg); color: var(--emerald-dark); }
+.btn.ghost:hover { background: var(--emerald-tint); }
+.btn.small { padding: 7px 13px; font-size: .88rem; }
+.btn:disabled { opacity: .45; cursor: default; }
+.btn svg { width: 17px; height: 17px; flex: none; }
+
+.quick { margin-top: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.quick-label { font-size: .85rem; margin-right: 4px; }
+.qchip { border: 1px solid var(--line-strong); background: var(--bg); color: var(--emerald-dark); border-radius: 4px; padding: 3px 11px; cursor: pointer; font-weight: 600; font-size: .9rem; }
+.qchip:hover { border-color: var(--emerald); color: var(--emerald-link); }
+
+.sound-pick { margin-top: 22px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.chip { display: inline-flex; align-items: baseline; gap: 7px; border: 1px solid var(--line-strong); background: var(--bg); color: var(--text-strong); border-radius: 4px; padding: 7px 13px; cursor: pointer; }
+.chip .ipa { font-family: var(--font-ipa); font-size: 1.05rem; font-weight: 600; color: var(--emerald-dark); }
+.chip .ex { font-weight: 600; }
+.chip .cnt { font-size: .78rem; color: var(--text); }
+.chip.on { border-color: var(--emerald); background: var(--emerald); color: #fff; }
+.chip.on .ipa, .chip.on .cnt { color: #fff; }
+.chip:disabled { opacity: .45; cursor: default; }
+.err { color: #A6492F; background: #FBEDE8; border-radius: 4px; padding: 10px 14px; margin: 0; }
+
+.options { margin-top: 22px; display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px 24px; align-items: end; }
+.opt-label { display: block; font-family: var(--font-head); font-weight: 700; color: var(--text-strong); font-size: .85rem; margin-bottom: 6px; }
+select { width: 100%; font: inherit; padding: 8px 10px; border: 1px solid var(--line-strong); border-radius: 4px; background: var(--bg); color: var(--text-strong); font-family: var(--font-ipa); }
+.check { display: flex; align-items: center; gap: 9px; cursor: pointer; color: var(--text-strong); padding-bottom: 8px; }
+.check input { width: 18px; height: 18px; accent-color: var(--emerald); }
+.seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 4px; overflow: hidden; width: 100%; }
+.seg button { flex: 1; border: 0; background: var(--bg); color: var(--text); padding: 8px 10px; cursor: pointer; font-weight: 600; }
+.seg button + button { border-left: 1px solid var(--line-strong); }
+.seg button[aria-checked="true"] { background: var(--emerald); color: #fff; }
+
+/* Result */
+.result-head { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px 12px; margin-bottom: 18px; }
+.pill { display: inline-flex; align-items: baseline; gap: 6px; padding: 3px 12px; border-radius: 4px; font-weight: 600; font-size: .9rem; }
+.pill .ipa { font-family: var(--font-ipa); }
+.pill.tg { background: var(--emerald-tint); color: var(--emerald-dark); }
+.pill.ct { background: var(--contrast-tint); color: #93531a; }
+.stats { font-size: .85rem; }
+.twister { background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 22px clamp(14px, 3vw, 28px) 12px; }
+.interlinear { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 12px; }
+.w { display: inline-flex; flex-direction: column; align-items: center; margin-bottom: 10px; min-width: 0; }
+.wt { font-family: var(--font-head); font-weight: 600; font-size: clamp(1.15rem, 2.6vw, 1.5rem); color: var(--text-strong); line-height: 1.35; }
+.wi { font-family: var(--font-ipa); font-size: .9rem; color: var(--text); line-height: 1.4; }
+.brk { font-family: var(--font-ipa); color: var(--line-strong); align-self: flex-start; font-size: 1.3rem; padding-top: 2px; }
+mark { background: transparent; color: inherit; }
+mark.tg { color: var(--emerald-dark); background: var(--emerald-tint); border-radius: 2px; box-shadow: inset 0 -2px 0 var(--emerald); }
+mark.ct { color: #93531a; background: var(--contrast-tint); border-radius: 2px; box-shadow: inset 0 -2px 0 var(--contrast); }
+.wt mark.tg, .wt mark.ct { font-weight: 700; }
+.ipa-line { margin: 14px 0 0; padding-top: 12px; border-top: 1px solid var(--line); text-align: center; }
+.ipa-label { display: block; font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--emerald-soft); font-weight: 600; margin-bottom: 4px; }
+.ipa-full { font-family: var(--font-ipa); font-size: 1.12rem; color: var(--text-strong); line-height: 1.8; overflow-wrap: anywhere; }
+.legend { display: flex; justify-content: center; flex-wrap: wrap; gap: 14px; font-size: .8rem; margin-top: 10px; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 14px; height: 10px; border-radius: 2px; display: inline-block; }
+.legend .l-tg i { background: var(--emerald-tint); box-shadow: inset 0 -2px 0 var(--emerald); }
+.legend .l-ct i { background: var(--contrast-tint); box-shadow: inset 0 -2px 0 var(--contrast); }
+
+.actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 18px; }
+.listen { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.listen-label { font-weight: 600; color: var(--text-strong); font-size: .9rem; display: inline-flex; align-items: center; gap: 6px; }
+.listen-label svg { width: 18px; height: 18px; color: var(--emerald); }
+.divider { width: 1px; background: var(--line); align-self: stretch; }
+
+/* Tip card (feature card with overlapping circle) */
+.tips { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 46px 24px; margin-top: 52px; }
+.tip { position: relative; background: var(--bg); border-radius: 4px; padding: 52px 22px 20px; text-align: center; border: 1px solid var(--line); }
+.tip-icon { position: absolute; top: -36px; left: 50%; transform: translateX(-50%); width: 72px; height: 72px; border-radius: 50%; background: var(--emerald); display: flex; align-items: center; justify-content: center; color: #fff; font-family: var(--font-ipa); font-size: 1.45rem; font-weight: 600; }
+.tip.ctip .tip-icon { background: var(--contrast); }
+.tip h3 { font-family: var(--font-head); font-weight: 700; color: var(--text-strong); font-size: 1rem; margin: 0 0 6px; }
+.tip p { margin: 0; line-height: 1.9; }
+
+/* Practice set */
+.set-empty { text-align: center; max-width: 560px; margin: 0 auto; line-height: 1.9; }
+.set-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.set-item { display: grid; grid-template-columns: 34px 1fr auto; gap: 12px; align-items: start; background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 12px 14px; }
+.set-num { font-family: var(--font-head); font-weight: 700; color: var(--emerald); font-size: 1.1rem; }
+.set-body { min-width: 0; }
+.set-tw { color: var(--text-strong); font-weight: 600; line-height: 1.6; }
+.set-ipa { font-family: var(--font-ipa); font-size: .9rem; overflow-wrap: anywhere; }
+.set-tags { margin-top: 4px; display: flex; gap: 6px; flex-wrap: wrap; }
+.set-tags .pill { font-size: .75rem; padding: 1px 8px; }
+.icon-btn { border: 1px solid transparent; background: transparent; color: var(--text); border-radius: 4px; padding: 4px 6px; cursor: pointer; display: inline-flex; }
+.icon-btn:hover { color: #A6492F; border-color: var(--line); }
+.icon-btn svg { width: 18px; height: 18px; }
+.set-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px; }
+.hint { font-size: .82rem; text-align: center; margin: 12px auto 0; max-width: 640px; line-height: 1.7; }
+.hint b { color: var(--text-strong); }
+.copy-box { width: 100%; height: 90px; margin-top: 12px; font-family: Consolas, monospace; font-size: .75rem; border: 1px solid var(--line-strong); border-radius: 4px; padding: 8px; }
+
+.toast { position: fixed; left: 50%; bottom: calc(22px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--text-strong); color: #fff; padding: 9px 18px; border-radius: 4px; font-size: .9rem; opacity: 0; transition: opacity .2s; pointer-events: none; z-index: 20; max-width: calc(100% - 32px); text-align: center; }
+.toast.show { opacity: 1; }
+
+.site-footer { border-top: 1px solid var(--line); margin-top: 56px; padding-block: 22px; font-size: .8rem; text-align: center; }
+
+@media (max-width: 640px) {
+  .brand-logo { height: 46px; }
+  .intro { padding-block: 32px 20px; }
+  .divider { display: none; }
+  .set-item { grid-template-columns: 26px 1fr auto; gap: 8px; }
+}
+@media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
+
+/* Print sheet */
+#printSheet { display: none; }
+@media print {
+  @page { margin: 14mm 14mm 16mm; }
+  .screen, .toast { display: none !important; }
+  #printSheet { display: block; color: #323232; font-family: var(--font-body); font-size: 11pt; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .ps-head { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #DADADA; padding-bottom: 10px; margin-bottom: 18px; }
+  .ps-head img { height: 44px; width: auto; }
+  .ps-title { font-family: var(--font-head); font-weight: 400; text-transform: uppercase; color: #457865; font-size: 15pt; letter-spacing: .04em; text-align: right; }
+  .ps-date { font-size: 9pt; color: #777; text-align: right; }
+  .ps-item { display: grid; grid-template-columns: 26px 1fr; gap: 10px; padding: 12px 0 14px; border-bottom: 1px solid #eee; break-inside: avoid; }
+  .ps-num { font-family: var(--font-head); font-weight: 700; color: #49B190; font-size: 14pt; }
+  .ps-tag { font-size: 9pt; color: #457865; font-weight: 600; }
+  .ps-tag .ipa { font-family: var(--font-ipa); }
+  .ps-tw { font-family: var(--font-head); font-weight: 600; font-size: 14pt; margin: 2px 0 4px; line-height: 1.45; }
+  .ps-ipa { font-family: var(--font-ipa); font-size: 11pt; margin: 0 0 6px; }
+  .ps-tip { font-size: 9.5pt; color: #555; margin: 0 0 6px; }
+  .ps-check { font-size: 9pt; color: #777; display: flex; gap: 16px; flex-wrap: wrap; }
+  .ps-check span::before { content: ""; display: inline-block; width: 10px; height: 10px; border: 1px solid #999; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+  .ps-foot { margin-top: 14px; font-size: 8.5pt; color: #999; text-align: center; }
+  mark.tg { background: rgba(73,177,144,.18); box-shadow: none; text-decoration: underline; text-decoration-color: #49B190; text-decoration-thickness: 2px; text-underline-offset: 2px; color: #2f6b56; font-weight: 700; }
+  mark.ct { background: rgba(217,130,59,.18); box-shadow: none; text-decoration: underline dotted; text-decoration-color: #C7772E; text-decoration-thickness: 2px; text-underline-offset: 2px; color: #93531a; font-weight: 700; }
+}
+</style>
+<style id="emerald-dark">
+/* Dark version of the Emerald look, used when the phone is in dark mode */
+@media screen and (prefers-color-scheme: dark){
+  :root{color-scheme:dark;--emerald-dark:#7fcbb0;--emerald-link:#6cc8a6;--emerald-tint:rgba(73,177,144,.24);--contrast-tint:rgba(217,130,59,.24);
+    --text-strong:#edf2f0;--text:#b6c2bd;--bg:#121816;--bg-soft:#1a2320;--line:#2f3b37;--line-strong:#4b5a55}
+  input,select,.copy-box{background:#1f2a26!important;color:#edf2f0}
+  .twister,.tip,.set-item,.chip,.qchip,.seg button,.btn.ghost{background:#161e1b}
+  .chip.on,.seg button[aria-checked="true"]{background:#49B190;color:#fff}
+  .btn.ghost:hover{background:#1d3a31}
+  .pill.ct,mark.ct{color:#f2b27a}
+  .err{background:#3a2420;color:#f4a58f}
+  .icon-btn:hover{color:#f4a58f}
+  .toast{background:#2f3b37}
+
+  .site{background:#161e1b!important;border-bottom-color:#2f3b37!important}
+  .brand-logo{background:#fff;border-radius:6px;padding:4px 8px;box-sizing:content-box}
+  .lang button{background:transparent!important;color:#7fcbb0!important}
+  .lang button[aria-pressed="true"]{background:#49B190!important;color:#fff!important}
+  .app-home{background:transparent!important;color:#7fcbb0!important}
+  .app-home:hover{background:#1d3a31!important}
+}
+</style>
+</head>
+<body>
+<div class="screen">
+<header class="site">
+  <div class="wrap site-in">
+    <a class="brand-home" href="index.html" title="Home" aria-label="Emerald Language Learning – Home"><img class="brand-logo" id="logo" width="306" height="90" alt="Emerald Language Learning" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAATIAAABaCAMAAAAMyCp0AAAAYFBMVEX///9CsJFHeGVCsJFHeGVCsJFCsJFHeGVCsJFHeGVCsJFCsJFCsJFHeGVHeGVHeGVHeGUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+cqAbAAAAIHRSTlMA/v5tdSavRY64RssQ1CkRjgAAAAAAAAAAAAAAAAAAAHyN6jMAAAmlSURBVHja7ZzrtqsoDIC1CCLg5f2fdpRrCNd2tzNravlx1mkNEr+GkATcw/Brv/Zrv/Zrv1ZoVJzth6GTFZdy9E0y8p3kpmVZjrrIKbFsTV58zDVG1PchezweS13klHjMr/By1H7IcBNsbLTvMrU/I6Ny7Gg9ljZPhbZ9FTKFpiQTl0GJzEQVXapk2/xNyESMRVJ/hSTMuPohGwZsYqpy8Wz09sgU8mLSLJ7nt5LTrKGRpirrV/symjGi4Noui0vtjP9Rlf83MprBAe3u8mvpYspujCwhNlqzksJGalJlhGrMvhxZCkOaL1lYSk+zY88w+25kSubc1GVkl9sn1OCjOAiprwHfjUxmQ1WpeXCDhel/c5mAuCMyngehHRq1jo3quZpNP+n9kIlCFikvcAQAzMM1AdytkKls4h07e4dMPJGkfzGyQnEs4kP1BC0hy0/NZ5Dpqse8+89bNU0wV4E4bvs8z1s6wrz16xnJI2S0UN8RAKbU6ZIsCrPXkDkJn40ehsK22M9rJkvZDp+srlO2JL0fOJWd/Q2PLSlMZ/TE8uh2pfqYBAZI9by80qMy35eR7UvI2NeL2QxSeFyU3+NkP2Zq77ei7H9bYJcJI0j0bMiXppolJKTNlYidfhW+LyJzT+iZzQ+sMXiaFZdFjmTEFRVMZtRj2evIWvJDpWptkm5dZKQWS2kW57xZJzIzi9ZlMY+6bFbRxf7W0P9s/jGceMRM329CNSZPYHVd1r2GrClPa+VqX2IkbvIVbZIV6mVL2qa0omY8hlF29U7KzFjwNLvlNdtFADPTD3/1P6bpsM+4wT67cVJLBVlbntdr/OzkpPTsNDZXnsaqu8SYIsNTaHFr4RKb2YrcuvWCU1ShcxLblu0zJ4XOGFlbfuxtrFDPLsdm3ciCfnaSxj/5FItHgcIRfTWlU3nyiwqe3HlkbXnaS4y3jJK9jOzAfgQ88gIeZ0+JWWZHdD+4YOT6bBVkHfK8k5hoLxYqW8ie07YhZDsKs4/CEjKlC+hgI4q9dL9sn6mMrEO+08RUxzwmr62YceSFMxN4jwXzCPeYS/dbonkOR8kja8vT54AV0tHCzOxENreQPQoWCKbSUbvflPQ5isja8qLt9aPDBDV5+SKyvROZdilLul+1hmEg4MAzTbrmErIO+borY1zUNzpxHv8SsqET2fwotxKyORkg0M8h65CXFeui8VkgUpfP5Jn9afk7kS0dyIYnkQ1tZOgUmSLSAFHjdyD7i5X1HIWyZ6do0/XxzyLTfmaas20r1SSe9GUd8hknHscKlEFPxf5LZIUVs32/t66YtB5cwcOMsh3FfRpZPmaq3y/fZ30yLgPyovbQ8dk81g5J5IeRTXkTqN5vys20VvRfkxel02RpCk7a2dWnkZkfG+eYVzlpLt5vf6Qpw97MMSvyETKpS4mEn02kzES0vrJTSP7ryEqVjLUyYlqZSOrcjUpGLC/wzPMYGEW+TgVXJgVeGvIZ09uRDag85or0c2VEYyLrlpbC872a8pGJxAczdGYZvgrSouTu+MeR2R98Nbt185ErJi25AOEU2sD21FoB3ZKHVmTwSMkkmIuKhUlHfXxGySlG8PEX/vTBz2eRDWFrZc3tl2R/pMmX8v1+wVbToiGPDq2M3KwAdoLqs7I87DZZQYdRH3OsVH8+gCzawEt3oPJ2jfU4Z11Vi7q8DNOSR9tELKyhxOEQyfylkTsU/wKy85toWy5+s6jgCuYV7bE19jGr8iwYiHnm8zSxvLZI3BVqJ6TbXSLuCiPWw7HivtxnkF174n5Ozp3eM3A2AUlr0ajIE+/JBDw/wMKMo8bLu/VV2MnMPEFRLP58sM3niYn5qbPwzWMcvfICzktw4o5EZwvOg9lOWLkuVNuXBP5QDvdo/mnZZUEUPL5I5puxMhUdpQX+kNwEGcsjG+FaSAFf4hG5E2cD63vX5GsaiScmjFzT8xYSml+C7CbErC0ZEFcAQTgR2Mo8M2JIkaiLw8zvgszaiJ91zr+hlF2EK+qKRPROgDRvoNxsXjoy9sQid2EYx5Ue4oVdiUjnANTHKXK4T/NFCJtiSmtKY+5FQ+ITdpcTqJutl2EBoDgRIvmzZna5kB703Zx/tAB4TIzmTx4QVGIToFDL74TMgmL+L6+o4jv5prZoNumk3rpj4w2NzAdg8K3o4r6IFPkNFXIzZAJt+YraMQLpDx6AOrYc7tbCGxEsswuSUrs2S9gT7+V/7QrweiPD/Rr9E7HSe78qMj7usi4/sb3zVIIImnTy1zm4Tyxqm0pGTC7x+EpGlatvQ7fyLu+TTariUgzNz8UhhLmfiUU+0a4sbPQelqOeWJQk+zR+xOSS/w8IpGJVrr4N3Z44a1dvauhBJlwg4r51al3JPSeEWWtNkfmeWJToHWhuEl6MLL4U7mGuMBuuE4Ssrls2PX+h0aELGXO5PbFdrFrCfX/+oCyLzPfEoiRxogAZwU8noivCvvxHEbKqbm9iRocuZHTkNhQh7s+8aC0UuAMzmzEIme+ZiPYjC6P7K/y8WaSKRVbT7T3M6NCH7NSQjzZLlRqGUYtHWMcMMt8zEe1HFkb3V4h+BxyoYpBVdXvHGiDV0IdMnb8eNQzOb6Xe/rPlExhTn8E0RhZ6JqLdyMDoyMqAKtaX1XRr/ymudnShhk5kxFTJTdWIUPMXEfTWH0tsPUbme6aiZDxd89VoBhm8BEZ3ItT4MqCKRVbTbej421J/i2ABMv2Dmc9GNWbUcr+98mEURuZ7pqIkUSQNMgga/Rqa6DVQIFXcilnRrVbW6JqUzSwpIDOjK+1biXHyJPoliX9ChCz0TEV7rQyO7ovIFKvig4yybqVEgL0tSQrImAmTpA+GTvMX0F8I/XyXH0HIQM9EtNeXwdEvmGfZgQQpp4pHVtbtT3+/kvcV4gjOYZn79oyLkthKpSsm7JmIdiKLRrdzfAw+zqkSQtmibrWUs25pkvTWLvEDXC7YfrARtQIHhpg510BBJ9gzEe1EFo1uPgk3SYEqIPov6VZfB0iRGqf95V6o6zBEainpI2wCI2xhIxe9csU9sWgnsuge9grX8yRSpUO35uop0tIZerGpiUz7EBIS7MsFE7/BB/O4K+tzoeu1pjF7qgj2xKJm8TubwCPCS+geZngloZkKnGOWdOsq2IrLb8qrqFiogTQ3FcZzRJB3CG8AnEUvZDARn3kwh9xgTyyaq2TYz+ASuoePy+D6wRGyom4fr1zaeAbUzRT8xOHfx4dRz/mR4oqbsnEREM3Vy+xncAndw31U0SVuxurQ7dd+7dd+7dfu2P4BRxls8DKa1nkAAAAASUVORK5CYII="></a>
+    <div class="lang" role="group" aria-label="Langue / Language">
+      <button type="button" data-lang="fr" aria-pressed="true">FR</button>
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="intro">
+    <h1 data-i18n="title">Générateur de virelangues</h1>
+    <p class="lead" data-i18n="lead"></p>
+  </section>
+
+  <section class="card builder" aria-labelledby="soundLabel">
+    <label class="field-label" id="soundLabel" for="soundInput" data-i18n="inputLabel">Son ou graphie à travailler</label>
+    <form class="input-row" id="soundForm" autocomplete="off">
+      <input id="soundInput" type="text" value="th" spellcheck="false" data-i18n-ph="placeholder">
+      <button class="btn" type="submit" id="genBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg><span data-i18n="generate">Générer</span></button>
+    </form>
+    <div class="quick" id="quick"><span class="quick-label" data-i18n="quick"></span></div>
+
+    <div class="sound-pick" id="soundPick"></div>
+
+    <div class="options">
+      <div id="spellWrap">
+        <label class="check"><input type="checkbox" id="spellOnly" checked> <span id="spellOnlyLabel"></span></label>
+      </div>
+      <div>
+        <label class="opt-label" for="contrastSel" data-i18n="contrast">Opposer à</label>
+        <select id="contrastSel"></select>
+      </div>
+      <div>
+        <span class="opt-label" id="lenLabel" data-i18n="length">Longueur</span>
+        <div class="seg" role="radiogroup" aria-labelledby="lenLabel" id="lenSeg">
+          <button type="button" role="radio" data-len="short" aria-checked="false" data-i18n="short">Court</button>
+          <button type="button" role="radio" data-len="medium" aria-checked="true" data-i18n="medium">Moyen</button>
+          <button type="button" role="radio" data-len="long" aria-checked="false" data-i18n="long">Long</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="result" id="result" aria-live="polite">
+    <h2 data-i18n="resultTitle">Votre virelangue</h2>
+    <div class="result-head" id="resultHead"></div>
+    <div class="twister">
+      <div class="interlinear" id="interlinear"></div>
+      <div class="ipa-line">
+        <span class="ipa-label" data-i18n="ipaLabel"></span>
+        <div class="ipa-full" id="ipaFull"></div>
+        <div class="legend" id="legend"></div>
+      </div>
+    </div>
+    <div class="actions">
+      <div class="listen">
+        <span class="listen-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg><span data-i18n="listen">Écouter</span></span>
+        <button type="button" class="btn ghost small" data-rate="0.6" data-i18n="slow">Lent</button>
+        <button type="button" class="btn ghost small" data-rate="0.9" data-i18n="normal">Normal</button>
+        <button type="button" class="btn ghost small" data-rate="1.2" data-i18n="fast">Rapide</button>
+      </div>
+      <span class="divider" aria-hidden="true"></span>
+      <button type="button" class="btn ghost" id="againBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg><span data-i18n="another">Un autre</span></button>
+      <button type="button" class="btn" id="addBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span id="addLabel"></span></button>
+    </div>
+    <div class="tips" id="tips"></div>
+  </section>
+
+  <section class="card practice" id="practice">
+    <h2 id="setTitle"></h2>
+    <div id="setBody"></div>
+    <div class="set-actions">
+      <button type="button" class="btn" id="printBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg><span data-i18n="print">Imprimer / PDF</span></button>
+      <button type="button" class="btn" id="ankiBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="14" height="16" rx="2"/><path d="M7 2h12a2 2 0 0 1 2 2v14"/><path d="M7 10h6M7 14h4"/></svg><span data-i18n="anki">Exporter vers Anki</span></button>
+      <button type="button" class="btn ghost" id="copyBtn"><span data-i18n="copyAnki">Copier pour Anki</span></button>
+      <button type="button" class="btn ghost" id="clearBtn"><span id="clearLabel"></span></button>
+    </div>
+    <p class="hint" id="setHint"></p>
+    <p class="hint" data-i18n-html="printHint"></p>
+    <p class="hint" data-i18n-html="ankiHelp"></p>
+    <textarea class="copy-box" id="copyBox" readonly hidden aria-label="Anki"></textarea>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap"><span data-i18n="footer"></span></div>
+</footer>
+<div class="toast" id="toast" role="status"></div>
+</div>
+
+<div id="printSheet" aria-hidden="true"></div>
+
+<script>
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
+/* ============================================================
+   WORD BANK  (IPA: modern Standard Southern British English)
+   Format: word=ipa ; irregular forms: word/form2=ipa/ipa2
+   Nouns: form2 = plural.  Verbs: form2 = past tense.
+   ============================================================ */
+var LEX = {
+    P: "Peter=\u02C8pi\u02D0t\u0259;Polly=\u02C8p\u0252li;Paula=\u02C8p\u0254\u02D0l\u0259;Pam=p\u00E6m;Patrick=\u02C8p\u00E6tr\u026Ak;Percy=\u02C8p\u025C\u02D0si;Pete=pi\u02D0t;Bob=b\u0252b;Betty=\u02C8beti;Billy=\u02C8b\u026Ali;Bella=\u02C8bel\u0259;Ben=ben;Barbara=\u02C8b\u0251\u02D0br\u0259;Bert=b\u025C\u02D0t;Bill=b\u026Al;Tom=t\u0252m;Tina=\u02C8ti\u02D0n\u0259;Tim=t\u026Am;Tess=tes;Tony=\u02C8t\u0259\u028Ani;Terry=\u02C8teri;Tilly=\u02C8t\u026Ali;Ted=ted;Dan=d\u00E6n;Daisy=\u02C8de\u026Azi;David=\u02C8de\u026Av\u026Ad;Dora=\u02C8d\u0254\u02D0r\u0259;Doug=d\u028C\u0261;Diana=da\u026A\u02C8\u00E6n\u0259;Kate=ke\u026At;Katie=\u02C8ke\u026Ati;Ken=ken;Carl=k\u0251\u02D0l;Kitty=\u02C8k\u026Ati;Colin=\u02C8k\u0252l\u026An;Chris=kr\u026As;Greg=\u0261re\u0261;Gary=\u02C8\u0261\u00E6ri;Grace=\u0261re\u026As;Gus=\u0261\u028Cs;Gertie=\u02C8\u0261\u025C\u02D0ti;Gail=\u0261e\u026Al;Gordon=\u02C8\u0261\u0254\u02D0dn;Gwen=\u0261wen;Fred=fred;Fiona=fi\u02C8\u0259\u028An\u0259;Frank=fr\u00E6\u014Bk;Frankie=\u02C8fr\u00E6\u014Bki;Felix=\u02C8fi\u02D0l\u026Aks;Phil=f\u026Al;Philip=\u02C8f\u026Al\u026Ap;Freya=\u02C8fre\u026A\u0259;Flora=\u02C8fl\u0254\u02D0r\u0259;Victor=\u02C8v\u026Akt\u0259;Vera=\u02C8v\u026A\u0259r\u0259;Vicky=\u02C8v\u026Aki;Vince=v\u026Ans;Violet=\u02C8va\u026A\u0259l\u0259t;Val=v\u00E6l;Steve=sti\u02D0v;Dave=de\u026Av;Olive=\u02C8\u0252l\u026Av;Eve=i\u02D0v;Thea=\u02C8\u03B8i\u02D0\u0259;Theo=\u02C8\u03B8i\u02D0\u0259\u028A;Thelma=\u02C8\u03B8elm\u0259;Ruth=ru\u02D0\u03B8;Beth=be\u03B8;Keith=ki\u02D0\u03B8;Arthur=\u02C8\u0251\u02D0\u03B8\u0259;Matthew=\u02C8m\u00E6\u03B8ju\u02D0;Timothy=\u02C8t\u026Am\u0259\u03B8i;Dorothy=\u02C8d\u0252r\u0259\u03B8i;Edith=\u02C8i\u02D0d\u026A\u03B8;Heather=\u02C8he\u00F0\u0259;Sally=\u02C8s\u00E6li;Sam=s\u00E6m;Sue=su\u02D0;Simon=\u02C8sa\u026Am\u0259n;Susan=\u02C8su\u02D0zn;Sid=s\u026Ad;Sophie=\u02C8s\u0259\u028Afi;Stella=\u02C8stel\u0259;Zoe=\u02C8z\u0259\u028Ai;Zack=z\u00E6k;Liz=l\u026Az;Rosie=\u02C8r\u0259\u028Azi;Susie=\u02C8su\u02D0zi;Lizzie=\u02C8l\u026Azi;Isabel=\u02C8\u026Az\u0259bel;Sheila=\u02C8\u0283i\u02D0l\u0259;Shelly=\u02C8\u0283eli;Sharon=\u02C8\u0283\u00E6r\u0259n;Shaun=\u0283\u0254\u02D0n;Shane=\u0283e\u026An;Charlotte=\u02C8\u0283\u0251\u02D0l\u0259t;Natasha=n\u0259\u02C8t\u00E6\u0283\u0259;Trish=tr\u026A\u0283;Harry=\u02C8h\u00E6ri;Hannah=\u02C8h\u00E6n\u0259;Henry=\u02C8henri;Holly=\u02C8h\u0252li;Hugo=\u02C8hju\u02D0\u0261\u0259\u028A;Hattie=\u02C8h\u00E6ti;Hector=\u02C8hekt\u0259;Helen=\u02C8hel\u0259n;Howard=\u02C8ha\u028A\u0259d;Hank=h\u00E6\u014Bk;Charlie=\u02C8t\u0283\u0251\u02D0li;Chuck=t\u0283\u028Ck;Chester=\u02C8t\u0283est\u0259;Cheryl=\u02C8t\u0283er\u0259l;Chad=t\u0283\u00E6d;Rachel=\u02C8re\u026At\u0283l;Mitch=m\u026At\u0283;Richard=\u02C8r\u026At\u0283\u0259d;Chloe=\u02C8kl\u0259\u028Ai;Jack=d\u0292\u00E6k;Jill=d\u0292\u026Al;Jenny=\u02C8d\u0292eni;James=d\u0292e\u026Amz;Julie=\u02C8d\u0292u\u02D0li;Jake=d\u0292e\u026Ak;George=d\u0292\u0254\u02D0d\u0292;Gemma=\u02C8d\u0292em\u0259;Jessica=\u02C8d\u0292es\u026Ak\u0259;Jasper=\u02C8d\u0292\u00E6sp\u0259;Gina=\u02C8d\u0292i\u02D0n\u0259;Jean=d\u0292i\u02D0n;Jim=d\u0292\u026Am;Molly=\u02C8m\u0252li;Max=m\u00E6ks;Mike=ma\u026Ak;Mary=\u02C8me\u0259ri;Mark=m\u0251\u02D0k;Millie=\u02C8m\u026Ali;Martin=\u02C8m\u0251\u02D0t\u026An;Emma=\u02C8em\u0259;Kim=k\u026Am;Nancy=\u02C8n\u00E6nsi;Ned=ned;Nick=n\u026Ak;Nina=\u02C8ni\u02D0n\u0259;Nora=\u02C8n\u0254\u02D0r\u0259;Neil=ni\u02D0l;Nell=nel;Anna=\u02C8\u00E6n\u0259;Annie=\u02C8\u00E6ni;Alice=\u02C8\u00E6l\u026As;Lily=\u02C8l\u026Ali;Lucy=\u02C8lu\u02D0si;Larry=\u02C8l\u00E6ri;Leo=\u02C8li\u02D0\u0259\u028A;Lola=\u02C8l\u0259\u028Al\u0259;Luke=lu\u02D0k;Laura=\u02C8l\u0254\u02D0r\u0259;Rob=r\u0252b;Ruby=\u02C8ru\u02D0bi;Ryan=\u02C8ra\u026A\u0259n;Rita=\u02C8ri\u02D0t\u0259;Rory=\u02C8r\u0254\u02D0ri;Robert=\u02C8r\u0252b\u0259t;Ray=re\u026A;Barry=\u02C8b\u00E6ri;Rex=reks;William=\u02C8w\u026Alj\u0259m;Wendy=\u02C8wendi;Will=w\u026Al;Walter=\u02C8w\u0254\u02D0lt\u0259;Winnie=\u02C8w\u026Ani;Willow=\u02C8w\u026Al\u0259\u028A;Wanda=\u02C8w\u0252nd\u0259;Yasmin=\u02C8j\u00E6zm\u026An;Yolanda=j\u0259\u02C8l\u00E6nd\u0259;Eugene=\u02C8ju\u02D0d\u0292i\u02D0n;Becky=\u02C8beki;Kelly=\u02C8keli;Duncan=\u02C8d\u028C\u014Bk\u0259n;Russell=\u02C8r\u028Csl;Oliver=\u02C8\u0252l\u026Av\u0259;Olly=\u02C8\u0252li;Brooke=br\u028Ak;Bruce=bru\u02D0s;Jude=d\u0292u\u02D0d;Marcus=\u02C8m\u0251\u02D0k\u0259s;Morgan=\u02C8m\u0254\u02D0\u0261\u0259n;Shirley=\u02C8\u0283\u025C\u02D0li;Myrtle=\u02C8m\u025C\u02D0tl;Herbert=\u02C8h\u025C\u02D0b\u0259t;Ernie=\u02C8\u025C\u02D0ni;Bernard=\u02C8b\u025C\u02D0n\u0259d;Amy=\u02C8e\u026Ami;Jane=d\u0292e\u026An;Fay=fe\u026A;Ivy=\u02C8a\u026Avi;Isaac=\u02C8a\u026Az\u0259k;Clive=kla\u026Av;Brian=\u02C8bra\u026A\u0259n;Myra=\u02C8ma\u026Ar\u0259;Joy=d\u0292\u0254\u026A;Roy=r\u0254\u026A;Lloyd=l\u0254\u026Ad;Joyce=d\u0292\u0254\u026As;Moira=\u02C8m\u0254\u026Ar\u0259;Troy=tr\u0254\u026A;Floyd=fl\u0254\u026Ad;Joe=d\u0292\u0259\u028A;Owen=\u02C8\u0259\u028A\u026An;Clare=kle\u0259;Sarah=\u02C8se\u0259r\u0259;Blair=ble\u0259;Quentin=\u02C8kwent\u026An;Ingrid=\u02C8\u026A\u014B\u0261r\u026Ad;Inga=\u02C8\u026A\u014B\u0261\u0259",
+    N: "pepper=\u02C8pep\u0259;pickle=\u02C8p\u026Akl;pie=pa\u026A;pear=pe\u0259;plum=pl\u028Cm;puppy=\u02C8p\u028Cpi;parrot=\u02C8p\u00E6r\u0259t;pot=p\u0252t;pan=p\u00E6n;pen=pen;pencil=\u02C8pensl;penguin=\u02C8pe\u014B\u0261w\u026An;pigeon=\u02C8p\u026Ad\u0292\u026An;piano=pi\u02C8\u00E6n\u0259\u028A;pillow=\u02C8p\u026Al\u0259\u028A;pirate=\u02C8pa\u026Ar\u0259t;pizza=\u02C8pi\u02D0ts\u0259;pumpkin=\u02C8p\u028Cmpk\u026An;puddle=\u02C8p\u028Cdl;paper=\u02C8pe\u026Ap\u0259;apple=\u02C8\u00E6pl;hippo=\u02C8h\u026Ap\u0259\u028A;cup=k\u028Cp;map=m\u00E6p;ship=\u0283\u026Ap;shop=\u0283\u0252p;sheep/sheep=\u0283i\u02D0p/\u0283i\u02D0p;soup=su\u02D0p;grape=\u0261re\u026Ap;rope=r\u0259\u028Ap;cap=k\u00E6p;pea=pi\u02D0;peach=pi\u02D0t\u0283;panda=\u02C8p\u00E6nd\u0259;parcel=\u02C8p\u0251\u02D0sl;party=\u02C8p\u0251\u02D0ti;peanut=\u02C8pi\u02D0n\u028Ct;pin=p\u026An;plate=ple\u026At;pineapple=\u02C8pa\u026An\u00E6pl;potato/potatoes=p\u0259\u02C8te\u026At\u0259\u028A/p\u0259\u02C8te\u026At\u0259\u028Az;prawn=pr\u0254\u02D0n;pudding=\u02C8p\u028Ad\u026A\u014B;purse=p\u025C\u02D0s;pupil=\u02C8pju\u02D0pl;pearl=p\u025C\u02D0l;pouch=pa\u028At\u0283;potion=\u02C8p\u0259\u028A\u0283n;\nbear=be\u0259;bee=bi\u02D0;bug=b\u028C\u0261;ball=b\u0254\u02D0l;balloon=b\u0259\u02C8lu\u02D0n;banana=b\u0259\u02C8n\u0251\u02D0n\u0259;basket=\u02C8b\u0251\u02D0sk\u026At;bat=b\u00E6t;bell=bel;bike=ba\u026Ak;bird=b\u025C\u02D0d;biscuit=\u02C8b\u026Ask\u026At;blanket=\u02C8bl\u00E6\u014Bk\u026At;boat=b\u0259\u028At;bone=b\u0259\u028An;book=b\u028Ak;boot=bu\u02D0t;bottle=\u02C8b\u0252tl;box=b\u0252ks;bubble=\u02C8b\u028Cbl;bucket=\u02C8b\u028Ck\u026At;bun=b\u028Cn;button=\u02C8b\u028Ctn;cabbage=\u02C8k\u00E6b\u026Ad\u0292;rabbit=\u02C8r\u00E6b\u026At;robin=\u02C8r\u0252b\u026An;crab=kr\u00E6b;cub=k\u028Cb;tub=t\u028Cb;web=web;baby=\u02C8be\u026Abi;badge=b\u00E6d\u0292;bath/baths=b\u0251\u02D0\u03B8/b\u0251\u02D0\u00F0z;beach=bi\u02D0t\u0283;bean=bi\u02D0n;beak=bi\u02D0k;beard=b\u026A\u0259d;bed=bed;beetle=\u02C8bi\u02D0tl;bench=bent\u0283;berry=\u02C8beri;bin=b\u026An;boiler=\u02C8b\u0254\u026Al\u0259;boy=b\u0254\u026A;brick=br\u026Ak;bridge=br\u026Ad\u0292;broom=bru\u02D0m;brother=\u02C8br\u028C\u00F0\u0259;brush=br\u028C\u0283;bull=b\u028Al;burger=\u02C8b\u025C\u02D0\u0261\u0259;bus=b\u028Cs;bush=b\u028A\u0283;butcher=\u02C8b\u028At\u0283\u0259;butterfly=\u02C8b\u028Ct\u0259fla\u026A;baboon=b\u0259\u02C8bu\u02D0n;barrel=\u02C8b\u00E6r\u0259l;bank=b\u00E6\u014Bk;branch=br\u0251\u02D0nt\u0283;barbecue=\u02C8b\u0251\u02D0b\u026Akju\u02D0;bugle=\u02C8bju\u02D0\u0261l;\ntable=\u02C8te\u026Abl;teacher=\u02C8ti\u02D0t\u0283\u0259;tiger=\u02C8ta\u026A\u0261\u0259;toad=t\u0259\u028Ad;toe=t\u0259\u028A;tomato/tomatoes=t\u0259\u02C8m\u0251\u02D0t\u0259\u028A/t\u0259\u02C8m\u0251\u02D0t\u0259\u028Az;tooth/teeth=tu\u02D0\u03B8/ti\u02D0\u03B8;top=t\u0252p;towel=\u02C8ta\u028A\u0259l;tower=\u02C8ta\u028A\u0259;toy=t\u0254\u026A;train=tre\u026An;tree=tri\u02D0;truck=tr\u028Ck;turtle=\u02C8t\u025C\u02D0tl;ticket=\u02C8t\u026Ak\u026At;tent=tent;kitten=\u02C8k\u026Atn;kite=ka\u026At;cat=k\u00E6t;hat=h\u00E6t;goat=\u0261\u0259\u028At;coat=k\u0259\u028At;carrot=\u02C8k\u00E6r\u0259t;rat=r\u00E6t;net=net;teapot=\u02C8ti\u02D0p\u0252t;trumpet=\u02C8tr\u028Cmp\u026At;tin=t\u026An;tank=t\u00E6\u014Bk;tray=tre\u026A;tortoise=\u02C8t\u0254\u02D0t\u0259s;toilet=\u02C8t\u0254\u026Al\u0259t;tourist=\u02C8t\u028A\u0259r\u026Ast;tuba=\u02C8tju\u02D0b\u0259;tube=tju\u02D0b;turkey=\u02C8t\u025C\u02D0ki;twig=tw\u026A\u0261;torch=t\u0254\u02D0t\u0283;trunk=tr\u028C\u014Bk;\ndog=d\u0252\u0261;duck=d\u028Ck;doll=d\u0252l;door=d\u0254\u02D0;dragon=\u02C8dr\u00E6\u0261\u0259n;drum=dr\u028Cm;desk=desk;diamond=\u02C8da\u026A\u0259m\u0259nd;dish=d\u026A\u0283;doughnut=\u02C8d\u0259\u028An\u028Ct;dinosaur=\u02C8da\u026An\u0259s\u0254\u02D0;doctor=\u02C8d\u0252kt\u0259;daisy=\u02C8de\u026Azi;bread=bred;cloud=kla\u028Ad;road=r\u0259\u028Ad;sandwich=\u02C8s\u00E6nw\u026Ad\u0292;ladder=\u02C8l\u00E6d\u0259;poodle=\u02C8pu\u02D0dl;noodle=\u02C8nu\u02D0dl;card=k\u0251\u02D0d;kid=k\u026Ad;daughter=\u02C8d\u0254\u02D0t\u0259;deer/deer=d\u026A\u0259/d\u026A\u0259;dolphin=\u02C8d\u0252lf\u026An;donkey=\u02C8d\u0252\u014Bki;dove=d\u028Cv;dress=dres;\ncake=ke\u026Ak;camel=\u02C8k\u00E6ml;candle=\u02C8k\u00E6ndl;car=k\u0251\u02D0;cookie=\u02C8k\u028Aki;cow=ka\u028A;crow=kr\u0259\u028A;cucumber=\u02C8kju\u02D0k\u028Cmb\u0259;cupboard=\u02C8k\u028Cb\u0259d;key=ki\u02D0;king=k\u026A\u014B;kitchen=\u02C8k\u026At\u0283\u026An;koala=k\u0259\u028A\u02C8\u0251\u02D0l\u0259;clock=kl\u0252k;coconut=\u02C8k\u0259\u028Ak\u0259n\u028Ct;coffee=\u02C8k\u0252fi;crocodile=\u02C8kr\u0252k\u0259da\u026Al;crown=kra\u028An;castle=\u02C8k\u0251\u02D0sl;sock=s\u0252k;rock=r\u0252k;snake=sne\u026Ak;cheek=t\u0283i\u02D0k;chicken=\u02C8t\u0283\u026Ak\u026An;monkey=\u02C8m\u028C\u014Bki;jacket=\u02C8d\u0292\u00E6k\u026At;pocket=\u02C8p\u0252k\u026At;rocket=\u02C8r\u0252k\u026At;cactus=\u02C8k\u00E6kt\u0259s;cage=ke\u026Ad\u0292;can=k\u00E6n;carpet=\u02C8k\u0251\u02D0p\u026At;cartoon=k\u0251\u02D0\u02C8tu\u02D0n;cave=ke\u026Av;chick=t\u0283\u026Ak;clown=kla\u028An;coach=k\u0259\u028At\u0283;coin=k\u0254\u026An;couch=ka\u028At\u0283;cousin=\u02C8k\u028Czn;cowboy=\u02C8ka\u028Ab\u0254\u026A;crayon=\u02C8kre\u026A\u0259n;cube=kju\u02D0b;cuckoo=\u02C8k\u028Aku\u02D0;curtain=\u02C8k\u025C\u02D0tn;cushion=\u02C8k\u028A\u0283n;computer=k\u0259m\u02C8pju\u02D0t\u0259;kangaroo=\u02CCk\u00E6\u014B\u0261\u0259\u02C8ru\u02D0;kazoo=k\u0259\u02C8zu\u02D0;quilt=kw\u026Alt;queen=kwi\u02D0n;squirrel=\u02C8skw\u026Ar\u0259l;\ngoose/geese=\u0261u\u02D0s/\u0261i\u02D0s;gorilla=\u0261\u0259\u02C8r\u026Al\u0259;guitar=\u0261\u026A\u02C8t\u0251\u02D0;garden=\u02C8\u0261\u0251\u02D0dn;gate=\u0261e\u026At;gift=\u0261\u026Aft;glove=\u0261l\u028Cv;glass=\u0261l\u0251\u02D0s;goblin=\u02C8\u0261\u0252bl\u026An;gherkin=\u02C8\u0261\u025C\u02D0k\u026An;game=\u0261e\u026Am;girl=\u0261\u025C\u02D0l;bag=b\u00E6\u0261;egg=e\u0261;flag=fl\u00E6\u0261;frog=fr\u0252\u0261;pig=p\u026A\u0261;rug=r\u028C\u0261;wagon=\u02C8w\u00E6\u0261\u0259n;gong=\u0261\u0252\u014B;germ=d\u0292\u025C\u02D0m;ghost=\u0261\u0259\u028Ast;gnome=n\u0259\u028Am;\nfish/fish=f\u026A\u0283/f\u026A\u0283;fox=f\u0252ks;feather=\u02C8fe\u00F0\u0259;finger=\u02C8f\u026A\u014B\u0261\u0259;flower=\u02C8fla\u028A\u0259;fork=f\u0254\u02D0k;farm=f\u0251\u02D0m;fan=f\u00E6n;fairy=\u02C8fe\u0259ri;flute=flu\u02D0t;phone=f\u0259\u028An;photo=\u02C8f\u0259\u028At\u0259\u028A;elephant=\u02C8el\u026Af\u0259nt;giraffe=d\u0292\u0259\u02C8r\u0251\u02D0f;waffle=\u02C8w\u0252fl;muffin=\u02C8m\u028Cf\u026An;leaf/leaves=li\u02D0f/li\u02D0vz;knife/knives=na\u026Af/na\u026Avz;scarf/scarves=sk\u0251\u02D0f/sk\u0251\u02D0vz;roof=ru\u02D0f;chef=\u0283ef;father=\u02C8f\u0251\u02D0\u00F0\u0259;field=fi\u02D0ld;fly=fla\u026A;football=\u02C8f\u028Atb\u0254\u02D0l;fountain=\u02C8fa\u028Ant\u026An;fridge=fr\u026Ad\u0292;\nvan=v\u00E6n;vase=v\u0251\u02D0z;vest=vest;vet=vet;violin=\u02CCva\u026A\u0259\u02C8l\u026An;volcano/volcanoes=v\u0252l\u02C8ke\u026An\u0259\u028A/v\u0252l\u02C8ke\u026An\u0259\u028Az;vulture=\u02C8v\u028Clt\u0283\u0259;valley=\u02C8v\u00E6li;village=\u02C8v\u026Al\u026Ad\u0292;voice=v\u0254\u026As;oven=\u02C8\u028Cvn;olive=\u02C8\u0252l\u026Av;wave=we\u026Av;stove=st\u0259\u028Av;sleeve=sli\u02D0v;river=\u02C8r\u026Av\u0259;vegetable=\u02C8ved\u0292t\u0259bl;visitor=\u02C8v\u026Az\u026At\u0259;raven=\u02C8re\u026Avn;hive=ha\u026Av;\nthing=\u03B8\u026A\u014B;thistle=\u02C8\u03B8\u026Asl;thief/thieves=\u03B8i\u02D0f/\u03B8i\u02D0vz;thorn=\u03B8\u0254\u02D0n;thread=\u03B8red;throne=\u03B8r\u0259\u028An;thumb=\u03B8\u028Cm;thunderstorm=\u02C8\u03B8\u028Cnd\u0259st\u0254\u02D0m;theatre=\u02C8\u03B8\u026A\u0259t\u0259;thimble=\u02C8\u03B8\u026Ambl;thermos=\u02C8\u03B8\u025C\u02D0m\u0259s;path/paths=p\u0251\u02D0\u03B8/p\u0251\u02D0\u00F0z;moth=m\u0252\u03B8;mouth/mouths=ma\u028A\u03B8/ma\u028A\u00F0z;cloth=kl\u0252\u03B8;birthday=\u02C8b\u025C\u02D0\u03B8de\u026A;athlete=\u02C8\u00E6\u03B8li\u02D0t;panther=\u02C8p\u00E6n\u03B8\u0259;python=\u02C8pa\u026A\u03B8\u0259n;toothbrush=\u02C8tu\u02D0\u03B8br\u028C\u0283;thermometer=\u03B8\u0259\u02C8m\u0252m\u026At\u0259;\nmother=\u02C8m\u028C\u00F0\u0259;grandmother=\u02C8\u0261r\u00E6nm\u028C\u00F0\u0259;grandfather=\u02C8\u0261r\u00E6nf\u0251\u02D0\u00F0\u0259;smoothie=\u02C8smu\u02D0\u00F0i;\nsea=si\u02D0;seashell=\u02C8si\u02D0\u0283el;seashore=\u02C8si\u02D0\u0283\u0254\u02D0;sofa=\u02C8s\u0259\u028Af\u0259;spoon=spu\u02D0n;star=st\u0251\u02D0;sun=s\u028Cn;sausage=\u02C8s\u0252s\u026Ad\u0292;saucepan=\u02C8s\u0254\u02D0sp\u0259n;seal=si\u02D0l;snail=sne\u026Al;spider=\u02C8spa\u026Ad\u0259;swan=sw\u0252n;sister=\u02C8s\u026Ast\u0259;horse=h\u0254\u02D0s;house/houses=ha\u028As/\u02C8ha\u028Az\u026Az;mouse/mice=ma\u028As/ma\u026As;sauce=s\u0254\u02D0s;nest=nest;circus=\u02C8s\u025C\u02D0k\u0259s;city=\u02C8s\u026Ati;saucer=\u02C8s\u0254\u02D0s\u0259;sailor=\u02C8se\u026Al\u0259;seesaw=\u02C8si\u02D0s\u0254\u02D0;stamp=st\u00E6mp;stone=st\u0259\u028An;street=stri\u02D0t;string=str\u026A\u014B;strawberry=\u02C8str\u0254\u02D0b\u0259ri;skunk=sk\u028C\u014Bk;skateboard=\u02C8ske\u026Atb\u0254\u02D0d;spaceship=\u02C8spe\u026As\u0283\u026Ap;scooter=\u02C8sku\u02D0t\u0259;sink=s\u026A\u014Bk;slide=sla\u026Ad;snowball=\u02C8sn\u0259\u028Ab\u0254\u02D0l;snowman/snowmen=\u02C8sn\u0259\u028Am\u00E6n/\u02C8sn\u0259\u028Amen;sponge=sp\u028Cnd\u0292;sprout=spra\u028At;spear=sp\u026A\u0259;square=skwe\u0259;statue=\u02C8st\u00E6t\u0283u\u02D0;station=\u02C8ste\u026A\u0283n;surfer=\u02C8s\u025C\u02D0f\u0259;sweater=\u02C8swet\u0259;sword=s\u0254\u02D0d;scarecrow=\u02C8ske\u0259kr\u0259\u028A;\nzebra=\u02C8zebr\u0259;zoo=zu\u02D0;zip=z\u026Ap;cheese=t\u0283i\u02D0z;nose=n\u0259\u028Az;rose=r\u0259\u028Az;prize=pra\u026Az;puzzle=\u02C8p\u028Czl;lizard=\u02C8l\u026Az\u0259d;wizard=\u02C8w\u026Az\u0259d;blizzard=\u02C8bl\u026Az\u0259d;breeze=bri\u02D0z;buzzer=\u02C8b\u028Cz\u0259;present=\u02C8preznt;raisin=\u02C8re\u026Azn;razor=\u02C8re\u026Az\u0259;freezer=\u02C8fri\u02D0z\u0259;xylophone=\u02C8za\u026Al\u0259f\u0259\u028An;zombie=\u02C8z\u0252mbi;museum=mju\u02C8zi\u02D0\u0259m;weasel=\u02C8wi\u02D0zl;\nshell=\u0283el;shark=\u0283\u0251\u02D0k;shirt=\u0283\u025C\u02D0t;shoe=\u0283u\u02D0;shed=\u0283ed;shelf/shelves=\u0283elf/\u0283elvz;shadow=\u02C8\u0283\u00E6d\u0259\u028A;shampoo=\u0283\u00E6m\u02C8pu\u02D0;shower=\u02C8\u0283a\u028A\u0259;shoulder=\u02C8\u0283\u0259\u028Ald\u0259;mushroom=\u02C8m\u028C\u0283r\u028Am;ocean=\u02C8\u0259\u028A\u0283n;machine=m\u0259\u02C8\u0283i\u02D0n;parachute=\u02C8p\u00E6r\u0259\u0283u\u02D0t;radish=\u02C8r\u00E6d\u026A\u0283;wish=w\u026A\u0283;magician=m\u0259\u02C8d\u0292\u026A\u0283n;\ntreasure=\u02C8tre\u0292\u0259;measure=\u02C8me\u0292\u0259;television=\u02C8tel\u026Av\u026A\u0292n;garage=\u02C8\u0261\u00E6r\u0251\u02D0\u0292;vision=\u02C8v\u026A\u0292n;pleasure=\u02C8ple\u0292\u0259;collision=k\u0259\u02C8l\u026A\u0292n;explosion=\u026Ak\u02C8spl\u0259\u028A\u0292n;decision=d\u026A\u02C8s\u026A\u0292n;massage=\u02C8m\u00E6s\u0251\u02D0\u0292;occasion=\u0259\u02C8ke\u026A\u0292n;division=d\u026A\u02C8v\u026A\u0292n;\nhen=hen;hedgehog=\u02C8hed\u0292h\u0252\u0261;hamster=\u02C8h\u00E6mst\u0259;hill=h\u026Al;hammer=\u02C8h\u00E6m\u0259;hamburger=\u02C8h\u00E6mb\u025C\u02D0\u0261\u0259;handbag=\u02C8h\u00E6ndb\u00E6\u0261;hand=h\u00E6nd;head=hed;heart=h\u0251\u02D0t;helmet=\u02C8helm\u026At;hole=h\u0259\u028Al;hook=h\u028Ak;horn=h\u0254\u02D0n;hut=h\u028Ct;hotel=h\u0259\u028A\u02C8tel;hare=he\u0259;hawk=h\u0254\u02D0k;hairbrush=\u02C8he\u0259br\u028C\u0283;hiccup=\u02C8h\u026Ak\u028Cp;hood=h\u028Ad;hound=ha\u028And;harp=h\u0251\u02D0p;\nchair=t\u0283e\u0259;cherry=\u02C8t\u0283eri;chip=t\u0283\u026Ap;chimney=\u02C8t\u0283\u026Amni;chocolate=\u02C8t\u0283\u0252kl\u0259t;church=t\u0283\u025C\u02D0t\u0283;cheetah=\u02C8t\u0283i\u02D0t\u0259;chimp=t\u0283\u026Amp;chain=t\u0283e\u026An;chest=t\u0283est;watch=w\u0252t\u0283;witch=w\u026At\u0283;match=m\u00E6t\u0283;ostrich=\u02C8\u0252str\u026At\u0283;picture=\u02C8p\u026Akt\u0283\u0259;creature=\u02C8kri\u02D0t\u0283\u0259;\njar=d\u0292\u0251\u02D0;jelly=\u02C8d\u0292eli;jellyfish/jellyfish=\u02C8d\u0292elif\u026A\u0283/\u02C8d\u0292elif\u026A\u0283;jet=d\u0292et;jewel=\u02C8d\u0292u\u02D0\u0259l;jigsaw=\u02C8d\u0292\u026A\u0261s\u0254\u02D0;judge=d\u0292\u028Cd\u0292;jug=d\u0292\u028C\u0261;juggler=\u02C8d\u0292\u028C\u0261l\u0259;jungle=\u02C8d\u0292\u028C\u014B\u0261l;giant=\u02C8d\u0292a\u026A\u0259nt;gem=d\u0292em;hedge=hed\u0292;orange=\u02C8\u0252r\u026And\u0292;page=pe\u026Ad\u0292;engine=\u02C8end\u0292\u026An;jaguar=\u02C8d\u0292\u00E6\u0261ju\u0259;\nmoon=mu\u02D0n;mop=m\u0252p;mug=m\u028C\u0261;melon=\u02C8mel\u0259n;mango/mangoes=\u02C8m\u00E6\u014B\u0261\u0259\u028A/\u02C8m\u00E6\u014B\u0261\u0259\u028Az;mitten=\u02C8m\u026Atn;mirror=\u02C8m\u026Ar\u0259;magnet=\u02C8m\u00E6\u0261n\u0259t;marshmallow=\u02CCm\u0251\u02D0\u0283\u02C8m\u00E6l\u0259\u028A;mole=m\u0259\u028Al;mermaid=\u02C8m\u025C\u02D0me\u026Ad;mountain=\u02C8ma\u028Ant\u026An;lamb=l\u00E6m;lemon=\u02C8lem\u0259n;umbrella=\u028Cm\u02C8brel\u0259;man/men=m\u00E6n/men;woman/women=\u02C8w\u028Am\u0259n/\u02C8w\u026Am\u026An;magpie=\u02C8m\u00E6\u0261pa\u026A;menu=\u02C8menju\u02D0;mule=mju\u02D0l;\nnail=ne\u026Al;newt=nju\u02D0t;nut=n\u028Ct;nurse=n\u025C\u02D0s;napkin=\u02C8n\u00E6pk\u026An;necklace=\u02C8nekl\u0259s;needle=\u02C8ni\u02D0dl;nightingale=\u02C8na\u026At\u026A\u014B\u0261e\u026Al;lion=\u02C8la\u026A\u0259n;onion=\u02C8\u028Cnj\u0259n;unicorn=\u02C8ju\u02D0n\u026Ak\u0254\u02D0n;nanny=\u02C8n\u00E6ni;knot=n\u0252t;knight=na\u026At;knee=ni\u02D0;nephew=\u02C8nefju\u02D0;\nring=r\u026A\u014B;swing=sw\u026A\u014B;wing=w\u026A\u014B;song=s\u0252\u014B;spring=spr\u026A\u014B;anchor=\u02C8\u00E6\u014Bk\u0259;uncle=\u02C8\u028C\u014Bkl;ankle=\u02C8\u00E6\u014Bkl;singer=\u02C8s\u026A\u014B\u0259;earring=\u02C8\u026A\u0259r\u026A\u014B;ceiling=\u02C8si\u02D0l\u026A\u014B;duckling=\u02C8d\u028Ckl\u026A\u014B;building=\u02C8b\u026Ald\u026A\u014B;morning=\u02C8m\u0254\u02D0n\u026A\u014B;wedding=\u02C8wed\u026A\u014B;\nlamp=l\u00E6mp;lettuce=\u02C8let\u026As;lolly=\u02C8l\u0252li;lollipop=\u02C8l\u0252lip\u0252p;lake=le\u026Ak;ladybird=\u02C8le\u026Adib\u025C\u02D0d;llama=\u02C8l\u0251\u02D0m\u0259;log=l\u0252\u0261;lorry=\u02C8l\u0252ri;eagle=\u02C8i\u02D0\u0261l;owl=a\u028Al;lily=\u02C8l\u026Ali;light=la\u026At;\nraccoon=r\u0259\u02C8ku\u02D0n;rainbow=\u02C8re\u026Anb\u0259\u028A;robot=\u02C8r\u0259\u028Ab\u0252t;ruler=\u02C8ru\u02D0l\u0259;arrow=\u02C8\u00E6r\u0259\u028A;rooster=\u02C8ru\u02D0st\u0259;radio=\u02C8re\u026Adi\u0259\u028A;reindeer/reindeer=\u02C8re\u026And\u026A\u0259/\u02C8re\u026And\u026A\u0259;\nwall=w\u0254\u02D0l;walrus=\u02C8w\u0254\u02D0lr\u0259s;wand=w\u0252nd;wasp=w\u0252sp;waterfall=\u02C8w\u0254\u02D0t\u0259f\u0254\u02D0l;watermelon=\u02C8w\u0254\u02D0t\u0259mel\u0259n;well=wel;whale=we\u026Al;wheel=wi\u02D0l;whistle=\u02C8w\u026Asl;window=\u02C8w\u026And\u0259\u028A;wolf/wolves=w\u028Alf/w\u028Alvz;worm=w\u025C\u02D0m;walnut=\u02C8w\u0254\u02D0ln\u028Ct;woodpecker=\u02C8w\u028Adpek\u0259;\nyacht=j\u0252t;yak=j\u00E6k;yo-yo=\u02C8j\u0259\u028Aj\u0259\u028A;yoghurt=\u02C8j\u0252\u0261\u0259t;yard=j\u0251\u02D0d;uniform=\u02C8ju\u02D0n\u026Af\u0254\u02D0m;ukulele=\u02CCju\u02D0k\u0259\u02C8le\u026Ali;\nigloo=\u02C8\u026A\u0261lu\u02D0;acorn=\u02C8e\u026Ak\u0254\u02D0n;alien=\u02C8e\u026Ali\u0259n;iron=\u02C8a\u026A\u0259n;island=\u02C8a\u026Al\u0259nd;oyster=\u02C8\u0254\u026Ast\u0259;octopus=\u02C8\u0252kt\u0259p\u0259s;lobster=\u02C8l\u0252bst\u0259;monster=\u02C8m\u0252nst\u0259;artist=\u02C8\u0251\u02D0t\u026Ast;aeroplane=\u02C8e\u0259r\u0259ple\u026An;millionaire=\u02CCm\u026Alj\u0259\u02C8ne\u0259;engineer=\u02CCend\u0292\u026A\u02C8n\u026A\u0259;ear=\u026A\u0259;mare=me\u0259;elbow=\u02C8elb\u0259\u028A;oboe=\u02C8\u0259\u028Ab\u0259\u028A",
+    A: "purple=\u02C8p\u025C\u02D0pl;pretty=\u02C8pr\u026Ati;plump=pl\u028Cmp;proper=\u02C8pr\u0252p\u0259;polite=p\u0259\u02C8la\u026At;plain=ple\u026An;pink=p\u026A\u014Bk;peppery=\u02C8pep\u0259ri;pale=pe\u026Al;posh=p\u0252\u0283;sleepy=\u02C8sli\u02D0pi;happy=\u02C8h\u00E6pi;cheap=t\u0283i\u02D0p;deep=di\u02D0p;big=b\u026A\u0261;blue=blu\u02D0;brown=bra\u028An;black=bl\u00E6k;bright=bra\u026At;brave=bre\u026Av;busy=\u02C8b\u026Azi;bold=b\u0259\u028Ald;bubbly=\u02C8b\u028Cbli;bumpy=\u02C8b\u028Cmpi;beautiful=\u02C8bju\u02D0t\u026Afl;bitter=\u02C8b\u026At\u0259;bouncy=\u02C8ba\u028Ansi;tiny=\u02C8ta\u026Ani;tall=t\u0254\u02D0l;tasty=\u02C8te\u026Asti;tight=ta\u026At;tired=\u02C8ta\u026A\u0259d;tidy=\u02C8ta\u026Adi;terrible=\u02C8ter\u0259bl;tough=t\u028Cf;little=\u02C8l\u026Atl;great=\u0261re\u026At;hot=h\u0252t;sweet=swi\u02D0t;fat=f\u00E6t;wet=wet;dark=d\u0251\u02D0k;dirty=\u02C8d\u025C\u02D0ti;dizzy=\u02C8d\u026Azi;dry=dra\u026A;dull=d\u028Cl;damp=d\u00E6mp;daft=d\u0251\u02D0ft;dusty=\u02C8d\u028Csti;red=red;gold=\u0261\u0259\u028Ald;cold=k\u0259\u028Ald;odd=\u0252d;bad=b\u00E6d;mad=m\u00E6d;sad=s\u00E6d;good=\u0261\u028Ad;glad=\u0261l\u00E6d;loud=la\u028Ad;proud=pra\u028Ad;cool=ku\u02D0l;cosy=\u02C8k\u0259\u028Azi;clever=\u02C8klev\u0259;crazy=\u02C8kre\u026Azi;crunchy=\u02C8kr\u028Cnt\u0283i;clean=kli\u02D0n;quick=kw\u026Ak;quiet=\u02C8kwa\u026A\u0259t;curly=\u02C8k\u025C\u02D0li;cute=kju\u02D0t;creaky=\u02C8kri\u02D0ki;crispy=\u02C8kr\u026Aspi;kind=ka\u026And;sick=s\u026Ak;thick=\u03B8\u026Ak;weak=wi\u02D0k;green=\u0261ri\u02D0n;grey=\u0261re\u026A;grumpy=\u02C8\u0261r\u028Cmpi;gigantic=d\u0292a\u026A\u02C8\u0261\u00E6nt\u026Ak;glossy=\u02C8\u0261l\u0252si;golden=\u02C8\u0261\u0259\u028Ald\u0259n;gloomy=\u02C8\u0261lu\u02D0mi;greedy=\u02C8\u0261ri\u02D0di;giddy=\u02C8\u0261\u026Adi;funny=\u02C8f\u028Cni;fast=f\u0251\u02D0st;fluffy=\u02C8fl\u028Cfi;fresh=fre\u0283;friendly=\u02C8frendli;fine=fa\u026An;fancy=\u02C8f\u00E6nsi;frozen=\u02C8fr\u0259\u028Azn;fierce=f\u026A\u0259s;famous=\u02C8fe\u026Am\u0259s;soft=s\u0252ft;stiff=st\u026Af;vast=v\u0251\u02D0st;velvet=\u02C8velv\u026At;vivid=\u02C8v\u026Av\u026Ad;violet=\u02C8va\u026A\u0259l\u0259t;valuable=\u02C8v\u00E6lju\u0259bl;vain=ve\u026An;lovely=\u02C8l\u028Cvli;heavy=\u02C8hevi;silver=\u02C8s\u026Alv\u0259;wavy=\u02C8we\u026Avi;lively=\u02C8la\u026Avli;evil=\u02C8i\u02D0vl;thin=\u03B8\u026An;thirsty=\u02C8\u03B8\u025C\u02D0sti;thoughtful=\u02C8\u03B8\u0254\u02D0tfl;thrilled=\u03B8r\u026Ald;thankful=\u02C8\u03B8\u00E6\u014Bkfl;healthy=\u02C8hel\u03B8i;wealthy=\u02C8wel\u03B8i;filthy=\u02C8f\u026Al\u03B8i;earthy=\u02C8\u025C\u02D0\u03B8i;toothless=\u02C8tu\u02D0\u03B8l\u0259s;thorny=\u02C8\u03B8\u0254\u02D0ni;smooth=smu\u02D0\u00F0;feathery=\u02C8fe\u00F0\u0259ri;leathery=\u02C8le\u00F0\u0259ri;northern=\u02C8n\u0254\u02D0\u00F0\u0259n;southern=\u02C8s\u028C\u00F0\u0259n;worthy=\u02C8w\u025C\u02D0\u00F0i;silly=\u02C8s\u026Ali;small=sm\u0254\u02D0l;sour=\u02C8sa\u028A\u0259;sunny=\u02C8s\u028Cni;salty=\u02C8s\u0254\u02D0lti;spicy=\u02C8spa\u026Asi;slippery=\u02C8sl\u026Ap\u0259ri;slow=sl\u0259\u028A;smart=sm\u0251\u02D0t;sticky=\u02C8st\u026Aki;strong=str\u0252\u014B;nice=na\u026As;lazy=\u02C8le\u026Azi;fuzzy=\u02C8f\u028Czi;rosy=\u02C8r\u0259\u028Azi;easy=\u02C8i\u02D0zi;noisy=\u02C8n\u0254\u026Azi;zany=\u02C8ze\u026Ani;zesty=\u02C8zesti;cheesy=\u02C8t\u0283i\u02D0zi;wise=wa\u026Az;jazzy=\u02C8d\u0292\u00E6zi;shiny=\u02C8\u0283a\u026Ani;short=\u0283\u0254\u02D0t;sharp=\u0283\u0251\u02D0p;shy=\u0283a\u026A;shabby=\u02C8\u0283\u00E6bi;shaggy=\u02C8\u0283\u00E6\u0261i;special=\u02C8spe\u0283l;delicious=d\u026A\u02C8l\u026A\u0283\u0259s;precious=\u02C8pre\u0283\u0259s;selfish=\u02C8self\u026A\u0283;foolish=\u02C8fu\u02D0l\u026A\u0283;stylish=\u02C8sta\u026Al\u026A\u0283;British=\u02C8br\u026At\u026A\u0283;shallow=\u02C8\u0283\u00E6l\u0259\u028A;beige=be\u026A\u0292;usual=\u02C8ju\u02D0\u0292u\u0259l;casual=\u02C8k\u00E6\u0292u\u0259l;unusual=\u028Cn\u02C8ju\u02D0\u0292u\u0259l;visual=\u02C8v\u026A\u0292u\u0259l;hungry=\u02C8h\u028C\u014B\u0261ri;hairy=\u02C8he\u0259ri;huge=hju\u02D0d\u0292;horrible=\u02C8h\u0252r\u0259bl;humble=\u02C8h\u028Cmbl;helpful=\u02C8helpfl;handsome=\u02C8h\u00E6ns\u0259m;hopeful=\u02C8h\u0259\u028Apfl;high=ha\u026A;hollow=\u02C8h\u0252l\u0259\u028A;cheerful=\u02C8t\u0283\u026A\u0259fl;cheeky=\u02C8t\u0283i\u02D0ki;chilly=\u02C8t\u0283\u026Ali;chubby=\u02C8t\u0283\u028Cbi;chunky=\u02C8t\u0283\u028C\u014Bki;rich=r\u026At\u0283;catchy=\u02C8k\u00E6t\u0283i;itchy=\u02C8\u026At\u0283i;natural=\u02C8n\u00E6t\u0283r\u0259l;chewy=\u02C8t\u0283u\u02D0i;charming=\u02C8t\u0283\u0251\u02D0m\u026A\u014B;jolly=\u02C8d\u0292\u0252li;juicy=\u02C8d\u0292u\u02D0si;jumpy=\u02C8d\u0292\u028Cmpi;jealous=\u02C8d\u0292el\u0259s;giant=\u02C8d\u0292a\u026A\u0259nt;gentle=\u02C8d\u0292entl;large=l\u0251\u02D0d\u0292;orange=\u02C8\u0252r\u026And\u0292;strange=stre\u026And\u0292;magic=\u02C8m\u00E6d\u0292\u026Ak;fragile=\u02C8fr\u00E6d\u0292a\u026Al;jagged=\u02C8d\u0292\u00E6\u0261\u026Ad;messy=\u02C8mesi;muddy=\u02C8m\u028Cdi;merry=\u02C8meri;mean=mi\u02D0n;mighty=\u02C8ma\u026Ati;mild=ma\u026Ald;moody=\u02C8mu\u02D0di;marvellous=\u02C8m\u0251\u02D0v\u0259l\u0259s;minty=\u02C8m\u026Anti;warm=w\u0254\u02D0m;calm=k\u0251\u02D0m;grim=\u0261r\u026Am;slim=sl\u026Am;yummy=\u02C8j\u028Cmi;creamy=\u02C8kri\u02D0mi;neat=ni\u02D0t;naughty=\u02C8n\u0254\u02D0ti;new=nju\u02D0;nutty=\u02C8n\u028Cti;nervous=\u02C8n\u025C\u02D0v\u0259s;narrow=\u02C8n\u00E6r\u0259\u028A;nimble=\u02C8n\u026Ambl;rotten=\u02C8r\u0252tn;wooden=\u02C8w\u028Adn;long=l\u0252\u014B;young=j\u028C\u014B;wrong=r\u0252\u014B;angry=\u02C8\u00E6\u014B\u0261ri;amazing=\u0259\u02C8me\u026Az\u026A\u014B;boring=\u02C8b\u0254\u02D0r\u026A\u014B;sparkling=\u02C8sp\u0251\u02D0kl\u026A\u014B;shocking=\u02C8\u0283\u0252k\u026A\u014B;stinky=\u02C8st\u026A\u014Bki;lucky=\u02C8l\u028Cki;lonely=\u02C8l\u0259\u028Anli;lumpy=\u02C8l\u028Cmpi;yellow=\u02C8jel\u0259\u028A;round=ra\u028And;rough=r\u028Cf;rusty=\u02C8r\u028Csti;rude=ru\u02D0d;ripe=ra\u026Ap;rare=re\u0259;royal=\u02C8r\u0254\u026A\u0259l;runny=\u02C8r\u028Cni;wild=wa\u026Ald;wobbly=\u02C8w\u0252bli;wonderful=\u02C8w\u028Cnd\u0259fl;woolly=\u02C8w\u028Ali;white=wa\u026At;weird=w\u026A\u0259d;wiggly=\u02C8w\u026A\u0261li;windy=\u02C8w\u026Andi;swift=sw\u026Aft;useful=\u02C8ju\u02D0sfl;free=fri\u02D0;squeaky=\u02C8skwi\u02D0ki;fizzy=\u02C8f\u026Azi;flat=fl\u00E6t;chatty=\u02C8t\u0283\u00E6ti;snappy=\u02C8sn\u00E6pi;fussy=\u02C8f\u028Csi;floppy=\u02C8fl\u0252pi;sloppy=\u02C8sl\u0252pi;foggy=\u02C8f\u0252\u0261i;spotty=\u02C8sp\u0252ti;bossy=\u02C8b\u0252si;full=f\u028Al;crooked=\u02C8kr\u028Ak\u026Ad;bookish=\u02C8b\u028Ak\u026A\u0283;sugary=\u02C8\u0283\u028A\u0261\u0259ri;loose=lu\u02D0s;groovy=\u02C8\u0261ru\u02D0vi;spooky=\u02C8spu\u02D0ki;starry=\u02C8st\u0251\u02D0ri;hard=h\u0251\u02D0d;awful=\u02C8\u0254\u02D0fl;gorgeous=\u02C8\u0261\u0254\u02D0d\u0292\u0259s;firm=f\u025C\u02D0m;perfect=\u02C8p\u025C\u02D0f\u026Akt;curvy=\u02C8k\u025C\u02D0vi;swirly=\u02C8sw\u025C\u02D0li;burnt=b\u025C\u02D0nt;turquoise=\u02C8t\u025C\u02D0kw\u0254\u026Az;rainy=\u02C8re\u026Ani;shaky=\u02C8\u0283e\u026Aki;flaky=\u02C8fle\u026Aki;stale=ste\u026Al;slimy=\u02C8sla\u026Ami;moist=m\u0254\u026Ast;oily=\u02C8\u0254\u026Ali;joyful=\u02C8d\u0292\u0254\u026Afl;loyal=\u02C8l\u0254\u026A\u0259l;spoilt=sp\u0254\u026Alt;old=\u0259\u028Ald;broken=\u02C8br\u0259\u028Ak\u0259n;snowy=\u02C8sn\u0259\u028Ai;mellow=\u02C8mel\u0259\u028A;cloudy=\u02C8kla\u028Adi;drowsy=\u02C8dra\u028Azi;grouchy=\u02C8\u0261ra\u028At\u0283i;clear=kl\u026A\u0259;eerie=\u02C8\u026A\u0259ri;serious=\u02C8s\u026A\u0259ri\u0259s;scary=\u02C8ske\u0259ri;careful=\u02C8ke\u0259fl;square=skwe\u0259;pure=pj\u028A\u0259;tender=\u02C8tend\u0259",
+    V: "pick=p\u026Ak;pack=p\u00E6k;paint=pe\u026Ant;pinch=p\u026Ant\u0283;pop/popped=p\u0252p;push=p\u028A\u0283;pull=p\u028Al;peel=pi\u02D0l;pat/patted=p\u00E6t;prepare=pr\u026A\u02C8pe\u0259;plant=pl\u0251\u02D0nt;pour=p\u0254\u02D0;put/put=p\u028At/p\u028At;keep/kept=ki\u02D0p/kept;wrap/wrapped=r\u00E6p;chop/chopped=t\u0283\u0252p;flip/flipped=fl\u026Ap;drop/dropped=dr\u0252p;bake=be\u026Ak;buy/bought=ba\u026A/b\u0254\u02D0t;bring/brought=br\u026A\u014B/br\u0254\u02D0t;build/built=b\u026Ald/b\u026Alt;bounce=ba\u028Ans;borrow=\u02C8b\u0252r\u0259\u028A;bite/bit=ba\u026At/b\u026At;break/broke=bre\u026Ak/br\u0259\u028Ak;brush=br\u028C\u0283;grab/grabbed=\u0261r\u00E6b;rub/rubbed=r\u028Cb;bury=\u02C8beri;take/took=te\u026Ak/t\u028Ak;taste=te\u026Ast;touch=t\u028Ct\u0283;toss=t\u0252s;trip/tripped=tr\u026Ap;tickle=\u02C8t\u026Akl;tie=ta\u026A;tell/told=tel/t\u0259\u028Ald;eat/ate=i\u02D0t/et;tap/tapped=t\u00E6p;twist=tw\u026Ast;teach/taught=ti\u02D0t\u0283/t\u0254\u02D0t;try=tra\u026A;chat/chatted=t\u0283\u00E6t;dig/dug=d\u026A\u0261/d\u028C\u0261;draw/drew=dr\u0254\u02D0/dru\u02D0;drink/drank=dr\u026A\u014Bk/dr\u00E6\u014Bk;drive/drove=dra\u026Av/dr\u0259\u028Av;dance=d\u0251\u02D0ns;dust=d\u028Cst;dip/dipped=d\u026Ap;drag/dragged=dr\u00E6\u0261;hide/hid=ha\u026Ad/h\u026Ad;feed/fed=fi\u02D0d/fed;find/found=fa\u026And/fa\u028And;hold/held=h\u0259\u028Ald/held;ride/rode=ra\u026Ad/r\u0259\u028Ad;read/read=ri\u02D0d/red;cook=k\u028Ak;catch/caught=k\u00E6t\u0283/k\u0254\u02D0t;carry=\u02C8k\u00E6ri;kick=k\u026Ak;kiss=k\u026As;cut/cut=k\u028Ct/k\u028Ct;clean=kli\u02D0n;crack=kr\u00E6k;count=ka\u028Ant;collect=k\u0259\u02C8lekt;knock=n\u0252k;make/made=me\u026Ak/me\u026Ad;like=la\u026Ak;lick=l\u026Ak;get/got=\u0261et/\u0261\u0252t;give/gave=\u0261\u026Av/\u0261e\u026Av;grow/grew=\u0261r\u0259\u028A/\u0261ru\u02D0;giggle=\u02C8\u0261\u026A\u0261l;gobble=\u02C8\u0261\u0252bl;gather=\u02C8\u0261\u00E6\u00F0\u0259;grill=\u0261r\u026Al;guess=\u0261es;hug/hugged=h\u028C\u0261;beg/begged=be\u0261;fix=f\u026Aks;fold=f\u0259\u028Ald;fry=fra\u026A;fill=f\u026Al;fetch=fet\u0283;follow=\u02C8f\u0252l\u0259\u028A;fly/flew=fla\u026A/flu\u02D0;laugh=l\u0251\u02D0f;stuff=st\u028Cf;sniff=sn\u026Af;visit=\u02C8v\u026Az\u026At;vanish=\u02C8v\u00E6n\u026A\u0283;love=l\u028Cv;move=mu\u02D0v;save=se\u026Av;serve=s\u025C\u02D0v;wave=we\u026Av;weave/wove=wi\u02D0v/w\u0259\u028Av;deliver=d\u026A\u02C8l\u026Av\u0259;carve=k\u0251\u02D0v;shave=\u0283e\u026Av;solve=s\u0252lv;shove=\u0283\u028Cv;think/thought=\u03B8\u026A\u014Bk/\u03B8\u0254\u02D0t;thank=\u03B8\u00E6\u014Bk;throw/threw=\u03B8r\u0259\u028A/\u03B8ru\u02D0;thump=\u03B8\u028Cmp;thaw=\u03B8\u0254\u02D0;thrill=\u03B8r\u026Al;threaten=\u02C8\u03B8retn;bathe=be\u026A\u00F0;breathe=bri\u02D0\u00F0;smother=\u02C8sm\u028C\u00F0\u0259;bother=\u02C8b\u0252\u00F0\u0259;soothe=su\u02D0\u00F0;wither=\u02C8w\u026A\u00F0\u0259;sell/sold=sel/s\u0259\u028Ald;see/saw=si\u02D0/s\u0254\u02D0;sing/sang=s\u026A\u014B/s\u00E6\u014B;sit/sat=s\u026At/s\u00E6t;sip/sipped=s\u026Ap;slice=sla\u026As;smell/smelled=smel;sort=s\u0254\u02D0t;spill=sp\u026Al;squash=skw\u0252\u0283;stir/stirred=st\u025C\u02D0;sew/sewed=s\u0259\u028A/s\u0259\u028Ad;swap/swapped=sw\u0252p;sweep/swept=swi\u02D0p/swept;miss=m\u026As;pass=p\u0251\u02D0s;press=pres;chase=t\u0283e\u026As;race=re\u026As;place=ple\u026As;zoom=zu\u02D0m;zip/zipped=z\u026Ap;buzz=b\u028Cz;fizz=f\u026Az;freeze/froze=fri\u02D0z/fr\u0259\u028Az;sneeze=sni\u02D0z;squeeze=skwi\u02D0z;choose/chose=t\u0283u\u02D0z/t\u0283\u0259\u028Az;close=kl\u0259\u028Az;lose/lost=lu\u02D0z/l\u0252st;please=pli\u02D0z;raise=re\u026Az;tease=ti\u02D0z;use=ju\u02D0z;amaze=\u0259\u02C8me\u026Az;surprise=s\u0259\u02C8pra\u026Az;shake/shook=\u0283e\u026Ak/\u0283\u028Ak;share=\u0283e\u0259;shout=\u0283a\u028At;show=\u0283\u0259\u028A;shine/shone=\u0283a\u026An/\u0283\u0252n;shut/shut=\u0283\u028Ct/\u0283\u028Ct;wash=w\u0252\u0283;wish=w\u026A\u0283;crush=kr\u028C\u0283;splash=spl\u00E6\u0283;polish=\u02C8p\u0252l\u026A\u0283;finish=\u02C8f\u026An\u026A\u0283;smash=sm\u00E6\u0283;rush=r\u028C\u0283;shuffle=\u02C8\u0283\u028Cfl;measure=\u02C8me\u0292\u0259;treasure=\u02C8tre\u0292\u0259;camouflage=\u02C8k\u00E6m\u0259fl\u0251\u02D0\u0292;help=help;hop/hopped=h\u0252p;hit/hit=h\u026At/h\u026At;hum/hummed=h\u028Cm;hang/hung=h\u00E6\u014B/h\u028C\u014B;hear/heard=h\u026A\u0259/h\u025C\u02D0d;heat=hi\u02D0t;hunt=h\u028Cnt;hurry=\u02C8h\u028Cri;hammer=\u02C8h\u00E6m\u0259;hurl=h\u025C\u02D0l;chew=t\u0283u\u02D0;check=t\u0283ek;cheer=t\u0283\u026A\u0259;scratch=skr\u00E6t\u0283;stretch=stret\u0283;munch=m\u028Cnt\u0283;crunch=kr\u028Cnt\u0283;watch=w\u0252t\u0283;reach=ri\u02D0t\u0283;punch=p\u028Cnt\u0283;march=m\u0251\u02D0t\u0283;jump=d\u0292\u028Cmp;juggle=\u02C8d\u0292\u028C\u0261l;join=d\u0292\u0254\u026An;judge=d\u0292\u028Cd\u0292;jog/jogged=d\u0292\u0252\u0261;jiggle=\u02C8d\u0292\u026A\u0261l;nudge=n\u028Cd\u0292;change=t\u0283e\u026And\u0292;charge=t\u0283\u0251\u02D0d\u0292;arrange=\u0259\u02C8re\u026And\u0292;manage=\u02C8m\u00E6n\u026Ad\u0292;damage=\u02C8d\u00E6m\u026Ad\u0292;mix=m\u026Aks;melt=melt;mend=mend;mash=m\u00E6\u0283;mumble=\u02C8m\u028Cmbl;mutter=\u02C8m\u028Ct\u0259;climb=kla\u026Am;swim/swam=sw\u026Am/sw\u00E6m;steam=sti\u02D0m;trim/trimmed=tr\u026Am;nibble=\u02C8n\u026Abl;nod/nodded=n\u0252d;need=ni\u02D0d;knit/knitted=n\u026At;name=ne\u026Am;open=\u02C8\u0259\u028Ap\u0259n;plan/planned=pl\u00E6n;spin/spun=sp\u026An/sp\u028Cn;run/ran=r\u028Cn/r\u00E6n;win/won=w\u026An/w\u028Cn;burn=b\u025C\u02D0n;learn=l\u025C\u02D0n;turn=t\u025C\u02D0n;lend/lent=lend/lent;ring/rang=r\u026A\u014B/r\u00E6\u014B;swing/swung=sw\u026A\u014B/sw\u028C\u014B;wink=w\u026A\u014Bk;sink/sank=s\u026A\u014Bk/s\u00E6\u014Bk;honk=h\u0252\u014Bk;clink=kl\u026A\u014Bk;blink=bl\u026A\u014Bk;sting/stung=st\u026A\u014B/st\u028C\u014B;lift=l\u026Aft;leave/left=li\u02D0v/left;lay/laid=le\u026A/le\u026Ad;play=ple\u026A;roll=r\u0259\u028Al;slide/slid=sla\u026Ad/sl\u026Ad;rattle=\u02C8r\u00E6tl;rescue=\u02C8reskju\u02D0;repair=r\u026A\u02C8pe\u0259;write/wrote=ra\u026At/r\u0259\u028At;cry=kra\u026A;walk=w\u0254\u02D0k;whisper=\u02C8w\u026Asp\u0259;whistle=\u02C8w\u026Asl;wiggle=\u02C8w\u026A\u0261l;wobble=\u02C8w\u0252bl;twirl=tw\u025C\u02D0l;wake/woke=we\u026Ak/w\u0259\u028Ak;wear/wore=we\u0259/w\u0254\u02D0;yell=jel;yawn=j\u0254\u02D0n;argue=\u02C8\u0251\u02D0\u0261ju\u02D0;refuse=r\u026A\u02C8fju\u02D0z;confuse=k\u0259n\u02C8fju\u02D0z;amuse=\u0259\u02C8mju\u02D0z;greet=\u0261ri\u02D0t;meet/met=mi\u02D0t/met;steal/stole=sti\u02D0l/st\u0259\u028Al;clap/clapped=kl\u00E6p;snap/snapped=sn\u00E6p;look=l\u028Ak;hook=h\u028Ak;scoop=sku\u02D0p;swoop=swu\u02D0p;shoot/shot=\u0283u\u02D0t/\u0283\u0252t;park=p\u0251\u02D0k;crawl=kr\u0254\u02D0l;roar=r\u0254\u02D0;snore=sn\u0254\u02D0;explore=\u026Ak\u02C8spl\u0254\u02D0;ignore=\u026A\u0261\u02C8n\u0254\u02D0;adore=\u0259\u02C8d\u0254\u02D0;curl=k\u025C\u02D0l;slurp=sl\u025C\u02D0p;chirp=t\u0283\u025C\u02D0p;search=s\u025C\u02D0t\u0283;hurt/hurt=h\u025C\u02D0t/h\u025C\u02D0t;spray=spre\u026A;weigh=we\u026A;trade=tre\u026Ad;smile=sma\u026Al;dive=da\u026Av;invite=\u026An\u02C8va\u026At;boil=b\u0254\u026Al;enjoy=\u026An\u02C8d\u0292\u0254\u026A;spoil=sp\u0254\u026Al;annoy=\u0259\u02C8n\u0254\u026A;destroy=d\u026A\u02C8str\u0254\u026A;avoid=\u0259\u02C8v\u0254\u026Ad;point=p\u0254\u026Ant;coil=k\u0254\u026Al;poke=p\u0259\u028Ak;float=fl\u0259\u028At;toast=t\u0259\u028Ast;phone=f\u0259\u028An;glow=\u0261l\u0259\u028A;blow/blew=bl\u0259\u028A/blu\u02D0;soak=s\u0259\u028Ak;joke=d\u0292\u0259\u028Ak;frown=fra\u028An;pounce=pa\u028Ans;growl=\u0261ra\u028Al;howl=ha\u028Al;steer=st\u026A\u0259;appear=\u0259\u02C8p\u026A\u0259;stare=ste\u0259;scare=ske\u0259;compare=k\u0259m\u02C8pe\u0259;tear/tore=te\u0259/t\u0254\u02D0;dare=de\u0259",
+    NUM: "two=tu\u02D0;three=\u03B8ri\u02D0;four=f\u0254\u02D0;five=fa\u026Av;six=s\u026Aks;seven=\u02C8sevn;eight=e\u026At;nine=na\u026An;ten=ten;eleven=\u026A\u02C8levn;twelve=twelv;thirteen=\u02CC\u03B8\u025C\u02D0\u02C8ti\u02D0n;twenty=\u02C8twenti;thirty=\u02C8\u03B8\u025C\u02D0ti;thirty-three=\u02CC\u03B8\u025C\u02D0ti\u02C8\u03B8ri\u02D0;forty=\u02C8f\u0254\u02D0ti;fifty=\u02C8f\u026Afti;sixty-six=\u02CCs\u026Aksti\u02C8s\u026Aks;seventy-seven=\u02CCsevnti\u02C8sevn;ninety-nine=\u02CCna\u026Anti\u02C8na\u026An;twenty-two=\u02CCtwenti\u02C8tu\u02D0;fifty-five=\u02CCf\u026Afti\u02C8fa\u026Av;a dozen=\u0259 \u02C8d\u028Czn;a hundred=\u0259 \u02C8h\u028Cndr\u0259d;a thousand=\u0259 \u02C8\u03B8a\u028Aznd;a million=\u0259 \u02C8m\u026Alj\u0259n;several=\u02C8sevr\u0259l",
+    PREP: "by=ba\u026A;beside=b\u026A\u02C8sa\u026Ad;behind=b\u026A\u02C8ha\u026And;below=b\u026A\u02C8l\u0259\u028A;near=n\u026A\u0259;under=\u02C8\u028Cnd\u0259;over=\u02C8\u0259\u028Av\u0259;through=\u03B8ru\u02D0;with=w\u026A\u00F0;without=w\u026A\u02C8\u00F0a\u028At;beneath=b\u026A\u02C8ni\u02D0\u03B8;across=\u0259\u02C8kr\u0252s;along=\u0259\u02C8l\u0252\u014B;around=\u0259\u02C8ra\u028And;past=p\u0251\u02D0st;towards=t\u0259\u02C8w\u0254\u02D0dz;inside=\u02CC\u026An\u02C8sa\u026Ad;outside=\u02CCa\u028At\u02C8sa\u026Ad;underneath=\u02CC\u028Cnd\u0259\u02C8ni\u02D0\u03B8;on top of=\u0252n \u02C8t\u0252p \u0259v;next to=\u02C8nekst t\u0259;in front of=\u026An \u02C8fr\u028Cnt \u0259v"
+};
+/* Function words used inside the sentence patterns (weak forms where natural) */
+var FUNC = { the: 'ðə', a: 'ə', an: 'ən', and: 'ənd', of: 'əv', if: 'ɪf', how: 'haʊ', many: 'ˈmeni', would: 'wʊd', could: 'kʊd', "where's": 'weəz', "i'm": 'aɪm', sure: 'ʃɔː', but: 'bət', more: 'mɔː', said: 'sed', does: 'dʌz', did: 'dɪd', this: 'ðɪs', that: 'ðæt', these: 'ðiːz', those: 'ðəʊz', together: 'təˈɡeðə', is: 'ɪz', or: 'ɔː', thought: 'θɔːt', some: 'səm', are: 'ɑː', my: 'maɪ', will: 'wɪl', be: 'biː', i: 'aɪ', it: 'ɪt', make: 'meɪk', no: 'nəʊ' };
+/* Sentence patterns. {SLOT:id}: same id = same word (forms may change). {a} = a/an. */
+var TEMPLATE_SRC = {
+    short: [
+        "{P:1} {VD:2} {a} {A:3} {N:4}.",
+        "{A:1} {NS:2} {V:3} {A:4} {NS:5}.",
+        "{P:1}'s {A:2} {N:3} {VS:4} {A:5} {NS:6}.",
+        "{A:1} {N:2}, {A:3} {N:4}, {A:1} {N:2}, {A:3} {N:4}.",
+        "{NUM:1} {A:2} {NS:3} {VD:4} {NUM:5} {A:6} {NS:7}.",
+        "This {A:1} {N:2} {VS:3} that {A:4} {N:5}.",
+        "{P:1} {VS:2} {NS:3} {PREP:4} the {N:5}."
+    ],
+    medium: [
+        "{P:1} {VS:2} {NS:3} {PREP:4} the {N:5}. The {NS:3} {P:1} {VS:2} are {A:6} {NS:3}, I'm sure.",
+        "How many {NS:1} would {a} {N:2} {V:3}, if {a} {N:2} could {V:3} {NS:1}?",
+        "If {P:1} {VS:2} {A:3} {NS:4}, how many {A:3} {NS:4} does {P:1} {V:2}?",
+        "The {A:1} {N:2} {VD:3} the {A:4} {N:5}, but the {A:4} {N:5} {VD:6} the {A:1} {N:2}.",
+        "{P:1} thought {P:2} {VD:3} the {A:4} {N:5}, but {P:2} thought {P:1} {VD:3} the {A:4} {N:5}.",
+        "This {A:1} {N:2} and that {A:3} {N:4} {VD:5} these {A:6} {NS:7} together.",
+        "{P:1} {VD:2} {NUM:3} {A:4} {NS:5} {PREP:6} the {A:7} {N:8}."
+    ],
+    long: [
+        "{P:1} {VD:2} {a} {N:3} of {A:4} {NS:5}. {a} {N:3} of {A:4} {NS:5} {P:1} {VD:2}. If {P:1} {VD:2} {a} {N:3} of {A:4} {NS:5}, where's the {N:3} of {A:4} {NS:5} {P:1} {VD:2}?",
+        "{P:1} {VD:2} some {A:3} {NS:4}. “But these {NS:4} are {A:3},” said {P:1}. “If I {V:2} some {A:5} {NS:4}, it will make my {A:3} {NS:4} {A:5}.”",
+        "{A:1} {P:2} {VD:3} {NUM:4} {A:5} {NS:6}. Did {A:1} {P:2} {V:3} {NUM:4} {A:5} {NS:6}? If {A:1} {P:2} {VD:3} {NUM:4} {A:5} {NS:6}, how many {A:5} {NS:6} did {A:1} {P:2} {V:3}?",
+        "{P:1} {VS:2} {A:3} {NS:4} and {P:5} {VS:6} {A:7} {NS:8}. Does {P:1} {V:6} {A:7} {NS:8}? No, {P:5} {VS:6} {A:7} {NS:8}, and {P:1} {VS:2} {A:3} {NS:4}!"
+    ]
+};
+/* ============================ IPA helpers ============================ */
+var MULTI = ['tʃ', 'dʒ', 'iː', 'ɑː', 'ɔː', 'uː', 'ɜː', 'eɪ', 'aɪ', 'ɔɪ', 'əʊ', 'aʊ', 'ɪə', 'eə', 'ʊə'];
+var STRESS = new Set(['ˈ', 'ˌ']);
+var VOWELS = ['iː', 'ɪ', 'e', 'æ', 'ʌ', 'ɒ', 'ʊ', 'uː', 'ə', 'ɑː', 'ɔː', 'ɜː', 'eɪ', 'aɪ', 'ɔɪ', 'əʊ', 'aʊ', 'ɪə', 'eə', 'ʊə', 'i', 'u'];
+var CONS = ['p', 'b', 't', 'd', 'k', 'ɡ', 'f', 'v', 'θ', 'ð', 's', 'z', 'ʃ', 'ʒ', 'h', 'tʃ', 'dʒ', 'm', 'n', 'ŋ', 'l', 'r', 'j', 'w'];
+var VSET = new Set(VOWELS);
+var PH = new Set(__spreadArray(__spreadArray([], CONS, true), VOWELS, true));
+var fixG = function (s) { return s.replace(/g/g, 'ɡ'); };
+function tok(s) { var out = []; var i = 0; while (i < s.length) {
+    var two = s.substr(i, 2);
+    if (MULTI.includes(two)) {
+        out.push(two);
+        i += 2;
+    }
+    else {
+        out.push(s[i]);
+        i++;
+    }
+} return out; }
+var phons = function (s) { return tok(s).filter(function (x) { return PH.has(x); }); };
+var lastPh = function (s) { var p = phons(s); return p[p.length - 1]; };
+var firstPh = function (s) { return phons(s)[0]; };
+function countSeq(ipa, seq) { if (!seq || !seq.length)
+    return 0; var t = phons(ipa); var n = 0; for (var i = 0; i <= t.length - seq.length; i++) {
+    var ok = true;
+    for (var j = 0; j < seq.length; j++)
+        if (t[i + j] !== seq[j]) {
+            ok = false;
+            break;
+        }
+    if (ok)
+        n++;
+} return n; }
+var SIB = new Set(['s', 'z', 'ʃ', 'ʒ', 'tʃ', 'dʒ']);
+var VLESS = new Set(['p', 't', 'k', 'f', 'θ']);
+var sIPA = function (ipa) { var l = lastPh(ipa); return ipa + (SIB.has(l) ? 'ɪz' : VLESS.has(l) ? 's' : 'z'); };
+var sSpell = function (w) { return /(s|x|z|ch|sh)$/.test(w) ? w + 'es' : /[^aeiou]y$/.test(w) ? w.slice(0, -1) + 'ies' : w + 's'; };
+var edIPA = function (ipa) { var l = lastPh(ipa); return ipa + ((l === 't' || l === 'd') ? 'ɪd' : (VLESS.has(l) || ['s', 'ʃ', 'tʃ'].includes(l)) ? 't' : 'd'); };
+var edSpell = function (w) { return /e$/.test(w) ? w + 'd' : /[^aeiou]y$/.test(w) ? w.slice(0, -1) + 'ied' : w + 'ed'; };
+function parseList(str) {
+    return str.split(';').map(function (s) { return s.trim(); }).filter(Boolean).map(function (e) {
+        var _a = e.split('='), l = _a[0], r = _a[1];
+        var ls = l.split('/');
+        var rs = (r || '').split('/');
+        return { w: ls[0].trim(), w2: ls[1] && ls[1].trim(), ipa: fixG(rs[0].trim()), ipa2: rs[1] && fixG(rs[1].trim()) };
+    });
+}
+var LEXC = {};
+(function build() {
+    var seen = {};
+    for (var _i = 0, _a = Object.keys(LEX); _i < _a.length; _i++) {
+        var cls = _a[_i];
+        LEXC[cls] = [];
+        seen[cls] = new Set();
+        for (var _b = 0, _c = parseList(LEX[cls]); _b < _c.length; _b++) {
+            var e = _c[_b];
+            if (seen[cls].has(e.w))
+                continue;
+            seen[cls].add(e.w);
+            var base = { text: e.w, ipa: e.ipa };
+            var f = {};
+            if (cls === 'N') {
+                f.N = base;
+                f.NS = { text: e.w2 || sSpell(e.w), ipa: e.ipa2 || sIPA(e.ipa) };
+            }
+            else if (cls === 'V') {
+                f.V = base;
+                f.VD = { text: e.w2 || edSpell(e.w), ipa: e.ipa2 || edIPA(e.ipa) };
+                f.VS = { text: sSpell(e.w), ipa: sIPA(e.ipa) };
+            }
+            else
+                f[cls] = base;
+            LEXC[cls].push({ w: e.w, f: f });
+        }
+    }
+})();
+/* Spelling → possible sounds */
+var GRAPH = {
+    a: [['æ', 'cat'], ['eɪ', 'cake'], ['ɑː', 'car'], ['ə', 'banana']], b: [['b', 'bat']], c: [['k', 'cat'], ['s', 'city']], d: [['d', 'dog']],
+    e: [['e', 'bed'], ['iː', 'evil'], ['ə', 'camel']], f: [['f', 'fish']], g: [['ɡ', 'go'], ['dʒ', 'giant']], h: [['h', 'hat']],
+    i: [['ɪ', 'sit'], ['aɪ', 'bike']], j: [['dʒ', 'jam']], k: [['k', 'kite']], l: [['l', 'lamp']], m: [['m', 'moon']], n: [['n', 'nose'], ['ŋ', 'pink']],
+    o: [['ɒ', 'hot'], ['əʊ', 'go'], ['ʌ', 'mother']], p: [['p', 'pen']], q: [['kw', 'queen']], r: [['r', 'red']], s: [['s', 'sun'], ['z', 'rose'], ['ʒ', 'treasure']],
+    t: [['t', 'top']], u: [['ʌ', 'cup'], ['juː', 'cute'], ['uː', 'rude'], ['ʊ', 'put']], v: [['v', 'van']], w: [['w', 'wet']], x: [['ks', 'box'], ['z', 'xylophone']],
+    y: [['j', 'yes'], ['aɪ', 'fly'], ['i', 'happy']], z: [['z', 'zoo']],
+    th: [['θ', 'think'], ['ð', 'this']], sh: [['ʃ', 'ship']], ch: [['tʃ', 'chair'], ['k', 'Chris'], ['ʃ', 'chef']], tch: [['tʃ', 'watch']], dge: [['dʒ', 'bridge']],
+    ph: [['f', 'phone']], wh: [['w', 'whale']], ng: [['ŋ', 'sing']], nk: [['ŋk', 'pink']], ck: [['k', 'duck']], kn: [['n', 'knee']], wr: [['r', 'write']],
+    gh: [['f', 'laugh']], qu: [['kw', 'queen']], squ: [['skw', 'squirrel']], tion: [['ʃ', 'station']], sion: [['ʒ', 'vision']], sure: [['ʒ', 'treasure']], ing: [['ŋ', 'king']], zh: [['ʒ', 'treasure']],
+    ee: [['iː', 'tree']], ea: [['iː', 'sea'], ['e', 'bread'], ['eɪ', 'great'], ['ɪə', 'ear']], ie: [['iː', 'field'], ['aɪ', 'pie']], ei: [['eɪ', 'reindeer']],
+    ey: [['i', 'monkey'], ['eɪ', 'grey']], ai: [['eɪ', 'rain'], ['eə', 'hair']], ay: [['eɪ', 'play']], oo: [['uː', 'moon'], ['ʊ', 'book']],
+    ou: [['aʊ', 'mouse'], ['ʌ', 'cousin'], ['uː', 'soup'], ['ɔː', 'pour']], ow: [['aʊ', 'cow'], ['əʊ', 'snow']], oa: [['əʊ', 'boat']], oe: [['əʊ', 'toe']],
+    oi: [['ɔɪ', 'coin']], oy: [['ɔɪ', 'boy']], au: [['ɔː', 'sauce']], aw: [['ɔː', 'draw']], ew: [['juː', 'new'], ['uː', 'chew']], ue: [['uː', 'blue'], ['juː', 'rescue']],
+    ui: [['uː', 'juicy'], ['ɪ', 'biscuit']], igh: [['aɪ', 'night']], ar: [['ɑː', 'car']], or: [['ɔː', 'fork']], er: [['ɜː', 'mermaid'], ['ə', 'sister']],
+    ir: [['ɜː', 'bird']], ur: [['ɜː', 'nurse']], ear: [['ɪə', 'ear'], ['ɜː', 'pearl'], ['eə', 'bear']], air: [['eə', 'chair']], are: [['eə', 'square']],
+    eer: [['ɪə', 'deer']], oor: [['ɔː', 'door']], ure: [['ʊə', 'pure'], ['ə', 'picture']],
+    a_e: [['eɪ', 'cake']], i_e: [['aɪ', 'kite']], o_e: [['əʊ', 'bone']], u_e: [['juː', 'cube'], ['uː', 'flute']], e_e: [['iː', 'these']]
+};
+var C_ = '[bcdfghjklmnpqrstvwxz]';
+var GRAPH_RE = { a_e: "a".concat(C_, "e"), i_e: "i".concat(C_, "e"), o_e: "o".concat(C_, "e"), u_e: "u".concat(C_, "e"), e_e: "e".concat(C_, "e") };
+var escRe = function (s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); };
+var PHINFO = { p: ['pen', 'p'], b: ['bat', 'b'], t: ['top', 't'], d: ['dog', 'd'], k: ['cat', 'k'], 'ɡ': ['go', 'g'], f: ['fish', 'f'], v: ['van', 'v'], 'θ': ['think', 'th_voiceless'], 'ð': ['this', 'th_voiced'], s: ['sun', 's'], z: ['zoo', 'z'], 'ʃ': ['ship', 'sh'], 'ʒ': ['treasure', 'zh'], h: ['hat', 'h'], 'tʃ': ['chair', 'ch'], 'dʒ': ['jam', 'j'], m: ['moon', 'm'], n: ['nose', 'n'], 'ŋ': ['sing', 'ng'], l: ['lamp', 'l'], r: ['red', 'r'], j: ['yes', 'y'], w: ['wet', 'w'], 'iː': ['sea', 'long_ee'], 'ɪ': ['sit', 'short_i'], e: ['bed', 'short_e'], 'æ': ['cat', 'short_a'], 'ʌ': ['cup', 'short_u'], 'ɒ': ['hot', 'short_o'], 'ʊ': ['book', 'short_oo'], 'uː': ['moon', 'long_oo'], 'ə': ['about', 'schwa'], 'ɑː': ['car', 'long_ar'], 'ɔː': ['door', 'long_or'], 'ɜː': ['bird', 'long_er'], 'eɪ': ['cake', 'ay'], 'aɪ': ['bike', 'eye'], 'ɔɪ': ['boy', 'oy'], 'əʊ': ['go', 'oh'], 'aʊ': ['cow', 'ow'], 'ɪə': ['ear', 'ear'], 'eə': ['hair', 'air'], 'ʊə': ['tour', 'tour'], i: ['happy', 'happy_i'] };
+var ORDER = ['p', 'b', 't', 'd', 'k', 'ɡ', 'f', 'v', 'θ', 'ð', 's', 'z', 'ʃ', 'ʒ', 'h', 'tʃ', 'dʒ', 'm', 'n', 'ŋ', 'l', 'r', 'j', 'w', 'iː', 'ɪ', 'e', 'æ', 'ʌ', 'ɒ', 'ʊ', 'uː', 'ə', 'ɑː', 'ɔː', 'ɜː', 'eɪ', 'aɪ', 'ɔɪ', 'əʊ', 'aʊ', 'ɪə', 'eə', 'ʊə'];
+var CONTRASTS = { 'θ': ['s', 'f', 't'], 'ð': ['z', 'd', 'v'], s: ['θ', 'z', 'ʃ'], z: ['s', 'ð'], f: ['θ', 'v'], v: ['w', 'b', 'f'], w: ['v'], h: ['r'], 'ʃ': ['s', 'tʃ'], 'tʃ': ['ʃ', 'dʒ'], 'dʒ': ['ʒ', 'tʃ', 'j'], 'ʒ': ['ʃ', 'dʒ'], r: ['l', 'w'], l: ['r'], 'ŋ': ['n'], n: ['ŋ', 'm'], m: ['n'], 'iː': ['ɪ'], 'ɪ': ['iː', 'e'], 'ʊ': ['uː'], 'uː': ['ʊ'], 'æ': ['ʌ', 'e'], 'ʌ': ['æ', 'ɒ', 'ɑː'], e: ['æ', 'ɪ', 'eɪ'], 'ɒ': ['əʊ', 'ɔː', 'ʌ'], 'əʊ': ['ɒ', 'ɔː'], 'ɔː': ['əʊ', 'ɒ', 'ɜː'], 'ɜː': ['eə', 'ɔː', 'e'], 'eɪ': ['e', 'aɪ'], 'aɪ': ['eɪ', 'ɔɪ'], 'ɔɪ': ['aɪ'], 'aʊ': ['əʊ'], 'ɪə': ['eə'], 'eə': ['ɪə', 'ɜː'], 'ɑː': ['æ', 'ʌ'], p: ['b'], b: ['p', 'v'], t: ['d', 'θ'], d: ['t', 'ð'], k: ['ɡ'], 'ɡ': ['k'], j: ['dʒ'], 'ʊə': ['ɔː'], 'ə': ['ɜː'] };
+/* Articulation tips (interface language) */
+var TIPS = {
+    en: { 'θ': "Put the tip of your tongue lightly between your teeth and blow, with no voice. It is neither /s/ nor /f/.", 'ð': "Same position as /θ/ (tongue between the teeth), but add your voice: you should feel a buzz.", s: "Tongue tip just behind the top teeth, teeth almost closed, a thin stream of air. No voice.", z: "Like /s/ but with voice, like a buzzing bee. A final -s is often /z/: bees, dogs.", 'ʃ': "Round your lips and push them forward, like the French « ch » in « chat ».", 'ʒ': "Like the French « j » in « je ». In English it is mostly found in the middle of words: treasure, television.", 'tʃ': "Start with /t/ and release straight into /ʃ/, as one quick sound: « tch ».", 'dʒ': "Start with /d/ and release into /ʒ/, as one sound: « dj ».", h: "Breathe out from your throat, as if fogging up a mirror. Don't drop it: « hat » is not « at ».", r: "Curl the tongue tip up and back without touching the roof of your mouth. No rolled r, no throat r.", l: "Tongue tip on the ridge behind the top teeth. At the end of a word (ball, little) the back of the tongue rises: a dark l.", w: "Round your lips tightly as for « ou », then open quickly. Your teeth don't touch your lip (that would be /v/).", v: "Top teeth on the bottom lip, with voice. Don't round your lips (that would be /w/).", f: "Top teeth on the bottom lip, blow air, no voice.", 'ŋ': "The back of the tongue touches the soft palate and the air goes through the nose. Don't add a /ɡ/ at the end of « sing ».", n: "Tongue tip on the ridge behind the top teeth, air through the nose.", m: "Lips together, air through the nose. Hum it.", j: "Like the « y » in « yaourt »: tongue high and forward, then glide into the vowel.", p: "Lips together, then release with a small puff of air at the start of a word. Hold your hand in front of your mouth to feel it.", b: "Lips together, with voice and no puff of air.", t: "Tongue tip on the ridge behind the teeth (not on the teeth as in French), with a puff of air at the start of a word.", d: "Tongue tip on the ridge behind the teeth, with voice.", k: "Back of the tongue against the soft palate, released with a puff of air.", 'ɡ': "Like /k/ but with voice.", 'iː': "Long and tense: smile and hold it, like the « i » in « lit » but longer.", 'ɪ': "Short and relaxed, between French « i » and « é ». « ship » is not « sheep ».", e: "Short, close to the « è » in « mère » but quicker.", 'æ': "Open your mouth wide, between « a » and « è ». Drop your jaw.", 'ʌ': "Short and central, like a quick « a » with a relaxed mouth: cup, love.", 'ɒ': "Short, lips slightly rounded, mouth open, like the « o » in « porte ».", 'ʊ': "A short, relaxed « ou », lips only slightly rounded: book, put.", 'uː': "A long « ou » with rounded lips: moon, blue.", 'ɑː': "A long, open « a » from the back of the mouth: car, father.", 'ɔː': "A long, rounded « o », like « fort » without the r.", 'ɜː': "A long central vowel, lips relaxed, close to « eu » in « heure » without rounding.", 'ə': "The schwa: short, weak and relaxed, like the « e » in « le ». It is the most frequent sound in English.", 'eɪ': "A glide from « é » to « i », not a pure « é »: cake sounds like « kéik ».", 'aɪ': "A glide from « a » to « i », like « aïe ».", 'ɔɪ': "A glide from « o » to « i », like « boï ».", 'əʊ': "Start from a relaxed « eu » and glide to « ou ». It is not a French « o ».", 'aʊ': "A glide from « a » to « ou », like « aou ».", 'ɪə': "A glide from /ɪ/ to the schwa: ear, beard.", 'eə': "A long « è » that relaxes into the schwa, with no r: hair, bear.", 'ʊə': "A glide from /ʊ/ to the schwa. Many speakers now say /ɔː/ instead.", i: "A weak, short « i » at the end of words like happy.", cluster: "Say every consonant in the group without slipping a vowel between them.", spelling: "English spelling is irregular: the same letters can make different sounds. Listen and compare each word." },
+    fr: { 'θ': "Placez le bout de la langue entre les dents et soufflez, sans voix. Ce n'est ni /s/ ni /f/.", 'ð': "Même position que /θ/ (langue entre les dents), mais avec la voix : vous devez sentir une vibration.", s: "Bout de la langue juste derrière les dents du haut, dents presque fermées, un filet d'air, sans voix.", z: "Comme /s/ mais avec la voix, comme une abeille. Le -s final se prononce souvent /z/ : bees, dogs.", 'ʃ': "Arrondissez les lèvres vers l'avant, comme le « ch » de « chat ».", 'ʒ': "Comme le « j » de « je ». En anglais, on le trouve surtout au milieu des mots : treasure, television.", 'tʃ': "Commencez par /t/ et enchaînez tout de suite sur /ʃ/, en un seul son : « tch ».", 'dʒ': "Commencez par /d/ et enchaînez sur /ʒ/, en un seul son : « dj ».", h: "Expirez depuis la gorge, comme pour faire de la buée sur un miroir. Ne l'oubliez pas : « hat » n'est pas « at ».", r: "Relevez le bout de la langue vers l'arrière sans toucher le palais. Pas de r roulé, ni de r de gorge à la française.", l: "Bout de la langue contre les alvéoles, derrière les dents du haut. En fin de mot (ball, little), le l est plus sombre : l'arrière de la langue se relève.", w: "Arrondissez bien les lèvres comme pour « ou », puis ouvrez vite. Les dents ne touchent pas la lèvre (sinon c'est /v/).", v: "Dents du haut sur la lèvre inférieure, avec la voix. N'arrondissez pas les lèvres (sinon c'est /w/).", f: "Dents du haut sur la lèvre inférieure, soufflez, sans voix.", 'ŋ': "L'arrière de la langue touche le voile du palais et l'air passe par le nez, comme dans « parking ». N'ajoutez pas de /ɡ/ à la fin de « sing ».", n: "Bout de la langue derrière les dents du haut, l'air passe par le nez.", m: "Lèvres fermées, l'air passe par le nez. Fredonnez.", j: "Comme le « y » de « yaourt » : langue haute et en avant, puis glissez vers la voyelle.", p: "Lèvres fermées, puis relâchez avec un petit souffle d'air en début de mot. Mettez la main devant la bouche pour le sentir.", b: "Lèvres fermées, avec la voix, sans souffle.", t: "Bout de la langue sur les alvéoles, derrière les dents (et non sur les dents comme en français), avec un petit souffle en début de mot.", d: "Bout de la langue sur les alvéoles derrière les dents, avec la voix.", k: "Arrière de la langue contre le palais mou, relâché avec un petit souffle.", 'ɡ': "Comme /k/ mais avec la voix.", 'iː': "Long et tendu : souriez et tenez le son, comme le « i » de « lit » mais plus long.", 'ɪ': "Court et relâché, entre le « i » et le « é » français. « ship » n'est pas « sheep ».", e: "Court, proche du « è » de « mère », mais plus bref.", 'æ': "Ouvrez grand la bouche, entre « a » et « è ». Baissez la mâchoire.", 'ʌ': "Court et central, comme un « a » bref, bouche détendue : cup, love.", 'ɒ': "Court, lèvres un peu arrondies, bouche ouverte, comme le « o » de « porte ».", 'ʊ': "Un « ou » court et relâché, lèvres à peine arrondies : book, put.", 'uː': "Un « ou » long, lèvres bien arrondies : moon, blue.", 'ɑː': "Un « a » long et ouvert, au fond de la bouche : car, father.", 'ɔː': "Un « o » long et arrondi, comme dans « fort » sans le r.", 'ɜː': "Voyelle longue et centrale, lèvres détendues, proche du « eu » de « heure » sans arrondir.", 'ə': "Le schwa : court, faible et détendu, comme le « e » de « le ». C'est le son le plus fréquent en anglais.", 'eɪ': "Un glissement de « é » vers « i », pas un « é » pur : cake se dit « kéik ».", 'aɪ': "Un glissement de « a » vers « i », comme « aïe ».", 'ɔɪ': "Un glissement de « o » vers « i », comme « boï ».", 'əʊ': "Partez d'un « eu » détendu et glissez vers « ou ». Ce n'est pas un « o » français.", 'aʊ': "Un glissement de « a » vers « ou », comme « aou ».", 'ɪə': "Un glissement de /ɪ/ vers le schwa : ear, beard.", 'eə': "Un « è » long qui se détend vers le schwa, sans r : hair, bear.", 'ʊə': "Un glissement de /ʊ/ vers le schwa. Beaucoup de locuteurs disent aujourd'hui /ɔː/.", i: "Un « i » court et faible en fin de mot, comme dans happy.", cluster: "Prononcez chaque consonne du groupe sans glisser de voyelle entre elles.", spelling: "L'orthographe anglaise est irrégulière : les mêmes lettres peuvent donner des sons différents. Écoutez et comparez chaque mot." }
+};
+/* ============================ Interface strings ============================ */
+var STR = {
+    en: {
+        title: "Tongue Twister Generator", lead: "Type a sound or a spelling (th, ea, sh, /iː/…) and get a tongue twister to practise it, with its phonetic transcription.",
+        inputLabel: "Sound or spelling to practise", placeholder: "e.g. th, ea, sh, /iː/", generate: "Generate", quick: "Tricky for French speakers:",
+        whichSound: "Which sound?", anySound: "Any pronunciation", nWords: "{n} words", spellOnly: "Only words spelled “{s}”",
+        contrast: "Contrast with", noContrast: "No contrast", suggested: "Suggested", allSounds: "All sounds", length: "Length", short: "Short", medium: "Medium", long: "Long",
+        resultTitle: "Your tongue twister", stats: "{c} × {s} · {w} of {t} words", statsSpell: "{w} of {t} words contain “{s}”",
+        ipaLabel: "Phonetic transcription · modern British English", listen: "Listen", slow: "Slow", normal: "Normal", fast: "Fast",
+        another: "Another one", add: "Add to practice set", added: "In your set", target: "Target sound", vs: "vs", spelledAs: "spelled “{s}”",
+        tipTitle: "How to say {s}", tipCluster: "How to say “{s}”", tipSpelling: "Spelling “{s}”",
+        setTitle: "Practice set ({n})", setEmpty: "Your set is empty. Generate twisters and add the ones you like: you can then print them or send them to Anki.",
+        print: "Print / Save as PDF", anki: "Export to Anki", copyAnki: "Copy for Anki", clear: "Clear set", confirmClear: "Click again to clear", remove: "Remove",
+        usesCurrent: "The set is empty, so printing and export use the twister shown above.", setReady: "Printing and export use the {n} twisters in your set.",
+        printHint: "<b>PDF:</b> in the print window, choose “Save as PDF” or “Microsoft Print to PDF” as the printer.",
+        ankiHelp: "<b>Anki:</b> File › Import…, choose the downloaded file, then Import. Cards go into the deck “Emerald::Tongue twisters”, front = twister, back = IPA and tip.",
+        copied: "Copied: paste into a .txt file and import it in Anki.", copyFail: "Copy was blocked. The text is selected below: press Ctrl+C.",
+        exported: "Anki file downloaded ({n} cards).",
+        noWords: "No words in the word bank match “{s}”. Try another spelling, or a sound between slashes such as /θ/.",
+        badIpa: "“{s}” is not a sound of British English. Try /θ/, /iː/, /ʃ/…",
+        printTitle: "Tongue twister practice sheet", practise: "Practise:", ck1: "slowly", ck2: "normal speed", ck3: "fast", ck4: "3 times in a row",
+        sound: "Sound:", footer: "Emerald Language Learning · IPA follows modern Standard Southern British English.", noVoice: "No English voice was found on this device.",
+        legendTg: "target sound", legendCt: "contrast sound", empty: "Type a sound or spelling above."
+    },
+    fr: {
+        title: "Générateur de virelangues", lead: "Saisissez un son ou une graphie (th, ea, sh, /iː/…) et obtenez un virelangue pour le travailler, avec sa transcription phonétique.",
+        inputLabel: "Son ou graphie à travailler", placeholder: "ex. : th, ea, sh, /iː/", generate: "Générer", quick: "Difficiles pour les francophones :",
+        whichSound: "Quel son ?", anySound: "Toutes les prononciations", nWords: "{n} mots", spellOnly: "Uniquement les mots écrits « {s} »",
+        contrast: "Opposer à", noContrast: "Aucun son", suggested: "Suggestions", allSounds: "Tous les sons", length: "Longueur", short: "Court", medium: "Moyen", long: "Long",
+        resultTitle: "Votre virelangue", stats: "{c} × {s} · {w} mots sur {t}", statsSpell: "{w} mots sur {t} contiennent « {s} »",
+        ipaLabel: "Transcription phonétique · anglais britannique moderne", listen: "Écouter", slow: "Lent", normal: "Normal", fast: "Rapide",
+        another: "Un autre", add: "Ajouter à la série", added: "Dans votre série", target: "Son travaillé", vs: "contre", spelledAs: "écrit « {s} »",
+        tipTitle: "Comment prononcer {s}", tipCluster: "Comment prononcer « {s} »", tipSpelling: "La graphie « {s} »",
+        setTitle: "Série d'entraînement ({n})", setEmpty: "Votre série est vide. Générez des virelangues et ajoutez ceux qui vous plaisent : vous pourrez ensuite les imprimer ou les envoyer vers Anki.",
+        print: "Imprimer / Enregistrer en PDF", anki: "Exporter vers Anki", copyAnki: "Copier pour Anki", clear: "Vider la série", confirmClear: "Cliquez à nouveau pour vider", remove: "Retirer",
+        usesCurrent: "La série est vide : l'impression et l'export utilisent le virelangue affiché ci-dessus.", setReady: "L'impression et l'export utilisent les {n} virelangues de votre série.",
+        printHint: "<b>PDF :</b> dans la fenêtre d'impression, choisissez « Enregistrer au format PDF » ou « Microsoft Print to PDF » comme imprimante.",
+        ankiHelp: "<b>Anki :</b> Fichier › Importer…, choisissez le fichier téléchargé, puis Importer. Les cartes arrivent dans le paquet « Emerald::Tongue twisters » : recto = virelangue, verso = API et conseil.",
+        copied: "Copié : collez-le dans un fichier .txt et importez-le dans Anki.", copyFail: "La copie a été bloquée. Le texte est sélectionné ci-dessous : appuyez sur Ctrl+C.",
+        exported: "Fichier Anki téléchargé ({n} cartes).",
+        noWords: "Aucun mot de la banque ne correspond à « {s} ». Essayez une autre graphie, ou un son entre barres obliques comme /θ/.",
+        badIpa: "« {s} » n'est pas un son de l'anglais britannique. Essayez /θ/, /iː/, /ʃ/…",
+        printTitle: "Fiche d'entraînement : virelangues", practise: "Entraînez-vous :", ck1: "lentement", ck2: "vitesse normale", ck3: "vite", ck4: "3 fois de suite",
+        sound: "Son :", footer: "Emerald Language Learning · L'API suit la prononciation britannique standard moderne.", noVoice: "Aucune voix anglaise n'a été trouvée sur cet appareil.",
+        legendTg: "son travaillé", legendCt: "son opposé", empty: "Saisissez un son ou une graphie ci-dessus."
+    }
+};
+var LANG = 'fr';
+try {
+    var s = localStorage.getItem('ell-lang');
+    if (s === 'en' || s === 'fr')
+        LANG = s;
+}
+catch (e) { }
+var T = function (k, v) { var _a, _b; var s = ((_b = (_a = STR[LANG][k]) !== null && _a !== void 0 ? _a : STR.en[k]) !== null && _b !== void 0 ? _b : k); if (v)
+    for (var x in v)
+        s = s.split('{' + x + '}').join(v[x]); return s; };
+var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]); }); };
+var $ = function (s) { return document.querySelector(s); };
+var rand = function (a) { return a[Math.floor(Math.random() * a.length)]; };
+/* ============================ Targets ============================ */
+function deriveCluster(s) {
+    if (/[aeiou]/.test(s))
+        return null;
+    var M = [['tch', 'tʃ'], ['th', 'θ'], ['sh', 'ʃ'], ['ch', 'tʃ'], ['ph', 'f'], ['ck', 'k'], ['ng', 'ŋ'], ['c', 'k'], ['x', 'ks'], ['q', 'k'], ['y', 'j'], ['g', 'ɡ'], ['j', 'dʒ']];
+    var out = '', i = 0;
+    while (i < s.length) {
+        var hit = false;
+        for (var _i = 0, M_1 = M; _i < M_1.length; _i++) {
+            var _a = M_1[_i], a = _a[0], b = _a[1];
+            if (s.startsWith(a, i)) {
+                out += b;
+                i += a.length;
+                hit = true;
+                break;
+            }
+        }
+        if (!hit) {
+            var ch = s[i];
+            if ('bdfhklmnprstvwz'.includes(ch)) {
+                out += ch;
+                i++;
+            }
+            else
+                return null;
+        }
+    }
+    return out;
+}
+function matches(form, tg) {
+    if (!tg || (!tg.spell && !tg.phon))
+        return false;
+    if (tg.spell && !tg.spell.test(form.text))
+        return false;
+    if (tg.phon && !countSeq(form.ipa, tg.phon))
+        return false;
+    return true;
+}
+function lemmaMatches(l, tg) { for (var k in l.f)
+    if (matches(l.f[k], tg))
+        return true; return false; }
+function countLex(tg) { var n = 0; for (var _i = 0, _a = ['P', 'N', 'A', 'V']; _i < _a.length; _i++) {
+    var c = _a[_i];
+    for (var _b = 0, _c = LEXC[c]; _b < _c.length; _b++) {
+        var l = _c[_b];
+        if (lemmaMatches(l, tg))
+            n++;
+    }
+} return n; }
+function exampleFor(tg) { var _loop_1 = function (c) {
+    var l = LEXC[c].filter(function (l) { return matches(l.f[c], tg); }).sort(function (a, b) { return a.w.length - b.w.length; })[0];
+    if (l)
+        return { value: l.w };
+}; for (var _i = 0, _a = ['N', 'A', 'V']; _i < _a.length; _i++) {
+    var c = _a[_i];
+    var state_1 = _loop_1(c);
+    if (typeof state_1 === "object")
+        return state_1.value;
+} return ''; }
+function resolve(raw) {
+    var s0 = raw.trim();
+    if (!s0)
+        return null;
+    var s = s0.toLowerCase();
+    var ipaMode = /^[\/\[]/.test(s) || /[θðʃʒŋəɪʊʌɒæɜɔɑːɡ]/.test(s);
+    if (ipaMode) {
+        s = fixG(s.replace(/[\/\[\]\s]/g, '').replace(/:/g, 'ː'));
+        var t = tok(s).filter(function (x) { return !STRESS.has(x); });
+        if (!t.length || t.some(function (x) { return !PH.has(x); }))
+            return { raw: s0, error: 'badIpa' };
+        var p = t.join('');
+        return { raw: s0, key: p, spell: null, ipa: true, options: [{ phon: p, ex: (PHINFO[p] || [''])[0] }] };
+    }
+    s = s.replace(/^-/, '').replace(/[^a-z_]/g, '');
+    if (!s)
+        return { raw: s0, error: 'noWords' };
+    var opts, spell;
+    if (GRAPH[s]) {
+        opts = GRAPH[s].map(function (_a) {
+            var p = _a[0], ex = _a[1];
+            return ({ phon: p, ex: ex });
+        });
+        spell = GRAPH_RE[s] || escRe(s);
+    }
+    else {
+        spell = escRe(s.replace(/_/g, ''));
+        var d = deriveCluster(s);
+        opts = d ? [{ phon: d, ex: '' }] : [];
+    }
+    opts.push({ phon: null, ex: '' });
+    return { raw: s0, key: s, spell: spell, options: opts };
+}
+function targetFor(res, i, spellOnly) {
+    var o = res.options[i];
+    var re = res.spell ? new RegExp(res.spell, 'i') : null;
+    return { phon: o.phon ? phons(o.phon) : null, phonStr: o.phon, spell: (re && (spellOnly || !o.phon)) ? re : null, hl: res.spell, key: res.key, ex: o.ex };
+}
+/* ============================ Generator ============================ */
+var CLASS_OF = { P: 'P', N: 'N', NS: 'N', A: 'A', V: 'V', VD: 'V', VS: 'V', NUM: 'NUM', PREP: 'PREP' };
+var TEMPLATES = {};
+for (var len in TEMPLATE_SRC)
+    TEMPLATES[len] = TEMPLATE_SRC[len].map(function (src) {
+        var items = [];
+        var re = /\{(\w+)(?::(\d+))?\}|[^{]+/g;
+        var m, u = 0;
+        while ((m = re.exec(src))) {
+            if (m[1])
+                items.push({ slot: m[1], key: m[1] === 'a' ? null : (m[2] ? CLASS_OF[m[1]] + m[2] : 'u' + (u++)) });
+            else
+                items.push({ lit: m[0] });
+        }
+        return { src: src, items: items };
+    });
+function pushLit(toks, lit) {
+    for (var _i = 0, _a = lit.split(/\s+/); _i < _a.length; _i++) {
+        var piece = _a[_i];
+        if (!piece)
+            continue;
+        if (piece.startsWith("'s") && toks.length) {
+            var last = toks[toks.length - 1];
+            last.core += "'s";
+            last.ipa = sIPA(last.ipa);
+            piece = piece.slice(2);
+            if (!piece)
+                continue;
+            last.post += piece;
+            continue;
+        }
+        var m = piece.match(/^([“"(]*)([A-Za-z'’-]*)(.*)$/);
+        if (!m[2]) {
+            if (toks.length)
+                toks[toks.length - 1].post += m[1] + m[3];
+            continue;
+        }
+        toks.push({ pre: m[1], core: m[2], post: m[3], ipa: FUNC[m[2].toLowerCase()] || m[2], slot: false });
+    }
+}
+function fill(tpl, tg, ct) {
+    var chosen = {};
+    var used = new Set();
+    var order = 0;
+    var _loop_2 = function (it) {
+        if (!it.slot || it.slot === 'a' || chosen[it.key])
+            return "continue";
+        var cls = CLASS_OF[it.slot];
+        var minor = cls === 'NUM' || cls === 'PREP';
+        var want = (!minor && ct && (order++ % 2 === 1)) ? ct : tg;
+        var pool = LEXC[cls].filter(function (l) { return !used.has(l); });
+        var good = pool.filter(function (l) { return matches(l.f[it.slot], want); });
+        var lem = good.length ? rand(good) : rand(pool.length ? pool : LEXC[cls]);
+        chosen[it.key] = lem;
+        used.add(lem);
+    };
+    for (var _i = 0, _a = tpl.items; _i < _a.length; _i++) {
+        var it = _a[_i];
+        _loop_2(it);
+    }
+    var toks = [];
+    for (var _b = 0, _c = tpl.items; _b < _c.length; _b++) {
+        var it = _c[_b];
+        if (it.lit !== undefined) {
+            pushLit(toks, it.lit);
+            continue;
+        }
+        if (it.slot === 'a') {
+            toks.push({ pre: '', core: 'a', post: '', ipa: 'ə', art: true, slot: false });
+            continue;
+        }
+        var f = chosen[it.key].f[it.slot];
+        toks.push({ pre: '', core: f.text, post: '', ipa: f.ipa, slot: true, cls: CLASS_OF[it.slot] });
+    }
+    toks.forEach(function (t, i) {
+        var nx = toks[i + 1];
+        var v = nx && VSET.has(firstPh(nx.ipa));
+        if (t.art) {
+            t.core = v ? 'an' : 'a';
+            t.ipa = v ? 'ən' : 'ə';
+        }
+        if (!t.slot && t.core.toLowerCase() === 'the')
+            t.ipa = v ? 'ði' : 'ðə';
+    });
+    toks.forEach(function (t, i) { if (i === 0 || /[.?!]/.test(toks[i - 1].post))
+        t.core = t.core.charAt(0).toUpperCase() + t.core.slice(1); });
+    var hits = 0, slots = 0, tHits = 0, cHits = 0, phonHits = 0;
+    for (var _d = 0, toks_1 = toks; _d < toks_1.length; _d++) {
+        var t = toks_1[_d];
+        t.m = matches({ text: t.core, ipa: t.ipa }, tg) ? 1 : (ct && matches({ text: t.core, ipa: t.ipa }, ct)) ? 2 : 0;
+        phonHits += tg.phon ? countSeq(t.ipa, tg.phon) : (t.m === 1 ? 1 : 0);
+        if (t.slot && t.cls !== 'NUM' && t.cls !== 'PREP') {
+            slots++;
+            if (t.m)
+                hits++;
+            if (t.m === 1)
+                tHits++;
+            if (t.m === 2)
+                cHits++;
+        }
+    }
+    var score = (slots ? hits / slots : 0) * 10 + Math.min(phonHits, 20) * 0.15 + Math.random() * 1.4 - (ct ? Math.abs(tHits - cHits) * 0.35 : 0);
+    return { toks: toks, score: score };
+}
+function generateTwister() {
+    var res = state.res;
+    if (!res || res.error)
+        return null;
+    var tg = targetFor(res, state.opt, state.spellOnly);
+    var ct = state.contrast ? { phon: phons(state.contrast), phonStr: state.contrast, spell: null } : null;
+    var cands = [];
+    for (var _i = 0, _a = TEMPLATES[state.len]; _i < _a.length; _i++) {
+        var tpl = _a[_i];
+        for (var k = 0; k < 4; k++)
+            cands.push(fill(tpl, tg, ct));
+    }
+    cands.sort(function (a, b) { return b.score - a.score; });
+    var prev = state.current ? plainText(state.current) : '';
+    var top = cands.slice(0, 4).filter(function (c) { return plainText({ toks: c.toks }) !== prev; });
+    var pick = rand(top.length ? top : cands.slice(0, 1));
+    return {
+        id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), toks: pick.toks,
+        tg: { phon: tg.phonStr, spell: tg.spell ? res.key : null, hl: tg.hl, key: res.key, ex: tg.ex || (tg.phonStr && PHINFO[tg.phonStr] ? PHINFO[tg.phonStr][0] : exampleFor(tg)) },
+        ct: ct ? { phon: ct.phonStr, ex: PHINFO[ct.phonStr] ? PHINFO[ct.phonStr][0] : '' } : null
+    };
+}
+/* ============================ Rendering ============================ */
+var plainText = function (tw) { return tw.toks.map(function (t) { return t.pre + t.core + t.post; }).join(' '); };
+var speechText = function (tw) { return plainText(tw).replace(/[“”"]/g, ''); };
+function markOpen(cls, inline) { if (!inline)
+    return "<mark class=\"".concat(cls, "\">"); return cls === 'tg' ? '<span style="color:#2f8f70;font-weight:700;text-decoration:underline">' : '<span style="color:#C7772E;font-weight:700;text-decoration:underline dotted">'; }
+var markClose = function (inline) { return inline ? '</span>' : '</mark>'; };
+function coreHTML(t, tw, inline) {
+    if (!t.m)
+        return esc(t.core);
+    var cls = t.m === 1 ? 'tg' : 'ct';
+    if (t.m === 1 && tw.tg.hl) {
+        var g = new RegExp(tw.tg.hl, 'gi');
+        var out = '', last = 0, m = void 0, any = false;
+        while ((m = g.exec(t.core))) {
+            if (!m[0].length) {
+                g.lastIndex++;
+                continue;
+            }
+            any = true;
+            out += esc(t.core.slice(last, m.index)) + markOpen(cls, inline) + esc(m[0]) + markClose(inline);
+            last = m.index + m[0].length;
+        }
+        if (any)
+            return out + esc(t.core.slice(last));
+    }
+    return markOpen(cls, inline) + esc(t.core) + markClose(inline);
+}
+function ipaHTML(ipa, tw, inline) {
+    var seqs = [];
+    if (tw.tg.phon)
+        seqs.push([phons(tw.tg.phon), 'tg']);
+    if (tw.ct && tw.ct.phon)
+        seqs.push([phons(tw.ct.phon), 'ct']);
+    var t = tok(ipa);
+    var idx = [];
+    t.forEach(function (x, i) { if (PH.has(x))
+        idx.push(i); });
+    var mark = new Array(t.length).fill(null);
+    for (var _i = 0, seqs_1 = seqs; _i < seqs_1.length; _i++) {
+        var _a = seqs_1[_i], seq = _a[0], cls = _a[1];
+        for (var a = 0; a <= idx.length - seq.length; a++) {
+            var ok = true;
+            for (var j = 0; j < seq.length; j++)
+                if (t[idx[a + j]] !== seq[j]) {
+                    ok = false;
+                    break;
+                }
+            if (ok)
+                for (var j = 0; j < seq.length; j++)
+                    if (!mark[idx[a + j]])
+                        mark[idx[a + j]] = cls;
+        }
+    }
+    var out = '', cur = null;
+    t.forEach(function (x, i) { var c = mark[i]; if (c !== cur) {
+        if (cur)
+            out += markClose(inline);
+        if (c)
+            out += markOpen(c, inline);
+        cur = c;
+    } out += esc(x); });
+    if (cur)
+        out += markClose(inline);
+    return out;
+}
+function brkAfter(t, i, n) { if (i >= n - 1)
+    return ''; if (/[.?!]/.test(t.post))
+    return '‖'; if (/[,;:]/.test(t.post))
+    return '|'; return ''; }
+function ipaLine(tw, html, inline) {
+    var parts = [];
+    var n = tw.toks.length;
+    tw.toks.forEach(function (t, i) { parts.push(html ? ipaHTML(t.ipa, tw, inline) : t.ipa); var b = brkAfter(t, i, n); if (b)
+        parts.push(b); });
+    return '/' + parts.join(' ') + '/';
+}
+var textHTML = function (tw, inline) { return tw.toks.map(function (t) { return esc(t.pre) + coreHTML(t, tw, inline) + esc(t.post); }).join(' '); };
+function soundLabel(tw, html) {
+    var ipaWrap = function (s) { return html ? "<span class=\"ipa\">".concat(esc(s), "</span>") : s; };
+    var a = tw.tg.phon ? ipaWrap('/' + tw.tg.phon + '/') + (tw.tg.ex ? ' ' + esc(tw.tg.ex) : '') : '“' + esc(tw.tg.key) + '”';
+    if (tw.tg.phon && tw.tg.spell)
+        a += ' · ' + esc(T('spelledAs', { s: tw.tg.spell }));
+    return a;
+}
+function ctLabel(tw, html) { if (!tw.ct)
+    return ''; var s = '/' + tw.ct.phon + '/'; return (html ? "<span class=\"ipa\">".concat(esc(s), "</span>") : s) + (tw.ct.ex ? ' ' + esc(tw.ct.ex) : ''); }
+function tipFor(tw, which) {
+    var o = which === 'ct' ? tw.ct : tw.tg;
+    if (!o.phon)
+        return { title: T('tipSpelling', { s: tw.tg.key }), text: TIPS[LANG].spelling, icon: tw.tg.key };
+    if (TIPS[LANG][o.phon])
+        return { title: T('tipTitle', { s: '/' + o.phon + '/' }), text: TIPS[LANG][o.phon], icon: o.phon };
+    return { title: T('tipCluster', { s: tw.tg.key }), text: TIPS[LANG].cluster, icon: o.phon };
+}
+function statsText(tw) {
+    var words = tw.toks.length;
+    var w = tw.toks.filter(function (t) { return t.m === 1; }).length;
+    if (!tw.tg.phon)
+        return T('statsSpell', { w: w, t: words, s: tw.tg.key });
+    var c = tw.toks.reduce(function (n, t) { return n + countSeq(t.ipa, phons(tw.tg.phon)); }, 0);
+    return T('stats', { c: c, s: '/' + tw.tg.phon + '/', w: w, t: words });
+}
+function renderResult() {
+    var tw = state.current;
+    var sec = $('#result');
+    if (!tw) {
+        sec.hidden = true;
+        return;
+    }
+    sec.hidden = false;
+    $('#resultHead').innerHTML = "<span class=\"pill tg\">".concat(soundLabel(tw, true), "</span>") + (tw.ct ? "<span class=\"stats\">".concat(esc(T('vs')), "</span><span class=\"pill ct\">").concat(ctLabel(tw, true), "</span>") : '') + "<span class=\"stats\">".concat(esc(statsText(tw)), "</span>");
+    var n = tw.toks.length;
+    $('#interlinear').innerHTML = tw.toks.map(function (t, i) { var b = brkAfter(t, i, n); return "<span class=\"w\"><span class=\"wt\">".concat(esc(t.pre)).concat(coreHTML(t, tw)).concat(esc(t.post), "</span><span class=\"wi\">").concat(ipaHTML(t.ipa, tw), "</span></span>") + (b ? "<span class=\"brk\" aria-hidden=\"true\">".concat(b, "</span>") : ''); }).join('');
+    $('#ipaFull').innerHTML = ipaLine(tw, true);
+    $('#legend').innerHTML = tw.ct ? "<span class=\"l-tg\"><i></i>".concat(esc(T('legendTg')), "</span><span class=\"l-ct\"><i></i>").concat(esc(T('legendCt')), "</span>") : '';
+    var tips = [tipFor(tw, 'tg')];
+    if (tw.ct)
+        tips.push(Object.assign(tipFor(tw, 'ct'), { c: true }));
+    $('#tips').innerHTML = tips.map(function (t) { return "<div class=\"tip".concat(t.c ? ' ctip' : '', "\"><div class=\"tip-icon\" aria-hidden=\"true\">").concat(esc(t.icon.length > 3 ? t.icon.slice(0, 3) : t.icon), "</div><h3>").concat(esc(t.title), "</h3><p>").concat(esc(t.text), "</p></div>"); }).join('');
+    var inSet = state.set.some(function (x) { return x.id === tw.id; });
+    $('#addLabel').textContent = T(inSet ? 'added' : 'add');
+    $('#addBtn').disabled = inSet;
+}
+function renderSet() {
+    $('#setTitle').textContent = T('setTitle', { n: state.set.length });
+    if (!state.set.length)
+        $('#setBody').innerHTML = "<p class=\"set-empty\">".concat(esc(T('setEmpty')), "</p>");
+    else
+        $('#setBody').innerHTML = '<ol class="set-list">' + state.set.map(function (tw, i) { return "<li class=\"set-item\"><span class=\"set-num\">".concat(i + 1, "</span><div class=\"set-body\"><div class=\"set-tw\">").concat(textHTML(tw), "</div><div class=\"set-ipa\">").concat(ipaLine(tw, true), "</div><div class=\"set-tags\"><span class=\"pill tg\">").concat(soundLabel(tw, true), "</span>").concat(tw.ct ? "<span class=\"pill ct\">".concat(ctLabel(tw, true), "</span>") : '', "</div></div><button type=\"button\" class=\"icon-btn\" data-remove=\"").concat(tw.id, "\" aria-label=\"").concat(esc(T('remove')), "\" title=\"").concat(esc(T('remove')), "\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" aria-hidden=\"true\"><path d=\"M18 6 6 18M6 6l12 12\"/></svg></button></li>"); }).join('') + '</ol>';
+    $('#setHint').textContent = state.set.length ? T('setReady', { n: state.set.length }) : T('usesCurrent');
+    $('#clearBtn').disabled = !state.set.length;
+    clearArmed = false;
+    $('#clearLabel').textContent = T('clear');
+}
+function renderSoundPick() {
+    var box = $('#soundPick');
+    var r = state.res;
+    var spellWrap = $('#spellWrap');
+    if (!r) {
+        box.innerHTML = "<p class=\"hint\" style=\"text-align:left;margin:0\">".concat(esc(T('empty')), "</p>");
+        spellWrap.hidden = true;
+        return;
+    }
+    if (r.error) {
+        box.innerHTML = "<p class=\"err\">".concat(esc(T(r.error, { s: r.raw })), "</p>");
+        spellWrap.hidden = true;
+        return;
+    }
+    var h = "<span class=\"opt-label\" id=\"pickLabel\">".concat(esc(T('whichSound')), "</span><div class=\"chips\" role=\"radiogroup\" aria-labelledby=\"pickLabel\">");
+    r.options.forEach(function (o, i) {
+        var n = o.count;
+        var on = i === state.opt;
+        h += "<button type=\"button\" class=\"chip".concat(on ? ' on' : '', "\" role=\"radio\" aria-checked=\"").concat(on, "\" data-opt=\"").concat(i, "\"").concat(n ? '' : ' disabled', ">") + (o.phon ? "<span class=\"ipa\">/".concat(esc(o.phon), "/</span>").concat(o.ex ? " <span class=\"ex\">".concat(esc(o.ex), "</span>") : '') : "<span class=\"ex\">".concat(esc(T('anySound')), "</span>")) + " <span class=\"cnt\">".concat(esc(T('nWords', { n: n })), "</span></button>");
+    });
+    box.innerHTML = h + '</div>';
+    var o = r.options[state.opt];
+    spellWrap.hidden = !(r.spell && o && o.phon);
+    $('#spellOnlyLabel').textContent = T('spellOnly', { s: r.key.replace(/_/g, '…') });
+}
+function renderContrast() {
+    var sel = $('#contrastSel');
+    var r = state.res;
+    var o = r && !r.error ? r.options[state.opt] : null;
+    var sugg = (o && o.phon && CONTRASTS[o.phon]) || [];
+    var lab = function (p) { return "/".concat(p, "/ ").concat(PHINFO[p] ? PHINFO[p][0] : ''); };
+    var h = "<option value=\"\">".concat(esc(T('noContrast')), "</option>");
+    if (sugg.length)
+        h += "<optgroup label=\"".concat(esc(T('suggested')), "\">") + sugg.map(function (p) { return "<option value=\"".concat(p, "\">").concat(esc(lab(p)), "</option>"); }).join('') + '</optgroup>';
+    h += "<optgroup label=\"".concat(esc(T('allSounds')), "\">") + ORDER.filter(function (p) { return !o || p !== o.phon; }).map(function (p) { return "<option value=\"".concat(p, "\">").concat(esc(lab(p)), "</option>"); }).join('') + '</optgroup>';
+    sel.innerHTML = h;
+    if (o && state.contrast === o.phon)
+        state.contrast = '';
+    sel.value = state.contrast;
+}
+function applyStatic() {
+    document.documentElement.lang = LANG;
+    document.querySelectorAll('[data-i18n]').forEach(function (el) { el.textContent = T(el.dataset.i18n); });
+    document.querySelectorAll('[data-i18n-html]').forEach(function (el) { el.innerHTML = T(el.dataset.i18nHtml); });
+    document.querySelectorAll('[data-i18n-ph]').forEach(function (el) { el.placeholder = T(el.dataset.i18nPh); });
+    document.querySelectorAll('.lang button').forEach(function (b) { return b.setAttribute('aria-pressed', String(b.dataset.lang === LANG)); });
+    document.title = T('title');
+}
+function renderAll() { applyStatic(); renderSoundPick(); renderContrast(); renderResult(); renderSet(); }
+/* ============================ State & actions ============================ */
+var state = { res: null, opt: 0, spellOnly: true, contrast: '', len: 'medium', current: null, set: [] };
+try {
+    var s = JSON.parse(localStorage.getItem('ell-tt-set') || '[]');
+    if (Array.isArray(s))
+        state.set = s.filter(function (x) { return x && x.toks && x.tg; });
+}
+catch (e) { }
+var saveSet = function () { try {
+    localStorage.setItem('ell-tt-set', JSON.stringify(state.set));
+}
+catch (e) { } };
+function computeCounts() {
+    var r = state.res;
+    if (!r || r.error)
+        return;
+    r.options.forEach(function (o, i) { o.count = countLex(targetFor(r, i, state.spellOnly)); });
+    if (r.options.every(function (o) { return !o.count; })) {
+        state.res = { raw: r.raw, error: 'noWords' };
+        return;
+    }
+    if (!r.options[state.opt] || !r.options[state.opt].count)
+        state.opt = r.options.findIndex(function (o) { return o.count; });
+}
+function setInput(val, keepOpt) {
+    state.res = resolve(val);
+    if (!keepOpt)
+        state.opt = 0;
+    computeCounts();
+    renderSoundPick();
+    renderContrast();
+}
+function regenerate() {
+    if (!state.res || state.res.error) {
+        state.current = null;
+        renderResult();
+        return;
+    }
+    state.current = generateTwister();
+    renderResult();
+}
+var toastTimer;
+function toast(msg) { var t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(function () { return t.classList.remove('show'); }, 3200); }
+function speak(rate) {
+    var tw = state.current;
+    if (!tw)
+        return;
+    if (!('speechSynthesis' in window)) {
+        toast(T('noVoice'));
+        return;
+    }
+    speechSynthesis.cancel();
+    var u = new SpeechSynthesisUtterance(speechText(tw));
+    var vs = speechSynthesis.getVoices();
+    var v = vs.find(function (v) { return /en[-_]GB/i.test(v.lang); }) || vs.find(function (v) { return /^en/i.test(v.lang); });
+    if (v)
+        u.voice = v;
+    else if (vs.length)
+        toast(T('noVoice'));
+    u.lang = v ? v.lang : 'en-GB';
+    u.rate = rate;
+    speechSynthesis.speak(u);
+}
+var exportList = function () { return state.set.length ? state.set : (state.current ? [state.current] : []); };
+function ankiText(list) {
+    var clean = function (s) { return s.replace(/[\t\r\n]+/g, ' '); };
+    var lines = ['#separator:tab', '#html:true', '#notetype:Basic', '#deck:Emerald::Tongue twisters', '#tags column:3'];
+    for (var _i = 0, list_1 = list; _i < list_1.length; _i++) {
+        var tw = list_1[_i];
+        var tip = tipFor(tw, 'tg');
+        var front = "<div style=\"font-size:.7em;color:#457865\">".concat(soundLabel(tw, false)).concat(tw.ct ? ' ' + esc(T('vs')) + ' ' + ctLabel(tw, false) : '', "</div><div style=\"margin-top:.4em\">").concat(textHTML(tw, true), "</div>");
+        var back = "<div style=\"font-family:'Noto Sans','Segoe UI','Lucida Sans Unicode',sans-serif\">".concat(ipaLine(tw, true, true), "</div><div style=\"font-size:.75em;color:#777;margin-top:.8em\"><b>").concat(esc(tip.title), "</b><br>").concat(esc(tip.text), "</div>");
+        if (tw.ct) {
+            var t2 = tipFor(tw, 'ct');
+            back += "<div style=\"font-size:.75em;color:#777;margin-top:.5em\"><b>".concat(esc(t2.title), "</b><br>").concat(esc(t2.text), "</div>");
+        }
+        var tag = function (s) { return s.replace(/[^\w:-]+/g, '_'); };
+        var tags = ['emerald', 'tongue_twister', 'sound::' + tag(tw.tg.phon ? (PHINFO[tw.tg.phon] ? PHINFO[tw.tg.phon][1] : tw.tg.key) : 'spelling_' + tw.tg.key)];
+        if (tw.ct)
+            tags.push('contrast::' + tag(PHINFO[tw.ct.phon] ? PHINFO[tw.ct.phon][1] : tw.ct.phon));
+        lines.push([front, back, tags.join(' ')].map(clean).join('\t'));
+    }
+    return lines.join('\n') + '\n';
+}
+function downloadText(name, text) {
+    var blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+}
+function buildPrintSheet(list) {
+    var d = new Date().toLocaleDateString(LANG === 'fr' ? 'fr-FR' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    var h = "<div class=\"ps-head\"><img src=\"".concat($('#logo').src, "\" width=\"306\" height=\"90\" alt=\"Emerald Language Learning\"><div><div class=\"ps-title\">").concat(esc(T('printTitle')), "</div><div class=\"ps-date\">").concat(esc(d), "</div></div></div>");
+    list.forEach(function (tw, i) {
+        var tip = tipFor(tw, 'tg');
+        h += "<article class=\"ps-item\"><div class=\"ps-num\">".concat(i + 1, "</div><div><div class=\"ps-tag\">").concat(esc(T('sound')), " ").concat(soundLabel(tw, true)).concat(tw.ct ? " &nbsp;".concat(esc(T('vs')), "&nbsp; ").concat(ctLabel(tw, true)) : '', "</div><p class=\"ps-tw\">").concat(textHTML(tw), "</p><p class=\"ps-ipa\">").concat(ipaLine(tw, true), "</p><p class=\"ps-tip\"><b>").concat(esc(tip.title), ".</b> ").concat(esc(tip.text), "</p><div class=\"ps-check\">").concat(esc(T('practise')), " <span>").concat(esc(T('ck1')), "</span><span>").concat(esc(T('ck2')), "</span><span>").concat(esc(T('ck3')), "</span><span>").concat(esc(T('ck4')), "</span></div></div></article>");
+    });
+    h += "<div class=\"ps-foot\">".concat(esc(T('footer')), "</div>");
+    $('#printSheet').innerHTML = h;
+}
+/* ============================ Wiring ============================ */
+var QUICK = ['th', 'h', 'r', 'w', 'sh', 'ch', 'j', 'ng', 'ee', 'i', 'oo', 'ea', 'ir', 'a_e', 'ow'];
+$('#quick').insertAdjacentHTML('beforeend', QUICK.map(function (q) { return "<button type=\"button\" class=\"qchip\" data-q=\"".concat(q, "\">").concat(q.replace('_', '…'), "</button>"); }).join(''));
+$('#quick').addEventListener('click', function (e) { var b = e.target.closest('.qchip'); if (!b)
+    return; var v = b.dataset.q; $('#soundInput').value = v; state.contrast = ''; setInput(v); regenerate(); });
+var inTimer;
+$('#soundInput').addEventListener('input', function (e) { clearTimeout(inTimer); inTimer = setTimeout(function () { return setInput(e.target.value); }, 250); });
+$('#soundForm').addEventListener('submit', function (e) { e.preventDefault(); clearTimeout(inTimer); setInput($('#soundInput').value); regenerate(); });
+$('#soundPick').addEventListener('click', function (e) { var b = e.target.closest('.chip'); if (!b || b.disabled)
+    return; state.opt = +b.dataset.opt; state.contrast = ''; renderSoundPick(); renderContrast(); regenerate(); });
+$('#spellOnly').addEventListener('change', function (e) { state.spellOnly = e.target.checked; computeCounts(); renderSoundPick(); regenerate(); });
+$('#contrastSel').addEventListener('change', function (e) { state.contrast = e.target.value; regenerate(); });
+$('#lenSeg').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b)
+    return; state.len = b.dataset.len; document.querySelectorAll('#lenSeg button').forEach(function (x) { return x.setAttribute('aria-checked', String(x === b)); }); regenerate(); });
+$('#againBtn').addEventListener('click', regenerate);
+document.querySelectorAll('[data-rate]').forEach(function (b) { return b.addEventListener('click', function () { return speak(+b.dataset.rate); }); });
+$('#addBtn').addEventListener('click', function () { if (!state.current || state.set.some(function (x) { return x.id === state.current.id; }))
+    return; state.set.push(state.current); saveSet(); renderSet(); renderResult(); });
+$('#setBody').addEventListener('click', function (e) { var b = e.target.closest('[data-remove]'); if (!b)
+    return; state.set = state.set.filter(function (x) { return x.id !== b.dataset.remove; }); saveSet(); renderSet(); renderResult(); });
+var clearArmed = false;
+$('#clearBtn').addEventListener('click', function () { if (!clearArmed) {
+    clearArmed = true;
+    $('#clearLabel').textContent = T('confirmClear');
+    setTimeout(function () { if (clearArmed) {
+        clearArmed = false;
+        $('#clearLabel').textContent = T('clear');
+    } }, 4000);
+    return;
+} state.set = []; saveSet(); renderSet(); renderResult(); });
+$('#printBtn').addEventListener('click', function () { var l = exportList(); if (!l.length)
+    return; buildPrintSheet(l); window.print(); });
+$('#ankiBtn').addEventListener('click', function () { var l = exportList(); if (!l.length)
+    return; downloadText('emerald-tongue-twisters-anki.txt', ankiText(l)); toast(T('exported', { n: l.length })); });
+$('#copyBtn').addEventListener('click', function () {
+    var l = exportList();
+    if (!l.length)
+        return;
+    var txt = ankiText(l);
+    var box = $('#copyBox');
+    var fallback = function () { box.hidden = false; box.value = txt; box.focus(); box.select(); toast(T('copyFail')); };
+    try {
+        navigator.clipboard.writeText(txt).then(function () { box.hidden = true; toast(T('copied')); }, fallback);
+    }
+    catch (e) {
+        fallback();
+    }
+});
+document.querySelectorAll('.lang button').forEach(function (b) { return b.addEventListener('click', function () { LANG = b.dataset.lang; try {
+    localStorage.setItem('ell-lang', LANG);
+}
+catch (e) { } renderAll(); }); });
+window.addEventListener('beforeprint', function () { if (!$('#printSheet').innerHTML)
+    buildPrintSheet(exportList()); });
+if ('speechSynthesis' in window)
+    speechSynthesis.getVoices();
+/* Start with a working example */
+applyStatic();
+setInput($('#soundInput').value);
+regenerate();
+renderSet();
+</script>
+</body>
+</html>
