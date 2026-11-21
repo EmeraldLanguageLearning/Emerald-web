@@ -9456,7 +9456,6 @@ var __values = (this && this.__values) || function(o) {
     var ERAS = { en: ['Old English', 'Middle English', 'Early Modern English', 'Late Modern English', 'Global English'], fr: ['Vieil anglais', 'Moyen anglais', 'Anglais moderne naissant', 'Anglais moderne tardif', 'Anglais mondial'] };
     var ERA = function (y) { return ERAS[lang][y < 1150 ? 0 : y < 1500 ? 1 : y < 1700 ? 2 : y < 1945 ? 3 : 4]; };
     var nm = function (c) { return lang === 'fr' ? c.fr : c.n; };
-    var fadeOf = function (c) { return c.f || 0; };
     var arrivalOf = function (c) { return c.a != null ? c.a : (c.n === 'Antarctica' ? Infinity : 1945); };
     /* ---------- interface strings ---------- */
     var SOURCES_FR = '<li>Locuteurs par pays : <a href="https://en.wikipedia.org/wiki/List_of_countries_by_English-speaking_population" target="_blank" rel="noopener">List of countries by English-speaking population</a>, Wikipédia (recensements et enquêtes nationales, 2003–2025 ; consulté en novembre 2026).</li><li>5 à 7 millions de locuteurs natifs vers 1600 et environ 250 millions dans les années 1950 : David Crystal, cité par Dick Leith, <a href="https://consensus.app/papers/details/w:11d8aa6d-7d25-4fd0-8b0d-374b02ddd3b4/" target="_blank" rel="noopener">« English — colonial to postcolonial »</a> (Routledge, 2020).</li><li>Plus de 1,35 milliard de locuteurs : <a href="https://consensus.app/papers/details/w:a0207aac-08a9-4187-bbed-65a02ec88857/" target="_blank" rel="noopener">« Influence of the development of the English language »</a>, International Journal of Literature and Languages (2024).</li><li>Anglais aéronautique : recommandation de l’Annexe 10 de l’OACI (1951), via <a href="https://en.wikipedia.org/wiki/Aviation_English" target="_blank" rel="noopener">Aviation English</a>, Wikipédia ; exigence du niveau 4 applicable depuis le 5 mars 2008 et réévaluations : <a href="https://ulc.gov.pl/_download/personel_lotniczy/ICAO_LPR/sarps.pdf" target="_blank" rel="noopener">dispositions de l’Annexe 1 de l’OACI sur les compétences linguistiques</a>.</li><li>Les années d’arrivée correspondent au premier établissement, comptoir ou pouvoir anglophone durable, selon les dates historiques usuelles. Les pays sans date apparaissent à partir de 1945, quand l’anglais se diffuse dans le monde comme langue seconde.</li><li>Carte : <a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener">Natural Earth</a> (domaine public), via <a href="https://github.com/topojson/world-atlas" target="_blank" rel="noopener">world-atlas</a>. Les petits États insulaires n’apparaissent pas sur cette carte. 3D : <a href="https://threejs.org/" target="_blank" rel="noopener">three.js</a> (MIT).</li>';
@@ -9603,7 +9602,6 @@ var __values = (this && this.__values) || function(o) {
         }
         if (selected)
             updateNotice();
-        requestDraw();
     }
     addEventListener('scroll', onScroll, { passive: true });
     addEventListener('resize', onScroll);
@@ -9642,65 +9640,77 @@ var __values = (this && this.__values) || function(o) {
     var camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
     var group = new THREE.Group();
     scene.add(group);
-    var TW = 4096, TH = 2048;
-    var tex = document.createElement('canvas');
-    tex.width = TW;
-    tex.height = TH;
-    var ctx = tex.getContext('2d');
-    var texture = new THREE.CanvasTexture(tex);
-    texture.colorSpace = THREE.SRGBColorSpace;
-    texture.anisotropy = 8;
-    var mesh = new THREE.Mesh(new THREE.SphereGeometry(1, 160, 100), new THREE.MeshLambertMaterial({ map: texture }));
+    /* Ocean + graticule: one small texture, drawn once per theme. Countries are their own meshes,
+       so a colour change, fade, hover or selection only changes a material colour (no texture redraw). */
+    var OW = 2048, OH = 1024;
+    var oceanCanvas = document.createElement('canvas');
+    oceanCanvas.width = OW;
+    oceanCanvas.height = OH;
+    var octx = oceanCanvas.getContext('2d');
+    var oceanTex = new THREE.CanvasTexture(oceanCanvas);
+    oceanTex.colorSpace = THREE.SRGBColorSpace;
+    oceanTex.anisotropy = 4;
+    var mesh = new THREE.Mesh(new THREE.SphereGeometry(1, 96, 64), new THREE.MeshLambertMaterial({ map: oceanTex }));
     group.add(mesh);
     scene.add(new THREE.AmbientLight(0xffffff, 2.4));
     var sun = new THREE.DirectionalLight(0xffffff, 0.9);
     sun.position.set(-3, 2.5, 4);
     scene.add(sun);
-    var view = { lon: -2, lat: 53, dist: 2.9 }, target = { lon: -2, lat: 53, dist: 2.9 };
-    function setTarget(lon, lat, dist) { target.lon = lon; target.lat = lat; if (dist)
-        target.dist = fitDist(dist); if (reduce)
-        Object.assign(view, target); }
-    function fitDist(d) { var r = stage.clientWidth / Math.max(1, stage.clientHeight); return r < 1 ? d * Math.min(1.9, 1 / r) : d; }
-    var px = function (lon) { return (lon + 180) / 360 * TW; }, py = function (lat) { return (90 - lat) / 180 * TH; };
-    function tracePath(c) {
+    function drawOcean() {
+        var px = function (lon) { return (lon + 180) / 360 * OW; }, py = function (lat) { return (90 - lat) / 180 * OH; };
+        octx.fillStyle = theme.ocean;
+        octx.fillRect(0, 0, OW, OH);
+        octx.strokeStyle = theme.grat;
+        octx.lineWidth = 1.5;
+        octx.beginPath();
+        for (var lo = -180; lo <= 180; lo += 15) {
+            octx.moveTo(px(lo), 0);
+            octx.lineTo(px(lo), OH);
+        }
+        for (var la = -75; la <= 75; la += 15) {
+            octx.moveTo(0, py(la));
+            octx.lineTo(OW, py(la));
+        }
+        octx.stroke();
+        oceanTex.needsUpdate = true;
+        dirty = true;
+    }
+    /* lon/lat -> point on the sphere (same mapping as SphereGeometry and the picking code) */
+    function sph(lon, lat, r, out, o) {
+        var ph = (lon + 180) * D2R, th = (90 - lat) * D2R, s = Math.sin(th);
+        out[o] = -Math.cos(ph) * s * r;
+        out[o + 1] = Math.cos(th) * r;
+        out[o + 2] = Math.sin(ph) * s * r;
+    }
+    var R_LAND = 1.002, R_LINE = 1.0035, R_SEL = 1.005, MAX_EDGE = 6, MAX_SEG = 2;
+    function countryGeometry(c) {
         var e_1, _a;
-        ctx.beginPath();
-        var _loop_1 = function (off) {
-            var e_2, _d, e_3, _e;
-            try {
-                for (var _f = (e_2 = void 0, __values(c.g)), _g = _f.next(); !_g.done; _g = _f.next()) {
-                    var poly = _g.value;
-                    try {
-                        for (var poly_1 = (e_3 = void 0, __values(poly)), poly_1_1 = poly_1.next(); !poly_1_1.done; poly_1_1 = poly_1.next()) {
-                            var ring = poly_1_1.value;
-                            ring.forEach(function (_a, k) {
-                                var _b = __read(_a, 2), x = _b[0], y = _b[1];
-                                return k ? ctx.lineTo(px(x) + off, py(y)) : ctx.moveTo(px(x) + off, py(y));
-                            });
-                            ctx.closePath();
-                        }
-                    }
-                    catch (e_3_1) { e_3 = { error: e_3_1 }; }
-                    finally {
-                        try {
-                            if (poly_1_1 && !poly_1_1.done && (_e = poly_1.return)) _e.call(poly_1);
-                        }
-                        finally { if (e_3) throw e_3.error; }
-                    }
-                }
+        var tris = [];
+        var sub = function (a, b, cc, d) {
+            var e = Math.max(Math.hypot(a[0] - b[0], a[1] - b[1]), Math.hypot(b[0] - cc[0], b[1] - cc[1]), Math.hypot(cc[0] - a[0], cc[1] - a[1]));
+            if (e <= MAX_EDGE || d > 6) {
+                tris.push(a, b, cc);
+                return;
             }
-            catch (e_2_1) { e_2 = { error: e_2_1 }; }
-            finally {
-                try {
-                    if (_g && !_g.done && (_d = _f.return)) _d.call(_f);
-                }
-                finally { if (e_2) throw e_2.error; }
-            }
+            var ab = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2], bc = [(b[0] + cc[0]) / 2, (b[1] + cc[1]) / 2], ca = [(cc[0] + a[0]) / 2, (cc[1] + a[1]) / 2];
+            sub(a, ab, ca, d + 1);
+            sub(ab, b, bc, d + 1);
+            sub(ca, bc, cc, d + 1);
+            sub(ab, bc, ca, d + 1);
+        };
+        var _loop_1 = function (poly) {
+            var rings = poly.map(function (r) { var v = r.map(function (_a) {
+                var _b = __read(_a, 2), x = _b[0], y = _b[1];
+                return new THREE.Vector2(x, y);
+            }); if (v.length > 1 && v[0].equals(v[v.length - 1]))
+                v.pop(); return v; });
+            var pts = [].concat.apply([], __spreadArray([], __read(rings), false));
+            THREE.ShapeUtils.triangulateShape(rings[0], rings.slice(1)).forEach(function (f) { return sub([pts[f[0]].x, pts[f[0]].y], [pts[f[1]].x, pts[f[1]].y], [pts[f[2]].x, pts[f[2]].y], 0); });
         };
         try {
-            for (var _b = __values(c.w ? [0, -TW] : [0]), _c = _b.next(); !_c.done; _c = _b.next()) {
-                var off = _c.value;
-                _loop_1(off);
+            for (var _b = __values(c.g), _c = _b.next(); !_c.done; _c = _b.next()) {
+                var poly = _c.value;
+                _loop_1(poly);
             }
         }
         catch (e_1_1) { e_1 = { error: e_1_1 }; }
@@ -9710,15 +9720,110 @@ var __values = (this && this.__values) || function(o) {
             }
             finally { if (e_1) throw e_1.error; }
         }
+        return tris;
     }
-    var lastKey = '', hovered = null, selected = null, drawQueued = false;
-    function stateKey() {
+    function outlinePositions(c, r) {
+        var e_2, _a, e_3, _b;
+        var out = [];
+        try {
+            for (var _c = __values(c.g), _d = _c.next(); !_d.done; _d = _c.next()) {
+                var poly = _d.value;
+                try {
+                    for (var poly_1 = (e_3 = void 0, __values(poly)), poly_1_1 = poly_1.next(); !poly_1_1.done; poly_1_1 = poly_1.next()) {
+                        var ring = poly_1_1.value;
+                        for (var k = 0; k < ring.length - 1; k++) {
+                            var _e = __read(ring[k], 2), x0 = _e[0], y0 = _e[1], _f = __read(ring[k + 1], 2), x1 = _f[0], y1 = _f[1];
+                            var n = Math.max(1, Math.ceil(Math.hypot(x1 - x0, y1 - y0) / MAX_SEG));
+                            for (var s = 0; s < n; s++)
+                                out.push([x0 + (x1 - x0) * s / n, y0 + (y1 - y0) * s / n], [x0 + (x1 - x0) * (s + 1) / n, y0 + (y1 - y0) * (s + 1) / n]);
+                        }
+                    }
+                }
+                catch (e_3_1) { e_3 = { error: e_3_1 }; }
+                finally {
+                    try {
+                        if (poly_1_1 && !poly_1_1.done && (_b = poly_1.return)) _b.call(poly_1);
+                    }
+                    finally { if (e_3) throw e_3.error; }
+                }
+            }
+        }
+        catch (e_2_1) { e_2 = { error: e_2_1 }; }
+        finally {
+            try {
+                if (_d && !_d.done && (_a = _c.return)) _a.call(_c);
+            }
+            finally { if (e_2) throw e_2.error; }
+        }
+        var pos = new Float32Array(out.length * 3);
+        out.forEach(function (p, k) { return sph(p[0], p[1], r, pos, k * 3); });
+        return pos;
+    }
+    /* all countries in ONE mesh with a colour per vertex: one draw call; a country's colour = its vertex range */
+    var landVerts = 0;
+    var triLists = COUNTRIES.map(function (c) { var tr = countryGeometry(c); c.v0 = landVerts; c.vn = tr.length; landVerts += tr.length; return tr; });
+    var landPos = new Float32Array(landVerts * 3), landCols = new Float32Array(landVerts * 3);
+    triLists.forEach(function (tr, i) { var o = COUNTRIES[i].v0 * 3; tr.forEach(function (pt, k) { return sph(pt[0], pt[1], R_LAND, landPos, o + k * 3); }); });
+    var landGeo = new THREE.BufferGeometry();
+    landGeo.setAttribute('position', new THREE.BufferAttribute(landPos, 3));
+    landGeo.setAttribute('normal', new THREE.BufferAttribute(landPos.map(function (v) { return v / R_LAND; }), 3));
+    var colAttr = new THREE.BufferAttribute(landCols, 3);
+    colAttr.setUsage(THREE.DynamicDrawUsage);
+    landGeo.setAttribute('color', colAttr);
+    var landMat = new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide });
+    group.add(new THREE.Mesh(landGeo, landMat));
+    var borderPos = [];
+    COUNTRIES.forEach(function (c) { return borderPos.push(outlinePositions(c, R_LINE)); });
+    var borderGeo = new THREE.BufferGeometry();
+    {
+        var n_1 = 0;
+        borderPos.forEach(function (a) { return n_1 += a.length; });
+        var all_1 = new Float32Array(n_1);
+        var o_1 = 0;
+        borderPos.forEach(function (a) { all_1.set(a, o_1); o_1 += a.length; });
+        borderGeo.setAttribute('position', new THREE.BufferAttribute(all_1, 3));
+    }
+    var borderMat = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.85 });
+    group.add(new THREE.LineSegments(borderGeo, borderMat));
+    var selMat = new THREE.LineBasicMaterial();
+    var selLines = new THREE.LineSegments(new THREE.BufferGeometry(), selMat);
+    group.add(selLines);
+    var hovLines = new THREE.LineSegments(new THREE.BufferGeometry(), selMat);
+    group.add(hovLines);
+    function setOutline(lines, c) { lines.geometry.dispose(); lines.geometry = new THREE.BufferGeometry(); if (c)
+        lines.geometry.setAttribute('position', new THREE.BufferAttribute(outlinePositions(c, R_SEL), 3)); }
+    var hovered = null, selected = null;
+    var landCol = new THREE.Color(), tmpCol = new THREE.Color(), WHITE = new THREE.Color(1, 1, 1), BLACK = new THREE.Color(0, 0, 0);
+    var dirty = true;
+    function applyTheme() {
+        drawOcean();
+        landCol.set(theme.land);
+        borderMat.color.set(theme.border);
+        selMat.color.set(theme.sel);
+        COUNTRIES.forEach(function (c) { c.col = new THREE.Color(colourOf(c)); });
+        paintCountries(true);
+    }
+    function paintCountry(c) {
+        tmpCol.copy(landCol).lerp(c.col, c.n === 'Antarctica' ? 0 : (c.f || 0));
+        if (c === selected || c === hovered)
+            tmpCol.lerp(isDark() ? WHITE : BLACK, isDark() ? 0.18 : 0.12);
+        var r = tmpCol.r, g = tmpCol.g, b = tmpCol.b;
+        for (var k = c.v0 * 3, end = (c.v0 + c.vn) * 3; k < end; k += 3) {
+            landCols[k] = r;
+            landCols[k + 1] = g;
+            landCols[k + 2] = b;
+        }
+        c.painted = c.f;
+        colAttr.needsUpdate = true;
+        dirty = true;
+    }
+    function paintCountries(all) {
         var e_4, _a;
-        var k = (isDark() ? 'd' : 'l') + (selected ? selected.i : '-') + '|' + (hovered ? hovered.i : '-') + '|';
         try {
             for (var COUNTRIES_1 = __values(COUNTRIES), COUNTRIES_1_1 = COUNTRIES_1.next(); !COUNTRIES_1_1.done; COUNTRIES_1_1 = COUNTRIES_1.next()) {
                 var c = COUNTRIES_1_1.value;
-                k += Math.round(fadeOf(c) * 4);
+                if (all || c.painted !== c.f)
+                    paintCountry(c);
             }
         }
         catch (e_4_1) { e_4 = { error: e_4_1 }; }
@@ -9728,69 +9833,36 @@ var __values = (this && this.__values) || function(o) {
             }
             finally { if (e_4) throw e_4.error; }
         }
-        return k;
     }
-    function draw() {
-        var e_5, _a, e_6, _b;
-        var key = stateKey();
-        if (key === lastKey)
-            return;
-        lastKey = key;
-        ctx.fillStyle = theme.ocean;
-        ctx.fillRect(0, 0, TW, TH);
-        ctx.strokeStyle = theme.grat;
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        for (var lo = -180; lo <= 180; lo += 15) {
-            ctx.moveTo(px(lo), 0);
-            ctx.lineTo(px(lo), TH);
-        }
-        for (var la = -75; la <= 75; la += 15) {
-            ctx.moveTo(0, py(la));
-            ctx.lineTo(TW, py(la));
-        }
-        ctx.stroke();
-        ctx.lineJoin = 'round';
+    var lastSel = null, lastHov = null;
+    function setHighlight() {
+        var e_5, _a;
         try {
-            for (var COUNTRIES_2 = __values(COUNTRIES), COUNTRIES_2_1 = COUNTRIES_2.next(); !COUNTRIES_2_1.done; COUNTRIES_2_1 = COUNTRIES_2.next()) {
-                var c = COUNTRIES_2_1.value;
-                var t = Math.round(fadeOf(c) * 4) / 4;
-                tracePath(c);
-                ctx.fillStyle = t > 0 ? mix(theme.land, colourOf(c), t) : theme.land;
-                ctx.fill('evenodd');
-                ctx.strokeStyle = theme.border;
-                ctx.lineWidth = 2;
-                ctx.stroke();
+            for (var _b = __values([lastSel, lastHov, selected, hovered]), _c = _b.next(); !_c.done; _c = _b.next()) {
+                var c = _c.value;
+                if (c)
+                    paintCountry(c);
             }
         }
         catch (e_5_1) { e_5 = { error: e_5_1 }; }
         finally {
             try {
-                if (COUNTRIES_2_1 && !COUNTRIES_2_1.done && (_a = COUNTRIES_2.return)) _a.call(COUNTRIES_2);
+                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
             }
             finally { if (e_5) throw e_5.error; }
         }
-        try {
-            for (var _c = __values([hovered, selected]), _d = _c.next(); !_d.done; _d = _c.next()) {
-                var c = _d.value;
-                if (c) {
-                    tracePath(c);
-                    ctx.strokeStyle = theme.sel;
-                    ctx.lineWidth = c === selected ? 6 : 4;
-                    ctx.stroke();
-                }
-            }
-        }
-        catch (e_6_1) { e_6 = { error: e_6_1 }; }
-        finally {
-            try {
-                if (_d && !_d.done && (_b = _c.return)) _b.call(_c);
-            }
-            finally { if (e_6) throw e_6.error; }
-        }
-        texture.needsUpdate = true;
+        lastSel = selected;
+        lastHov = hovered;
+        setOutline(selLines, selected);
+        setOutline(hovLines, hovered !== selected ? hovered : null);
+        dirty = true;
     }
-    function requestDraw() { drawQueued = true; }
+    function requestDraw() { setHighlight(); }
+    var view = { lon: -2, lat: 53, dist: 2.9 }, target = { lon: -2, lat: 53, dist: 2.9 };
+    function setTarget(lon, lat, dist) { target.lon = lon; target.lat = lat; if (dist)
+        target.dist = fitDist(dist); if (reduce)
+        Object.assign(view, target); }
+    function fitDist(d) { var r = stage.clientWidth / Math.max(1, stage.clientHeight); return r < 1 ? d * Math.min(1.9, 1 / r) : d; }
     /* picking */
     var ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
     function lonLatAt(cx, cy) {
@@ -9817,42 +9889,42 @@ var __values = (this && this.__values) || function(o) {
         return inside;
     }
     function countryAt(lon0, lat) {
-        var e_7, _a;
+        var e_6, _a;
         var _loop_2 = function (c) {
-            var e_8, _b;
+            var e_7, _b;
             var lon = c.w && lon0 < 0 ? lon0 + 360 : lon0;
             var _c = __read(c.b, 4), x0 = _c[0], y0 = _c[1], x1 = _c[2], y1 = _c[3];
             if (lon < x0 || lon > x1 || lat < y0 || lat > y1)
                 return "continue";
             try {
-                for (var _d = (e_8 = void 0, __values(c.g)), _e = _d.next(); !_e.done; _e = _d.next()) {
+                for (var _d = (e_7 = void 0, __values(c.g)), _e = _d.next(); !_e.done; _e = _d.next()) {
                     var poly = _e.value;
                     if (inRing(lon, lat, poly[0]) && !poly.slice(1).some(function (h) { return inRing(lon, lat, h); }))
                         return { value: c.n === 'Antarctica' ? null : c };
                 }
             }
-            catch (e_8_1) { e_8 = { error: e_8_1 }; }
+            catch (e_7_1) { e_7 = { error: e_7_1 }; }
             finally {
                 try {
                     if (_e && !_e.done && (_b = _d.return)) _b.call(_d);
                 }
-                finally { if (e_8) throw e_8.error; }
+                finally { if (e_7) throw e_7.error; }
             }
         };
         try {
-            for (var COUNTRIES_3 = __values(COUNTRIES), COUNTRIES_3_1 = COUNTRIES_3.next(); !COUNTRIES_3_1.done; COUNTRIES_3_1 = COUNTRIES_3.next()) {
-                var c = COUNTRIES_3_1.value;
+            for (var COUNTRIES_2 = __values(COUNTRIES), COUNTRIES_2_1 = COUNTRIES_2.next(); !COUNTRIES_2_1.done; COUNTRIES_2_1 = COUNTRIES_2.next()) {
+                var c = COUNTRIES_2_1.value;
                 var state_1 = _loop_2(c);
                 if (typeof state_1 === "object")
                     return state_1.value;
             }
         }
-        catch (e_7_1) { e_7 = { error: e_7_1 }; }
+        catch (e_6_1) { e_6 = { error: e_6_1 }; }
         finally {
             try {
-                if (COUNTRIES_3_1 && !COUNTRIES_3_1.done && (_a = COUNTRIES_3.return)) _a.call(COUNTRIES_3);
+                if (COUNTRIES_2_1 && !COUNTRIES_2_1.done && (_a = COUNTRIES_2.return)) _a.call(COUNTRIES_2);
             }
-            finally { if (e_7) throw e_7.error; }
+            finally { if (e_6) throw e_6.error; }
         }
         return null;
     }
@@ -9904,6 +9976,7 @@ var __values = (this && this.__values) || function(o) {
             if (pinchStart) {
                 target.dist = clampDist(pinchDist0 * pinchStart / d);
                 view.dist = target.dist;
+                dirty = true;
             }
             dragMoved += 10;
             return;
@@ -9915,6 +9988,7 @@ var __values = (this && this.__values) || function(o) {
             var k = 0.32 * (view.dist - 1) / 1.6 * (500 / Math.max(300, Math.min(stage.clientWidth, stage.clientHeight)));
             view.lon -= dx * k;
             view.lat = Math.max(-80, Math.min(80, view.lat + dy * k));
+            dirty = true;
             target.lon = view.lon;
             target.lat = view.lat;
         }
@@ -9996,8 +10070,8 @@ var __values = (this && this.__values) || function(o) {
     chEl.addEventListener('click', function (e) { var b = e.target.closest('.chip'); if (b)
         openCard(byName[b.dataset.country], true); });
     /* theme changes */
-    function themeChanged() { theme = isDark() ? THEMES.dark : THEMES.light; lastKey = ''; paintDots(); if (selected)
-        renderCard(selected); requestDraw(); }
+    function themeChanged() { theme = isDark() ? THEMES.dark : THEMES.light; paintDots(); applyTheme(); setHighlight(); if (selected)
+        renderCard(selected); }
     if (mq.addEventListener)
         mq.addEventListener('change', themeChanged);
     else if (mq.addListener)
@@ -10013,6 +10087,7 @@ var __values = (this && this.__values) || function(o) {
         renderer.setSize(w, h, false);
         camera.aspect = w / h;
         camera.updateProjectionMatrix();
+        dirty = true;
         // keep the globe framed on wide or tall stages
         camera.setViewOffset(w, h, isMobile() ? 0 : -w * 0.04, isMobile() ? -h * 0.02 : 0, w, h);
     }
@@ -10025,7 +10100,7 @@ var __values = (this && this.__values) || function(o) {
         addEventListener('resize', onStageResize);
     var angDiff = function (a, b) { return ((b - a + 540) % 360) - 180; };
     function frame(t) {
-        var e_9, _a;
+        var e_8, _a;
         if (playing) {
             var dt = Math.min(0.05, (t - lastT) / 1000);
             lastT = t;
@@ -10037,38 +10112,48 @@ var __values = (this && this.__values) || function(o) {
             }
         }
         var e = reduce ? 1 : 0.07;
-        view.lon += angDiff(view.lon, target.lon) * e;
-        view.lat += (target.lat - view.lat) * e;
-        view.dist += (target.dist - view.dist) * (reduce ? 1 : 0.09);
+        var dLon = angDiff(view.lon, target.lon), dLat = target.lat - view.lat, dDist = target.dist - view.dist;
+        if (Math.abs(dLon) + Math.abs(dLat) > 0.01 || Math.abs(dDist) > 0.0005) {
+            view.lon += dLon * e;
+            view.lat += dLat * e;
+            view.dist += dDist * (reduce ? 1 : 0.09);
+            dirty = true;
+        }
+        else if (dLon || dLat || dDist) {
+            view.lon = target.lon;
+            view.lat = target.lat;
+            view.dist = target.dist;
+            dirty = true;
+        }
         group.rotation.set(view.lat * D2R, -Math.PI / 2 - view.lon * D2R, 0);
         camera.position.set(0, 0, view.dist);
+        var fdt = Math.min(0.1, (t - (frame.last || t)) / 1000);
+        frame.last = t;
         var anim = false;
         try {
-            for (var COUNTRIES_4 = __values(COUNTRIES), COUNTRIES_4_1 = COUNTRIES_4.next(); !COUNTRIES_4_1.done; COUNTRIES_4_1 = COUNTRIES_4.next()) {
-                var c = COUNTRIES_4_1.value;
+            for (var COUNTRIES_3 = __values(COUNTRIES), COUNTRIES_3_1 = COUNTRIES_3.next(); !COUNTRIES_3_1.done; COUNTRIES_3_1 = COUNTRIES_3.next()) {
+                var c = COUNTRIES_3_1.value;
                 var on = year >= arrivalOf(c) ? 1 : 0;
                 var f = c.f || 0;
                 if (f !== on) {
-                    c.f = reduce ? on : (on ? Math.min(1, f + 0.09) : Math.max(0, f - 0.12));
+                    c.f = reduce ? on : (on ? Math.min(1, f + fdt * 2.2) : Math.max(0, f - fdt * 3));
                     anim = true;
                 }
             }
         }
-        catch (e_9_1) { e_9 = { error: e_9_1 }; }
+        catch (e_8_1) { e_8 = { error: e_8_1 }; }
         finally {
             try {
-                if (COUNTRIES_4_1 && !COUNTRIES_4_1.done && (_a = COUNTRIES_4.return)) _a.call(COUNTRIES_4);
+                if (COUNTRIES_3_1 && !COUNTRIES_3_1.done && (_a = COUNTRIES_3.return)) _a.call(COUNTRIES_3);
             }
-            finally { if (e_9) throw e_9.error; }
+            finally { if (e_8) throw e_8.error; }
         }
         if (anim)
-            drawQueued = true;
-        if (drawQueued) {
-            drawQueued = false;
-            draw();
-        }
-        if (renderer)
+            paintCountries(false);
+        if (renderer && dirty) {
+            dirty = false;
             renderer.render(scene, camera);
+        }
         requestAnimationFrame(frame);
     }
     applyStatic();
@@ -10076,7 +10161,8 @@ var __values = (this && this.__values) || function(o) {
     onScroll();
     Object.assign(view, target);
     COUNTRIES.forEach(function (c) { return c.f = year >= arrivalOf(c) ? 1 : 0; });
-    draw();
+    applyTheme();
+    setHighlight();
     requestAnimationFrame(frame);
 })();
 </script>
