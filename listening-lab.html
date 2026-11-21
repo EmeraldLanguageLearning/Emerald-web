@@ -587,29 +587,79 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
         }).filter(function (s) { return s.transcript || s.title; });
     }
     // Teachers: copy the current playlist as a table that pastes straight into the sheet.
+    // Puts both an HTML table (desktop Sheets) and proper TSV (Sheets apps on iPad/Android, Excel) on the clipboard.
+    // Several methods are tried because old iPads and the Android app don't all support the same one;
+    // if none works, the table is shown in a box to copy by hand.
     function copySheetRows() {
         var esc2 = function (t) { return String(t || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>"); };
+        var tsvCell = function (t) { t = String(t || "").replace(/\r/g, ""); return /[\t\n"]/.test(t) ? "\"" + t.replace(/"/g, "\"\"") + "\"" : t; };
         var head = SHEET_COLS.map(function (c) { return c[1]; });
         var rows = lib.items.map(function (it) { var s = it.setup; return [it.id, s.title, s.url, s.start, s.end, s.audio, s.transcript, s.wordBank ? "yes" : "no", s.keyFeedback !== false ? "yes" : "no", s.model, s.icon || "", s.iconSvg || ""]; });
-        var html = "<table><tr>" + head.map(function (h) { return "<td>" + esc2(h) + "</td>"; }).join("") + "</tr>" + rows.map(function (r) { return "<tr>" + r.map(function (c) { return "<td>" + esc2(c) + "</td>"; }).join("") + "</tr>"; }).join("") + "</table>";
-        var box = document.createElement("div");
-        box.innerHTML = html;
-        box.setAttribute("contenteditable", "true");
-        box.style.cssText = "position:fixed;left:-9999px;top:0;opacity:0";
-        document.body.appendChild(box);
-        var range = document.createRange();
-        range.selectNodeContents(box);
-        var sel = window.getSelection();
-        sel.removeAllRanges();
-        sel.addRange(range);
+        var all = [head].concat(rows);
+        // Times are marked as text so the sheet keeps "0:45" instead of turning it into a clock time.
+        var td = function (c, i) { return (i === 3 || i === 4) ? "<td style=\"mso-number-format:'\\@'\">" + esc2(c) + "</td>" : "<td>" + esc2(c) + "</td>"; };
+        var html = "<meta charset=\"utf-8\"><table>" + all.map(function (r) { return "<tr>" + r.map(td).join("") + "</tr>"; }).join("") + "</table>";
+        var tsv = all.map(function (r) { return r.map(tsvCell).join("\t"); }).join("\n");
+        var done = function () { toast("Copied. In the sheet, click cell A1 and paste."); };
+        // 1. Synchronous copy event: works in desktop browsers, Safari and most webviews, and lets us set both formats.
+        var viaEvent = false;
+        var onCopy = function (e) {
+            if (!e.clipboardData) return;
+            e.clipboardData.setData("text/html", html);
+            e.clipboardData.setData("text/plain", tsv);
+            e.preventDefault();
+            viaEvent = true;
+        };
+        var ta = document.createElement("textarea");
+        ta.value = tsv;
+        ta.setAttribute("readonly", "");
+        ta.style.cssText = "position:fixed;top:0;left:0;width:1px;height:1px;opacity:0.01;font-size:16px";
+        document.body.appendChild(ta);
+        document.addEventListener("copy", onCopy, true);
         var ok = false;
         try {
+            ta.focus();
+            ta.select();
+            ta.setSelectionRange(0, tsv.length);
             ok = document.execCommand("copy");
         }
         catch (e) { }
-        sel.removeAllRanges();
-        box.parentNode.removeChild(box);
-        toast(ok ? "Copied. In the sheet, click cell A1 and paste." : T("t_copyManual"));
+        document.removeEventListener("copy", onCopy, true);
+        ta.parentNode.removeChild(ta);
+        if (ok && viaEvent) { done(); return; }
+        // 2. Modern clipboard API (newer iPads, Chrome).
+        var tryApi = function () {
+            if (navigator.clipboard && window.ClipboardItem && navigator.clipboard.write) {
+                return navigator.clipboard.write([new ClipboardItem({ "text/html": new Blob([html], { type: "text/html" }), "text/plain": new Blob([tsv], { type: "text/plain" }) })]);
+            }
+            if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(tsv);
+            return Promise.reject(new Error("no clipboard"));
+        };
+        var p;
+        try { p = tryApi(); } catch (e) { p = Promise.reject(e); }
+        p.then(done, function () {
+            // The textarea copy (plain TSV only) still counts if the browser said it worked.
+            if (ok) { done(); return; }
+            showManualCopy(tsv);
+        });
+    }
+    // Last resort: show the table so the teacher can select it and copy it.
+    function showManualCopy(text) {
+        var old = document.getElementById("s-manual");
+        if (old) old.parentNode.removeChild(old);
+        var box = document.createElement("div");
+        box.id = "s-manual";
+        box.className = "group";
+        box.innerHTML = "<span class=\"note\">Your device didn't let the page copy automatically. Tap in the box, select all, copy, then paste into cell A1 of the sheet.</span><textarea readonly style=\"min-height:140px;width:100%\"></textarea><div><button type=\"button\" class=\"btn quiet\" id=\"s-manualClose\">Close</button></div>";
+        box.querySelector("textarea").value = text;
+        var anchor = document.getElementById("s-rows");
+        var host = anchor && anchor.closest(".group") || document.body;
+        host.appendChild(box);
+        var t = box.querySelector("textarea");
+        t.focus();
+        t.select();
+        try { box.scrollIntoView({ block: "center" }); } catch (e) { }
+        toast(T("t_copyManual"));
     }
     var inApp = function () { return !!(window.EmeraldApp && window.EmeraldApp.inApp); };
     function decodeCode(text) {
@@ -1644,6 +1694,11 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
             case "s-rows":
                 copySheetRows();
                 break;
+            case "s-manualClose": {
+                var m = document.getElementById("s-manual");
+                if (m) m.parentNode.removeChild(m);
+                break;
+            }
             case "s-importToggle":
                 $("#s-import").hidden = !$("#s-import").hidden;
                 break;
