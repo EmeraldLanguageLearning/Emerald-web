@@ -1,0 +1,1477 @@
+<!doctype html>
+<html lang="en">
+<head><script src="legacy.js"></script><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Emerald"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#49B190"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" href="icon-192.png"><link rel="manifest" href="manifest.webmanifest">
+<script src="app-bridge.js"></script>
+<meta charset="utf-8">
+<meta name="color-scheme" content="light dark">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prompter · Emerald</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#49B190; --brand-hover:#3f9c7e; --brand-link:#53AC90; --brand-dark:#457865; --brand-soft:#72B1A0;
+  --hl:#FFC857; --text-strong:#323232; --text:#777; --bg:#fff; --bg-soft:#F9F9F9;
+  --line:#DADADA; --line-strong:#BBB;
+  --surface:#fff; --on-hl:#1d1a12; --phrase:#2E7D63; --hud-bg:rgba(30,46,40,.08); --hud-text:#3f5a50;
+  --stage:#FCFDFC; --stage-text:#1F2A26; --stage-dim:#B4C4BD;
+  color-scheme:light;
+  --font-head:'Montserrat',system-ui,sans-serif; --font-body:'Open Sans',system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--brand:#49B190; --brand-hover:#5cc4a2; --brand-link:#6cc8a6; --brand-dark:#7fcbb0; --brand-soft:#72B1A0; --text-strong:#edf2f0; --text:#b6c2bd; --bg:#121816; --bg-soft:#1a2320; --surface:#161e1b; --line:#2f3b37; --line-strong:#4b5a55; --phrase:#8FDDBF; --hud-bg:rgba(255,255,255,.1); --hud-text:#cfe0d9; --stage:#0D1311; --stage-text:#F1F6F4; --stage-dim:#5D6F68; color-scheme:dark;}}
+:root[data-theme=dark]{--brand:#49B190; --brand-hover:#5cc4a2; --brand-link:#6cc8a6; --brand-dark:#7fcbb0; --brand-soft:#72B1A0; --text-strong:#edf2f0; --text:#b6c2bd; --bg:#121816; --bg-soft:#1a2320; --surface:#161e1b; --line:#2f3b37; --line-strong:#4b5a55; --phrase:#8FDDBF; --hud-bg:rgba(255,255,255,.1); --hud-text:#cfe0d9; --stage:#0D1311; --stage-text:#F1F6F4; --stage-dim:#5D6F68; color-scheme:dark;}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-body);line-height:1.6}
+button,select,input,textarea{font:inherit}
+.site{background:var(--surface);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+.site-in{max-width:1080px;width:90%;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0}
+.brand-home{display:block;line-height:0;border-radius:6px}
+.brand-logo{height:60px;width:auto;display:block}
+@media (max-width:640px){.brand-logo{height:44px}.site-in{width:auto;padding:12px 16px}}
+.lang{display:inline-flex;flex:none;border:1px solid var(--brand);border-radius:4px;overflow:hidden}
+.lang button{border:0;background:var(--surface);color:var(--brand-dark);padding:7px 13px;cursor:pointer;font-weight:600;font-size:.85rem}
+.lang button[aria-pressed="true"]{background:var(--brand);color:#fff}
+nav.tabs{display:flex;justify-content:center;gap:28px;border-bottom:1px solid var(--line);background:var(--surface)}
+nav.tabs button{border:0;background:none;padding:12px 4px;font-weight:600;color:var(--text);cursor:pointer;border-bottom:2px solid transparent}
+nav.tabs button[aria-selected="true"]{color:var(--brand-link);border-bottom-color:var(--brand)}
+main{width:90%;max-width:1080px;margin:0 auto;padding:24px 0 60px}
+h1{font-family:var(--font-head);font-weight:300;text-transform:uppercase;color:var(--brand-dark);text-align:center;font-size:clamp(1.8rem,4.5vw,3rem);line-height:1.3;margin:12px 0 6px}
+.sub{text-align:center;margin:0 auto 26px;max-width:640px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:54px 22px;margin:48px 0 24px}
+.card{background:var(--bg-soft);border-radius:4px;padding:52px 20px 20px;position:relative;text-align:center}
+.card .ic{position:absolute;top:-34px;left:50%;transform:translateX(-50%);width:68px;height:68px;border-radius:50%;background:var(--brand);display:flex;align-items:center;justify-content:center}
+.card .ic svg{width:30px;height:30px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.card h3{font-family:var(--font-head);font-weight:700;color:var(--text-strong);margin:0 0 6px;font-size:1rem}
+.card p{margin:0 0 12px;font-size:.92rem;line-height:1.7}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:var(--brand);color:#fff;border:1px solid var(--brand);border-radius:4px;padding:8px 16px;cursor:pointer;font-weight:600}
+.btn:hover{background:var(--brand-hover)}
+.btn.out{background:var(--surface);color:var(--brand-dark)}
+.btn.out:hover{background:var(--bg-soft)}
+.btn.big{padding:12px 26px;font-size:1.05rem}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.opts{display:flex;flex-direction:column;gap:6px;text-align:left;font-size:.9rem;margin:0 auto 10px;max-width:260px}
+.opts label{display:flex;gap:8px;align-items:center;cursor:pointer}
+textarea#script{background:var(--surface);width:100%;min-height:320px;border:1px solid var(--line);border-radius:4px;padding:16px;font-size:1rem;line-height:1.7;color:var(--text-strong);resize:vertical}
+textarea#script:focus{outline:2px solid var(--brand-soft);border-color:transparent}
+.bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin:10px 0 18px;font-size:.9rem}
+.stats b{color:var(--text-strong)}
+.tips{background:var(--bg-soft);border-radius:4px;padding:16px 20px;font-size:.9rem;margin-top:26px}
+.tips h3{font-family:var(--font-head);color:var(--text-strong);font-size:.95rem;margin:0 0 6px}
+.tips code{background:var(--surface);border:1px solid var(--line);border-radius:3px;padding:0 5px;color:var(--brand-dark)}
+.tips ul{margin:6px 0 0;padding-left:20px}
+.center{text-align:center}
+select,input[type=text],input[type=search]{border:1px solid var(--line-strong);border-radius:4px;padding:6px 8px;background:var(--surface);color:var(--text-strong)}
+
+/* Prompter */
+#view-prompt{display:none}
+body.prompting #view-script{display:none}
+body.prompting #view-prompt{display:block}
+body.prompting main{width:100%;max-width:none;padding:0}
+.stage{position:relative;background:var(--stage);height:calc(100vh - 270px);min-height:320px;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
+.stage.full,.stage:fullscreen{position:fixed;top:0;right:0;bottom:0;left:0;height:100%;z-index:100}
+.flip{position:absolute;top:0;right:0;bottom:0;left:0}
+.stage.mirror .flip{transform:scaleX(-1)}
+#content{position:relative;width:min(88%,1000px);margin:0 auto;color:var(--stage-text);font-family:var(--font-body);font-weight:600;line-height:1.55;will-change:transform;padding-bottom:70vh}
+#content p{margin:0 0 .9em}
+#content .w{border-radius:.15em;padding:0 .06em;transition:color .15s,background-color .15s;cursor:pointer}
+#content .w.emph{font-weight:700;text-decoration:underline;text-decoration-color:var(--brand-soft);text-underline-offset:.15em}
+#content .pz{color:var(--brand-soft);font-weight:400;opacity:.8;padding:0 .1em}
+#content .slide-chip{display:inline-block;font-family:var(--font-head);font-size:.42em;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:var(--brand);border-radius:4px;padding:.2em .8em;margin:.4em 0 .8em}
+#content.hl-word .w.past,#content.hl-phrase .w.past,#content.hl-word .pz.past{color:var(--stage-dim)}
+#content.hl-word .w.now{background:var(--hl);color:var(--on-hl)}
+#content.hl-phrase .w.phrase{color:var(--phrase)}
+#content.hl-phrase .w.now{text-decoration:underline;text-decoration-color:var(--hl);text-decoration-thickness:.08em;text-underline-offset:.18em}
+.readline{position:absolute;left:0;right:0;height:0;border-top:2px dashed rgba(114,177,160,.55);pointer-events:none}
+.readline::before,.readline::after{content:"";position:absolute;top:-9px;border:8px solid transparent}
+.readline::before{left:6px;border-left-color:var(--brand-soft)}
+.readline::after{right:6px;border-right-color:var(--brand-soft)}
+.overlay{position:absolute;top:0;right:0;bottom:0;left:0;display:none;align-items:center;justify-content:center;font-family:var(--font-head);font-weight:700;color:#fff;font-size:min(30vw,220px);background:rgba(13,19,17,.55);pointer-events:none}
+.toast{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);background:var(--brand);color:#fff;padding:8px 16px;border-radius:4px;font-size:.95rem;display:none;z-index:5;text-align:center}
+.hud{position:absolute;top:10px;right:14px;display:flex;gap:8px;z-index:4}
+.hud span{background:var(--hud-bg);color:var(--hud-text);border-radius:4px;padding:2px 10px;font-size:.85rem}
+.progress{position:absolute;left:0;bottom:0;height:4px;background:var(--brand);width:0}
+.exitfull{position:absolute;top:10px;left:14px;z-index:4;display:none;background:var(--hud-bg);color:var(--hud-text);border:0;border-radius:4px;padding:4px 10px;cursor:pointer}
+.stage.full .exitfull,.stage:fullscreen .exitfull{display:block}
+.controls{background:var(--surface);border-top:1px solid var(--line);padding:10px 4%;display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:center}
+.grp{display:flex;align-items:center;gap:6px;font-size:.85rem}
+.ibtn{width:42px;height:42px;border-radius:4px;border:1px solid var(--brand);background:var(--surface);color:var(--brand-dark);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.ibtn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ibtn.play{background:var(--brand);color:#fff;width:54px;height:54px;border-radius:50%}
+.ibtn.play svg{width:24px;height:24px;fill:currentColor;stroke:none}
+.ibtn[aria-pressed="true"]{background:var(--brand);color:#fff}
+.ibtn:disabled{opacity:.35}
+.grp input[type=range]{width:120px;accent-color:var(--brand)}
+.grp .val{min-width:44px;font-weight:600;color:var(--text-strong)}
+.cadinfo{text-align:center;font-size:.82rem;padding:4px 4% 10px;background:var(--surface)}
+
+/* Modal */
+.modal{position:fixed;top:0;right:0;bottom:0;left:0;background:rgba(13,19,17,.5);display:none;align-items:center;justify-content:center;z-index:200;padding:16px}
+.modal.open{display:flex}
+.dialog{background:var(--surface);border-radius:4px;max-width:560px;width:100%;max-height:85vh;display:flex;flex-direction:column;padding:20px}
+.dialog h2{font-family:var(--font-head);font-weight:400;text-transform:uppercase;color:var(--brand-dark);margin:0 0 10px;font-size:1.3rem;text-align:center}
+.dialog .row{display:flex;gap:8px;margin-bottom:10px}
+.dialog .row input{flex:1}
+.flist{overflow:auto;border-top:1px solid var(--line);flex:1;min-height:80px}
+.flist button{display:flex;width:100%;gap:10px;align-items:center;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:10px 4px;cursor:pointer;color:var(--text-strong)}
+.flist button:hover{background:var(--bg-soft)}
+.flist small{color:var(--text);display:block}
+.tag{font-size:.7rem;font-weight:700;color:#fff;background:var(--brand-soft);border-radius:3px;padding:1px 6px;flex:none}
+.msg{font-size:.88rem;margin:8px 0;text-align:center}
+.dialog .foot{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
+@media (max-width:640px){
+  .stage{height:calc(100vh - 290px)}
+  .controls{gap:8px 12px}
+  .grp input[type=range]{width:90px}
+}
+footer{border-top:1px solid var(--line);text-align:center;font-size:.8rem;color:var(--line-strong);padding:18px 0 calc(18px + env(safe-area-inset-bottom,0px))}
+body.prompting footer{display:none}
+</style>
+<style id="emerald-dark">
+/* Dark version of the Emerald look, used when the phone is in dark mode */
+@media screen and (prefers-color-scheme: dark){
+  .site{background:#161e1b!important;border-bottom-color:#2f3b37!important}
+  .brand-logo{background:#fff;border-radius:6px;padding:4px 8px;box-sizing:content-box}
+  .lang button{background:transparent!important;color:#7fcbb0!important}
+  .lang button[aria-pressed="true"]{background:#49B190!important;color:#fff!important}
+  .app-home{background:transparent!important;color:#7fcbb0!important}
+  .app-home:hover{background:#1d3a31!important}
+}
+</style>
+</head>
+<body>
+<div class="site"><div class="site-in">
+  <a class="brand-home" href="index.html" title="Home" aria-label="Emerald Language Learning – Home"><img class="brand-logo" alt="Emerald Language Learning" width="306" height="90" src="data:image/png;base64,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"></a>
+  <div class="lang" role="group" aria-label="Langue / Language"><button type="button" data-lang="en" aria-pressed="true" lang="en" title="English">EN</button><button type="button" data-lang="fr" aria-pressed="false" lang="fr" title="Français">FR</button></div>
+</div></div>
+<nav class="tabs" role="tablist">
+  <button role="tab" id="tab-script" aria-selected="true" data-i18n="tabScript">Script</button>
+  <button role="tab" id="tab-prompt" aria-selected="false" data-i18n="tabPrompt">Prompter</button>
+</nav>
+
+<main>
+<section id="view-script">
+  <h1 data-i18n="title">Your script, at your pace</h1>
+  <p class="sub" data-i18n="subtitle">Paste or import your text, choose a speaking cadence, then follow the highlighted words as the script scrolls.</p>
+
+  <div class="cards">
+    <div class="card">
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg></div>
+      <h3 data-i18n="cFileT">Open a file</h3>
+      <p data-i18n="cFileP">Text, Word (.docx) or PowerPoint (.pptx). On Android you can pick straight from Google Drive.</p>
+      <button class="btn" id="btnFile" data-i18n="cFileB">Choose file</button>
+      <input type="file" id="fileInput" accept=".txt,.md,.text,.docx,.pptx,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.presentationml.presentation" hidden>
+    </div>
+    <div class="card">
+      <div class="ic"><svg viewBox="0 0 24 24"><path d="M8 3h8l6 10-4 7H6l-4-7z"/><path d="M8 3l6 10H2M16 3 10 13M14 13h8"/></svg></div>
+      <h3 data-i18n="cDriveT">Google Docs &amp; Slides</h3>
+      <p id="driveTxt" data-i18n="cDrivePweb"></p>
+      <div class="btnrow"><button class="btn" id="btnLink" data-i18n="cLinkB">Paste link</button></div>
+    </div>
+    <div class="card">
+      <div class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M12 16v4M8 20h8M7 8h6M7 11h4"/></svg></div>
+      <h3 data-i18n="cPresT">Presentation add-on</h3>
+      <p data-i18n="cPresP">Google Slides and PowerPoint: import each slide as a marked section of your script.</p>
+      <div class="opts">
+        <label><input type="radio" name="slideMode" value="notes" checked> <span data-i18n="optNotes">Speaker notes</span></label>
+        <label><input type="radio" name="slideMode" value="slides"> <span data-i18n="optSlides">Slide text</span></label>
+        <label><input type="radio" name="slideMode" value="both"> <span data-i18n="optBoth">Slide text + notes</span></label>
+        <label><input type="checkbox" id="pauseSlides"> <span data-i18n="optPause">Pause at each new slide</span></label>
+      </div>
+    </div>
+  </div>
+
+  <textarea id="script" spellcheck="true" aria-label="Script"></textarea>
+  <div class="bar">
+    <div class="stats" id="stats"></div>
+    <div class="btnrow">
+      <button class="btn out" id="btnSample" data-i18n="sample">Load sample</button>
+      <button class="btn out" id="btnClear" data-i18n="clear">Clear</button>
+      <button class="btn big" id="btnStart" data-i18n="start">Start prompting</button>
+    </div>
+  </div>
+
+  <div class="tips">
+    <h3 data-i18n="tipsT">Script marks</h3>
+    <ul>
+      <li data-i18n-html="tip1"><code>*word*</code> or <code>*several words*</code>: emphasis, held slightly longer</li>
+      <li data-i18n-html="tip2"><code>/</code> short pause, <code>//</code> long pause</li>
+      <li data-i18n-html="tip3"><code>[Slide 3]</code> on its own line: slide marker (added automatically for decks)</li>
+      <li data-i18n-html="tip4">A blank line starts a new paragraph, with a longer breath</li>
+    </ul>
+    <h3 style="margin-top:12px" data-i18n="keysT">While prompting</h3>
+    <ul>
+      <li data-i18n-html="key1"><code>Space</code> play / pause · <code>↑ ↓</code> speed · <code>← →</code> sentence · <code>PgUp PgDn</code> slide</li>
+      <li data-i18n-html="key2"><code>+ −</code> text size · <code>M</code> mirror · <code>F</code> full screen · <code>Home</code> restart · drag or scroll to move, tap a word to jump</li>
+    </ul>
+  </div>
+</section>
+
+<section id="view-prompt">
+  <div class="stage" id="stage">
+    <div class="flip"><div id="content" class="hl-word"></div></div>
+    <div class="readline" id="readline"></div>
+    <div class="hud"><span id="hudSlide" hidden></span><span id="hudTime">0:00 / 0:00</span></div>
+    <button class="exitfull" id="exitFull" data-i18n="exitFull">Exit full screen</button>
+    <div class="overlay" id="countdown"></div>
+    <div class="toast" id="toast"></div>
+    <div class="progress" id="progress"></div>
+  </div>
+  <div class="controls">
+    <div class="grp">
+      <button class="ibtn" id="bRestart" data-i18n-aria="aRestart" data-i18n-title="aRestart"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button>
+      <button class="ibtn" id="bPrevSlide" data-i18n-aria="aPrevSlide" data-i18n-title="aPrevSlide"><svg viewBox="0 0 24 24"><path d="M19 5 9 12l10 7zM5 5v14"/></svg></button>
+      <button class="ibtn" id="bPrev" data-i18n-aria="aPrev" data-i18n-title="aPrev"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
+      <button class="ibtn play" id="bPlay" data-i18n-aria="aPlay" data-i18n-title="aPlay"><svg viewBox="0 0 24 24" id="playIcon"><path d="M7 4v16l13-8z"/></svg></button>
+      <button class="ibtn" id="bNext" data-i18n-aria="aNext" data-i18n-title="aNext"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+      <button class="ibtn" id="bNextSlide" data-i18n-aria="aNextSlide" data-i18n-title="aNextSlide"><svg viewBox="0 0 24 24"><path d="m5 5 10 7-10 7zM19 5v14"/></svg></button>
+    </div>
+    <div class="grp">
+      <label for="cadence" data-i18n="cadence">Cadence</label>
+      <select id="cadence"></select>
+    </div>
+    <div class="grp" id="customGrp" hidden>
+      <label for="customWpm" data-i18n="wpm">Words/min</label>
+      <input type="range" id="customWpm" min="60" max="240" step="5">
+      <span class="val" id="customWpmVal"></span>
+    </div>
+    <div class="grp">
+      <label for="speed" data-i18n="speed">Speed</label>
+      <input type="range" id="speed" min="0.5" max="2" step="0.05">
+      <span class="val" id="speedVal"></span>
+    </div>
+    <div class="grp">
+      <label for="hlMode" data-i18n="highlight">Highlight</label>
+      <select id="hlMode">
+        <option value="word" data-i18n="hlWord">Word</option>
+        <option value="phrase" data-i18n="hlPhrase">Phrase</option>
+        <option value="none" data-i18n="hlNone">Off</option>
+      </select>
+    </div>
+    <div class="grp">
+      <button class="ibtn" id="bSmaller" data-i18n-aria="aSmaller" data-i18n-title="aSmaller"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button>
+      <span class="val center" id="fontVal"></span>
+      <button class="ibtn" id="bBigger" data-i18n-aria="aBigger" data-i18n-title="aBigger"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+      <button class="ibtn" id="bMirror" aria-pressed="false" data-i18n-aria="aMirror" data-i18n-title="aMirror"><svg viewBox="0 0 24 24"><path d="M12 3v18M9 7 4 12l5 5M15 7l5 5-5 5"/></svg></button>
+      <button class="ibtn" id="bCount" aria-pressed="true" data-i18n-aria="aCount" data-i18n-title="aCount"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M10 2h4"/></svg></button>
+      <button class="ibtn" id="bFull" data-i18n-aria="aFull" data-i18n-title="aFull"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+    </div>
+  </div>
+  <div class="cadinfo" id="cadInfo"></div>
+</section>
+</main>
+<footer>Emerald Language Learning</footer>
+
+<div class="modal" id="linkModal" role="dialog" aria-modal="true">
+  <div class="dialog">
+    <h2 data-i18n="linkT">Paste a Google link</h2>
+    <p class="msg" data-i18n="linkP">Google Docs, Google Slides or a Drive file link (.docx, .pptx, .txt). The file must be shared with "Anyone with the link" unless you use Browse Drive.</p>
+    <div class="row"><input type="text" id="linkUrl" placeholder="https://docs.google.com/..."></div>
+    <div class="msg" id="linkMsg"></div>
+    <div class="foot">
+      <button class="btn out" data-close data-i18n="close">Close</button>
+      <button class="btn" id="linkGo" data-i18n="importB">Import</button>
+    </div>
+  </div>
+</div>
+
+<script>var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+var __values = (this && this.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+};
+(function () {
+    "use strict";
+    var _this = this;
+    /* ---------- i18n ---------- */
+    var STR = {
+        en: { tabScript: "Script", tabPrompt: "Prompter", title: "Your script, at your pace",
+            subtitle: "Paste or import your text, choose a speaking cadence, then follow the highlighted words as the script scrolls.",
+            cFileT: "Open a file", cFileP: "Text, Word (.docx) or PowerPoint (.pptx). On Android you can pick straight from Google Drive.", cFileB: "Choose file",
+            cDriveT: "Google Docs & Slides", cDrivePapp: "Paste the sharing link of a Google Doc or Slides deck, or use Choose file and pick Google Drive.", cDrivePweb: "In Google Docs or Slides, choose File → Download → .docx or .pptx, then use Choose file.", cLinkB: "Paste link",
+            cPresT: "Presentation add-on", cPresP: "Google Slides and PowerPoint: import each slide as a marked section of your script.",
+            optNotes: "Speaker notes", optSlides: "Slide text", optBoth: "Slide text + notes", optPause: "Pause at each new slide",
+            sample: "Load sample", clear: "Clear", start: "Start prompting",
+            tipsT: "Script marks", tip1: "<code>*word*</code> or <code>*several words*</code>: emphasis, held slightly longer",
+            tip2: "<code>/</code> short pause, <code>//</code> long pause", tip3: "<code>[Slide 3]</code> on its own line: slide marker (added automatically for decks)",
+            tip4: "A blank line starts a new paragraph, with a longer breath", keysT: "While prompting",
+            key1: "<code>Space</code> play / pause · <code>↑ ↓</code> speed · <code>← →</code> sentence · <code>PgUp PgDn</code> slide",
+            key2: "<code>+ −</code> text size · <code>M</code> mirror · <code>F</code> full screen · <code>Home</code> restart · drag or scroll to move, tap a word to jump",
+            exitFull: "Exit full screen", cadence: "Cadence", wpm: "Words/min", speed: "Speed", highlight: "Highlight", hlWord: "Word", hlPhrase: "Phrase", hlNone: "Off",
+            aRestart: "Restart", aPrevSlide: "Previous slide", aPrev: "Previous sentence", aPlay: "Play / pause", aNext: "Next sentence", aNextSlide: "Next slide",
+            aSmaller: "Smaller text", aBigger: "Larger text", aMirror: "Mirror text", aCount: "3-second countdown", aFull: "Full screen",
+            driveT: "Google Drive", driveSearch: "Search by title", search: "Search", close: "Close", linkT: "Paste a Google link",
+            linkP: "Google Docs, Google Slides or a Drive file link (.docx, .pptx, .txt). The file must be shared with \"Anyone with the link\".",
+            importB: "Import",
+            statsLine: "<b>{w}</b> words · <b>{s}</b> slides · about <b>{d}</b> at {cad}", statsNoSlides: "<b>{w}</b> words · about <b>{d}</b> at {cad}",
+            cad_presentation: "Presentation", cad_normal: "Normal speech", cad_story: "Storytelling", cad_news: "News / brisk", cad_learner: "Learner / slow", cad_custom: "Custom",
+            slideN: "Slide {n} / {t}", slidePaused: "Slide {n}: press play when ready", ended: "End of script",
+            empty: "Your script is empty: paste or import some text first.", loading: "Loading…", imported: "Imported: {name}",
+            noDrive: "Drive browsing works in the Claude page. In the app, use Choose file and pick Google Drive, or paste a link.",
+            driveNone: "No matching files.", driveErr: "Drive could not be reached: {e}", driveDenied: "Drive access was not granted.",
+            badLink: "That doesn't look like a Google Docs, Slides or Drive link.", linkErr: "Could not download that link. Check it is shared with \"Anyone with the link\", or use Choose file.",
+            readErr: "Could not read that file: {e}", unsupported: "Unsupported file type. Use .txt, .docx or .pptx.", noZip: "This device can't open .docx or .pptx files. Use a .txt file or paste the text.",
+            noNotes: "(no speaker notes)", confirmClear: "Click again to clear", sampleTitle: "sample" },
+        fr: { tabScript: "Texte", tabPrompt: "Prompteur", title: "Votre texte, à votre rythme",
+            subtitle: "Collez ou importez votre texte, choisissez une cadence d'élocution, puis suivez les mots surlignés pendant le défilement.",
+            cFileT: "Ouvrir un fichier", cFileP: "Texte, Word (.docx) ou PowerPoint (.pptx). Sur Android, vous pouvez choisir directement dans Google Drive.", cFileB: "Choisir un fichier",
+            cDriveT: "Google Docs et Slides", cDrivePapp: "Collez le lien de partage d'un Google Doc ou d'une présentation Slides, ou utilisez Choisir un fichier puis Google Drive.", cDrivePweb: "Dans Google Docs ou Slides, choisissez Fichier → Télécharger → .docx ou .pptx, puis utilisez Choisir un fichier.", cLinkB: "Coller un lien",
+            cPresT: "Module présentations", cPresP: "Google Slides et PowerPoint : chaque diapositive devient une section repérée de votre texte.",
+            optNotes: "Notes de l'orateur", optSlides: "Texte des diapositives", optBoth: "Texte + notes", optPause: "Pause à chaque nouvelle diapositive",
+            sample: "Charger un exemple", clear: "Effacer", start: "Lancer le prompteur",
+            tipsT: "Repères dans le texte", tip1: "<code>*mot*</code> ou <code>*plusieurs mots*</code> : mise en valeur, tenue un peu plus longtemps",
+            tip2: "<code>/</code> pause courte, <code>//</code> pause longue", tip3: "<code>[Slide 3]</code> seul sur une ligne : repère de diapositive (ajouté automatiquement pour les présentations)",
+            tip4: "Une ligne vide commence un nouveau paragraphe, avec une respiration plus longue", keysT: "Pendant le défilement",
+            key1: "<code>Espace</code> lecture / pause · <code>↑ ↓</code> vitesse · <code>← →</code> phrase · <code>PgPréc PgSuiv</code> diapositive",
+            key2: "<code>+ −</code> taille du texte · <code>M</code> miroir · <code>F</code> plein écran · <code>Origine</code> recommencer · glissez ou faites défiler pour vous déplacer, touchez un mot pour y aller",
+            exitFull: "Quitter le plein écran", cadence: "Cadence", wpm: "Mots/min", speed: "Vitesse", highlight: "Surlignage", hlWord: "Mot", hlPhrase: "Groupe de mots", hlNone: "Aucun",
+            aRestart: "Recommencer", aPrevSlide: "Diapositive précédente", aPrev: "Phrase précédente", aPlay: "Lecture / pause", aNext: "Phrase suivante", aNextSlide: "Diapositive suivante",
+            aSmaller: "Texte plus petit", aBigger: "Texte plus grand", aMirror: "Texte en miroir", aCount: "Compte à rebours de 3 secondes", aFull: "Plein écran",
+            driveT: "Google Drive", driveSearch: "Rechercher par titre", search: "Rechercher", close: "Fermer", linkT: "Coller un lien Google",
+            linkP: "Lien Google Docs, Google Slides ou fichier Drive (.docx, .pptx, .txt). Le fichier doit être partagé avec « Tous les utilisateurs disposant du lien », ",
+            importB: "Importer",
+            statsLine: "<b>{w}</b> mots · <b>{s}</b> diapositives · environ <b>{d}</b> en cadence {cad}", statsNoSlides: "<b>{w}</b> mots · environ <b>{d}</b> en cadence {cad}",
+            cad_presentation: "Présentation", cad_normal: "Conversation", cad_story: "Récit", cad_news: "Journal / rapide", cad_learner: "Apprenant / lent", cad_custom: "Personnalisée",
+            slideN: "Diapo {n} / {t}", slidePaused: "Diapo {n} : appuyez sur lecture quand vous êtes prêt", ended: "Fin du texte",
+            empty: "Votre texte est vide : collez ou importez d'abord un texte.", loading: "Chargement…", imported: "Importé : {name}",
+            noDrive: "La navigation dans Drive fonctionne dans la page Claude. Dans l'application, utilisez Choisir un fichier puis Google Drive, ou collez un lien.",
+            driveNone: "Aucun fichier trouvé.", driveErr: "Impossible de joindre Drive : {e}", driveDenied: "L'accès à Drive n'a pas été autorisé.",
+            badLink: "Ce lien ne ressemble pas à un lien Google Docs, Slides ou Drive.", linkErr: "Impossible de télécharger ce lien. Vérifiez qu'il est partagé avec « Tous les utilisateurs disposant du lien », ou utilisez Choisir un fichier.",
+            readErr: "Impossible de lire ce fichier : {e}", unsupported: "Type de fichier non pris en charge. Utilisez .txt, .docx ou .pptx.", noZip: "Cet appareil ne peut pas ouvrir les fichiers .docx ou .pptx. Utilisez un fichier .txt ou collez le texte.",
+            noNotes: "(pas de notes)", confirmClear: "Cliquez encore pour effacer", sampleTitle: "exemple" }
+    };
+    // Content (cadence descriptions, sample) stays in English.
+    var CAD_DESC = {
+        presentation: "Measured delivery with clear breaths at commas and full stops, and extra weight on emphasised words.",
+        normal: "Everyday conversational pace with light, natural pauses.",
+        story: "Warm and expressive: slower on key words, longer pauses for effect.",
+        news: "Brisk, newsreader-style delivery with short pauses.",
+        learner: "Slow and very clear, ideal for practice or for a non-native audience.",
+        custom: "Your own words-per-minute, with conversational pauses."
+    };
+    var SAMPLE = "[Slide 1]\nGood morning everyone, and thank you for joining us. / Today I'd like to walk you through *three key milestones* for the mission.\n\n[Slide 2]\nFirst, the launch window. // We have a narrow slot in early spring, so every team needs to be ready *on time*.\n\nSecond, the ground segment. The new antennas are installed, tested, and fully operational.\n\n[Slide 3]\nFinally, the timeline. / If we stay on track, the first data will reach us by the end of the year. // Thank you. I'm happy to take your questions.";
+    var lang = "en";
+    function T(k, v) { var _a, _b; var s = (_b = (_a = (STR[lang] && STR[lang][k])) !== null && _a !== void 0 ? _a : STR.en[k]) !== null && _b !== void 0 ? _b : k; if (v)
+        for (var x in v)
+            s = s.split("{" + x + "}").join(v[x]); return s; }
+    function applyStatic() {
+        document.documentElement.lang = lang;
+        Array.prototype.forEach.call(document.querySelectorAll("[data-i18n]"), function (e) { return e.textContent = T(e.dataset.i18n); });
+        Array.prototype.forEach.call(document.querySelectorAll("[data-i18n-html]"), function (e) { return e.innerHTML = T(e.dataset.i18nHtml); });
+        Array.prototype.forEach.call(document.querySelectorAll("[data-i18n-aria]"), function (e) { return e.setAttribute("aria-label", T(e.dataset.i18nAria)); });
+        Array.prototype.forEach.call(document.querySelectorAll("[data-i18n-title]"), function (e) { return e.title = T(e.dataset.i18nTitle); });
+        Array.prototype.forEach.call(document.querySelectorAll(".lang button"), function (b) { return b.setAttribute("aria-pressed", String(b.dataset.lang === lang)); });
+        var inApp = !!(window.EmeraldApp && EmeraldApp.inApp);
+        $("driveTxt").textContent = T(inApp ? "cDrivePapp" : "cDrivePweb");
+        $("btnLink").parentNode.hidden = !inApp;
+        fillCadence();
+        updateStats();
+        updateHud();
+    }
+    function setLang(l) { lang = l; try {
+        localStorage.setItem("ell-lang", l);
+    }
+    catch (e) { } applyStatic(); }
+    /* ---------- settings ---------- */
+    var $ = function (id) { return document.getElementById(id); };
+    var PRESETS = {
+        presentation: { wpm: 125, comma: .9, period: 1.8, para: 3, emph: 1.3, slash: 1.2, dslash: 2.5 },
+        normal: { wpm: 155, comma: .45, period: 1, para: 1.8, emph: 1.1, slash: .8, dslash: 1.6 },
+        story: { wpm: 135, comma: .7, period: 1.5, para: 2.6, emph: 1.35, slash: 1.2, dslash: 2.4 },
+        news: { wpm: 175, comma: .35, period: .8, para: 1.4, emph: 1.1, slash: .6, dslash: 1.2 },
+        learner: { wpm: 100, comma: 1, period: 2, para: 3, emph: 1.25, slash: 1.4, dslash: 2.8 },
+        custom: { wpm: 140, comma: .5, period: 1.1, para: 2, emph: 1.15, slash: .9, dslash: 1.8 }
+    };
+    var S = { cadence: "presentation", customWpm: 140, speed: 1, font: 44, hl: "word", mirror: false, countdown: true, pauseSlides: false, slideMode: "notes", script: "" };
+    var KEY = "smoothprompt";
+    try {
+        Object.assign(S, JSON.parse(localStorage.getItem(KEY) || "{}"));
+    }
+    catch (e) { }
+    var saveTimer = 0;
+    function save() { clearTimeout(saveTimer); saveTimer = setTimeout(function () { try {
+        localStorage.setItem(KEY, JSON.stringify(S));
+    }
+    catch (e) { } }, 300); }
+    function preset() { var p = __assign({}, PRESETS[S.cadence] || PRESETS.presentation); if (S.cadence === "custom")
+        p.wpm = S.customWpm; return p; }
+    /* ---------- tokenizer ---------- */
+    var SLIDE_RE = /^\s*\[(?:slide|diapo(?:sitive)?)\s*(\d+)[^\]]*\]\s*$/i;
+    function syllables(w) {
+        w = w.toLowerCase().replace(/[^a-z0-9àâäéèêëîïôöùûüç]/g, "");
+        if (!w)
+            return 1;
+        if (/^\d+$/.test(w))
+            return Math.min(6, Math.max(1, w.length));
+        if (w.length <= 3)
+            return 1;
+        w = w.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, "").replace(/^y/, "");
+        var m = w.match(/[aeiouyàâäéèêëîïôöùûü]{1,2}/g);
+        return Math.max(1, m ? m.length : 1);
+    }
+    function tokenize(text) {
+        var e_1, _a;
+        var toks = [];
+        var emph = false;
+        var lines = text.replace(/\r/g, "").split("\n");
+        var para = [];
+        var flush = function () {
+            if (!para.length)
+                return;
+            var words = para.join(" ").split(/\s+/).filter(Boolean);
+            words.forEach(function (raw) {
+                if (raw === "/" || raw === "//") {
+                    toks.push({ type: "pause", text: raw === "/" ? "‖" : "‖‖", long: raw === "//" });
+                    return;
+                }
+                var w = raw, e0 = emph;
+                if (w.startsWith("*") && w.length > 1) {
+                    e0 = true;
+                    emph = true;
+                    w = w.replace(/^\*+/, "");
+                }
+                var endEm = false;
+                if (/\*+[^\w]*$/.test(w) && w.replace(/\*/g, "").length) {
+                    endEm = true;
+                    w = w.replace(/\*+/g, "");
+                }
+                if (!w)
+                    return;
+                var core = w.replace(/[”"')\]]+$/, "");
+                var punct = /[.!?…]$/.test(core) ? "period" : /[,;:—–-]$/.test(core) ? "comma" : null;
+                toks.push({ type: "w", text: w, syl: syllables(w), emph: e0 || emph, punct: punct });
+                if (endEm)
+                    emph = false;
+            });
+            for (var i = toks.length - 1; i >= 0; i--) {
+                if (toks[i].type === "w") {
+                    toks[i].paraEnd = true;
+                    break;
+                }
+                if (toks[i].type === "slide")
+                    break;
+            }
+            toks.push({ type: "br" });
+            para = [];
+        };
+        try {
+            for (var lines_1 = __values(lines), lines_1_1 = lines_1.next(); !lines_1_1.done; lines_1_1 = lines_1.next()) {
+                var line = lines_1_1.value;
+                var m = line.match(SLIDE_RE);
+                if (m) {
+                    flush();
+                    toks.push({ type: "slide", n: +m[1] });
+                    continue;
+                }
+                if (!line.trim()) {
+                    flush();
+                    continue;
+                }
+                para.push(line.trim());
+            }
+        }
+        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+        finally {
+            try {
+                if (lines_1_1 && !lines_1_1.done && (_a = lines_1.return)) _a.call(lines_1);
+            }
+            finally { if (e_1) throw e_1.error; }
+        }
+        flush();
+        emph = false;
+        return toks;
+    }
+    /* ---------- timing ---------- */
+    var toks = [], els = [], start = [], total = 0, lines = [], slideIdx = [], sentStarts = [], slideOf = [], phraseA = [], phraseB = [];
+    function computeTimes() {
+        var p = preset(), base = 60000 / p.wpm;
+        start = new Array(toks.length);
+        var t = 0;
+        toks.forEach(function (k, i) {
+            start[i] = t;
+            var d = 0;
+            if (k.type === "w") {
+                d = base * (0.45 + 0.55 * k.syl / 1.5) * (k.emph ? p.emph : 1);
+                if (k.punct === "comma")
+                    d += base * p.comma;
+                if (k.punct === "period")
+                    d += base * p.period;
+                if (k.paraEnd)
+                    d += base * (p.para - (k.punct === "period" ? p.period * .5 : 0));
+            }
+            else if (k.type === "pause")
+                d = base * (k.long ? p.dslash : p.slash);
+            k.dur = d;
+            t += d;
+        });
+        total = t;
+    }
+    function buildStructure() {
+        slideIdx = [];
+        sentStarts = [];
+        slideOf = [];
+        phraseA = [];
+        phraseB = [];
+        var curSlide = -1, newSent = true, pa = 0;
+        toks.forEach(function (k, i) {
+            if (k.type === "slide") {
+                slideIdx.push(i);
+                curSlide = slideIdx.length - 1;
+                newSent = true;
+            }
+            slideOf[i] = curSlide;
+            if (k.type === "w") {
+                if (newSent) {
+                    sentStarts.push(i);
+                    newSent = false;
+                }
+                if (k.punct === "period" || k.paraEnd)
+                    newSent = true;
+            }
+        });
+        // phrases
+        var a = 0;
+        for (var i = 0; i < toks.length; i++) {
+            var k = toks[i];
+            if (k.type !== "w" && k.type !== "pause")
+                continue;
+            phraseA[i] = a;
+            if (k.type === "pause" || k.punct || k.paraEnd) {
+                for (var j = a; j <= i; j++)
+                    phraseB[j] = i;
+                a = i + 1;
+            }
+            if (k.type === "slide")
+                a = i + 1;
+        }
+        for (var j = a; j < toks.length; j++)
+            phraseB[j] = toks.length - 1;
+    }
+    /* ---------- render ---------- */
+    var content = $("content"), stage = $("stage");
+    function render() {
+        content.innerHTML = "";
+        els = new Array(toks.length);
+        var p = null;
+        var newP = function () { p = document.createElement("p"); content.appendChild(p); };
+        toks.forEach(function (k, i) {
+            if (k.type === "br") {
+                p = null;
+                return;
+            }
+            if (k.type === "slide") {
+                var d = document.createElement("div");
+                d.className = "slide-chip";
+                d.dataset.i = i;
+                d.textContent = "Slide " + k.n;
+                content.appendChild(d);
+                els[i] = d;
+                p = null;
+                return;
+            }
+            if (!p)
+                newP();
+            var s = document.createElement("span");
+            s.className = k.type === "w" ? "w" + (k.emph ? " emph" : "") : "pz";
+            s.dataset.i = i;
+            s.textContent = k.text;
+            p.appendChild(s);
+            p.appendChild(document.createTextNode(" "));
+            els[i] = s;
+        });
+        content.className = "hl-" + S.hl;
+        content.style.fontSize = S.font + "px";
+        curIdx = -1;
+        phrase = [-1, -1];
+        measure();
+    }
+    function measure() {
+        lines = [];
+        for (var i = 0; i < toks.length; i++) {
+            var e = els[i];
+            if (!e)
+                continue;
+            var y = e.offsetTop + e.offsetHeight / 2;
+            var L = lines[lines.length - 1];
+            if (!L || Math.abs(y - L.y) > S.font * 0.4)
+                lines.push({ y: y, start: start[i], first: i });
+        }
+        if (!lines.length)
+            lines.push({ y: 0, start: 0, first: 0 });
+        readY = stage.clientHeight * 0.36;
+        $("readline").style.top = readY + "px";
+    }
+    var readY = 200;
+    function lineAtT(t) { var lo = 0, hi = lines.length - 1; while (lo < hi) {
+        var m = (lo + hi + 1) >> 1;
+        if (lines[m].start <= t)
+            lo = m;
+        else
+            hi = m - 1;
+    } return lo; }
+    function yAt(t) {
+        var k = lineAtT(t), L = lines[k], N = lines[k + 1];
+        if (!N) {
+            var f_1 = total > L.start ? Math.min(1, (t - L.start) / (total - L.start)) : 0;
+            return L.y + f_1 * S.font * 0.6;
+        }
+        var f = Math.max(0, Math.min(1, (t - L.start) / ((N.start - L.start) || 1)));
+        return L.y + (N.y - L.y) * f;
+    }
+    function tFromY(y) {
+        if (y <= lines[0].y)
+            return 0;
+        for (var k = 0; k < lines.length - 1; k++) {
+            var L = lines[k], N = lines[k + 1];
+            if (y < N.y) {
+                var f = (y - L.y) / ((N.y - L.y) || 1);
+                return L.start + f * (N.start - L.start);
+            }
+        }
+        return lines[lines.length - 1].start;
+    }
+    function idxAt(t) {
+        var lo = 0, hi = toks.length - 1;
+        while (lo < hi) {
+            var m = (lo + hi + 1) >> 1;
+            if (start[m] <= t)
+                lo = m;
+            else
+                hi = m - 1;
+        }
+        while (lo < toks.length - 1 && (toks[lo].type === "br" || toks[lo].type === "slide") && start[lo + 1] <= t)
+            lo++;
+        return lo;
+    }
+    /* ---------- playback ---------- */
+    var t = 0, playing = false, last = 0, curIdx = -1, phrase = [-1, -1], counting = false;
+    function setCurrent(i) {
+        if (i === curIdx)
+            return;
+        var from = Math.max(0, curIdx);
+        if (curIdx >= 0 && els[curIdx])
+            els[curIdx].classList.remove("now");
+        if (i > curIdx) {
+            for (var j = from; j < i; j++)
+                els[j] && els[j].classList.add("past");
+        }
+        else {
+            for (var j = i; j <= Math.max(curIdx, 0); j++)
+                els[j] && els[j].classList.remove("past");
+        }
+        curIdx = i;
+        var k = toks[i];
+        if (k && (k.type === "w" || k.type === "pause") && els[i])
+            els[i].classList.add("now");
+        var a = phraseA[i], b = phraseB[i];
+        if (a !== undefined && (a !== phrase[0] || b !== phrase[1])) {
+            for (var j = phrase[0]; j >= 0 && j <= phrase[1]; j++)
+                els[j] && els[j].classList.remove("phrase");
+            for (var j = a; j <= b; j++)
+                els[j] && els[j].classList.add("phrase");
+            phrase = [a, b];
+        }
+        updateHud();
+    }
+    function draw() {
+        if (!lines.length || !toks.length)
+            return;
+        content.style.transform = "translateY(" + (readY - yAt(t)).toFixed(1) + "px)";
+        if (toks.length)
+            setCurrent(idxAt(t));
+        $("progress").style.width = (total ? 100 * t / total : 0) + "%";
+        updateTime();
+    }
+    function loop(now) {
+        var e_2, _a;
+        if (playing) {
+            var dt = Math.min(100, now - last);
+            var prev = t;
+            t += dt * S.speed;
+            if (S.pauseSlides) {
+                try {
+                    for (var slideIdx_1 = __values(slideIdx), slideIdx_1_1 = slideIdx_1.next(); !slideIdx_1_1.done; slideIdx_1_1 = slideIdx_1.next()) {
+                        var si = slideIdx_1_1.value;
+                        if (start[si] > prev && start[si] <= t && si > 0) {
+                            t = start[si];
+                            pause();
+                            showToast(T("slidePaused", { n: toks[si].n }), 0);
+                            break;
+                        }
+                    }
+                }
+                catch (e_2_1) { e_2 = { error: e_2_1 }; }
+                finally {
+                    try {
+                        if (slideIdx_1_1 && !slideIdx_1_1.done && (_a = slideIdx_1.return)) _a.call(slideIdx_1);
+                    }
+                    finally { if (e_2) throw e_2.error; }
+                }
+            }
+            if (t >= total) {
+                t = total;
+                pause();
+                showToast(T("ended"), 2500);
+            }
+        }
+        last = now;
+        draw();
+        requestAnimationFrame(loop);
+    }
+    function play() {
+        if (!toks.length)
+            return;
+        if (t >= total)
+            t = 0;
+        hideToast();
+        if (S.countdown && t === 0 && !counting) {
+            counting = true;
+            var ov_1 = $("countdown");
+            var n_1 = 3;
+            ov_1.style.display = "flex";
+            ov_1.textContent = n_1;
+            var iv_1 = setInterval(function () { n_1--; if (n_1 <= 0) {
+                clearInterval(iv_1);
+                ov_1.style.display = "none";
+                counting = false;
+                doPlay();
+            }
+            else
+                ov_1.textContent = n_1; }, 1000);
+            return;
+        }
+        doPlay();
+    }
+    function doPlay() { playing = true; setPlayIcon(); keepAwake(true); }
+    function pause() { playing = false; setPlayIcon(); keepAwake(false); }
+    function toggle() { if (counting)
+        return; playing ? pause() : play(); }
+    function setPlayIcon() { $("playIcon").innerHTML = playing ? '<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>' : '<path d="M7 4v16l13-8z"/>'; }
+    function seekIdx(i) { if (i < 0)
+        i = 0; if (i >= toks.length)
+        i = toks.length - 1; t = start[i]; hideToast(); }
+    function prevSentence() {
+        var ci = idxAt(t);
+        var k = sentStarts.length - 1;
+        while (k > 0 && sentStarts[k] > ci)
+            k--;
+        if (k >= 0 && t - start[sentStarts[k]] < 900 && k > 0)
+            k--;
+        if (k >= 0)
+            seekIdx(sentStarts[k]);
+    }
+    function nextSentence() { var ci = idxAt(t); var n = sentStarts.find(function (s) { return s > ci; }); if (n !== undefined)
+        seekIdx(n); }
+    function prevSlide() { if (!slideIdx.length)
+        return; var ci = idxAt(t); var k = slideOf[ci]; if (k < 0)
+        k = 0; if (t - start[slideIdx[k]] < 900 && k > 0)
+        k--; seekIdx(slideIdx[k]); }
+    function nextSlide() { if (!slideIdx.length)
+        return; var ci = idxAt(t); var n = slideIdx.find(function (s) { return s > ci; }); if (n !== undefined)
+        seekIdx(n); }
+    var wakeLock = null;
+    function keepAwake(on) {
+        return __awaiter(this, void 0, void 0, function () {
+            var e_3;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 5, , 6]);
+                        if (window.EmeraldApp && EmeraldApp.keepAwake) {
+                            EmeraldApp.keepAwake(on);
+                            return [2 /*return*/];
+                        }
+                        if (!(on && navigator.wakeLock && !wakeLock)) return [3 /*break*/, 2];
+                        return [4 /*yield*/, navigator.wakeLock.request("screen")];
+                    case 1:
+                        wakeLock = _a.sent();
+                        wakeLock.addEventListener("release", function () { return wakeLock = null; });
+                        _a.label = 2;
+                    case 2:
+                        if (!(!on && wakeLock)) return [3 /*break*/, 4];
+                        return [4 /*yield*/, wakeLock.release()];
+                    case 3:
+                        _a.sent();
+                        wakeLock = null;
+                        _a.label = 4;
+                    case 4: return [3 /*break*/, 6];
+                    case 5:
+                        e_3 = _a.sent();
+                        return [3 /*break*/, 6];
+                    case 6: return [2 /*return*/];
+                }
+            });
+        });
+    }
+    /* ---------- HUD ---------- */
+    var fmt = function (ms) { var s = Math.max(0, Math.round(ms / 1000)); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); };
+    function updateTime() { $("hudTime").textContent = fmt(t / S.speed) + " / " + fmt(total / S.speed); }
+    function updateHud() {
+        var h = $("hudSlide");
+        if (slideIdx.length && curIdx >= 0) {
+            var k = Math.max(0, slideOf[curIdx]);
+            h.hidden = false;
+            h.textContent = T("slideN", { n: toks[slideIdx[k]].n, t: slideIdx.length });
+        }
+        else
+            h.hidden = true;
+        $("bPrevSlide").disabled = $("bNextSlide").disabled = !slideIdx.length;
+    }
+    var toastT = 0;
+    function showToast(m, ms) { var e = $("toast"); e.textContent = m; e.style.display = "block"; clearTimeout(toastT); if (ms)
+        toastT = setTimeout(hideToast, ms); }
+    function hideToast() { $("toast").style.display = "none"; }
+    /* ---------- controls ---------- */
+    function fillCadence() {
+        var sel = $("cadence");
+        sel.innerHTML = "";
+        Object.keys(PRESETS).forEach(function (k) { var o = document.createElement("option"); o.value = k; o.textContent = T("cad_" + k) + (k === "custom" ? "" : " · " + PRESETS[k].wpm); sel.appendChild(o); });
+        sel.value = S.cadence;
+        $("customGrp").hidden = S.cadence !== "custom";
+        $("cadInfo").textContent = CAD_DESC[S.cadence] + "  ·  ≈ " + Math.round(preset().wpm * S.speed) + " wpm";
+    }
+    function syncControls() {
+        $("speed").value = S.speed;
+        $("speedVal").textContent = S.speed.toFixed(2) + "×";
+        $("customWpm").value = S.customWpm;
+        $("customWpmVal").textContent = S.customWpm;
+        $("hlMode").value = S.hl;
+        $("fontVal").textContent = S.font;
+        $("bMirror").setAttribute("aria-pressed", String(S.mirror));
+        stage.classList.toggle("mirror", S.mirror);
+        $("bCount").setAttribute("aria-pressed", String(S.countdown));
+        $("pauseSlides").checked = S.pauseSlides;
+        Array.prototype.forEach.call(document.querySelectorAll("input[name=slideMode]"), function (r) { return r.checked = r.value === S.slideMode; });
+        fillCadence();
+    }
+    function retime() {
+        var i = toks.length ? idxAt(t) : 0;
+        var frac = toks[i] && toks[i].dur ? (t - start[i]) / toks[i].dur : 0;
+        computeTimes();
+        measure();
+        if (toks[i])
+            t = start[i] + frac * toks[i].dur;
+        updateStats();
+        fillCadence();
+    }
+    function setSpeed(v) { S.speed = Math.round(Math.max(.5, Math.min(2, v)) * 100) / 100; syncControls(); save(); }
+    function setFont(v) { var i = toks.length ? idxAt(t) : 0; S.font = Math.max(20, Math.min(120, v)); content.style.fontSize = S.font + "px"; syncControls(); save(); measure(); if (toks[i])
+        t = start[i]; }
+    $("cadence").onchange = function (e) { S.cadence = e.target.value; save(); retime(); syncControls(); };
+    $("customWpm").oninput = function (e) { S.customWpm = +e.target.value; save(); retime(); syncControls(); };
+    $("speed").oninput = function (e) { return setSpeed(+e.target.value); };
+    $("hlMode").onchange = function (e) { S.hl = e.target.value; content.className = "hl-" + S.hl; save(); };
+    $("bSmaller").onclick = function () { return setFont(S.font - 4); };
+    $("bBigger").onclick = function () { return setFont(S.font + 4); };
+    $("bMirror").onclick = function () { S.mirror = !S.mirror; syncControls(); save(); };
+    $("bCount").onclick = function () { S.countdown = !S.countdown; syncControls(); save(); };
+    $("bPlay").onclick = toggle;
+    $("bRestart").onclick = function () { pause(); t = 0; hideToast(); };
+    $("bPrev").onclick = prevSentence;
+    $("bNext").onclick = nextSentence;
+    $("bPrevSlide").onclick = prevSlide;
+    $("bNextSlide").onclick = nextSlide;
+    function isFull() { return document.fullscreenElement === stage || stage.classList.contains("full"); }
+    function setFull(on) {
+        if (on) {
+            if (stage.requestFullscreen) {
+                stage.requestFullscreen().catch(function () { return stage.classList.add("full"); }).then(function () { return setTimeout(measure, 150); });
+            }
+            else
+                stage.classList.add("full");
+        }
+        else {
+            if (document.fullscreenElement)
+                document.exitFullscreen().catch(function () { });
+            stage.classList.remove("full");
+        }
+        setTimeout(measure, 200);
+    }
+    $("bFull").onclick = function () { return setFull(!isFull()); };
+    $("exitFull").onclick = function (e) { e.stopPropagation(); setFull(false); };
+    document.addEventListener("fullscreenchange", function () { return setTimeout(measure, 150); });
+    window.addEventListener("resize", function () { if (document.body.classList.contains("prompting"))
+        measure(); });
+    // drag / wheel / tap
+    var drag = null;
+    function dDown(y, target) { if (target.closest && target.closest("button"))
+        return false; drag = { y: y, y0: yAt(t), moved: false, wasPlaying: playing }; return true; }
+    function dMove(y) { if (!drag)
+        return; var dy = y - drag.y; if (Math.abs(dy) > 6) {
+        drag.moved = true;
+        if (playing)
+            pause();
+    } if (drag.moved) {
+        t = Math.max(0, Math.min(total, tFromY(drag.y0 - dy)));
+    } }
+    function dUp(x, y) {
+        if (!drag)
+            return;
+        var d = drag;
+        drag = null;
+        if (!d.moved) {
+            var w = document.elementFromPoint(x, y);
+            var s = w && w.closest && w.closest("[data-i]");
+            if (s && content.contains(s)) {
+                seekIdx(+s.dataset.i);
+            }
+            else
+                toggle();
+        }
+        else if (d.wasPlaying)
+            play();
+    }
+    if (window.PointerEvent) {
+        stage.addEventListener("pointerdown", function (e) { if (dDown(e.clientY, e.target))
+            stage.setPointerCapture(e.pointerId); });
+        stage.addEventListener("pointermove", function (e) { return dMove(e.clientY); });
+        stage.addEventListener("pointerup", function (e) { return dUp(e.clientX, e.clientY); });
+    }
+    else {
+        var last_1 = { x: 0, y: 0 };
+        stage.addEventListener("touchstart", function (e) { var p = e.touches[0]; last_1 = { x: p.clientX, y: p.clientY }; dDown(p.clientY, e.target); }, { passive: true });
+        stage.addEventListener("touchmove", function (e) { var p = e.touches[0]; last_1 = { x: p.clientX, y: p.clientY }; if (drag) {
+            e.preventDefault();
+            dMove(p.clientY);
+        } }, { passive: false });
+        stage.addEventListener("touchend", function (e) { if (drag) {
+            e.preventDefault();
+            dUp(last_1.x, last_1.y);
+        } }, { passive: false });
+        stage.addEventListener("mousedown", function (e) { return dDown(e.clientY, e.target); });
+        window.addEventListener("mousemove", function (e) { return dMove(e.clientY); });
+        window.addEventListener("mouseup", function (e) { return dUp(e.clientX, e.clientY); });
+    }
+    stage.addEventListener("wheel", function (e) { e.preventDefault(); t = Math.max(0, Math.min(total, tFromY(yAt(t) + e.deltaY))); }, { passive: false });
+    document.addEventListener("keydown", function (e) {
+        if (!document.body.classList.contains("prompting"))
+            return;
+        if (e.target.matches("input,select,textarea") && e.key !== " ")
+            return;
+        var k = e.key;
+        var h = true;
+        if (k === " ") {
+            toggle();
+        }
+        else if (k === "ArrowUp")
+            setSpeed(S.speed + .05);
+        else if (k === "ArrowDown")
+            setSpeed(S.speed - .05);
+        else if (k === "ArrowLeft")
+            prevSentence();
+        else if (k === "ArrowRight")
+            nextSentence();
+        else if (k === "PageUp")
+            prevSlide();
+        else if (k === "PageDown")
+            nextSlide();
+        else if (k === "+" || k === "=")
+            setFont(S.font + 4);
+        else if (k === "-" || k === "_")
+            setFont(S.font - 4);
+        else if (k === "m" || k === "M")
+            $("bMirror").click();
+        else if (k === "f" || k === "F")
+            setFull(!isFull());
+        else if (k === "Home") {
+            pause();
+            t = 0;
+        }
+        else if (k === "Escape" && stage.classList.contains("full"))
+            setFull(false);
+        else
+            h = false;
+        if (h)
+            e.preventDefault();
+    });
+    /* ---------- views ---------- */
+    var ta = $("script");
+    function showTab(which) {
+        var p = which === "prompt";
+        if (p && !ta.value.trim()) {
+            flash(T("empty"));
+            return;
+        }
+        document.body.classList.toggle("prompting", p);
+        $("tab-script").setAttribute("aria-selected", String(!p));
+        $("tab-prompt").setAttribute("aria-selected", String(p));
+        if (p) {
+            if (builtFor !== ta.value) {
+                build();
+                t = 0;
+            }
+            requestAnimationFrame(function () { measure(); draw(); });
+        }
+        else
+            pause();
+    }
+    var builtFor = null;
+    function build() { toks = tokenize(ta.value); computeTimes(); buildStructure(); render(); builtFor = ta.value; }
+    $("tab-script").onclick = function () { return showTab("script"); };
+    $("tab-prompt").onclick = function () { return showTab("prompt"); };
+    $("btnStart").onclick = function () { return showTab("prompt"); };
+    ta.addEventListener("input", function () { S.script = ta.value; save(); updateStats(); });
+    $("btnSample").onclick = function () { return setScript(SAMPLE, T("sampleTitle")); };
+    $("btnClear").onclick = function (e) { var b = e.currentTarget; if (ta.value && !b.dataset.armed) {
+        b.dataset.armed = "1";
+        b.textContent = T("confirmClear");
+        setTimeout(function () { delete b.dataset.armed; b.textContent = T("clear"); }, 3000);
+        return;
+    } delete b.dataset.armed; b.textContent = T("clear"); ta.value = ""; S.script = ""; save(); updateStats(); };
+    $("pauseSlides").onchange = function (e) { S.pauseSlides = e.target.checked; save(); };
+    Array.prototype.forEach.call(document.querySelectorAll("input[name=slideMode]"), function (r) { return r.onchange = function () { S.slideMode = r.value; save(); }; });
+    function updateStats() {
+        var tk = tokenize(ta.value);
+        var w = tk.filter(function (k) { return k.type === "w"; }).length;
+        var s = tk.filter(function (k) { return k.type === "slide"; }).length;
+        var sv = toks;
+        toks = tk;
+        computeTimes();
+        var d = total / S.speed;
+        toks = sv;
+        if (sv.length)
+            computeTimes();
+        $("stats").innerHTML = T(s ? "statsLine" : "statsNoSlides", { w: w, s: s, d: fmt(d), cad: T("cad_" + S.cadence).toLowerCase() });
+    }
+    function setScript(text, name) {
+        ta.value = text.replace(/\n{3,}/g, "\n\n").trim();
+        S.script = ta.value;
+        save();
+        updateStats();
+        if (name)
+            flash(T("imported", { name: name }));
+    }
+    function flash(m, ms) { var s = $("stats"); s.innerHTML = "<b>" + esc(m) + "</b>"; s.scrollIntoView({ block: "center", behavior: "smooth" }); setTimeout(updateStats, ms || 2500); }
+    var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]); }); };
+    /* ---------- zip / docx / pptx ---------- */
+    function inflate(data) {
+        return __awaiter(this, void 0, void 0, function () {
+            var ds, _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        if (typeof DecompressionStream === "undefined")
+                            throw new Error(T("noZip"));
+                        ds = new DecompressionStream("deflate-raw");
+                        _a = Uint8Array.bind;
+                        return [4 /*yield*/, new Response(new Blob([data]).stream().pipeThrough(ds)).arrayBuffer()];
+                    case 1: return [2 /*return*/, new (_a.apply(Uint8Array, [void 0, _b.sent()]))()];
+                }
+            });
+        });
+    }
+    function unzip(buf) {
+        var u8 = new Uint8Array(buf), dv = new DataView(u8.buffer, u8.byteOffset, u8.byteLength);
+        var e = -1;
+        for (var i = u8.length - 22; i >= Math.max(0, u8.length - 65558); i--) {
+            if (dv.getUint32(i, true) === 0x06054b50) {
+                e = i;
+                break;
+            }
+        }
+        if (e < 0)
+            throw new Error("not a zip file");
+        var n = dv.getUint16(e + 10, true);
+        var off = dv.getUint32(e + 16, true);
+        var files = {};
+        var dec = new TextDecoder();
+        for (var k = 0; k < n; k++) {
+            if (dv.getUint32(off, true) !== 0x02014b50)
+                break;
+            var method = dv.getUint16(off + 10, true), csize = dv.getUint32(off + 20, true), nl = dv.getUint16(off + 28, true), xl = dv.getUint16(off + 30, true), cl = dv.getUint16(off + 32, true), lho = dv.getUint32(off + 42, true);
+            files[dec.decode(u8.subarray(off + 46, off + 46 + nl))] = { method: method, csize: csize, lho: lho };
+            off += 46 + nl + xl + cl;
+        }
+        return { names: Object.keys(files), has: function (n) { return !!files[n]; }, text: function (name) {
+                return __awaiter(this, void 0, void 0, function () {
+                    var f, ln, lx, s, data, _a, _b, _c;
+                    return __generator(this, function (_d) {
+                        switch (_d.label) {
+                            case 0:
+                                f = files[name];
+                                if (!f)
+                                    return [2 /*return*/, null];
+                                ln = dv.getUint16(f.lho + 26, true), lx = dv.getUint16(f.lho + 28, true), s = f.lho + 30 + ln + lx;
+                                data = u8.subarray(s, s + f.csize);
+                                _b = (_a = dec).decode;
+                                if (!(f.method === 0)) return [3 /*break*/, 1];
+                                _c = data;
+                                return [3 /*break*/, 3];
+                            case 1: return [4 /*yield*/, inflate(data)];
+                            case 2:
+                                _c = _d.sent();
+                                _d.label = 3;
+                            case 3: return [2 /*return*/, _b.apply(_a, [_c])];
+                        }
+                    });
+                });
+            } };
+    }
+    var X = function (s) { return new DOMParser().parseFromString(s, "application/xml"); };
+    var byLocal = function (root, name) { return Array.prototype.slice.call(root.getElementsByTagNameNS("*", name)); };
+    function joinPath(base, target) {
+        var e_4, _a;
+        if (target.startsWith("/"))
+            return target.slice(1);
+        var parts = base.split("/");
+        parts.pop();
+        try {
+            for (var _b = __values(target.split("/")), _c = _b.next(); !_c.done; _c = _b.next()) {
+                var p = _c.value;
+                if (p === "..")
+                    parts.pop();
+                else if (p !== ".")
+                    parts.push(p);
+            }
+        }
+        catch (e_4_1) { e_4 = { error: e_4_1 }; }
+        finally {
+            try {
+                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+            }
+            finally { if (e_4) throw e_4.error; }
+        }
+        return parts.join("/");
+    }
+    function paraText(p) {
+        var e_5, _a;
+        var s = "";
+        try {
+            for (var _b = __values(Array.prototype.slice.call(p.getElementsByTagNameNS("*", "*"))), _c = _b.next(); !_c.done; _c = _b.next()) {
+                var n = _c.value;
+                if (n.localName === "t")
+                    s += n.textContent;
+                else if (n.localName === "br")
+                    s += "\n";
+                else if (n.localName === "tab")
+                    s += " ";
+            }
+        }
+        catch (e_5_1) { e_5 = { error: e_5_1 }; }
+        finally {
+            try {
+                if (_c && !_c.done && (_a = _b.return)) _a.call(_b);
+            }
+            finally { if (e_5) throw e_5.error; }
+        }
+        return s;
+    }
+    function shapeText(doc, notes) {
+        var out = [];
+        var found = false;
+        var sps = byLocal(doc, "sp");
+        var pick = function (strict) {
+            var e_6, _a;
+            try {
+                for (var sps_1 = __values(sps), sps_1_1 = sps_1.next(); !sps_1_1.done; sps_1_1 = sps_1.next()) {
+                    var sp = sps_1_1.value;
+                    var ph = byLocal(sp, "ph")[0];
+                    var type = ph ? ph.getAttribute("type") : null;
+                    if (notes) {
+                        if (strict && type !== "body")
+                            continue;
+                        if (!strict && (!ph || ["sldImg", "sldNum", "hdr", "ftr", "dt"].includes(type)))
+                            continue;
+                    }
+                    else if (["sldNum", "dt", "ftr", "hdr"].includes(type))
+                        continue;
+                    var tx = byLocal(sp, "txBody")[0];
+                    if (!tx)
+                        continue;
+                    var ps = byLocal(tx, "p").map(paraText).map(function (s) { return s.trim(); }).filter(Boolean);
+                    if (ps.length) {
+                        out.push(ps.join("\n"));
+                        found = true;
+                    }
+                }
+            }
+            catch (e_6_1) { e_6 = { error: e_6_1 }; }
+            finally {
+                try {
+                    if (sps_1_1 && !sps_1_1.done && (_a = sps_1.return)) _a.call(sps_1);
+                }
+                finally { if (e_6) throw e_6.error; }
+            }
+        };
+        pick(true);
+        if (notes && !found)
+            pick(false);
+        return out.join("\n\n");
+    }
+    function parsePptx(buf) {
+        return __awaiter(this, void 0, void 0, function () {
+            var z, paths, pres, rels, _a, _b, map_1, _c, _d, r, e_7, mode, out, i, path, xml, slideTxt, notes, rp, rx, r, nx, body;
+            var e_8, _e;
+            return __generator(this, function (_f) {
+                switch (_f.label) {
+                    case 0:
+                        z = unzip(buf);
+                        paths = [];
+                        _f.label = 1;
+                    case 1:
+                        _f.trys.push([1, 4, , 5]);
+                        _a = X;
+                        return [4 /*yield*/, z.text("ppt/presentation.xml")];
+                    case 2:
+                        pres = _a.apply(void 0, [_f.sent()]);
+                        _b = X;
+                        return [4 /*yield*/, z.text("ppt/_rels/presentation.xml.rels")];
+                    case 3:
+                        rels = _b.apply(void 0, [_f.sent()]);
+                        map_1 = {};
+                        try {
+                            for (_c = __values(byLocal(rels, "Relationship")), _d = _c.next(); !_d.done; _d = _c.next()) {
+                                r = _d.value;
+                                map_1[r.getAttribute("Id")] = r.getAttribute("Target");
+                            }
+                        }
+                        catch (e_8_1) { e_8 = { error: e_8_1 }; }
+                        finally {
+                            try {
+                                if (_d && !_d.done && (_e = _c.return)) _e.call(_c);
+                            }
+                            finally { if (e_8) throw e_8.error; }
+                        }
+                        paths = byLocal(pres, "sldId").map(function (s) { return s.getAttribute("r:id") || s.getAttributeNS("http://schemas.openxmlformats.org/officeDocument/2006/relationships", "id"); }).map(function (id) { return map_1[id]; }).filter(Boolean).map(function (tg) { return joinPath("ppt/presentation.xml", tg); });
+                        return [3 /*break*/, 5];
+                    case 4:
+                        e_7 = _f.sent();
+                        return [3 /*break*/, 5];
+                    case 5:
+                        if (!paths.length)
+                            paths = z.names.filter(function (n) { return /^ppt\/slides\/slide\d+\.xml$/.test(n); }).sort(function (a, b) { return parseInt(a.match(/\d+/)) - parseInt(b.match(/\d+/)); });
+                        mode = S.slideMode, out = [];
+                        i = 0;
+                        _f.label = 6;
+                    case 6:
+                        if (!(i < paths.length)) return [3 /*break*/, 12];
+                        path = paths[i];
+                        return [4 /*yield*/, z.text(path)];
+                    case 7:
+                        xml = _f.sent();
+                        if (!xml)
+                            return [3 /*break*/, 11];
+                        slideTxt = shapeText(X(xml), false);
+                        notes = "";
+                        rp = path.replace(/([^/]+)$/, "_rels/$1.rels");
+                        return [4 /*yield*/, z.text(rp)];
+                    case 8:
+                        rx = _f.sent();
+                        if (!rx) return [3 /*break*/, 10];
+                        r = byLocal(X(rx), "Relationship").find(function (r) { return /notesSlide$/.test(r.getAttribute("Type") || ""); });
+                        if (!r) return [3 /*break*/, 10];
+                        return [4 /*yield*/, z.text(joinPath(path, r.getAttribute("Target")))];
+                    case 9:
+                        nx = _f.sent();
+                        if (nx)
+                            notes = shapeText(X(nx), true);
+                        _f.label = 10;
+                    case 10:
+                        body = mode === "slides" ? slideTxt : mode === "both" ? [slideTxt, notes].filter(Boolean).join("\n\n") : notes;
+                        out.push("[Slide " + (i + 1) + "]\n" + (body || T("noNotes")));
+                        _f.label = 11;
+                    case 11:
+                        i++;
+                        return [3 /*break*/, 6];
+                    case 12: return [2 /*return*/, out.join("\n\n")];
+                }
+            });
+        });
+    }
+    function parseDocx(buf) {
+        return __awaiter(this, void 0, void 0, function () {
+            var z, doc, _a, body;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        z = unzip(buf);
+                        _a = X;
+                        return [4 /*yield*/, z.text("word/document.xml")];
+                    case 1:
+                        doc = _a.apply(void 0, [_b.sent()]);
+                        body = byLocal(doc, "body")[0] || doc;
+                        return [2 /*return*/, byLocal(body, "p").map(function (p) { return paraText(p).trim(); }).filter(Boolean).join("\n\n")];
+                }
+            });
+        });
+    }
+    function bytesToScript(u8, name, mime) {
+        return __awaiter(this, void 0, void 0, function () {
+            var isZip, z;
+            return __generator(this, function (_a) {
+                isZip = u8[0] === 0x50 && u8[1] === 0x4b;
+                if (isZip) {
+                    z = unzip(u8);
+                    if (z.has("ppt/presentation.xml"))
+                        return [2 /*return*/, parsePptx(u8)];
+                    if (z.has("word/document.xml"))
+                        return [2 /*return*/, parseDocx(u8)];
+                    throw new Error(T("unsupported"));
+                }
+                return [2 /*return*/, new TextDecoder().decode(u8)];
+            });
+        });
+    }
+    /* ---------- local file ---------- */
+    $("btnFile").onclick = function () { return $("fileInput").click(); };
+    $("fileInput").onchange = function (e) { return __awaiter(_this, void 0, void 0, function () {
+        var f, u8, _a, _b, err_1;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    f = e.target.files[0];
+                    e.target.value = "";
+                    if (!f)
+                        return [2 /*return*/];
+                    _c.label = 1;
+                case 1:
+                    _c.trys.push([1, 4, , 5]);
+                    flash(T("loading"));
+                    _a = Uint8Array.bind;
+                    return [4 /*yield*/, f.arrayBuffer()];
+                case 2:
+                    u8 = new (_a.apply(Uint8Array, [void 0, _c.sent()]))();
+                    _b = setScript;
+                    return [4 /*yield*/, bytesToScript(u8, f.name, f.type)];
+                case 3:
+                    _b.apply(void 0, [_c.sent(), f.name]);
+                    return [3 /*break*/, 5];
+                case 4:
+                    err_1 = _c.sent();
+                    flash(T("readErr", { e: err_1.message || err_1 }), 6000);
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
+            }
+        });
+    }); };
+    /* ---------- helpers ---------- */
+    function b64ToBytes(s) { s = s.replace(/-/g, "+").replace(/_/g, "/"); var bin = atob(s); var u = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++)
+        u[i] = bin.charCodeAt(i); return u; }
+    function openModal(id) { $(id).classList.add("open"); }
+    Array.prototype.forEach.call(document.querySelectorAll("[data-close]"), function (b) { return b.onclick = function () { return b.closest(".modal").classList.remove("open"); }; });
+    Array.prototype.forEach.call(document.querySelectorAll(".modal"), function (m) { return m.addEventListener("click", function (e) { if (e.target === m)
+        m.classList.remove("open"); }); });
+    /* ---------- Google link ---------- */
+    $("btnLink").onclick = function () { openModal("linkModal"); $("linkMsg").textContent = ""; $("linkUrl").focus(); };
+    function parseLink(u) {
+        var m = u.match(/\/(document|presentation)\/d\/([\w-]{10,})/);
+        if (m)
+            return { kind: m[1], id: m[2] };
+        m = u.match(/\/file\/d\/([\w-]{10,})/) || u.match(/[?&]id=([\w-]{10,})/);
+        if (m)
+            return { kind: "file", id: m[1] };
+        return null;
+    }
+    function fetchBytes(url) {
+        if (window.EmeraldApp && EmeraldApp.fetchBytes)
+            return EmeraldApp.fetchBytes(url);
+        return fetch(url, { credentials: "omit" }).then(function (r) { if (!r.ok)
+            throw new Error("HTTP " + r.status); return r.arrayBuffer(); }).then(function (b) { return new Uint8Array(b); });
+    }
+    $("linkGo").onclick = function () { return __awaiter(_this, void 0, void 0, function () {
+        var L, msg, txt, url, u8, e_9;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    L = parseLink($("linkUrl").value.trim()), msg = $("linkMsg");
+                    if (!L) {
+                        msg.textContent = T("badLink");
+                        return [2 /*return*/];
+                    }
+                    msg.textContent = T("loading");
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 4, , 5]);
+                    txt = void 0;
+                    url = L.kind === "document" ? "https://docs.google.com/document/d/" + L.id + "/export?format=txt" :
+                        L.kind === "presentation" ? "https://docs.google.com/presentation/d/" + L.id + "/export/pptx" :
+                            "https://drive.google.com/uc?export=download&id=" + L.id;
+                    return [4 /*yield*/, fetchBytes(url)];
+                case 2:
+                    u8 = _a.sent();
+                    if (u8[0] === 0x3c && /<html/i.test(new TextDecoder().decode(u8.subarray(0, 400))))
+                        throw new Error("html");
+                    return [4 /*yield*/, bytesToScript(u8, "", "")];
+                case 3:
+                    txt = _a.sent();
+                    setScript(txt, "Google");
+                    $("linkModal").classList.remove("open");
+                    return [3 /*break*/, 5];
+                case 4:
+                    e_9 = _a.sent();
+                    msg.textContent = T("linkErr");
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
+            }
+        });
+    }); };
+    /* ---------- init ---------- */
+    Array.prototype.forEach.call(document.querySelectorAll(".lang button"), function (b) { return b.onclick = function () { return setLang(b.dataset.lang); }; });
+    try {
+        var l = localStorage.getItem("ell-lang");
+        if (l === "fr" || l === "en")
+            lang = l;
+    }
+    catch (e) { }
+    ta.value = S.script || SAMPLE;
+    syncControls();
+    applyStatic();
+    requestAnimationFrame(function (t0) { last = t0; requestAnimationFrame(loop); });
+})();
+</script>
+</body>
+</html>
