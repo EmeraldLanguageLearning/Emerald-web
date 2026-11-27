@@ -2,7 +2,8 @@
    Loaded first by every tool page. Inside the Android app (window.EmeraldAndroid exists) it:
    - provides window.speechSynthesis / SpeechSynthesisUtterance on top of Android text-to-speech,
    - makes window.print() use Android printing,
-   - offers EmeraldApp.fetchText(url) for reads that browsers would block (CORS),
+   - offers EmeraldApp.fetchText(url) / fetchBytes(url) for reads that browsers would block (CORS),
+   - offers EmeraldApp.keepAwake(on) to keep the screen on,
    - adds a Home button to each tool's header.
    In a normal browser it only defines EmeraldApp.inApp = false. */
 (function () {
@@ -85,6 +86,33 @@
         });
     };
     App.open = function (url) { A.open(url); };
+    /* Binary download (a .pptx or .docx from a Google link) as a Uint8Array. */
+    App.fetchBytes = function (url) {
+        return new Promise(function (resolve, reject) {
+            var id = 'b' + (++fetchId);
+            fetchCb[id] = function (ok, body) {
+                if (!ok) {
+                    reject(new Error(body || 'network'));
+                    return;
+                }
+                try {
+                    var bin = atob(body), u = new Uint8Array(bin.length);
+                    for (var i = 0; i < bin.length; i++)
+                        u[i] = bin.charCodeAt(i);
+                    resolve(u);
+                }
+                catch (e) {
+                    reject(e);
+                }
+            };
+            A.fetchBase64(id, url);
+        });
+    };
+    /* Keeps the screen on while a tool needs it (the prompter while it scrolls). */
+    App.keepAwake = function (on) { try {
+        A.keepAwake(!!on);
+    }
+    catch (e) { } };
     /* ---------- speech ---------- */
     // Known Google TTS voice codes, so tools that pick a male/female voice can tell them apart.
     var GENDER = { gba: 'female', gbb: 'male', gbc: 'female', gbd: 'male', gbg: 'female', rjs: 'male',
